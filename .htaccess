@@ -1,0 +1,29 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+#RewriteBase /
+Options -Indexes
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteCond %{REQUEST_URI} -d
+RewriteRule . index.php [L]
+ErrorDocument 403 /twc/commerce_new/404
+ErrorDocument 404 /twc/commerce_new/404
+</IfModule>
+order deny,allow
+<Files ~ "\.(js|woff2|sql)$">
+   allow from all
+</Files>
+<ifModule mod_php4.c> 
+php_value zlib.output_compression off 
+</ifModule> 
+#<IfModule mod_rewrite.c>
+#RewriteEngine On
+#RewriteBase /
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteRule . / [L]
+#Options -Indexes
+#ErrorDocument 403 NOTFOUND
+#ErrorDocument 404 NOTFOUND
+#</IfModule>

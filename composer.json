@@ -1,0 +1,29 @@
+{
+    "name": "sfandrianah/native",
+    "version": "1.2.1",
+    "description": "Framework Native",
+    "keywords": ["framework", "native"],
+    "license": "Tripoin Inc.",
+    "type": "project",
+    "require": {
+        "php": ">=5.3",
+        "psr/log": "^1.0.0",
+        "katzgrau/klogger": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.0.*"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Syahrial Fandrianah",
+            "email": "sfandrianah2@gmail.com"
+        },
+        {
+            "name": "Nurul Hidayat",
+            "email": "nurul.hidayat@gmail.com"
+        }
+    ],
+    "autoload": {
+    }
+}

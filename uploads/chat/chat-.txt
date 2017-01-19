@@ -1,0 +1,2 @@
+superadmin;Administrator 1;contents/images/administrator.jpg;;0;2017-01-02 02:22:15
+superadmin2;Administrator 2;contents/images/administrator.jpg;;0;2017-01-02 02:22:15
