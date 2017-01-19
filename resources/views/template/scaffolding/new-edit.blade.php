@@ -1,1 +1,0 @@
-@include('template.scaffolding.layout.new-edit')
