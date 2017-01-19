@@ -145,6 +145,8 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
         $Routes->set($sys_url_admin . '/settings/update', 'app\Controller\Security\Settings@update');
         $Routes->set($sys_url_admin . '/logout', 'app\Controller\Base\AuthAdmin@logout');
         $Routes->set($sys_url_admin . '/media', 'app\Controller\Base\Media@index');
+        $Routes->set($sys_url_admin . '/get-media', 'app\Controller\Base\Media@getMedia');
+        $Routes->set($sys_url_admin . '/list-get-media', 'app\Controller\Base\Media@listGetMedia');
     }
 }
 

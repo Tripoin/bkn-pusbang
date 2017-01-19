@@ -985,13 +985,6 @@ function getTemplateURL($url) {
         $themeName = getSystemParameter("GENERAL_TEMPLATE_THEME");
     }
 
-    if (substr($url, 0, 7) == "http://") {
-        return $url;
-    } else if (substr($url, 0, 8) == "https://") {
-        return $url;
-    } else {
-        return $str . $url_str;
-    }
     if (substr($url, 0, 1) != "/") {
         $path = URL("/template/" . $themeName) . "/" . $url;
     } else {

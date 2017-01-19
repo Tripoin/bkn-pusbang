@@ -83,8 +83,8 @@ class MasterGuest {
 
         if (!empty($list_post_function)) {
             if (isset($_SESSION[LANGUAGE_SESSION])) {
-                $mp_lang = $db->selectByID($mpl, $mpl->getLanguage() . "='" . $_SESSION[LANGUAGE_SESSION] . "'"
-                        . " AND " . $mpl->getPost()->getId() . "=" . $list_post_function[0][$mp->getId()]);
+                $mp_lang = $db->selectByID($mpl, $mpl->getLanguageId() . "='" . $_SESSION[LANGUAGE_SESSION] . "'"
+                        . " AND " . $mpl->getPostId() . "=" . $list_post_function[0][$mp->getId()]);
             }
             include_once FILE_PATH('view/page/global/master-guest-two-column.html.php');
         } else {
@@ -179,9 +179,11 @@ class MasterGuest {
                 );
             }
             if (isset($_SESSION[LANGUAGE_SESSION])) {
-                $mp_lang = $db->selectByID($mpl, $mpl->getLanguage() . "='" . $_SESSION[LANGUAGE_SESSION] . "'"
-                        . " AND " . $mpl->getPost()->getId() . "=" . $list_post_function[0][$mp->getId()]);
+                $mp_lang = $db->selectByID($mpl, $mpl->getLanguageId() . "='" . $_SESSION[LANGUAGE_SESSION] . "'"
+                        . " AND " . $mpl->getPostId() . "=" . $list_post_function[0][$mp->getId()]);
+                
             }
+            
             include_once getTemplatePath('page/global/master-guest-one-page.html.php');
         } else {
             include_once FILE_PATH(PAGE_404);
@@ -228,7 +230,7 @@ class MasterGuest {
         $post = $_POST['posting'];
         $db = new Database();
         if (isset($_SESSION[LANGUAGE_SESSION])) {
-            $mp_lang = $db->selectByID($mpl, $mpl->getLanguage() . "='" . $_SESSION[LANGUAGE_SESSION] . "'"
+            $mp_lang = $db->selectByID($mpl, $mpl->getLanguageId() . "='" . $_SESSION[LANGUAGE_SESSION] . "'"
                     . " AND " . $mpl->getPostId() . "=" . $post[$mp->getId()]);
         }
         if (isset($_SESSION['read_artikel_' . $post[$mp->getId()]])) {

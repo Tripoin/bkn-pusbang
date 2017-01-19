@@ -407,8 +407,8 @@ class Form {
         if ($this->formOption['VALUE'] != '') {
             $value = '<img src="' . $this->formOption['VALUE'] . '" alt="" />';
         }
-        $textbox .= '<div class="fileinput fileinput-new" data-provides="fileinput">
-                        <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;"> 
+        $textbox .= '<div class="fileinput fileinput-new" id="fileinput-' . $this->formOption['ID'] . '" data-provides="fileinput">
+                        <div class="fileinput-preview thumbnail" id="view-' . $this->formOption['ID'] . '" data-trigger="fileinput" style="width: 200px; height: 150px;"> 
                         ' . $value . '
                         </div>
                             <div>

@@ -47,6 +47,17 @@ class Media {
             include FILE_PATH('view/page/media/index.html.php');
         }
     }
+    public function listGetMedia() {
+        $Form = new Form();
+        $db = new Database();
+        include FILE_PATH('view/page/media/list-get-media.html.php');
+    }
+    public function getMedia() {
+        $Form = new Form();
+        $db = new Database();
+        include FILE_PATH('view/page/media/get-media.html.php');
+    }
+    
 
     public function uploadFile() {
         $path = FILE_PATH($_POST['file_path']);

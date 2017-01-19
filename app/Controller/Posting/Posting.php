@@ -52,7 +52,8 @@ class Posting extends Controller {
 
         $this->data_lang = $db->selectByID($this->lang);
         $this->data_author = $c_author;
-        $this->path_upload = 'contents/images/post/';
+//        $this->path_upload = 'contents/images/post/';
+        $this->path_upload = 'contents/';
     }
 
     public function setViewURL() {
@@ -95,8 +96,7 @@ class Posting extends Controller {
         $db = new Database();
         $mp = new MasterPost();
         $db->connect();
-        $thumbnail = $_FILES['thumbnail'];
-        $image = $_FILES['image'];
+
 
         $code = $_POST['code'];
         $authors = $_POST['author'];
@@ -112,29 +112,51 @@ class Posting extends Controller {
         }
 //        $requiredMessage = 'Please Input Field';
 
-
-        $temporary = explode(".", $thumbnail['name']);
-        $temporary_img = explode(".", $image['name']);
-        $path = FILE_PATH(DIR_WEB . $this->path_upload);
-        $upload_thumbnail = uploadFileImg($thumbnail, 'thumbnail-' . $temporary[0] . '-' . date('Ymdhis'), $path);
         $return_upload = false;
-        if ($upload_thumbnail['result'] == 1) {
-            $upload_image = uploadFileImg($image, 'image-' . $temporary_img[0] . '-' . date('Ymdhis'), $path);
-            if ($upload_image['result'] == 1) {
-                $return_upload = true;
-            } else {
-                echo resultPageMsg('danger', lang('general.upload_img_error'), $upload_thumbnail['message']);
-                $return_upload = false;
-            }
-        } else {
-            echo resultPageMsg('danger', lang('general.upload_img_error'), $upload_thumbnail['message']);
-            $return_upload = false;
-        }
         $no_image = 0;
+        $upload_thumbnail_file_name = '';
+        $upload_image_file_name = '';
         if (isset($_POST['no_image'])) {
             if ($_POST['no_image'] == 'true') {
                 $no_image = 1;
                 $return_upload = true;
+            }
+        } else {
+            $path_post = 'images/post/';
+            $path = FILE_PATH(DIR_WEB . $this->path_upload . $path_post);
+            if (isset($_POST['from_media_thumb'])) {
+                if ($_POST['from_media_thumb'] == 'true') {
+                    $upload_thumbnail_file_name = $_POST['media-thumbnail'];
+                    $return_upload = true;
+                }
+            } else {
+                $thumbnail = $_FILES['thumbnail'];
+                $temporary = explode(".", $thumbnail['name']);
+                $upload_thumbnail = uploadFileImg($thumbnail, 'thumbnail-' . $temporary[0] . '-' . date('Ymdhis'), $path);
+                if ($upload_thumbnail['result'] == 1) {
+                    $upload_thumbnail_file_name = $path_post . $upload_thumbnail['file_name'];
+                    $return_upload = true;
+                } else {
+                    echo resultPageMsg('danger', lang('general.upload_img_error'), $upload_thumbnail['message']);
+                    $return_upload = false;
+                }
+            }
+            if (isset($_POST['from_media_image'])) {
+                if ($_POST['from_media_image'] == 'true') {
+                    $upload_image_file_name = $_POST['media-image'];
+                    $return_upload = true;
+                }
+            } else {
+                $image = $_FILES['image'];
+                $temporary_img = explode(".", $image['name']);
+                $upload_image = uploadFileImg($image, 'image-' . $temporary_img[0] . '-' . date('Ymdhis'), $path);
+                if ($upload_image['result'] == 1) {
+                    $upload_image_file_name = $path_post . $upload_thumbnail['file_name'];
+                    $return_upload = true;
+                } else {
+                    echo resultPageMsg('danger', lang('general.upload_img_error'), $upload_thumbnail['message']);
+                    $return_upload = false;
+                }
             }
         }
         if ($return_upload == true) {
@@ -154,11 +176,11 @@ class Posting extends Controller {
             $subtitle = $_POST['subtitle_id'];
             $desc = $_POST['description_id'];
             $db->insert($masterPost->getEntity(), array(
-                $masterPost->getCode() => $code,
+                $masterPost->getCode() => htmlentities($code),
                 $masterPost->getTitle() => $title,
                 $masterPost->getSubtitle() => $subtitle,
-                $masterPost->getThumbnail() => $upload_thumbnail['file_name'],
-                $masterPost->getImg() => $upload_image['file_name'],
+                $masterPost->getThumbnail() => $upload_thumbnail_file_name,
+                $masterPost->getImg() => $upload_image_file_name,
                 $masterPost->getAuthorId() => $authors,
 //                    $masterPost->getAuthorCode() => $rs_author[0][$author->getCode()],
 //                    $masterPost->getAuthorName() => $rs_author[0][$author->getName()],
@@ -182,8 +204,8 @@ class Posting extends Controller {
                         $title_lang = $_POST['title_' . $value_lang];
                         $subtitle_lang = $_POST['subtitle_' . $value_lang];
                         $desc_lang = $_POST['description_' . $value_lang];
-                        
-                        $getLang = $db->selectByID($masterLang, $masterLang->getCode()."='".$value_lang."'");
+
+                        $getLang = $db->selectByID($masterLang, $masterLang->getCode() . "='" . $value_lang . "'");
                         $db->insert($masterPostLang->getEntity(), array(
                             $masterPostLang->getPostId() => $rs_post[0],
                             $masterPostLang->getCode() => $rs_post[0] . $value_lang,
@@ -212,11 +234,6 @@ class Posting extends Controller {
 //        $noImg = $_POST['no_image'];
         $code = $_POST['code'];
         $authors = $_POST['author'];
-        $temporary = explode(".", $thumbnail['name']);
-        $temporary_img = explode(".", $image['name']);
-        $path = FILE_PATH(DIR_WEB . $this->path_upload);
-        $upload_thumbnail = uploadFileImg($thumbnail, 'thumbnail-' . $temporary[0] . '-' . date('Ymdhis'), $path);
-        $upload_image = uploadFileImg($image, 'image-' . $temporary_img[0] . '-' . date('Ymdhis'), $path);
 
         $author = new MasterAuthor();
         $masterPost = new MasterPost();
@@ -226,18 +243,65 @@ class Posting extends Controller {
         $db->connect();
 
         $rs_post = $db->selectByID($masterPost, $masterPost->getId() . "='" . $idPost . "'");
-        if ($upload_thumbnail['result'] == 1) {
-            $file_name_thumbnail = $upload_thumbnail['file_name'];
-        } else {
-            $file_name_thumbnail = $rs_post[0][$masterPost->getThumbnail()];
-        }
 
-        if ($upload_image['result'] == 1) {
-            $file_name_image = $upload_image['file_name'];
+        $return_upload = false;
+        $no_image = 0;
+        $upload_thumbnail_file_name = '';
+        $upload_image_file_name = '';
+        if (isset($_POST['no_image'])) {
+            if ($_POST['no_image'] == 'true') {
+                $no_image = 1;
+                $return_upload = true;
+            }
         } else {
-            $file_name_image = $rs_post[0][$masterPost->getImg()];
+            $path_post = 'images/post/';
+            $path = FILE_PATH(DIR_WEB . $this->path_upload . $path_post);
+            if (isset($_POST['from_media_thumb'])) {
+                if ($_POST['from_media_thumb'] == 'true') {
+                    $upload_thumbnail_file_name = $_POST['media-thumbnail'];
+                    $return_upload = true;
+                }
+            } else {
+                $thumbnail = $_FILES['thumbnail'];
+                $temporary = explode(".", $thumbnail['name']);
+                $upload_thumbnail = uploadFileImg($thumbnail, 'thumbnail-' . $temporary[0] . '-' . date('Ymdhis'), $path);
+                if ($upload_thumbnail['result'] == 1) {
+                    $upload_thumbnail_file_name = $path_post . $upload_thumbnail['file_name'];
+                    $return_upload = true;
+                } else {
+                    echo resultPageMsg('danger', lang('general.upload_img_error'), $upload_thumbnail['message']);
+                    $return_upload = false;
+                }
+                if ($upload_thumbnail['result'] == 1) {
+                    $upload_thumbnail_file_name = $path_post . $upload_thumbnail['file_name'];
+                } else {
+                    $upload_thumbnail_file_name = $rs_post[0][$masterPost->getThumbnail()];
+                }
+            }
+            if (isset($_POST['from_media_image'])) {
+                if ($_POST['from_media_image'] == 'true') {
+                    $upload_image_file_name = $_POST['media-image'];
+                    $return_upload = true;
+                }
+            } else {
+                $image = $_FILES['image'];
+                $temporary_img = explode(".", $image['name']);
+                $upload_image = uploadFileImg($image, 'image-' . $temporary_img[0] . '-' . date('Ymdhis'), $path);
+                if ($upload_image['result'] == 1) {
+                    $upload_image_file_name = $path_post . $upload_thumbnail['file_name'];
+                    $return_upload = true;
+                } else {
+                    echo resultPageMsg('danger', lang('general.upload_img_error'), $upload_thumbnail['message']);
+                    $return_upload = false;
+                }
+                if ($upload_image['result'] == 1) {
+                    $upload_image_file_name = $path_post . $upload_image['file_name'];
+                } else {
+                    $upload_image_file_name = $rs_post[0][$masterPost->getImg()];
+                }
+            }
         }
-
+        
         $rs_author = $db->selectByID($author, $author->getId() . "='" . $authors . "'");
 //                $rs_user = $db->selectByID($user, $user->getCode() . "='" . $_SESSION[SESSION_USERNAME] . "'");
         if (empty($rs_author)) {
@@ -256,8 +320,8 @@ class Posting extends Controller {
                 $masterPost->getCode() => $code,
                 $masterPost->getTitle() => $title,
                 $masterPost->getSubtitle() => $subtitle,
-                $masterPost->getThumbnail() => $file_name_thumbnail,
-                $masterPost->getImg() => $file_name_image,
+                $masterPost->getThumbnail() => $upload_thumbnail_file_name,
+                $masterPost->getImg() => $upload_image_file_name,
                 $masterPost->getAuthorId() => $authors,
 //                $masterPost->getAuthorCode() => $rs_author[0][$author->getCode()],
 //                $masterPost->getAuthorName() => $rs_author[0][$author->getName()],
@@ -282,12 +346,12 @@ class Posting extends Controller {
                         $title_lang = $_POST['title_' . $value_lang];
                         $subtitle_lang = $_POST['subtitle_' . $value_lang];
                         $desc_lang = $_POST['description_' . $value_lang];
-                        
-                        $getLang = $db->selectByID($masterLang, $masterLang->getCode()."='".$value_lang."'");
+
+                        $getLang = $db->selectByID($masterLang, $masterLang->getCode() . "='" . $value_lang . "'");
                         $dt_mstPostLang = $db->selectByID($masterPostLang, $masterPostLang->getPostId() . EQUAL . $idPost
                                 . " AND " . $masterPostLang->getLanguageId() . "='" . $getLang[0][$masterLang->getId()] . "'");
-                        
-                        
+
+
                         if (empty($dt_mstPostLang)) {
                             $db->insert($masterPostLang->getEntity(), array(
                                 $masterPostLang->getPostId() => $idPost,

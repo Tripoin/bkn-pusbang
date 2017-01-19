@@ -193,7 +193,7 @@ class AuthAdmin {
                 if (password_verify($password, $rsPostNew[0][$user->getPassword()])) {
                     $_SESSION[SESSION_USERNAME] = $rsPostNew[0][$user->getCode()];
                     $_SESSION[SESSION_EMAIL] = $rsPostNew[0][$user->getEmail()];
-                    $_SESSION[SESSION_FULLNAME] = $user_profile[0][$userProfile->getName()];
+                    $_SESSION[SESSION_FULLNAME] = $rsPostNew[0][$userProfile->getName()];
                     $_SESSION[SESSION_GROUP] = $rsPostNew[0][$user->getGroupId()];
 //            echo '<h3 align="center">Login Sukses</h3>';
 //            echo toastAlert("success", "Login Success", "You Have successfully login");
