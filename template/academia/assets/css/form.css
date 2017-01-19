@@ -1,0 +1,323 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jan 18, 2017, 1:09:16 AM
+    Author     : sfandrianah
+*/
+
+
+.signup{
+    background: #FFFFFF;
+    padding: 30px 20px;
+    color: #d01c24;
+}
+
+.signup h1{
+    text-align: center;
+    font-size: 24px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #d01c24;
+}
+
+.signup legend{
+    font-size: 16px;
+    color:#d01c24;
+    padding-bottom: 5px;
+}
+
+.signup div.required label::before {
+    content: "* ";
+}
+
+.signup input{
+    border-radius: 0px;
+    border: 1px solid #d01c24;
+    background: #FFFFFF;
+}
+
+.signup textarea{
+    border-radius: 0px;
+    border: 1px solid #d01c24;
+    background: #efefef;
+}
+
+.signup select{
+    border-radius: 0px;
+    border: 1px solid #d01c24;
+    background: #efefef;
+}
+
+.signup .inputfiles{
+    border-radius: 0px;
+    border: 1px solid #d01c24;
+    background: #efefef;
+}
+
+
+.signup button, .signup button:focus,.signup button:hover {
+    background: #782881;
+    color: #fff;
+    border-radius: 0px;
+}
+
+
+.signup .btn-info {
+    color: #fff;
+    background-color: #5bc0de;
+    border-color: #5bc0de;
+}
+
+.signup .btn-info:focus,
+.signup .btn-info.focus,
+.signup .btn-info:active,
+.signup .btn-info.active,
+.open > .signup .btn-info.dropdown-toggle {
+    color: #fff;
+    background-color: #31b0d5;
+    border-color: #2aabd2;
+}
+
+.signup .btn-info:hover {
+    color: #fff;
+    background-color: #31b0d5;
+    border-color: #2aabd2;
+}
+
+.signup .btn-info:active,
+.signup .btn-info.active,
+.open > .signup .btn-info.dropdown-toggle {
+    background-image: none;
+}
+
+.signup .btn-info.disabled:focus,
+.signup .btn-info.disabled.focus,
+.signup .btn-info:disabled:focus,
+.signup .btn-info:disabled.focus,
+fieldset[disabled] .signup .btn-info:focus,
+fieldset[disabled] .signup .btn-info.focus {
+    background-color: #5bc0de;
+    border-color: #5bc0de;
+}
+
+.signup .btn-info.disabled:hover,
+.signup .btn-info:disabled:hover,
+fieldset[disabled] .signup .btn-info:hover {
+    background-color: #5bc0de;
+    border-color: #5bc0de;
+}
+
+.signup .btn-success {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #5cb85c;
+}
+
+.signup .btn-success:focus,
+.signup .btn-success.focus,
+.signup .btn-success:active,
+.signup .btn-success.active,
+.open > .signup .btn-success.dropdown-toggle {
+    color: #fff;
+    background-color: #449d44;
+    border-color: #419641;
+}
+
+.signup .btn-success:hover {
+    color: #fff;
+    background-color: #449d44;
+    border-color: #419641;
+}
+
+.signup .btn-success:active,
+.signup .btn-success.active,
+.open > .signup .btn-success.dropdown-toggle {
+    background-image: none;
+}
+
+.signup .btn-success.disabled:focus,
+.signup .btn-success.disabled.focus,
+.signup .btn-success:disabled:focus,
+.signup .btn-success:disabled.focus,
+fieldset[disabled] .signup .btn-success:focus,
+fieldset[disabled] .signup .btn-success.focus {
+    background-color: #5cb85c;
+    border-color: #5cb85c;
+}
+
+.signup .btn-success.disabled:hover,
+.signup .btn-success:disabled:hover,
+fieldset[disabled] .signup .btn-success:hover {
+    background-color: #5cb85c;
+    border-color: #5cb85c;
+}
+
+.signup .btn-warning {
+    color: #fff;
+    background-color: #f0ad4e;
+    border-color: #f0ad4e;
+}
+
+.signup .btn-warning:focus,
+.signup .btn-warning.focus,
+.signup .btn-warning:active,
+.signup .btn-warning.active,
+.open > .signup .btn-warning.dropdown-toggle {
+    color: #fff;
+    background-color: #ec971f;
+    border-color: #eb9316;
+}
+
+.signup .btn-warning:hover {
+    color: #fff;
+    background-color: #ec971f;
+    border-color: #eb9316;
+}
+
+.signup .btn-warning:active,
+.signup .btn-warning.active,
+.open > .signup .btn-warning.dropdown-toggle {
+    background-image: none;
+}
+
+.signup .btn-warning.disabled:focus,
+.signup .btn-warning.disabled.focus,
+.signup .btn-warning:disabled:focus,
+.signup .btn-warning:disabled.focus,
+fieldset[disabled] .signup .btn-warning:focus,
+fieldset[disabled] .signup .btn-warning.focus {
+    background-color: #f0ad4e;
+    border-color: #f0ad4e;
+}
+
+.signup .btn-warning.disabled:hover,
+.signup .btn-warning:disabled:hover,
+fieldset[disabled] .signup .btn-warning:hover {
+    background-color: #f0ad4e;
+    border-color: #f0ad4e;
+}
+
+.signup .btn-danger {
+    color: #fff;
+    background-color: #d9534f;
+    border-color: #d9534f;
+}
+
+.signup .btn-danger:focus,
+.signup .btn-danger.focus,
+.signup .btn-danger:active,
+.signup .btn-danger.active,
+.open > .signup .btn-danger.dropdown-toggle {
+    color: #fff;
+    background-color: #c9302c;
+    border-color: #c12e2a;
+}
+
+.signup .btn-danger:hover {
+    color: #fff;
+    background-color: #c9302c;
+    border-color: #c12e2a;
+}
+
+.signup .btn-danger:active,
+.signup .btn-danger.active,
+.open > .signup .btn-danger.dropdown-toggle {
+    background-image: none;
+}
+
+.signup .btn-danger.disabled:focus,
+.signup .btn-danger.disabled.focus,
+.signup .btn-danger:disabled:focus,
+.signup .btn-danger:disabled.focus,
+fieldset[disabled] .signup .btn-danger:focus,
+fieldset[disabled] .signup .btn-danger.focus {
+    background-color: #d9534f;
+    border-color: #d9534f;
+}
+
+.signup .btn-danger.disabled:hover,
+.signup .btn-danger:disabled:hover,
+fieldset[disabled] .signup .btn-danger:hover {
+    background-color: #d9534f;
+    border-color: #d9534f;
+}
+
+.signup .btn-primary-outline {
+    color: #0275d8;
+    background-color: transparent;
+    background-image: none;
+    border-color: #0275d8;
+}
+
+.signup .btn-primary-outline:focus,
+.signup .btn-primary-outline.focus,
+.signup .btn-primary-outline:active,
+.signup .btn-primary-outline.active,
+.open > .signup .btn-primary-outline.dropdown-toggle {
+    color: #fff;
+    background-color: #0275d8;
+    border-color: #0275d8;
+}
+
+.signup .btn-primary-outline:hover {
+    color: #fff;
+    background-color: #0275d8;
+    border-color: #0275d8;
+}
+
+.signup .btn-primary-outline.disabled:focus,
+.signup .btn-primary-outline.disabled.focus,
+.signup .btn-primary-outline:disabled:focus,
+.signup .btn-primary-outline:disabled.focus,
+fieldset[disabled] .signup .btn-primary-outline:focus,
+fieldset[disabled] .signup .btn-primary-outline.focus {
+    border-color: #43a7fd;
+}
+
+.signup .btn-primary-outline.disabled:hover,
+.signup .btn-primary-outline:disabled:hover,
+fieldset[disabled] .signup .btn-primary-outline:hover {
+    border-color: #43a7fd;
+}
+
+
+.signup .btn-circle , .signup .btn-circle:focus,.signup .btn-circle:hover {
+    /*background: #000000;*/
+    /*color: #fff;*/
+    border-radius: 15px;
+}
+
+.signup .btn-circle.btn-lg , .signup .btn-circle.btn-lg:focus,.signup .btn-circle.btn-lg:hover {
+    border-radius: 25px;
+}
+.signup .btn-circle.xl , .signup .btn-circle.xl:focus,.signup .btn-circle.xl:hover {
+    border-radius: 35px;
+}
+
+.signup .btn-circle {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+}
+.signup .btn-circle.btn-lg {
+    width: 50px;
+    height: 50px;
+    padding: 10px 16px;
+    font-size: 18px;
+    line-height: 1.33;
+    border-radius: 25px;
+}
+.signup .btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    font-size: 24px;
+    line-height: 1.33;
+    border-radius: 35px;
+}
