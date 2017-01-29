@@ -37,6 +37,20 @@ function setLog($value) {
     $GLOBALS['var_log'] = $value;
 }
 
+
+/**
+ * (PHP 4, PHP 5+)<br/>
+ * Management Language from Framework in path FILE_PATH('resources/lang/<id>|<en>/<file_language>.<get_array_key>')
+ * <br/>
+ * @example : lang('general.name') result = 'Name' in en language
+ * Licensed by Tripoin Team
+ * @link http://www.tripoin.co.id/
+ * @param String $lang [optional] <p>
+ * get text language from FILE_PATH('resources/lang/<id>|<en>/<file_language>.<get_array_key>').
+ * </p>
+ 
+ * @return String A formatted version of <i>$result</i>.
+ */
 function lang($lang) {
     $explode = explode('.', $lang);
     $path = $explode[0];
@@ -376,7 +390,20 @@ function getURLFeatured($db, $mpf, $val_mn_child) {
 //    }
     return $cek_menu_child[0];
 }
-
+/**
+ * (PHP 4, PHP 5+)<br/>
+ * Management DEFAULT URL FROM FRAMEWORK V.1 
+ * <br/>
+ * @example : URL('contoh') => 'http://<SERVER>/<directory>/contoh'
+ * <br/>
+ * Licensed by Tripoin Team
+ * @link http://www.tripoin.co.id/
+ * @param String $url [optional] <p>
+ * sets join url from url framework.
+ * </p>
+ 
+ * @return String A formatted version of <i>$result</i>.
+ */
 function URL($url = "") {
     if ($_SERVER['SERVER_PORT'] == 443)
         $http = 'https';
@@ -1455,6 +1482,28 @@ function getActionType($value = null) {
 //    $url_end = Url
 }
 
+/**
+ * (PHP 4, PHP 5+)<br/>
+ * Convert Combobox From Array to set ID and Label
+ * <br/>
+ * Licensed by Tripoin Team
+ * @link http://www.tripoin.co.id/
+ * @param Array() $data <p>
+ * Data Array Multidimensional from get Table Database or Web Service
+ * </p>
+ * @param String $id [optional] <p>
+ * change array key be from $data id combobox.
+ * </p>
+ * @param string $label [optional] <p>
+ *  change array key from $data be label combobox.
+ * </p>
+ * @param Array() $manual_data [optional] <p>
+ * Sets Manual Combobox 
+ * example =>
+ * $manual_data = [array("id"=>1,"label","Option 1"),array("id"=>2,"label","Option 2")];
+ * </p>
+ * @return json_decode A formatted version of <i>$data</i>.
+ */
 function convertJsonCombobox($data = null, $id, $label, $manual_data = array()) {
 //    print_r($data);
     $json = '[';

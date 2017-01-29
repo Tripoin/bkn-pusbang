@@ -61,5 +61,8 @@ interface IViewConstant {
     const MASTER_VIDEO_SEMINAR_VIEW_INDEX = 'view/page/master/video-seminar';
     const MASTER_AUTHOR_VIEW_INDEX = 'view/page/master/author';
     const MASTER_PRICE_VIEW_INDEX = 'view/page/master/price';
+    
+    const MASTER_ROOM_VIEW_INDEX = 'view/page/master/room';
+    const MASTER_FACILITY_VIEW_INDEX = 'view/page/master/facility';
 
 }

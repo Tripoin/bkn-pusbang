@@ -27,3 +27,12 @@ foreach ($list_data['item'] as $value) {
     );
 }
 echo $Datatable->showBodyArtikelReadMore();
+if($_POST['urut'] != 1){
+?>
+<script>
+    $(function(){
+//        location.reload(true);
+        $('html, body').animate({scrollTop: $('#pageArtikel').offset().top}, 'slow');
+    })
+</script>
+<?php } ?>

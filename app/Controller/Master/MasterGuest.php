@@ -37,22 +37,23 @@ class MasterGuest {
         $db = new Database();
         $db->connect();
         $db->select($mpf->getEntity(), "*", array($mp->getEntity(), $sf->getEntity()), ""
-                . $mpf->getEntity() . DOT . $mpf->getPost()->getId() . EQUAL . $mp->getEntity() . DOT . $mp->getId() . " AND "
-                . $mpf->getEntity() . DOT . $mpf->getFunction()->getId() . EQUAL . $sf->getEntity() . DOT . $sf->getId() . " AND "
-                . $mp->getEntity() . DOT . $mp->getPostStatus() . EQUAL . "'published'" . " AND "
-                . $mpf->getEntity() . DOT . $mpf->getFunction()->getId() . EQUAL . $functionId);
-        $list_post_function = $db->getResult();
+                . $mpf->getEntity() . DOT . $mpf->getPostId() . EQUAL . $mp->getEntity() . DOT . $mp->getId() . " AND "
+                . $mpf->getEntity() . DOT . $mpf->getFunctionId() . EQUAL . $sf->getEntity() . DOT . $sf->getId() . " AND "
+                . $mp->getEntity() . DOT . $mp->getPostStatus() . EQUAL . "'p'" . " AND "
+                . $mpf->getEntity() . DOT . $mpf->getFunctionId() . EQUAL . $functionId);
+        $post = $db->getResult()[0];
+        
 //        echo 'masuk';
 //        
-        if (!empty($list_post_function)) {
+        if (!empty($post)) {
 //            print_r($rs_post);
             if (isset($_SESSION[LANGUAGE_SESSION])) {
-                $mp_lang = $db->selectByID($mpl, $mpl->getLanguage() . "='" . $_SESSION[LANGUAGE_SESSION] . "'"
-                        . " AND " . $mpl->getPost()->getId() . "=" . $list_post_function[0][$mp->getId()]);
+                $mp_lang = $db->selectByID($mpl, $mpl->getLanguageId() . "='" . $_SESSION[LANGUAGE_SESSION] . "'"
+                        . " AND " . $mpl->getPostId() . "=" . $post[$mp->getId()]);
             }
 
-            $breadcrumb = array(URL($list_post_function[0][$mpf->getFunction()->getUrl()]) => $list_post_function[0][$mpf->getFunction()->getName()]);
-            include_once FILE_PATH('view/page/global/master-guest-one-page.html.php');
+            $breadcrumb = array(URL($post[$mpf->getFunction()->getUrl()]) => $post[$mpf->getFunction()->getName()]);
+            include_once getTemplatePath('/page/global/master-guest-one-page.html.php');
         } else {
             include_once FILE_PATH(PAGE_404);
         }
@@ -66,15 +67,15 @@ class MasterGuest {
 //        $db->select("mst_product");
 //        $list_product = $db->getResult();
         $functionId = $_POST['function_id_now'];
-//        echo $functionId;
+        
         $db = new Database();
         $db->connect();
 //        $mpf->getFunction()->getId();
         $db->select($mpf->getEntity(), "*", array($mp->getEntity(), $sf->getEntity()), ""
                 . $mpf->getEntity() . DOT . $mpf->getPost()->getId() . EQUAL . $mp->getEntity() . DOT . $mp->getId() . " AND "
-                . $mpf->getEntity() . DOT . $mpf->getFunction()->getId() . EQUAL . $sf->getEntity() . DOT . $sf->getId() . " AND "
-                . $mp->getEntity() . DOT . $mp->getPostStatus() . EQUAL . "'published'" . " AND "
-                . $mpf->getEntity() . DOT . $mpf->getFunction()->getId() . EQUAL . $functionId);
+                . $mpf->getEntity() . DOT . $mpf->getFunctionId() . EQUAL . $sf->getEntity() . DOT . $sf->getId() . " AND "
+                . $mp->getEntity() . DOT . $mp->getPostStatus() . EQUAL . "'p'" . " AND "
+                . $mpf->getEntity() . DOT . $mpf->getFunctionId() . EQUAL . $functionId);
         $list_post_function = $db->getResult();
 
         $get_menu_parent = $db->selectByID($sf, $sf->getId() . EQUAL . $list_post_function[0][$sf->getParent()]);

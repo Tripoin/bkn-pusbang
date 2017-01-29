@@ -12,13 +12,13 @@
                 if ($_SESSION[SESSION_GROUP] != 1) {
                     include getAdminTemplatePath(CONTENT_PATH);
                 } else {
-                    echo '<link href="'.getAdminTemplateURL('/assets/css/login-2.min.css').'" rel="stylesheet" type="text/css">';
+                    echo '<link href="'.getAdminTemplateURL('/assets/css/login-2.min.css').'?tripoin='.createRandomBooking().'" rel="stylesheet" type="text/css">';
 //                    echo STYLE('/assets/css/login-2.min.css');
                     include getAdminTemplatePath(LOGIN_PATH);
                 }
             } else {
 //                echo STYLE('/assets/css/login-2.min.css');
-                echo '<link href="'.getAdminTemplateURL('/assets/css/login-2.min.css').'" rel="stylesheet" type="text/css">';
+                echo '<link href="'.getAdminTemplateURL('/assets/css/login-2.min.css').'?tripoin='.createRandomBooking().'" rel="stylesheet" type="text/css">';
                 include getAdminTemplatePath(LOGIN_PATH);
 //        echo SCRIPTS('/assets/js/login.min.js');
             }
@@ -30,12 +30,12 @@
                 include getAdminTemplatePath(CONTENT_PATH);
             } else {
 //                echo STYLE('/assets/css/login-2.min.css');
-                echo '<link href="'.getAdminTemplateURL('/assets/css/login-2.min.css').'" rel="stylesheet" type="text/css">';
+                echo '<link href="'.getAdminTemplateURL('/assets/css/login-2.min.css').'?tripoin='.createRandomBooking().'" rel="stylesheet" type="text/css">';
                 include getAdminTemplatePath(LOGIN_PATH);
             }
         } else {
 //            echo STYLE('/assets/css/login-2.min.css');
-            echo '<link href="'.getAdminTemplateURL('/assets/css/login-2.min.css').'" rel="stylesheet" type="text/css">';
+            echo '<link href="'.getAdminTemplateURL('/assets/css/login-2.min.css').'?tripoin='.createRandomBooking().'" rel="stylesheet" type="text/css">';
             include getAdminTemplatePath(LOGIN_PATH);
 //        echo SCRIPTS('/assets/js/login.min.js');
         }

@@ -38,12 +38,4 @@ define('TEXT_COPYRIGHT', '&copy;2017 <a href="http://tripoin.co.id">TRIPOIN</a> 
 
 
 
-
-/*
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', 'Trijep3t3!');
-define('DB_NAME', 'talaindo');
-define('DB_DRIVER', 'mysqli');
-*/
-
+define('URL_REST','http://54.251.168.102/api/public/');

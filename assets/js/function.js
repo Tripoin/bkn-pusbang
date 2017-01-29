@@ -1440,11 +1440,45 @@ function ajaxPostManual(page, target, value) {
         data: value,
         success: function (data) {
             $('#' + target).html(data);
-            $('html, body').animate({scrollTop: $('#' + target).offset().top}, 'slow');
+            
 //            $('#'+target).focus();
         },
         error: function (data) {
             $('#' + target).html(data.responseText);
         },
     });
+}
+
+function postFormAjaxPostSetContent(page,content) {
+
+    CKupdate();
+    var form = $('#form-newedit');
+    var ti = document.getElementById('form-newedit');
+//    var content = 'bodyPage';
+    var contents = $('#' + content);
+//alert(form.valid());
+    if (form.valid()) {
+        contents.append(highlightLoader());
+        $.ajax({
+            type: "POST",
+            url: page,
+//            data: datastring,
+            data: new FormData(ti),
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (data) {
+                try {
+                    $('#form-message').html(data);
+                    $('.background-overlay').remove();
+                } catch (e) {
+                    $('#form-message').html(data);
+                    $('.background-overlay').remove();
+                }
+            }, error: function (jqXHR, textStatus, errorThrown) {
+//                alert(jqXHR.responseText);
+                $('#form-message').html(jqXHR.responseText);
+            }
+        });
+    }
 }

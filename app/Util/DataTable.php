@@ -15,6 +15,8 @@
 namespace app\Util;
 
 use app\Util\Database;
+use App\Util\RestClient\TripoinRestClient;
+use app\Constant\IRestCommandConstant;
 
 class DataTable {
 
@@ -328,22 +330,22 @@ class DataTable {
             $txt .= '<div class="row margin-bottom" style="margin-bottom:50px;">						
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="new_bulletin" style="width: 100%;height: 250px;overflow: hidden;">
-                                <a href="'.$value['link'].'">
+                                <a href="' . $value['link'] . '">
                                     <img style=" width:100%;height:auto;" src="' . $value['img'] . '" ' . notFoundImg() . '>
                                 </a>
                             </div>
                         </div>
                         <div class="col-lg-8 col-md-8 col-sm-12">
                             <div class="news_content news_buletin_pra">
-                                <h1><a href="'.$value['link'].'">' . $value['title'] . '</a></h1>
+                                <h1><a href="' . $value['link'] . '">' . $value['title'] . '</a></h1>
                                 <p class="date">
                                     <span data-toggle="tooltip" data-placement="top" title="" 
-                                        data-original-title="Written By"><i class="fa fa-user"></i> '.$value['author_name'].'
+                                        data-original-title="Written By"><i class="fa fa-user"></i> ' . $value['author_name'] . '
                                     </span>
-                                    <span data-toggle="tooltip" data-placement="top" title="" data-original-title="Published"><i class="fa fa-calendar"></i> '.$value['publish_on'].'</span>
+                                    <span data-toggle="tooltip" data-placement="top" title="" data-original-title="Published"><i class="fa fa-calendar"></i> ' . $value['publish_on'] . '</span>
                                     <span><i class="fa fa-eye"></i> Hits: ' . $value['read_count'] . '</span>
                                 </p>							
-                                ' . html_entity_decode(readMore($value['content'],$value['link'])) . '
+                                ' . html_entity_decode(readMore($value['content'], $value['link'])) . '
                             </div>				
                         </div>				
                     </div>';
@@ -763,6 +765,94 @@ class DataTable {
 //            $res = array();
 //        }
         $res = array_merge(array("item" => $res), $this->json_pagination());
+        return $res;
+    }
+
+    public function select_pagination_rest($url, $param) {
+        $search = explode('>', $this->search);
+        
+        $tripoinRestClient = new TripoinRestClient();
+        if ($this->current_page == 1) {
+            $full_url = $url . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::ADVANCED_PAGINATION;
+        } else {
+            $full_url = $url . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::ADVANCED_PAGINATION . '?page=' . $this->current_page;
+        }
+        $result = $tripoinRestClient->doPOST($full_url, array(), array(), array(
+            "item_number" => $this->per_page ,
+            "filter_key" => $search[0],
+            "filter_value" => $search[1],
+            "sorting_key" => "code",
+            "sorting_direction" => "asc"
+        ));
+        if ($result == false) {
+            $tripoinRestClient = new TripoinRestClient();
+            $tripoinRestClient->doPOSTLoginNoAuth();
+            return $this->select_pagination_rest($url, $param);
+        }
+//        print_r($result);
+        $json = json_decode($result->getBody);
+        $this->per_page = $json->per_page;
+        $this->current_page = $json->current_page;
+        $this->last_page = $json->last_page;
+        $this->total = $json->total;
+        $this->from = $json->from;
+        $this->to = $json->to;
+        
+        
+        
+        $current_page = $this->current_page;
+        $total = $this->total;
+        $per_page = $this->per_page;
+        $last_page = $total / $per_page;
+        if ($current_page >= ceil($last_page)) {
+            $this->next_page = NULL;
+        } else {
+            $this->next_page = $current_page + 1;
+        }
+
+        if ($current_page <= 1) {
+            $this->prev_page = NULL;
+        } else {
+            $this->prev_page = $current_page - 1;
+        }
+        
+        $min_page = $current_page - 2;
+        $max_page = $current_page + 2;
+
+        $res_page = "";
+
+//        if ($last_page > 5) {
+        if ($current_page == 1) {
+            $min_page = $current_page - 1;
+            $max_page = $current_page + 4;
+        } else if ($current_page == 2) {
+            $min_page = $current_page - 2;
+            $max_page = $current_page + 3;
+        } else if ($current_page == 4) {
+            $min_page = $current_page - 2;
+            $max_page = $current_page + 2;
+        } else if ($current_page == ($this->last_page - 1)) {
+            $min_page = $current_page - 3;
+            $max_page = $current_page + 2;
+//            echo 'masuk';
+        } else if ($current_page == $this->last_page) {
+            $min_page = $current_page - 4;
+            $max_page = $current_page + 1;
+//                echo 'masuk';
+        }
+        for ($no = $min_page; $no <= $max_page; $no++) {
+//            echo $no;
+            if ($no > ceil($this->last_page)) {
+                
+            } else if ($no <= 0) {
+                
+            } else {
+                $res_page .= $no . ",";
+            }
+        }
+
+        $this->pagination_item = rtrim($res_page, ",");
+        $res = array_merge(array("item" => $json->data), $this->json_pagination());
         return $res;
     }
 

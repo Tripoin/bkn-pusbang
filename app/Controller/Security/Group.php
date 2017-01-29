@@ -20,13 +20,11 @@ use app\Model\SecurityGroup;
 use app\Constant\IURLConstant;
 use app\Constant\IViewConstant;
 
-class Group extends Controller {
+class Group extends Controller{
 
     //put your code here
 
     public function __construct() {
-
-
         $this->modelData = new SecurityGroup();
         $this->setTitle(lang('security.group'));
         $this->setBreadCrumb(array(lang('security.security') => "", lang('security.security') => URL()));

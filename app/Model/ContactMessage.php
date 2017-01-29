@@ -14,17 +14,28 @@ namespace app\Model;
  * @author sfandrianah
  */
 use app\Model\Auditrail;
-class ContactMessage extends Auditrail{
+
+class ContactMessage extends Auditrail {
+
     //put your code here
     private $filename = 'contactMessage';
     private $entity = 'mst_contact_message';
-    private $id = 'contact_message_id';
-    private $code = 'contact_message_code';
+    private $id = 'id';
+    private $code = 'code';
+    private $name = 'name';
     private $guestName = 'contact_message_guest_name';
     private $guestMail = 'contact_message_guest_email';
     private $subject = 'contact_message_subject';
     private $content = 'contact_message_content';
-    
+
+    function getName() {
+        return $this->name;
+    }
+
+    function setName($name) {
+        $this->name = $name;
+    }
+
     function getFilename() {
         return $this->filename;
     }
@@ -89,6 +100,4 @@ class ContactMessage extends Auditrail{
         $this->content = $content;
     }
 
-
-    
 }

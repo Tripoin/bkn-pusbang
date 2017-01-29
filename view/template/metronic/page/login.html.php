@@ -1,9 +1,19 @@
-<body class=" login">
+<style>
+    html{
+        height: 100%
+    }
+    body{
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        background-image:url(<?= URL('assets/img/bg-blur.jpg'); ?>);
+    }
+</style>
+<body class="login" style="  ">
     <!-- BEGIN LOGO -->
     <div class="logo">
-                <a href="<?=URL('');?>">
-                    <img src="<?=URL('/assets/img/logotripoin.png'); ?>" height="150" alt="TALA INDONESIA ADMIN" /> 
-                </a>
+        <a href="<?= URL(''); ?>">
+            <img src="<?= URL('/assets/img/logotripoin.png'); ?>" height="150" alt="BKN" /> 
+        </a>
     </div>
     <!-- END LOGO -->
     <!-- BEGIN LOGIN -->
@@ -31,7 +41,7 @@
                     <label class="control-label visible-ie8 visible-ie9">Password</label>
                     <input class="form-control form-control-solid placeholder-no-fix" type="password" placeholder="Password" name="password" id="password" required/> </div>
                 <div class="form-actions">
-                    <button type="submit" onsubmit="return false;" onclick="return loginPostAjax('login-form', 'page-login');" class="btn red btn-block uppercase">Login</button>
+                    <button type="submit" onsubmit="return false;" onclick="return loginPostAjax('login-form', 'page-login');" class="btn orange btn-block uppercase">Login</button>
                 </div>
                 <div class="form-actions">
                     <div class="pull-left">

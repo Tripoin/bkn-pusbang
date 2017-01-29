@@ -1,6 +1,6 @@
 <head>
 
-    <title<?=COMPANY_NAME;?></title>
+    <title><?=COMPANY_NAME;?></title>
     <meta charset="utf-8"/>
     <META NAME="Author" CONTENT="Tripoin Team @Tripoin Inc."/>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
@@ -31,12 +31,12 @@
     <link href="<?=URL('/assets/plugins/jquery-nestable/jquery.nestable.css');?>" rel="stylesheet" type="text/css">
     <link href="<?=URL('/assets/plugins/select2/css/select2.css');?>" rel="stylesheet" type="text/css">
     <link href="<?=URL('/assets/plugins/select2/css/select2-bootstrap.min.css');?>" rel="stylesheet" type="text/css">
-    <link href="<?=getAdminTemplateURL('/assets/css/components.min.css');?>" rel="stylesheet" type="text/css">
+    <link href="<?=getAdminTemplateURL('/assets/css/components.min.css');?>?tripoin=<?=createRandomBooking();?>" rel="stylesheet" type="text/css">
     <link href="<?=getAdminTemplateURL('/assets/css/plugins.min.css');?>" rel="stylesheet" type="text/css">
     <link href="<?=getAdminTemplateURL('/assets/css/layout.min.css');?>" rel="stylesheet" type="text/css">
-    <link href="<?=getAdminTemplateURL('/assets/css/themes/darkblue.min.css');?>" rel="stylesheet" type="text/css"/>
+    <link href="<?=getAdminTemplateURL('/assets/css/themes/'.  getSystemParameter('SYSTEM_ADMINISTRATOR_THEME_STYLE').'.css');?>?tripoin=<?=createRandomBooking();?>" rel="stylesheet" type="text/css"/>
     <link href="<?=getAdminTemplateURL('/assets/css/custom.min.css');?>" rel="stylesheet" type="text/css"/>
-    <link href="<?=getAdminTemplateURL('/assets/css/style.css');?>?v=1.0" rel="stylesheet" type="text/css"/>
+    <link href="<?=getAdminTemplateURL('/assets/css/style.css');?>?tripoin=<?=createRandomBooking();?>" rel="stylesheet" type="text/css"/>
     
     
     

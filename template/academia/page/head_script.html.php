@@ -30,8 +30,8 @@
     $them_style = getSystemParameter('GENERAL_THEME_STYLE'); 
 //    if($them_style == 'default'){
     ?>
-    <link href="<?= getTemplateURL('/assets/css/themes/mobile-'.$them_style.'.css'); ?>" rel="stylesheet"  type="text/css">
-    <link href="<?= getTemplateURL('/assets/css/themes/'.$them_style.'.css'); ?>" rel="stylesheet"  type="text/css">
+    <link href="<?= getTemplateURL('/assets/css/themes/mobile-'.$them_style.'.css?tripoin=').  createRandomBooking(); ?>" rel="stylesheet"  type="text/css">
+    <link href="<?= getTemplateURL('/assets/css/themes/'.$them_style.'.css?tripoin=').  createRandomBooking(); ?>" rel="stylesheet"  type="text/css">
     <link href="<?= getTemplateURL('/assets/css/responsive.css'); ?>" rel="stylesheet"  type="text/css">
     <link href="<?= getTemplateURL('/assets/css/form.css'); ?>" rel="stylesheet"  type="text/css">
     

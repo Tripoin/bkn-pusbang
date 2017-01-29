@@ -14,6 +14,7 @@ namespace app\Controller\Master;
  * @author sfandrianah
  */
 use app\Util\Database;
+use app\Util\PasswordLib\TripoinCrypt;
 
 class Test {
 
@@ -141,9 +142,12 @@ class Test {
 //            echo $rsCountCode[0]['countCode'];
 //        }
     }
-    
-    public function hashing(){
-        echo password_hash('trijep3t3', PASSWORD_BCRYPT);
+
+    public function hashing() {
+//        echo password_hash('trijep3t3', PASSWORD_BCRYPT);
+//        $tripoinCrypt = new TripoinCrypt();
+//        $user = array("code" => "12345", "password" => "admin123");
+//        print_r($tripoinCrypt->encrypt('tripoin:trijep3t3'));
     }
 
 }

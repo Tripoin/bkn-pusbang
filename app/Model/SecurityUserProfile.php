@@ -12,8 +12,8 @@ class SecurityUserProfile extends GeneralAuditrail {
     
     
     public $fullname = 'fullname';
-    public $birthdate = 'birthdate';
-    public $place = 'place_of_birth';
+    public $birthdate = 'dob';
+    public $place = 'pob';
     public $email = 'email';
     public $group = 'group_id';
     public $gender = 'gender';

@@ -9,7 +9,7 @@ $sfa = new SecurityFunctionAssignment();
 $language = new SecurityLanguage();
 //LOGGER('tes');
 ?>
-<div class="page-sidebar-wrapper">
+<div class="page-sidebar-menu  page-header-fixed">
     <!-- BEGIN SIDEBAR -->
     <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
     <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
@@ -106,7 +106,7 @@ $language = new SecurityLanguage();
 
                     <a href='<?= $url_fix; ?>' title='<?= $value[$sfa->getFunction()->getName()]; ?>'  class="<?= $class; ?>">
                         <i class="<?= $value[$sfa->getFunction()->getStyle()]; ?>"></i>
-                        <?= $value[$sfa->getFunction()->getName()]; ?>
+                        <span class="title"><?= $value[$sfa->getFunction()->getName()]; ?></span>
                         <?= $arrow; ?>
                     </a>
                     <?php

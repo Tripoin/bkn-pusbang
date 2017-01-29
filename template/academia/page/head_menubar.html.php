@@ -56,7 +56,6 @@ $sfLanguage = new SecurityFunctionLanguage();
                                     . " AND " . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getStatus() . EQUAL . ONE
                                     . " AND " . $secFuncAssg->getFunction()->getEntity() . DOT . $secFuncAssg->getStatus() . EQUAL . ONE
                                     . " AND " . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getGroupId() . EQUAL . ONE
-                                    . " AND " . $secFuncAssg->getFunction()->getEntity() . DOT . $secFuncAssg->getFunction()->getTypeId() . EQUAL . ONE
                                     . " AND " . $secFuncAssg->getGroup()->getEntity() . DOT . $secFuncAssg->getGroup()->getId() . EQUAL . ONE
                                     . " AND " . $secFuncAssg->getFunction()->getEntity() . DOT . $secFuncAssg->getFunction()->getParent() . EQUAL . $value[$secFuncAssg->getFunction()->getId()], $secFuncAssg->getFunctionAssignmentOrder() . ASC
                             );
@@ -79,7 +78,7 @@ $sfLanguage = new SecurityFunctionLanguage();
                             }
                             ?>
                             <li>
-                                <a href="<?= $value[$secFuncAssg->getFunction()->getUrl()]; ?>"><?= $functionName; ?>
+                                <a href="<?= URL($value[$secFuncAssg->getFunction()->getUrl()]); ?>"><?= $functionName; ?>
                                     <?= $class; ?>
                                 </a>
                                 <ul>
@@ -93,7 +92,7 @@ $sfLanguage = new SecurityFunctionLanguage();
                                             $functionNameChild = $convertLangFunctionChild[0][$sfLanguage->getName()];
                                         }
                                         ?>
-                                        <li><a href="<?= $value_child[$secFuncAssg->getFunction()->getUrl()]; ?>"><?= $functionNameChild; ?></a></li>
+                                        <li><a href="<?= URL($value_child[$secFuncAssg->getFunction()->getUrl()]) ?>"><?= $functionNameChild; ?></a></li>
                                     <?php } ?>
                                 </ul>
                             </li>

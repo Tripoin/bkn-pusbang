@@ -72,5 +72,9 @@ interface IURLConstant {
     const MASTER_VIDEO_SEMINAR_INDEX_URL = 'master/video-seminar';
     const MASTER_AUTHOR_INDEX_URL = 'master/author';
     const MASTER_PRICE_INDEX_URL = 'master/price';
+    
+    
+    const MASTER_ROOM_INDEX_URL = '/master/room';
+    const MASTER_FACILITY_INDEX_URL = '/master/facility';
 
 }

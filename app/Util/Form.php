@@ -8,7 +8,7 @@
  */
 
 namespace app\Util;
-
+use app\Util\TCaptcha\TCaptcha;
 class Form {
 
 //    public $style = null;
@@ -24,6 +24,7 @@ class Form {
         'TITLE' => null,
         'TOOLTIP_TITLE' => null,
         'CLASS' => null,
+        'CLASS_COMP' => null,
         'NOTIF' => null,
         'PLACEHOLDER' => '',
         'REQUIRED' => true,
@@ -34,6 +35,7 @@ class Form {
         'NAME' => null,
         'LABEL' => '',
         'ATTR_BUTTON' => '',
+        'ALIGN_LABEL' => '',
         'TITLE_BUTTON' => '',
         'ONCLICK' => '',
         'ICON' => '',
@@ -56,9 +58,17 @@ class Form {
     public function autocomplete($autocomplete) {
         return $this->setFormOption('AUTO_COMPLETE', $autocomplete);
     }
+    
+    public function alignLabel($alignLabel) {
+        return $this->setFormOption('ALIGN_LABEL', $alignLabel);
+    }
 
     public function attrBtn($attrBtn) {
         return $this->setFormOption('ATTR_BUTTON', $attrBtn);
+    }
+    
+    public function classComponent($classComponent) {
+        return $this->setFormOption('CLASS_COMP', $classComponent);
     }
 
     public function titleBtn($titleBtn) {
@@ -304,9 +314,55 @@ class Form {
             ' . $this->formOption['MANUAL_ATTRIBUT'] . ' 
             value="' . $this->formOption['VALUE'] . '"
             ' . $minlength . $maxlength . '
-            class="form-control">';
+            class="form-control ' . $this->formOption['CLASS'] . '">';
 //        $textbox .= '<div>';
         $rs = $this->formGroup($textbox);
+        $this->ResetObject();
+        return $rs;
+    }
+    
+    public function captcha() {
+        $TCaptcha = new TCaptcha();
+        $_SESSION[SESSION_CAPTCHA] = $TCaptcha->simple_php_captcha();
+        $this->defaultOption();
+        $captcha = '';
+//        $textbox = '<div class="col-xs-3">';
+        $type = 'text';
+        if ($this->formOption['TYPE'] != null) {
+            $type = $this->formOption['TYPE'];
+        }
+
+        $minlength = "";
+        $maxlength = "";
+        if ($this->formOption['MINLENGTH'] != null) {
+            $minlength = ' minlength="' . $this->formOption['MINLENGTH'] . '"';
+        }
+
+        if ($this->formOption['MAXLENGTH'] != null) {
+            $maxlength = ' maxlength="' . $this->formOption['MAXLENGTH'] . '"';
+        }
+        
+        $captcha .= '<div class="col-md-4" style="background:#fffdcd;" 
+            id="captcha_image_' . $this->formOption['ID'] . '">
+                <img src="' . $_SESSION[SESSION_CAPTCHA]['image_src'] . '" alt="CAPTCHA code"></div>';
+        $captcha .= '<div class="col-md-8" style="background:#fffdcd;height:73px;">
+            <div class="input-group">
+            <input type="' . $type . '" 
+            style="width:200px;margin-top:18px;"
+            placeholder="' . $this->formOption['PLACEHOLDER'] . '" 
+            name="' . $this->formOption['NAME'] . '" 
+            id="' . $this->formOption['ID'] . '" 
+            ' . $this->formOption['REQUIRED'] . ' 
+            ' . $this->formOption['MANUAL_ATTRIBUT'] . ' 
+            value="' . $this->formOption['VALUE'] . '"
+            ' . $minlength . $maxlength . '
+            class="form-control ' . $this->formOption['CLASS'] . '">
+                <span class="input-group-btn"><button style="margin-top:18px;height:34px;" type="button" 
+                onclick="ajaxPostManual(\''.  URL('captcha/reload').'\',\'captcha_image_' . $this->formOption['ID'] . '\',\'\')" 
+                    class="read_more buttonc">Reload</button></span>
+                </div></div>';
+        
+        $rs = $this->formGroup($captcha);
         $this->ResetObject();
         return $rs;
     }
@@ -652,14 +708,14 @@ class Form {
                 $rs = '<div class="form-group">
                 <label class="control-label" for="focusedinput">' . $rq_l . $title . '</label>
                 ';
-                $rs .= '<div id="comp' . $this->formOption['ID'] . '">' . $component . '</div>';
+                $rs .= '<div id="comp' . $this->formOption['ID'] . '" class="' . $this->formOption['CLASS_COMP'] . '">' . $component . '</div>';
 //            $rs .= '<p class="help-block">' . $msg_rq_tx . '</p>';
                 $rs .= '<span class="material-input"></span>
     </div>';
             } else {
                 $rs = '<div class="form-group">
-                <label class="col-md-3 control-label" for="focusedinput">' . $title . '</label>
-                <div class="col-md-9" id="comp' . $this->formOption['ID'] . '">';
+                <label class="col-md-3 control-label" for="focusedinput"  align="' . $this->formOption['ALIGN_LABEL'] . '">' . $title . $rq_l .'</label>
+                <div class="col-md-9 ' . $this->formOption['CLASS_COMP'] . '" id="comp' . $this->formOption['ID'] . '">';
                 $rs .= $component;
                 $rs .= '</div>';
 //            $rs .= '<div class="col-sm-2">

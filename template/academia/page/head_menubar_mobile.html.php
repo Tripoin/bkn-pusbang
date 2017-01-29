@@ -62,7 +62,7 @@ $sfLanguage = new SecurityFunctionLanguage();
                                 }
                                 ?>
                                 <li>
-                                    <a href="<?= $value[$secFuncAssg->getFunction()->getUrl()]; ?>"><?= $functionName; ?>
+                                    <a href="<?= URL($value[$secFuncAssg->getFunction()->getUrl()]); ?>"><?= $functionName; ?>
                                         <?= $class; ?>
                                     </a>
                                     <ul>
@@ -76,7 +76,7 @@ $sfLanguage = new SecurityFunctionLanguage();
                                                 $functionNameChild = $convertLangFunctionChild[0][$sfLanguage->getName()];
                                             }
                                             ?>
-                                            <li><a href="<?= $value_child[$secFuncAssg->getFunction()->getUrl()]; ?>"><?= $functionNameChild; ?></a></li>
+                                            <li><a href="<?= URL($value_child[$secFuncAssg->getFunction()->getUrl()]); ?>"><?= $functionNameChild; ?></a></li>
                                         <?php } ?>
                                     </ul>
                                 </li>

@@ -55,6 +55,12 @@ $Routes->set('page/forgot-password', 'app\Controller\Base\Auth@forgotPasswordPag
 $Routes->set('page/forgot-password/proses', 'app\Controller\Base\Auth@forgotPassword');
 $Routes->set('page/change-password/member', 'app\Controller\Base\Auth@changePassword');
 $Routes->set('page/search', 'app\Controller\Master\Read@search');
+
+$Routes->set('captcha/search', 'app\Util\TCaptcha\TCaptcha@getCaptcha');
+$Routes->set('captcha/reload', 'app\Util\TCaptcha\TCaptcha@reloadCaptcha');
+
+$Routes->set('contact-us', 'app\Controller\Guest\ContactUs@index');
+$Routes->set('contact-us/submit', 'app\Controller\Guest\ContactUs@save');
 if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
 
     $Routes->set('page/member/user-profile', 'app\Controller\Member\UserProfile@index');
@@ -128,6 +134,8 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
         $Routes->set($sys_url_admin . IURLConstant::POST_ASSIGN_EDIT_URL . "/delete-post-assign", $post_assign_class . '@deletePostAssign');
         $Routes->set($sys_url_admin . IURLConstant::POST_ASSIGN_EDIT_URL . "/view-post-assign", $post_assign_class . '@viewPostAssign');
 
+        
+        
         $Routes->setScaffolding($sys_url_admin . IURLConstant::GROUP_INDEX_URL, 'app\Controller\Security\Group');
         $Routes->setScaffolding($sys_url_admin . IURLConstant::USER_INDEX_URL, 'app\Controller\Security\User');
         $Routes->setScaffolding($sys_url_admin . IURLConstant::FUNCTION_INDEX_URL, 'app\Controller\Security\Functions');
@@ -143,10 +151,18 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
 
         $Routes->set($sys_url_admin . '/settings', 'app\Controller\Security\Settings@index');
         $Routes->set($sys_url_admin . '/settings/update', 'app\Controller\Security\Settings@update');
+        $Routes->set($sys_url_admin . '/profile', 'app\Controller\Base\General@profile');
+        $Routes->set($sys_url_admin . '/profile/update', 'app\Controller\Base\General@profileUpdate');
+        $Routes->set($sys_url_admin . '/change-password', 'app\Controller\Base\General@changePassword');
+        $Routes->set($sys_url_admin . '/change-password/update', 'app\Controller\Base\General@changePasswordUpdate');
         $Routes->set($sys_url_admin . '/logout', 'app\Controller\Base\AuthAdmin@logout');
         $Routes->set($sys_url_admin . '/media', 'app\Controller\Base\Media@index');
         $Routes->set($sys_url_admin . '/get-media', 'app\Controller\Base\Media@getMedia');
         $Routes->set($sys_url_admin . '/list-get-media', 'app\Controller\Base\Media@listGetMedia');
+        
+        
+        $Routes->setScaffolding($sys_url_admin . IURLConstant::MASTER_ROOM_INDEX_URL, 'app\Controller\Master\Room');
+        $Routes->setScaffolding($sys_url_admin . IURLConstant::MASTER_FACILITY_INDEX_URL, 'app\Controller\Master\Facility');
     }
 }
 
@@ -177,6 +193,7 @@ $rs_url_now = $db->selectByID($sf, $sf->getUrl() . "='" . $str_replace_url . "'"
 
 
 if (!empty($rs_url_now)) {
+//    print_r($rs_url_now);
     $_POST['function_id_now'] = $rs_url_now[0][$sf->getId()];
 
     $url_guest = $rs_url_now[0][$sf->getUrl()];
@@ -186,11 +203,6 @@ if (!empty($rs_url_now)) {
         $url_guest = ltrim($url_guest, "/");
     }
 
-
-    if ($rs_url_now[0][$sf->getCode()] == "FNC003") {
-//        print_r($url_guest);
-        $Routes->set($url_guest, 'app\Controller\Master\About@page');
-    }
 
     if ($rs_url_now[0][$sf->getTypeUrl()] == 2) {
 //        echo $url_guest;

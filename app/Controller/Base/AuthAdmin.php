@@ -30,6 +30,7 @@ use app\Util\Database;
 use app\Model\SecurityUser;
 use app\Model\SecurityUserProfile;
 use app\Util\PHPMail\PHPMailer;
+use app\Util\PasswordLib\TripoinCrypt;
 
 class AuthAdmin {
 
@@ -180,21 +181,23 @@ class AuthAdmin {
                         echo json_encode($result);
                     }
                 } else {
-                    $result = array("result" => "error", "title" => "Login Failed", "message" => "Email Or Password Is Incorrect".$rsPostNews[0]);
+                    $result = array("result" => "error", "title" => "Login Failed", "message" => "Email Or Password Is Incorrect" . $rsPostNews[0]);
                     echo json_encode($result);
 //            echo '<h3 align="center">Login Sukses</h3>';
                 }
             } else {
 //                $dbNew->selectByID($user->getEntity(), $user->getCode() . EQUAL . "'" . $code . "'");
 //                $rsPostNews = $dbNew->getResult();
-                
 //                if ($rsPostNew[0][$user->getPassword()] == hash("sha256", $password . $rsPostNew[0][$user->getSalt()])) {
-                
+
                 if (password_verify($password, $rsPostNew[0][$user->getPassword()])) {
                     $_SESSION[SESSION_USERNAME] = $rsPostNew[0][$user->getCode()];
                     $_SESSION[SESSION_EMAIL] = $rsPostNew[0][$user->getEmail()];
                     $_SESSION[SESSION_FULLNAME] = $rsPostNew[0][$userProfile->getName()];
                     $_SESSION[SESSION_GROUP] = $rsPostNew[0][$user->getGroupId()];
+                    $tripoinCrypt = new TripoinCrypt();
+                    $crypt = $tripoinCrypt->encrypt($code . ':' . $password);
+                    $_SESSION[SESSION_ADMIN_AUTHORIZATION] = $crypt;
 //            echo '<h3 align="center">Login Sukses</h3>';
 //            echo toastAlert("success", "Login Success", "You Have successfully login");
 

@@ -23,10 +23,12 @@ abstract class Home {
 
         include 'app/Http/routes.php';
         $dec = json_decode($Routes->get());
+        
 //        echo $Routes->get();
 //        $rute = $Routes;
 //        $Routes = new Routes();
         $page_include = $this->routes($dec);
+        LOGGER($page_include);
 //        echo $page_include;
 //        $page_include = '';
         $page_decode = json_decode($page_include);
@@ -44,7 +46,8 @@ abstract class Home {
             $exd = explode(',', $trim);
             $filename = str_replace('\\', '/', $str[0]) . '.php';
             $exists = file_exists($filename);
-            echo $trim;
+//            LOGGER($filename);
+//            echo $trim;
             if ($exists == true) {
                 the_autoloader($str[0]);
                 $class = new $str[0]();
@@ -63,6 +66,7 @@ abstract class Home {
                     echo call_user_func_array(array($class, $str2[0]), explode(',', $txt));
                 }
             } else {
+//                LOGGER('NOT FOUND PAGE');
                 include FILE_PATH(PAGE_404);
             }
         } else {

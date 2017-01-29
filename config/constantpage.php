@@ -45,6 +45,7 @@ define('WHERE', " WHERE ");
 define('PUBLISH', "published");
 define('ASC', " ASC ");
 define('DESC', " DESC ");
+define('SLASH', "/");
 
 define('ZERO', "0");
 define('ONE', "1");

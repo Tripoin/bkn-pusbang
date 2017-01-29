@@ -31,6 +31,7 @@ return [
     "CONTACT_PHONE" => "Kontak Perusahaan",
     "CONTACT_EMAIL" => "Email Perusahaan",
     "CONTACT_WEB" => "Website Perusahaan",
+    "CONTACT_LATLONG" => "Latitude & Longitude",
     "GENERAL_COPYRIGHT" => "Copyright",
     "GENERAL_FACEBOOK" => "URL Facebook",
     "GENERAL_TWITTER" => "URL Twitter",

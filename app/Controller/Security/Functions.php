@@ -66,7 +66,7 @@ class Functions extends Controller {
         $masterFunctionType = new MasterFunctionType();
         $rs_data_mft = $db->selectByID($masterFunctionType);
         $rs = convertJsonCombobox($rs_data_mft, $masterFunctionType->getId(), $masterFunctionType->getName());
-        $this->data_url_type = $rs;
+        $this->data_type = $rs;
 
 
         $manual_data_ut = [
@@ -76,7 +76,7 @@ class Functions extends Controller {
         $masterUrlType = new MasterUrlType();
         $rs_data_mut = $db->selectByID($masterUrlType);
         $rs = convertJsonCombobox($rs_data_mut, $masterUrlType->getId(), $masterUrlType->getName());
-        $this->data_type = $rs;
+        $this->data_url_type = $rs;
 
         $lang = new MasterLanguage();
         $this->lang = $lang;
@@ -121,6 +121,7 @@ class Functions extends Controller {
         $typeUrl = $_POST['typeUrl'];
         $type = $_POST['type'];
         $style = $_POST['style'];
+        $code = $_POST['code'];
         $level = 0;
         if ($parent != 0) {
             $level = 1;
@@ -128,8 +129,20 @@ class Functions extends Controller {
         if ($parent == 0) {
             $parent = null;
         }
+        $checkCodeFunction = $db->selectByID($sf, $sf->getCode() . EQUAL . "'" . $code . "'");
+        if (!empty($checkCodeFunction)) {
+            $code_1 = $code . "_1";
+            $checkCodeFunction = $db->selectByID($sf, $sf->getCode() . EQUAL . "'" . $code_1 . "'");
+            if (!empty($checkCodeFunction)) {
+                $ex_code = explode('_', $checkCodeFunction);
+                $hitung = $ex_code[1] + 1;
+                $code = $ex_code[1] . "_" . $hitung;
+            } else {
+                $code = $code_1;
+            }
+        }
         $db->insert($sf->getEntity(), array(
-            $sf->getCode() => $_POST['code'],
+            $sf->getCode() => $code,
             $sf->getName() => $_POST['name_id'],
             $sf->getLevel() => $level,
             $sf->getParent() => $parent,
@@ -156,7 +169,7 @@ class Functions extends Controller {
                 if ($val_lang[$lang->getCode()] != 'id') {
                     $db->insert($sfl->getEntity(), array(
                         $sfl->getFunctionId() => $rs_save[0],
-                        $sfl->getCode() => $_POST['code'].$val_lang[$lang->getId()],
+                        $sfl->getCode() => $_POST['code'] . $val_lang[$lang->getId()],
                         $sfl->getName() => $name,
                         $sfl->getLanguageId() => $val_lang[$lang->getId()]
                     ));
