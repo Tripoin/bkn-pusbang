@@ -88,11 +88,13 @@ abstract class ControllerRestUI {
             $tripoinRestClient->doPOSTLoginNoAuth();
             return $this->save();
         }
+//        print_r(json_decode($result->getBody));
         if (is_numeric(json_decode($result->getBody)) > 0) {
             echo toastAlert("success", lang('general.title_insert_success'), lang('general.message_insert_success'));
             echo '<script>$(function(){postAjaxPagination()});</script>';
         } else {
-            echo toastAlert("error", lang('general.title_insert_error'), lang('general.message_insert_error'));
+//            echo toastAlert("error", lang('general.title_insert_error'), lang('general.message_insert_error'));
+            echo toastAlert("error", lang('general.title_insert_error'), lang('error.'.json_decode($result->getBody)));
             echo '<script>$(function(){postAjaxPagination()});</script>';
 //            echo resultPageMsg('danger', lang('general.title_insert_error'), $rs[0]);
         }
@@ -112,7 +114,8 @@ abstract class ControllerRestUI {
             echo toastAlert("success", lang('general.title_update_success'), lang('general.message_update_success'));
             echo '<script>$(function(){postAjaxPagination()});</script>';
         } else {
-            echo toastAlert("error", lang('general.title_update_error'), lang('general.message_update_error'));
+//            echo toastAlert("error", lang('general.title_update_error'), lang('general.message_update_error'));
+            echo toastAlert("error", lang('general.title_insert_error'), lang('error.'.json_decode($result->getBody)));
         }
     }
 
