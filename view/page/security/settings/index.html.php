@@ -4,7 +4,9 @@
 <?php
 $string_general = 'GENERAL_';
 $string_contact = 'CONTACT_';
-$string_setting = array("GENERAL_" => "GENERAL", "CONTACT_" => "CONTACT", "SYSTEM_" => "SYSTEM");
+$string_setting = array("GENERAL_" =>lang("security.GENERAL"), 
+    "CONTACT_" => lang("security.CONTACT"), 
+    "SYSTEM_" => lang("security.SYSTEM"));
 
 $theme_general = '';
 if ($handle = opendir(getTemplatePath('/assets/css/themes'))) {
@@ -20,6 +22,22 @@ if ($handle = opendir(getTemplatePath('/assets/css/themes'))) {
     closedir($handle);
 }
 $convertheme_general = convertJsonCombobox(null, null, null, $theme_general);
+
+$theme_admin_general = '';
+if ($handle = opendir(getAdminTemplatePath('/assets/css/themes'))) {
+    while (false !== ($entry = readdir($handle))) {
+        if ($entry != "." && $entry != "..") {
+//            echo "$entry\n";
+            $ex_theme_entry = explode(".", $entry);
+            if (strpos($ex_theme_entry[0], 'mobile') === false) {
+                $theme_admin_general[] = array("id" => $ex_theme_entry[0], "label" => $ex_theme_entry[0]);
+            }
+        }
+    }
+    closedir($handle);
+}
+$convertThemeAdmingeneral = convertJsonCombobox(null, null, null, $theme_admin_general);
+
 ?>
 <div>
     <ul class="nav nav-tabs">
@@ -53,6 +71,8 @@ $convertheme_general = convertJsonCombobox(null, null, null, $theme_general);
                         echo $Form->id($val_option[$mo->getCode()])->title(lang('security.' . $val_option[$mo->getCode()]))->value($val_option[$mo->getName()])->data($convertheme_general)->combobox();
                     } else if ($val_option[$mo->getCode()] == 'GENERAL_TEMPLATE_THEME') {
                         echo $Form->attr('disabled')->id($val_option[$mo->getCode()])->title(lang('security.' . $val_option[$mo->getCode()]))->value($val_option[$mo->getName()])->textbox();
+                    }  else if ($val_option[$mo->getCode()] == 'SYSTEM_ADMINISTRATOR_THEME_STYLE') {
+                        echo $Form->id($val_option[$mo->getCode()])->title(lang('security.' . $val_option[$mo->getCode()]))->value($val_option[$mo->getName()])->data($convertThemeAdmingeneral)->combobox();
                     }  else if ($val_option[$mo->getCode()] == 'SYSTEM_ADMINISTRATOR_THEME') {
                         echo $Form->attr('disabled')->id($val_option[$mo->getCode()])->title(lang('security.' . $val_option[$mo->getCode()]))->value($val_option[$mo->getName()])->textbox();
                     } else if ($val_option[$mo->getCode()] == 'GENERAL_LANGUAGE_DEFAULT') {

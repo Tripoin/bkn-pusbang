@@ -11,7 +11,15 @@ $admin_url = getAdminTheme();
         <!-- BEGIN LOGO -->
         <div class="page-logo">
             <a href="<?= URL(getAdminTheme()); ?>" class="">
-                <span style="font-size: 25px;font-family: 'deftone-stylus'" class="logo-default text-logo"> <?= LOGO_TEXT; ?></span>
+                <?php
+                $logo_text = COMPANY_NAME;
+                if (getSystemParameter('SYSTEM_ADMINISTRATOR_COMPANY_NAME') != '') {
+                    $logo_text = getSystemParameter('SYSTEM_ADMINISTRATOR_COMPANY_NAME');
+                }
+                ?>
+
+                <span style="font-size: 25px;font-family: 'deftone-stylus'" 
+                      class="logo-default text-logo"> <?= $logo_text; ?></span>
                 <!--<img src="<?= URL('/assets/img/logotripoin.png'); ?>" height="30" alt="logo" class="logo-default" /> </a>-->
             </a>
             <div class="menu-toggler sidebar-toggler" id="menu-toogle">

@@ -37,7 +37,6 @@ function setLog($value) {
     $GLOBALS['var_log'] = $value;
 }
 
-
 /**
  * (PHP 4, PHP 5+)<br/>
  * Management Language from Framework in path FILE_PATH('resources/lang/<id>|<en>/<file_language>.<get_array_key>')
@@ -48,17 +47,25 @@ function setLog($value) {
  * @param String $lang [optional] <p>
  * get text language from FILE_PATH('resources/lang/<id>|<en>/<file_language>.<get_array_key>').
  * </p>
- 
+
  * @return String A formatted version of <i>$result</i>.
  */
+
 function lang($lang) {
     $explode = explode('.', $lang);
     $path = $explode[0];
     $language = LANGUAGE_DEFAULT;
 //    $language = '';
-    if (isset($_SESSION[LANGUAGE_SESSION]))
+    if (isset($_SESSION[LANGUAGE_SESSION])) {
         $language = $_SESSION[LANGUAGE_SESSION];
+    } else {
+        $language = getSystemParameter('GENERAL_LANGUAGE_DEFAULT');
+        if($language == ''){
+            $language = LANGUAGE_DEFAULT;
+        }
+    }
 
+//    echo '';
 
     $langs = require FILE_PATH('resources/lang/' . $language . '/' . $path . '.php');
     $result = $langs[$explode[1]];
@@ -390,6 +397,7 @@ function getURLFeatured($db, $mpf, $val_mn_child) {
 //    }
     return $cek_menu_child[0];
 }
+
 /**
  * (PHP 4, PHP 5+)<br/>
  * Management DEFAULT URL FROM FRAMEWORK V.1 
@@ -401,7 +409,7 @@ function getURLFeatured($db, $mpf, $val_mn_child) {
  * @param String $url [optional] <p>
  * sets join url from url framework.
  * </p>
- 
+
  * @return String A formatted version of <i>$result</i>.
  */
 function URL($url = "") {
