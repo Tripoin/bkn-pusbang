@@ -50,7 +50,6 @@ function setLog($value) {
 
  * @return String A formatted version of <i>$result</i>.
  */
-
 function lang($lang) {
     $explode = explode('.', $lang);
     $path = $explode[0];
@@ -60,7 +59,7 @@ function lang($lang) {
         $language = $_SESSION[LANGUAGE_SESSION];
     } else {
         $language = getSystemParameter('GENERAL_LANGUAGE_DEFAULT');
-        if($language == ''){
+        if ($language == '') {
             $language = LANGUAGE_DEFAULT;
         }
     }
@@ -492,6 +491,19 @@ function errorHandler() {
     }
 }
 
+/**
+ * (PHP 4, PHP 5+)<br/>
+ * Create Logger <Logger Tripoin>
+ * <br/>
+ * Licensed by Tripoin Team
+ * @link http://www.tripoin.co.id/
+ * @param String $message [optional]<p>
+ * </p>
+ * @example LOGGER('test logger');
+ * @return string write log in path logs/log.logs
+ * @version 1.0
+ * @desc Sorry cuk masih belajar
+ */
 function LOGGER($message = '') {
     $file_url = "logs/log.logs";
     $txt = '[' . date('Y-m-d h:i:s') . '] : ';
@@ -580,10 +592,36 @@ function breadCrumb() {
     return $result;
 }
 
+/**
+ * (PHP 4, PHP 5+)<br/>
+ * Convert Amount to Format Money
+ * <br/>
+ * Licensed by Tripoin Team
+ * @link http://www.tripoin.co.id/
+ * @param String $amount [optional]<p>
+ * </p>
+ * @example strToAmount('1000000');
+ * @return String =>  1000000 be 1,000,000
+ * @version 1.0
+ * @desc Sorry cuk masih belajar
+ */
 function amountToStr($amount) {
     return ($amount == "-") ? $amount : number_format($amount, 0, ".", ",");
 }
 
+/**
+ * (PHP 4, PHP 5+)<br/>
+ * Convert String Amount to Amount
+ * <br/>
+ * Licensed by Tripoin Team
+ * @link http://www.tripoin.co.id/
+ * @param String $amount [optional]<p>
+ * </p>
+ * @example strToAmount('1,000,000');
+ * @return Double => 1,000,000 be 1000000
+ * @version 1.0
+ * @desc Sorry cuk masih belajar
+ */
 function strToAmount($amount) {
     $uang = explode(',', $amount);
     for ($i = 0; $i < count($uang); $i++) {
@@ -721,6 +759,19 @@ function fullDateString($tgl) {
     return $day . ", " . $date;
 }
 
+/**
+ * (PHP 4, PHP 5+)<br/>
+ * Convert Date Y-m-d
+ * <br/>
+ * Licensed by Tripoin Team
+ * @link http://www.tripoin.co.id/
+ * @param String $tgl [optional]<p>
+ * </p>
+ * @example ;
+ * @return Date String
+ * @version 1.0
+ * @desc Sorry cuk masih belajar
+ */
 function subMonth($tgl) {
 //    $date = substr($tgl, 8, 9);
 //    $month = getMonth(substr($tgl, 5, 6));
@@ -737,6 +788,20 @@ function selectMonth($month) {
     return $bln;
 }
 
+
+/**
+ * (PHP 4, PHP 5+)<br/>
+ * Get String Month 
+ * <br/>
+ * Licensed by Tripoin Team
+ * @link http://www.tripoin.co.id/
+ * @param String $bln [optional]<p>
+ * </p>
+ * @example ;
+ * @return String Month => 1 be Januari
+ * @version 1.0
+ * @desc Sorry cuk masih belajar
+ */
 function getMonth($bln) {
     switch ($bln) {
         case 1:
@@ -778,6 +843,20 @@ function getMonth($bln) {
     }
 }
 
+
+/**
+ * (PHP 4, PHP 5+)<br/>
+ * Create Random Code 8 length
+ * <br/>
+ * Licensed by Tripoin Team
+ * @link http://www.tripoin.co.id/
+ * @param noparam<p>
+ * </p>
+ * @example createRandomBooking();
+ * @return String
+ * @version 1.0
+ * @desc Sorry cuk masih belajar
+ */
 function createRandomBooking() {
 
     $chars = "abcdefghijkmnopqrstuvwxyz023456789";
@@ -943,6 +1022,27 @@ function sort_by_date($a, $b) {
     return ($a < $b) ? -1 : 1;
 }
 
+
+/**
+ * (PHP 4, PHP 5+)<br/>
+ * Function Upload Image
+ * <br/>
+ * Licensed by Tripoin Team
+ * @link http://www.tripoin.co.id/
+ * @param String $files [optional]<p>
+ * Files
+ * </p>
+ * @param String $path [optional]<p>
+ * Path Name
+ * </p>
+* @param String $file_names [optional]<p>
+ * Files Name
+ * </p>
+ * @example ;
+ * @return String Message Error Code
+ * @version 1.0
+ * @desc Sorry cuk masih belajar
+ */
 function uploadImage($files, $path, $file_names) {
     if (!file_exists(FILE_PATH($path))) {
         mkdir(FILE_PATH($path));

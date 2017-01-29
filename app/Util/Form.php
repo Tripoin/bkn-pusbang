@@ -8,7 +8,9 @@
  */
 
 namespace app\Util;
+
 use app\Util\TCaptcha\TCaptcha;
+
 class Form {
 
 //    public $style = null;
@@ -58,7 +60,7 @@ class Form {
     public function autocomplete($autocomplete) {
         return $this->setFormOption('AUTO_COMPLETE', $autocomplete);
     }
-    
+
     public function alignLabel($alignLabel) {
         return $this->setFormOption('ALIGN_LABEL', $alignLabel);
     }
@@ -66,7 +68,7 @@ class Form {
     public function attrBtn($attrBtn) {
         return $this->setFormOption('ATTR_BUTTON', $attrBtn);
     }
-    
+
     public function classComponent($classComponent) {
         return $this->setFormOption('CLASS_COMP', $classComponent);
     }
@@ -87,7 +89,7 @@ class Form {
         return $txt;
     }
 
-    public function formFooter($btn_save_url =null, $manual_button = null, $event = null) {
+    public function formFooter($btn_save_url = null, $manual_button = null, $event = null) {
         $txt = '';
         $txt .= '</div>
     <div class="form-actions">
@@ -98,7 +100,7 @@ class Form {
             if ($event != null) {
                 $str_event = $event;
             }
-            $txt .= '<button type="submit" onclick="'.$str_event.'" class="btn green">' . lang('general.save') . '</button>
+            $txt .= '<button type="submit" onclick="' . $str_event . '" class="btn green">' . lang('general.save') . '</button>
                 <button type="reset" class="btn default">' . lang('general.reset') . '</button>';
         } else {
             $txt .= $manual_button;
@@ -200,30 +202,97 @@ class Form {
         return $this->setFormOption('MESSAGE_REQUIRED_ERROR', $msgRequired);
     }
 
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * set ID Form Component used to Textbox,Combobox
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param String $id [optional] <p>
+     * String id component
+     * </p>
+     * @return setFormOption <i>$formOption</i>.
+     */
     public function id($id) {
         return $this->setFormOption('ID', $id);
     }
 
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * set Data Form Component used to data combobox
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param Array() $data [optional] <p>
+     * Array data component Combobox from rest or database
+     * </p>
+     * @return setFormOption <i>$formOption</i>.
+     */
     public function data($data = array()) {
         return $this->setFormOption('OPTION_LABEL_VALUE', $data);
     }
 
+     /**
+     * (PHP 4, PHP 5+)<br/>
+     * set Name Form Component used to Textbox,Combobox
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param String $name [optional] <p>
+     * String name component
+     * </p>
+     * @return setFormOption <i>$formOption</i>.
+     */
     public function name($name) {
         return $this->setFormOption('NAME', $name);
     }
 
+     /**
+     * (PHP 4, PHP 5+)<br/>
+     * set Manual Attribute or add new Attribute for Form Component used to Textbox,Combobox
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param String $manualattribut [optional] <p>
+     * String manual component
+     * </p>
+     * @return setFormOption <i>$formOption</i>.
+     */
     public function attr($manualattribut) {
         return $this->setFormOption('MANUAL_ATTRIBUT', $manualattribut);
     }
 
+     /**
+     * (PHP 4, PHP 5+)<br/>
+     * set Value Attribute for Form Component used to Textbox,Combobox
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param String $value [optional] <p>
+     * String value;
+     * </p>
+     * @return setFormOption <i>$formOption</i>.
+     */
     public function value($value) {
         return $this->setFormOption('VALUE', $value);
     }
 
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * set Title Attribute for Form Component used to Label Group
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param String $title [optional] <p>
+     * String title;
+     * </p>
+     * @return setFormOption <i>$formOption</i>.
+     */
     public function title($title) {
         return $this->setFormOption('TITLE', $title);
     }
 
+    
     protected function defaultOption() {
         $required = $this->formOption['REQUIRED'];
         if ($required == true) {
@@ -288,6 +357,19 @@ class Form {
         return $textbox;
     }
 
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component textbox 
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * </p>
+     * @example $Form->id('textbox')->title('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->value('EXAMPLE')->placeholder('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->textbox();<br/>
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
     public function textbox() {
         $this->defaultOption();
         $textbox = '';
@@ -320,7 +402,20 @@ class Form {
         $this->ResetObject();
         return $rs;
     }
-    
+
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component Tripoin Captcha 
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * </p>
+     * @example $Form->id('captcha')->title('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->value('EXAMPLE')->placeholder('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->captcha();<br/>
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
     public function captcha() {
         $TCaptcha = new TCaptcha();
         $_SESSION[SESSION_CAPTCHA] = $TCaptcha->simple_php_captcha();
@@ -341,7 +436,7 @@ class Form {
         if ($this->formOption['MAXLENGTH'] != null) {
             $maxlength = ' maxlength="' . $this->formOption['MAXLENGTH'] . '"';
         }
-        
+
         $captcha .= '<div class="col-md-4" style="background:#fffdcd;" 
             id="captcha_image_' . $this->formOption['ID'] . '">
                 <img src="' . $_SESSION[SESSION_CAPTCHA]['image_src'] . '" alt="CAPTCHA code"></div>';
@@ -358,15 +453,28 @@ class Form {
             ' . $minlength . $maxlength . '
             class="form-control ' . $this->formOption['CLASS'] . '">
                 <span class="input-group-btn"><button style="margin-top:18px;height:34px;" type="button" 
-                onclick="ajaxPostManual(\''.  URL('captcha/reload').'\',\'captcha_image_' . $this->formOption['ID'] . '\',\'\')" 
+                onclick="ajaxPostManual(\'' . URL('captcha/reload') . '\',\'captcha_image_' . $this->formOption['ID'] . '\',\'\')" 
                     class="read_more buttonc">Reload</button></span>
                 </div></div>';
-        
+
         $rs = $this->formGroup($captcha);
         $this->ResetObject();
         return $rs;
     }
 
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component File Input <UPLOAD FILE>
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * </p>
+     * @example $Form->id('fileinput')->title('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->value('EXAMPLE')->placeholder('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->fileinput();<br/>
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
     public function fileinput() {
         $this->defaultOption();
         $textbox = '';
@@ -395,6 +503,19 @@ class Form {
         return $rs;
     }
 
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component Textbox with Icon <First Icon then textbox>
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * </p>
+     * @example $Form->id('textboxicongroup')->title('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->value('EXAMPLE')->placeholder('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->textboxicongroup();<br/>
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
     public function textboxicongroup() {
         $this->defaultOption();
         $type = 'text';
@@ -431,6 +552,19 @@ class Form {
         return $rs;
     }
 
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component File Input <Upload Only Image>
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * </p>
+     * @example $Form->id('fileinputimage')->title('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->value('EXAMPLE')->placeholder('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->fileinputimage();<br/>
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
     public function fileinputimage() {
         $this->defaultOption();
         $textbox = '';
@@ -481,6 +615,19 @@ class Form {
         return $rs;
     }
 
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component File Input <Upload Only Image>
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * </p>
+     * @example $Form->id('datepicker')->title('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->value('EXAMPLE')->placeholder('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->fileinputimage();<br/>
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
     public function datepicker() {
         $this->defaultOption();
         $textbox = '';
@@ -500,6 +647,19 @@ class Form {
         return $rs;
     }
 
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component Textbox Hidden
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * </p>
+     * @example $Form->id('textbox_hidden')->title('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->value('EXAMPLE')->placeholder('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->textbox_hidden();<br/>
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
     public function textbox_hidden() {
         $this->defaultOption();
         $textbox = '';
@@ -516,6 +676,19 @@ class Form {
         return $rs;
     }
 
+     /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component Textbox Password
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * </p>
+     * @example $Form->id('textpassword')->title('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->value('EXAMPLE')->placeholder('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->textpassword();<br/>
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
     public function textpassword() {
         $this->defaultOption();
         $textbox = '';
@@ -544,6 +717,19 @@ class Form {
         return $rs;
     }
 
+     /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component Text Area
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * </p>
+     * @example $Form->id('textarea')->title('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->value('EXAMPLE')->placeholder('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->textarea();<br/>
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
     public function textarea() {
         $this->defaultOption();
         $minlength = "";
@@ -569,6 +755,19 @@ class Form {
         return $rs;
     }
 
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component CKEditor <Text Editor>
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * </p>
+     * @example $Form->id('ckeditor')->title('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->value('EXAMPLE')->placeholder('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->ckeditor();<br/>
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
     public function ckeditor() {
         $this->defaultOption();
         $minlength = "";
@@ -595,6 +794,19 @@ class Form {
         return $rs;
     }
 
+     /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component Default Date <DatePicker>
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * </p>
+     * @example $Form->id('defaultdate')->title('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->value('EXAMPLE')->placeholder('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->defaultdate();<br/>
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
     public function defaultdate() {
         $this->defaultOption();
         $defaultdate = '<input id="datepicker"
@@ -634,7 +846,19 @@ class Form {
      * $json_data = json_decode($data);
      * $Form->title('Combobox Example')->id('combobox')->data($json_data)->combobox();
      */
-
+     /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component COMBOBOX <COMBOBOX>
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * </p>
+     * @example $data = '[{"id":"1","label":"EXAMPLE VALUE"},{"id":"2","label":"EXAMPLE VALUE"}]';<br/>$json_data = json_decode($data);<br/>$Form->title('Combobox Example')->id('combobox')->data($json_data)->combobox();
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
     public function combobox() {
         $this->defaultOption();
         $combobox = '<select type="text" 
@@ -684,6 +908,19 @@ class Form {
 //        }
     }
 
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component Manual with Form Group
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param String @component<p>
+     * </p>
+     * @example $Form->formGroup('Example')
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
     protected function formGroup($component) {
         $msg_rq_tx = $this->formOption['MESSAGE_REQUIRED_ERROR'];
         $rq_tx = $this->formOption['REQUIRED'];
@@ -714,7 +951,7 @@ class Form {
     </div>';
             } else {
                 $rs = '<div class="form-group">
-                <label class="col-md-3 control-label" for="focusedinput"  align="' . $this->formOption['ALIGN_LABEL'] . '">' . $title . $rq_l .'</label>
+                <label class="col-md-3 control-label" for="focusedinput"  align="' . $this->formOption['ALIGN_LABEL'] . '">' . $title . $rq_l . '</label>
                 <div class="col-md-9 ' . $this->formOption['CLASS_COMP'] . '" id="comp' . $this->formOption['ID'] . '">';
                 $rs .= $component;
                 $rs .= '</div>';
@@ -731,6 +968,19 @@ class Form {
         return $rs;
     }
 
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component Labels
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * </p>
+     * @example $Form->id('labels')->title('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->value('EXAMPLE')->placeholder('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->labels();<br/>
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
     public function labels() {
         $rs = '';
         if ($this->formOption['FORM_LAYOUT'] == 'vertical') {
