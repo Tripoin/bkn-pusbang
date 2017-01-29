@@ -768,21 +768,28 @@ class DataTable {
         return $res;
     }
 
-    public function select_pagination_rest($url, $param) {
+    public function select_pagination_rest($url, $param, $order = array()) {
         $search = explode('>', $this->search);
-        
+
         $tripoinRestClient = new TripoinRestClient();
         if ($this->current_page == 1) {
             $full_url = $url . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::ADVANCED_PAGINATION;
         } else {
             $full_url = $url . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::ADVANCED_PAGINATION . '?page=' . $this->current_page;
         }
+//        $this->se
+        $keyOrder = 'code';
+        $valOrder = 'asc';
+        if (!empty($order)) {
+            $keyOrder = key($order);
+            $valOrder = $order[key($order)];
+        }
         $result = $tripoinRestClient->doPOST($full_url, array(), array(), array(
-            "item_number" => $this->per_page ,
+            "item_number" => $this->per_page,
             "filter_key" => $search[0],
             "filter_value" => $search[1],
-            "sorting_key" => "code",
-            "sorting_direction" => "asc"
+            "sorting_key" => $keyOrder,
+            "sorting_direction" => $valOrder
         ));
         if ($result == false) {
             $tripoinRestClient = new TripoinRestClient();
@@ -797,9 +804,9 @@ class DataTable {
         $this->total = $json->total;
         $this->from = $json->from;
         $this->to = $json->to;
-        
-        
-        
+
+
+
         $current_page = $this->current_page;
         $total = $this->total;
         $per_page = $this->per_page;
@@ -815,7 +822,7 @@ class DataTable {
         } else {
             $this->prev_page = $current_page - 1;
         }
-        
+
         $min_page = $current_page - 2;
         $max_page = $current_page + 2;
 

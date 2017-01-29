@@ -16,5 +16,6 @@ namespace app\Constant;
 interface IApplicationConstant {
     //put your code here
     const APPLICATION_CRYPT = "PIP-Dev!23TelkomS1gma";
+//    const APPLICATION_CRYPT = "TRIPOIN_DEV!TRIPOIN123";
     const SESSION_TOKEN_NAME = "Authorization";
 }

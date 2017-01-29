@@ -19,9 +19,10 @@ use app\Util\Database;
 use app\Util\Button;
 use app\Constant\IViewConstant;
 use app\Constant\IRestCommandConstant;
+use app\Controller\Base\IController;
 use App\Util\RestClient\TripoinRestClient;
 
-abstract class ControllerRestUI {
+abstract class ControllerRestUI implements IController{
 
     //put your code here
 
@@ -94,7 +95,7 @@ abstract class ControllerRestUI {
             echo '<script>$(function(){postAjaxPagination()});</script>';
         } else {
 //            echo toastAlert("error", lang('general.title_insert_error'), lang('general.message_insert_error'));
-            echo toastAlert("error", lang('general.title_insert_error'), lang('error.'.json_decode($result->getBody)));
+            echo toastAlert("error", lang('general.title_insert_error'), lang('error.' . json_decode($result->getBody)));
             echo '<script>$(function(){postAjaxPagination()});</script>';
 //            echo resultPageMsg('danger', lang('general.title_insert_error'), $rs[0]);
         }
@@ -115,7 +116,7 @@ abstract class ControllerRestUI {
             echo '<script>$(function(){postAjaxPagination()});</script>';
         } else {
 //            echo toastAlert("error", lang('general.title_update_error'), lang('general.message_update_error'));
-            echo toastAlert("error", lang('general.title_insert_error'), lang('error.'.json_decode($result->getBody)));
+            echo toastAlert("error", lang('general.title_insert_error'), lang('error.' . json_decode($result->getBody)));
         }
     }
 
@@ -154,10 +155,13 @@ abstract class ControllerRestUI {
         }
 
 //        print_r($testLogin);
-
-        $list_data = $Datatable->select_pagination_rest($this->url_api . $this->restURL, null);
+        $sorting = array();
+        if (!empty($this->orderBy)) {
+            $sorting = array(key($this->orderBy) => $this->orderBy[key($this->orderBy)]);
+        }
+        $list_data = $Datatable->select_pagination_rest($this->url_api . $this->restURL, null, $sorting);
 //        print_r($list_data);
-        
+
 
         include_once FILE_PATH($this->viewList);
     }

@@ -18,8 +18,9 @@ use app\Util\DataTable;
 use app\Util\Database;
 use app\Util\Button;
 use app\Constant\IViewConstant;
+use app\Controller\Base\IController;
 
-abstract class Controller {
+abstract class Controller implements IController {
 
     //put your code here
 
@@ -115,8 +116,7 @@ abstract class Controller {
             echo toastAlert("success", lang('general.title_update_success'), lang('general.message_update_success'));
             echo '<script>$(function(){postAjaxPagination()});</script>';
         } else {
-            echo toastAlert("error", lang('general.title_update_error'), 
-                    lang('general.message_update_error') . '<br/>' . stripslashes($db->getResult()[0]));
+            echo toastAlert("error", lang('general.title_update_error'), lang('general.message_update_error') . '<br/>' . stripslashes($db->getResult()[0]));
         }
     }
 
@@ -128,12 +128,12 @@ abstract class Controller {
 //        $group = new SecurityGroup();
         $data = $this->modelData;
 //        if ($_POST['per_page'] == "") {
-        if($_POST['per_page'] == ""){
+        if ($_POST['per_page'] == "") {
             $Datatable->per_page = 5;
         } else {
             $Datatable->per_page = $_POST['per_page'];
         }
-        
+
 //        }
         $Datatable->urlDeleteCollection($this->urlDeleteCollection);
 //        $search = $_POST['search_pagination'];
@@ -155,11 +155,11 @@ abstract class Controller {
         }
 
         if ($this->orderBy != null) {
-            $list_data = $Datatable->select_pagination($data, $data->getEntity(), $this->where_list, $this->join_list, $this->search_list, $this->orderBy,$this->select_entity);
+            $list_data = $Datatable->select_pagination($data, $data->getEntity(), $this->where_list, $this->join_list, $this->search_list, $this->orderBy, $this->select_entity);
         } else if ($this->where_list == null && $this->join_list == null) {
             $list_data = $Datatable->select_pagination($data, $data->getEntity());
         } else {
-            $list_data = $Datatable->select_pagination($data, $data->getEntity(), $this->where_list, $this->join_list, $this->search_list, $this->orderBy,$this->select_entity);
+            $list_data = $Datatable->select_pagination($data, $data->getEntity(), $this->where_list, $this->join_list, $this->search_list, $this->orderBy, $this->select_entity);
         }
 
         include_once FILE_PATH($this->viewList);
