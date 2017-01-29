@@ -479,5 +479,10 @@ class AuthAdmin {
         $admin_url = getAdminTheme();
         echo '<script>window.location.href = "' . URL($admin_url) . '";</script>';
     }
-
+     public function lockScreen() {
+        ini_set("display_errors", "Off");
+        $_SESSION[SESSION_LOCK_SCREEN] = true;
+        $admin_url = getAdminTheme();
+        echo '<script>window.location.href = "' .URL($admin_url) . '";</script>';
+    }
 }

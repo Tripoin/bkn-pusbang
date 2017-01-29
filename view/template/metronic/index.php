@@ -6,6 +6,7 @@
         if ($_SESSION[SESSION_LOCK_SCREEN] == true) {
             echo '<link href="'.getAdminTemplateURL('/assets/css/opensans.css').'" rel="stylesheet" type="text/css">';
 //            echo getAdminTemplateURL('/assets/css/lock.min.css');
+            echo '<link href="'.getAdminTemplateURL('/assets/css/lock.min.css').'?tripoin='.createRandomBooking().'" rel="stylesheet" type="text/css">';
             include getAdminTemplatePath(LOCK_SCREEN_PATH);
         } else {
             if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {

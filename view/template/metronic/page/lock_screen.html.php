@@ -16,7 +16,7 @@ $rs_user_profile = $db->selectByID($sup, $sup->getUser()->getId() . "='" . $rs_u
 <div class="page-lock">
     <div class="page-logo">
         <a class="brand" href="<?= URL(); ?>">
-            <img src="<?= URL('/assets/images/logo.png'); ?>" alt="TALA INDONESIA ADMIN" > </a>
+            <img src="<?= URL('/assets/img/logotripoin.png'); ?>" height="150" alt="BKN" /> </a>
     </div>
     <div class="page-body">
         <div class="lock-head"> Locked </div>
@@ -32,8 +32,8 @@ $rs_user_profile = $db->selectByID($sup, $sup->getUser()->getId() . "='" . $rs_u
             <div class="pull-left lock-avatar-block">
                 <img <?= notFoundImg('user.png'); ?> src="<?= URL('assets/img/photos.jpg'); ?>" class="lock-avatar"> 
             </div>
-            <form id="login-form"  class="lock-form pull-left" action="<?= URL('/page/login/proses'); ?>" method="POST" onsubmit="return false;">
-                <h4><?= $rs_user_profile[0][$sup->getFullname()]; ?></h4>
+            <form id="login-form"  class="lock-form pull-left" action="<?= FULLURL('/login/proses'); ?>" method="POST" onsubmit="return false;">
+                <h4><?= $rs_user_profile[0][$sup->getName()]; ?></h4>
                 <div class="form-group">
                     <input type="hidden" name="username" id="username" value="<?=$_SESSION[SESSION_USERNAME];?>"/>
                     <input class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password"> </div>
@@ -43,12 +43,12 @@ $rs_user_profile = $db->selectByID($sup, $sup->getUser()->getId() . "='" . $rs_u
             </form>
         </div>
         <div class="lock-bottom">
-            <a href="<?= URL('page/logout'); ?>">Not <?= $rs_user_profile[0][$sup->getFullname()]; ?>?</a>
+            <a href="<?= FULLURL('logout'); ?>">Not <?= $rs_user_profile[0][$sup->getName()]; ?>?</a>
         </div>
     </div>
-    <div class="page-footer-custom"><?= getOption('GENERAL_COPYRIGHT'); ?></div>
+    <div class="page-footer-custom"><?= getSystemParameter('GENERAL_COPYRIGHT'); ?></div>
 </div>
-<?php include FILE_PATH(FOOTER_SCRIPT_PATH); ?>
+<?php include getAdminTemplatePath(FOOTER_SCRIPT); ?>
     <script>
         $(function () {
 

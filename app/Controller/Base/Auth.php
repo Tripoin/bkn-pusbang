@@ -415,5 +415,7 @@ class Auth {
         session_unset($_SESSION[SESSION_GROUP]);
         echo '<script>window.location.href = "' . URL('') . '";</script>';
     }
+    
+   
 
 }
