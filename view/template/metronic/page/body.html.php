@@ -28,7 +28,7 @@ $rs_member = $db->getResult();
 <div class="page-content-wrapper">
     <!-- BEGIN CONTENT BODY -->
     <div class="page-content">
-        <h1 class="page-title"> Dashboard
+        <h1 class="page-title"> <?=lang('general.dashboard');?>
             <!--<small>bootstrap inputs, input groups, custom checkboxes and radio controls and more</small>-->
         </h1>
         <!-- END PAGE TITLE-->

@@ -6,7 +6,7 @@
         $logo_text = getSystemParameter('SYSTEM_ADMINISTRATOR_COMPANY_NAME');
     }
     ?>
-    <title><?= $logo_text; ?></title>
+    <title><?= $logo_text; ?> | <?=getTitle();?></title>
     <meta charset="utf-8"/>
     <META NAME="Author" CONTENT="Tripoin Team @Tripoin Inc."/>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>

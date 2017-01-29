@@ -140,4 +140,5 @@ return [
     'message_submit_success' => 'Data Has Been Submit Successfull',
     'title_submit_error' => 'Submit Failed',
     'message_submit_error' => 'Data Has Been Submit Failed',
+    'dashboard'=>'Dashboard'
 ];

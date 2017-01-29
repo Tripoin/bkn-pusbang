@@ -65,6 +65,7 @@ class Home {
     public function indexAdministrator() {
 //        echo 'masuk ';
         $prm_template = getSystemParameter('SYSTEM_ADMINISTRATOR_THEME');
+        setTitle(lang('general.dashboard'));
         if ($prm_template == '') {
 
             include getAdminTemplatePath('index.php');
