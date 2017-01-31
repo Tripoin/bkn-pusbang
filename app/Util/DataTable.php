@@ -859,7 +859,11 @@ class DataTable {
         }
 
         $this->pagination_item = rtrim($res_page, ",");
-        $res = array_merge(array("item" => $json->data), $this->json_pagination());
+        if (!empty($json->data)) {
+            $res = array_merge(array("item" => $json->data), $this->json_pagination());
+        } else {
+            $res = array_merge(array("item" => array()), $this->json_pagination());
+        }
         return $res;
     }
 
