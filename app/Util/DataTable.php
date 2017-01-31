@@ -15,7 +15,7 @@
 namespace app\Util;
 
 use app\Util\Database;
-use App\Util\RestClient\TripoinRestClient;
+use app\Util\RestClient\TripoinRestClient;
 use app\Constant\IRestCommandConstant;
 
 class DataTable {
@@ -798,68 +798,69 @@ class DataTable {
         }
 //        print_r($result);
         $json = json_decode($result->getBody);
-        $this->per_page = $json->per_page;
-        $this->current_page = $json->current_page;
-        $this->last_page = $json->last_page;
-        $this->total = $json->total;
-        $this->from = $json->from;
-        $this->to = $json->to;
+        if (!empty($json->data)) {
+            $this->per_page = $json->per_page;
+            $this->current_page = $json->current_page;
+            $this->last_page = $json->last_page;
+            $this->total = $json->total;
+            $this->from = $json->from;
+            $this->to = $json->to;
 
 
 
-        $current_page = $this->current_page;
-        $total = $this->total;
-        $per_page = $this->per_page;
-        $last_page = $total / $per_page;
-        if ($current_page >= ceil($last_page)) {
-            $this->next_page = NULL;
-        } else {
-            $this->next_page = $current_page + 1;
-        }
+            $current_page = $this->current_page;
+            $total = $this->total;
+            $per_page = $this->per_page;
+            $last_page = $total / $per_page;
+            if ($current_page >= ceil($last_page)) {
+                $this->next_page = NULL;
+            } else {
+                $this->next_page = $current_page + 1;
+            }
 
-        if ($current_page <= 1) {
-            $this->prev_page = NULL;
-        } else {
-            $this->prev_page = $current_page - 1;
-        }
+            if ($current_page <= 1) {
+                $this->prev_page = NULL;
+            } else {
+                $this->prev_page = $current_page - 1;
+            }
 
-        $min_page = $current_page - 2;
-        $max_page = $current_page + 2;
+            $min_page = $current_page - 2;
+            $max_page = $current_page + 2;
 
-        $res_page = "";
+            $res_page = "";
 
 //        if ($last_page > 5) {
-        if ($current_page == 1) {
-            $min_page = $current_page - 1;
-            $max_page = $current_page + 4;
-        } else if ($current_page == 2) {
-            $min_page = $current_page - 2;
-            $max_page = $current_page + 3;
-        } else if ($current_page == 4) {
-            $min_page = $current_page - 2;
-            $max_page = $current_page + 2;
-        } else if ($current_page == ($this->last_page - 1)) {
-            $min_page = $current_page - 3;
-            $max_page = $current_page + 2;
+            if ($current_page == 1) {
+                $min_page = $current_page - 1;
+                $max_page = $current_page + 4;
+            } else if ($current_page == 2) {
+                $min_page = $current_page - 2;
+                $max_page = $current_page + 3;
+            } else if ($current_page == 4) {
+                $min_page = $current_page - 2;
+                $max_page = $current_page + 2;
+            } else if ($current_page == ($this->last_page - 1)) {
+                $min_page = $current_page - 3;
+                $max_page = $current_page + 2;
 //            echo 'masuk';
-        } else if ($current_page == $this->last_page) {
-            $min_page = $current_page - 4;
-            $max_page = $current_page + 1;
+            } else if ($current_page == $this->last_page) {
+                $min_page = $current_page - 4;
+                $max_page = $current_page + 1;
 //                echo 'masuk';
-        }
-        for ($no = $min_page; $no <= $max_page; $no++) {
-//            echo $no;
-            if ($no > ceil($this->last_page)) {
-                
-            } else if ($no <= 0) {
-                
-            } else {
-                $res_page .= $no . ",";
             }
-        }
+            for ($no = $min_page; $no <= $max_page; $no++) {
+//            echo $no;
+                if ($no > ceil($this->last_page)) {
+                    
+                } else if ($no <= 0) {
+                    
+                } else {
+                    $res_page .= $no . ",";
+                }
+            }
 
-        $this->pagination_item = rtrim($res_page, ",");
-        if (!empty($json->data)) {
+            $this->pagination_item = rtrim($res_page, ",");
+
             $res = array_merge(array("item" => $json->data), $this->json_pagination());
         } else {
             $res = array_merge(array("item" => array()), $this->json_pagination());

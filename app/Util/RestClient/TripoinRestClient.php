@@ -60,7 +60,9 @@ class TripoinRestClient {
             return false;
         } else {
             $headers = json_decode($response->getHeader);
-            $this->setSessionFromBearer($headers->Authorization);
+            if (isset($headers->Authorization)) {
+                $this->setSessionFromBearer($headers->Authorization);
+            }
         }
 //        Log::info('Do Get menu');
         return $response;
@@ -83,7 +85,9 @@ class TripoinRestClient {
         $value = explode(' ', $bearer);
 
         if ($value != null) {
-            $_SESSION[SESSION_ADMIN_TOKEN] = $value[1];
+            if (isset($value[1])) {
+                $_SESSION[SESSION_ADMIN_TOKEN] = $value[1];
+            }
         } else {
 //            return \Redirect::to(IApplicationConstant::URL_LOGIN)->send();
         }
@@ -145,15 +149,15 @@ class TripoinRestClient {
 
     public function doPOST($p_TargetURL, $param = array(), $header = array(), $body = array()) {
 //        $tripoinRestClient = new TripoinRestClient();
-        if(isset($_SESSION[SESSION_ADMIN_TOKEN])){
-            if($_SESSION[SESSION_ADMIN_TOKEN] == ""){
+        if (isset($_SESSION[SESSION_ADMIN_TOKEN])) {
+            if ($_SESSION[SESSION_ADMIN_TOKEN] == "") {
                 $this->doPOSTLoginNoAuth();
             }
         } else {
             $this->doPOSTLoginNoAuth();
         }
 //        $testLogin = 
-        
+
         $merge_array_key = $this->queryParamURL($p_TargetURL);
         $page_url = strtok($p_TargetURL, '?');
 //        $this->getRefreshedToken();
@@ -176,21 +180,24 @@ class TripoinRestClient {
         } else {
             $headers = json_decode($response->getHeader);
 //            $bear_exp = explode('', $headers->Authorization);
-            $this->setSessionFromBearer($headers->Authorization);
+//            print_r($headers);
+            if (isset($headers->Authorization)) {
+                $this->setSessionFromBearer($headers->Authorization);
+            }
         }
         return $response;
     }
 
     public function doDelete($p_TargetURL, $param = array(), $header = array(), $body = array()) {
-        if(isset($_SESSION[SESSION_ADMIN_TOKEN])){
-            if($_SESSION[SESSION_ADMIN_TOKEN] == ""){
+        if (isset($_SESSION[SESSION_ADMIN_TOKEN])) {
+            if ($_SESSION[SESSION_ADMIN_TOKEN] == "") {
                 $this->doPOSTLoginNoAuth();
             }
         } else {
             $this->doPOSTLoginNoAuth();
         }
 //        $testLogin = 
-        
+
         $merge_array_key = $this->queryParamURL($p_TargetURL);
         $page_url = strtok($p_TargetURL, '?');
 //        $this->getRefreshedToken();
@@ -213,21 +220,23 @@ class TripoinRestClient {
         } else {
             $headers = json_decode($response->getHeader);
 //            $bear_exp = explode('', $headers->Authorization);
-            $this->setSessionFromBearer($headers->Authorization);
+            if (isset($headers->Authorization)) {
+                $this->setSessionFromBearer($headers->Authorization);
+            }
         }
         return $response;
     }
 
     public function doPut($p_TargetURL, $param = array(), $header = array(), $body = array()) {
-        if(isset($_SESSION[SESSION_ADMIN_TOKEN])){
-            if($_SESSION[SESSION_ADMIN_TOKEN] == ""){
+        if (isset($_SESSION[SESSION_ADMIN_TOKEN])) {
+            if ($_SESSION[SESSION_ADMIN_TOKEN] == "") {
                 $this->doPOSTLoginNoAuth();
             }
         } else {
             $this->doPOSTLoginNoAuth();
         }
 //        $testLogin = 
-        
+
         $merge_array_key = $this->queryParamURL($p_TargetURL);
         $page_url = strtok($p_TargetURL, '?');
 //        $this->getRefreshedToken();
@@ -250,7 +259,9 @@ class TripoinRestClient {
         } else {
             $headers = json_decode($response->getHeader);
 //            $bear_exp = explode('', $headers->Authorization);
-            $this->setSessionFromBearer($headers->Authorization);
+            if (isset($headers->Authorization)) {
+                $this->setSessionFromBearer($headers->Authorization);
+            }
         }
         return $response;
     }
