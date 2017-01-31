@@ -23,10 +23,10 @@ date_default_timezone_set(TIME_ZONE);
 ini_set("display_errors", 'Off');
 
 
-//require ("vendor/autoload.php");
+require ("vendor/autoload.php");
 //require_once 'app/Util/Function.php';
 
-spl_autoload_register('the_autoloader');
+//spl_autoload_register('the_autoloader');
 register_shutdown_function('errorHandler');
 
 //the_autoloader('app/Util/Form');

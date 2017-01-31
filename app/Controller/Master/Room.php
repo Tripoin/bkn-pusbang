@@ -18,7 +18,7 @@ use app\Constant\IURLConstant;
 use app\Constant\IViewConstant;
 use app\Constant\IRestURLConstant;
 use app\Constant\IRestCommandConstant;
-use App\Util\RestClient\TripoinRestClient;
+use app\Util\RestClient\TripoinRestClient;
 
 class Room extends ControllerRestUI {
 

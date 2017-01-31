@@ -6,9 +6,9 @@
  * @author <a href = "fauzi.knightmaster.achmad@gmail.com">Achmad Fauzi</a>
  */
 
-namespace App\Util\RestClient;
+namespace app\Util\RestClient;
 
-use App\Util\RestClient;
+use app\Util\RestClient;
 use app\Constant\IRestCommandConstant;
 use app\Constant\IApplicationConstant;
 

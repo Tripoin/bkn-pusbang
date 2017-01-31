@@ -20,7 +20,7 @@ use app\Util\Button;
 use app\Constant\IViewConstant;
 use app\Constant\IRestCommandConstant;
 use app\Controller\Base\IController;
-use App\Util\RestClient\TripoinRestClient;
+use app\Util\RestClient\TripoinRestClient;
 
 abstract class ControllerRestUI implements IController{
 
