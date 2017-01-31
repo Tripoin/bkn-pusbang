@@ -1,4 +1,8 @@
-
+.background-refresh-overlay {
+    position:fixed; top:0; left:0; 
+    background:rgba(0,0,0,0.6); z-index:1005; width:100%; height:100%; display:block;
+    
+}
 
 .background-overlay {
     background: #e9e9e9;

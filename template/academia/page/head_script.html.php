@@ -37,4 +37,6 @@
     
     <script src="<?= getTemplateURL('/assets/js/modernizr-2.8.3.min.js'); ?>"></script>
     <script src="<?= getTemplateURL('/assets/js/jquery-1.11.3.min.js'); ?>"></script>
+    <script src="<?= URL('/assets/plugins/galleria/galleria-1.5.1.js'); ?>"></script>
+    <script src="<?= URL('/assets/plugins/galleria/flickr/galleria.flickr.js'); ?>"></script>
 </head>

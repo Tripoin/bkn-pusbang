@@ -12,6 +12,16 @@ $su = new SecurityUser();
 $rs_user = $db->selectByID($su, $su->getCode() . "='" . $_SESSION[SESSION_USERNAME] . "'");
 $rs_user_profile = $db->selectByID($sup, $sup->getUser()->getId() . "='" . $rs_user[0][$sup->getUser()->getId()] . "'");
 ?>
+<style>
+    html{
+        height: 100%
+    }
+    body{
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        background-image:url(<?= URL('assets/img/bg-blur.jpg'); ?>);
+    }
+</style>
 <body class="login">
 <div class="page-lock">
     <div class="page-logo">

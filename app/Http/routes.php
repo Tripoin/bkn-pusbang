@@ -209,6 +209,8 @@ if (!empty($rs_url_now)) {
 //        echo $url_guest;
         $Routes->set($url_guest, 'app\Controller\Master\MasterGuest@page');
     } else if ($rs_url_now[0][$sf->getTypeUrl()] == 3) {
+        $Routes->set($url_guest, 'app\Controller\Master\MasterGuest@pageGallery');
+    } else if ($rs_url_now[0][$sf->getTypeUrl()] == 4) {
         $db->sql("SELECT COUNT('*') as count_menu FROM " . $sf->getEntity() . WHERE . $sf->getParent() . EQUAL . $rs_url_now[0][$sf->getId()]);
         $cm = $db->getResult();
 //        print_r($count_menu);
@@ -217,7 +219,7 @@ if (!empty($rs_url_now)) {
         } else {
             $Routes->set($url_guest, 'app\Controller\Master\MasterGuest@chooseMenuPost');
         }
-    } else if ($rs_url_now[0][$sf->getTypeUrl()] == 4) {
+    } else if ($rs_url_now[0][$sf->getTypeUrl()] == 5) {
         $Routes->set($url_guest, 'app\Controller\Master\MasterGuest@pageTwoColumn');
     }
 } else {

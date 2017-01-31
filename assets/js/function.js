@@ -1440,7 +1440,7 @@ function ajaxPostManual(page, target, value) {
         data: value,
         success: function (data) {
             $('#' + target).html(data);
-            
+
 //            $('#'+target).focus();
         },
         error: function (data) {
@@ -1449,7 +1449,26 @@ function ajaxPostManual(page, target, value) {
     });
 }
 
-function postFormAjaxPostSetContent(page,content) {
+function ajaxPostModalManual(page, value) {
+//    $('#' + target).html(highlightLoader());
+    $('#myModal_self').modal({backdrop: 'static', keyboard: false});
+    $('#modal-body-self').html(spinnerLoader());
+    $.ajax({
+        type: "POST",
+        url: page,
+        data: value,
+        success: function (data) {
+            $('#modal-body-self').html(data);
+
+//            $('#'+target).focus();
+        },
+        error: function (data) {
+            $('#modal-body-self').html(data.responseText);
+        },
+    });
+}
+
+function postFormAjaxPostSetContent(page, content) {
 
     CKupdate();
     var form = $('#form-newedit');
@@ -1481,4 +1500,24 @@ function postFormAjaxPostSetContent(page,content) {
             }
         });
     }
+}
+
+
+function ajaxPostModalGallery(page, target, value) {
+//    $('#' + target).html(highlightLoader());
+    $('#myModal_self').modal({backdrop: 'static', keyboard: false});
+    $('#modal-body-self').html(spinnerLoader());
+    $.ajax({
+        type: "POST",
+        url: page,
+        data: value,
+        success: function (data) {
+            $('#modal-body-self').html(data);
+//            Galleria.run(target);
+//            $('#'+target).focus();
+        },
+        error: function (data) {
+            $('#modal-body-self').html(data.responseText);
+        },
+    });
 }

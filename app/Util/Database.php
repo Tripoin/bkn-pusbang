@@ -193,7 +193,31 @@ class Database {
         return $result;
     }
 
-    // Function to SELECT from the database
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * SELECT TABLE FROM YOUR DATABASE WITH PARAM
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param String $table [optional] <p>
+     * set your table ex:mst_province
+     * </p>
+     * @param String $rows [optional] <p>
+     * set your rows or select field ex - All = * , and other
+     * </p>
+     * @param String $where [optional] <p>
+     * set where field table ex:code=0
+     * </p>
+     * @param String $order [optional] <p>
+     * set order by table ex: code ASC.
+     * </p>
+     * @param String $limit [optional] <p>
+     * set limit table ex: 0,10.
+     * </p>
+     * @return Boolean A formatted version of <i>true or false</i><p>
+     * if you get array from  this select table, doing $db->getResult();
+     * </p>
+     * 
+     */
     public function select($table, $rows = '*', $join = array(), $where = null, $order = null, $limit = null) {
         // Create query from the variables passed to the function
         $q = 'SELECT ' . $rows . ' FROM ' . $table;
@@ -202,7 +226,11 @@ class Database {
           }
          * */
         if (!empty($join)) {
+            if(is_array($join)){
             foreach ($join as $value) {
+                $q .= ' JOIN ' . $value;
+            }
+            } else {
                 $q .= ' JOIN ' . $value;
             }
         }
@@ -234,10 +262,10 @@ class Database {
                             if (!is_int($key[$x])) {
                                 if (mysql_num_rows($query) >= 1) {
                                     $this->result[$i][$key[$x]] = $r[$key[$x]];
-                                    $this->log_masuk('SUKSES SELECT Table : ' . $table);
+//                                    $this->log_masuk('SUKSES SELECT Table : ' . $table);
                                 } else {
                                     $this->result = null;
-                                    $this->log_masuk('SELECT DATA NULL');
+//                                    $this->log_masuk('SELECT DATA NULL');
                                 }
                             }
                         }
@@ -245,11 +273,11 @@ class Database {
                     return true; // Query was successful
                 } else {
                     array_push($this->result, mysql_error());
-                    $this->log_masuk("GAGAL SELECT : " . mysql_error());
+//                    $this->log_masuk("GAGAL SELECT : " . mysql_error());
                     return false; // No rows where returned
                 }
             } else {
-                $this->log_masuk("GAGAL SELECT : " . mysql_error());
+//                $this->log_masuk("GAGAL SELECT : " . mysql_error());
                 return false; // Table does not exist
             }
         } else if ($this->db_driver == "mysqli") {
@@ -280,6 +308,8 @@ class Database {
                     }
                     return true; // Query was successful
                 } else {
+//                    LOGGER($this->mysql->error);
+                    error_get_last()['message'] = $this->mysql->error;
                     array_push($this->result, $this->mysql->error);
                     $this->log_masuk("GAGAL SELECT : " . $this->mysql->error);
                     return false; // No rows where returned
@@ -489,6 +519,7 @@ class Database {
             }
         } else if ($this->db_driver == "mysqli") {
             $tablesInDb = $this->mysql->query('SHOW TABLES FROM ' . $this->db_name . ' LIKE "' . $table . '"');
+            
             if ($tablesInDb) {
                 if ($tablesInDb->num_rows == 1) {
                     return true; // The table exists

@@ -511,7 +511,7 @@ function LOGGER($message = '') {
 //        $txt .= "Array(" . implode(",", $message) . ")";
         $txt .= json_encode($message);
     } else {
-        $txt .= (string) $message;
+        $txt .= json_encode($message);
     }
     file_put_contents(FILE_PATH($file_url), $txt . PHP_EOL, FILE_APPEND | LOCK_EX);
 }

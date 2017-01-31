@@ -42,7 +42,7 @@ class MasterGuest {
                 . $mp->getEntity() . DOT . $mp->getPostStatus() . EQUAL . "'p'" . " AND "
                 . $mpf->getEntity() . DOT . $mpf->getFunctionId() . EQUAL . $functionId);
         $post = $db->getResult()[0];
-        
+
 //        echo 'masuk';
 //        
         if (!empty($post)) {
@@ -67,7 +67,7 @@ class MasterGuest {
 //        $db->select("mst_product");
 //        $list_product = $db->getResult();
         $functionId = $_POST['function_id_now'];
-        
+
         $db = new Database();
         $db->connect();
 //        $mpf->getFunction()->getId();
@@ -182,9 +182,8 @@ class MasterGuest {
             if (isset($_SESSION[LANGUAGE_SESSION])) {
                 $mp_lang = $db->selectByID($mpl, $mpl->getLanguageId() . "='" . $_SESSION[LANGUAGE_SESSION] . "'"
                         . " AND " . $mpl->getPostId() . "=" . $list_post_function[0][$mp->getId()]);
-                
             }
-            
+
             include_once getTemplatePath('page/global/master-guest-one-page.html.php');
         } else {
             include_once FILE_PATH(PAGE_404);
@@ -243,13 +242,31 @@ class MasterGuest {
         } else {
             $_SESSION['read_artikel_' . $post[$mp->getId()]] = $post[$mp->getId()];
             $select = $db->selectByID($mp, $mp->getId() . EQUAL . $post[$mp->getId()]);
-                $count = $select[0][$mp->getReadCount()];
-                $db->update($mp->getEntity(), array(
-                    $mp->getReadCount() => ($count + 1),
-                        ), $mp->getId() . EQUAL . $post[$mp->getId()]);
+            $count = $select[0][$mp->getReadCount()];
+            $db->update($mp->getEntity(), array(
+                $mp->getReadCount() => ($count + 1),
+                    ), $mp->getId() . EQUAL . $post[$mp->getId()]);
         }
         include_once getTemplatePath('page/global/master-guest-one-page.html.php');
 //        print_r($post);
+    }
+
+    public function pageGallery() {
+//        echo 'masuk';
+        if (!isset($_POST['id'])) {
+            $functionId = $_POST['function_id_now'];
+            $mFunction = new SecurityFunction();
+            $db = new Database();
+            $function = $db->selectByID($mFunction, $mFunction->getId() . EQUAL . $functionId);
+            include_once getTemplatePath('page/global/master-guest-gallery-page.html.php');
+        } else {
+            if ($_POST['id'] != "") {
+                
+                include_once getTemplatePath('page/global/gallery/view-gallery.html.php');
+            } else {
+                include_once FILE_PATH(PAGE_404);
+            }
+        }
     }
 
 }
