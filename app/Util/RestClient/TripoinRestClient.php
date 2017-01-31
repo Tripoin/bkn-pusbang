@@ -16,6 +16,11 @@ class TripoinRestClient {
 
     public $token;
     public $sessionClient;
+    
+    public $header;
+    public $param;
+    public $p_TargetURL;
+    public $body;
 
     /**
      * PIPRestClient constructor.
@@ -57,7 +62,6 @@ class TripoinRestClient {
 //        print_r($response);
         if (isset(json_decode($response->getBody)->error)) {
             $this->failGetBearer(json_decode($response->getBody)->error);
-
             return false;
         } else {
             $headers = json_decode($response->getHeader);
@@ -77,7 +81,7 @@ class TripoinRestClient {
         } else {
             $tripoinRestClient = new TripoinRestClient();
             $tripoinRestClient->doPOSTLoginNoAuth();
-            return $this->save();
+//            return $this->save();
         }
         /* Session::forget(IApplicationConstant::SESSION_USER);
           Session::flush(); */

@@ -82,6 +82,7 @@ abstract class ControllerRestUI implements IController{
     }
 
     public function save() {
+        $this->url_api  = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
         $tripoinRestClient = new TripoinRestClient();
         $url = $this->url_api . $this->restURL . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::INSERT_SINGLE_DATA;
         $result = $tripoinRestClient->doPOST($url, array(), array(), $_POST);
@@ -103,6 +104,7 @@ abstract class ControllerRestUI implements IController{
     }
 
     public function update() {
+        $this->url_api  = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
 //        print_r($db->getResult());
         $tripoinRestClient = new TripoinRestClient();
         $url = $this->url_api . $this->restURL . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::UPDATE_SINGLE_DATA;
@@ -174,6 +176,7 @@ abstract class ControllerRestUI implements IController{
     }
 
     public function edit() {
+        $this->url_api  = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
         $id = $_POST['id'];
         $Form = new Form();
         $Button = new Button();
@@ -193,6 +196,7 @@ abstract class ControllerRestUI implements IController{
     }
 
     public function delete() {
+        $this->url_api  = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
         $id = $_POST['id'];
         $Form = new Form();
         /*  $db = new Database();
