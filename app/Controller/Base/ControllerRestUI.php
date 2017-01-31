@@ -48,7 +48,7 @@ abstract class ControllerRestUI implements IController{
     public $per_page = 5;
     public $auditrail = true;
     public $restURL = '';
-    public $url_api = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
+    public $url_api;
 
     public function __construct() {
         if (empty($this->search_filter)) {
@@ -57,6 +57,7 @@ abstract class ControllerRestUI implements IController{
                 "name" => lang('general.name')
             );
         }
+        $this->url_api  = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
     }
 
     public function setBreadCrumb($breadcrumb = array()) {
@@ -206,7 +207,7 @@ abstract class ControllerRestUI implements IController{
         if ($result == false) {
             $tripoinRestClient = new TripoinRestClient();
             $tripoinRestClient->doPOSTLoginNoAuth();
-            return $this->update();
+            return $this->delete();
         }
         if (is_numeric(json_decode($result->getBody)) > 0) {
 //            echo json_decode($result->getBody);
@@ -238,7 +239,7 @@ abstract class ControllerRestUI implements IController{
         if ($result == false) {
             $tripoinRestClient = new TripoinRestClient();
             $tripoinRestClient->doPOSTLoginNoAuth();
-            return $this->update();
+            return $this->deleteCollection();
         }
         if (is_numeric(json_decode($result->getBody)) > 0) {
 //            echo json_decode($result->getBody);

@@ -565,7 +565,9 @@ class DataTable {
                     }
                     $style_body = $styleBody[$urut];
                 }
-                $rs .= '<td style="' . $style_body . '">' . $body[$no][$urut] . '</td>';
+                if (isset($body[$no][$urut])) {
+                    $rs .= '<td style="' . $style_body . '">' . $body[$no][$urut] . '</td>';
+                }
             }
             $rs .= '</tr>';
         }
