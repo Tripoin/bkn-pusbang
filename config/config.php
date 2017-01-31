@@ -38,4 +38,5 @@ define('TEXT_COPYRIGHT', '&copy;2017 <a href="http://tripoin.co.id">TRIPOIN</a> 
 
 
 
+
 define('URL_REST','http://54.251.168.102/api/public/');

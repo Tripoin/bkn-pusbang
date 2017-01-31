@@ -111,6 +111,7 @@ class AuthAdmin {
                         $_SESSION[SESSION_EMAIL] = $email;
                         $_SESSION[SESSION_FULLNAME] = $firstname . ' ' . $lastname;
                         $_SESSION[SESSION_GROUP] = 2;
+//                        $_SESSION[SESSION_ADMIN_PASSWORD] = $password;
 //            echo '<h3 align="center">Login Sukses</h3>';
                         echo toastAlert("success", lang('general.title_register_success'), lang('general.message_register_success'));
                         echo '<script>window.location.href = "' . URL('') . '";</script>';
@@ -463,7 +464,7 @@ class AuthAdmin {
 
     public function logout() {
 //        ini_set("display_errors", "Off");
-//        session_destroy();
+        session_destroy();
         if (isset($_SESSION[SESSION_ADMIN_USERNAME])) {
             session_unset($_SESSION[SESSION_ADMIN_USERNAME]);
         }
@@ -475,6 +476,12 @@ class AuthAdmin {
         }
         if (isset($_SESSION[SESSION_ADMIN_GROUP])) {
             session_unset($_SESSION[SESSION_ADMIN_GROUP]);
+        }
+        if (isset($_SESSION[SESSION_ADMIN_TOKEN])) {
+            session_unset($_SESSION[SESSION_ADMIN_TOKEN]);
+        }
+        if (isset($_SESSION[SESSION_ADMIN_AUTHORIZATION])) {
+            session_unset($_SESSION[SESSION_ADMIN_AUTHORIZATION]);
         }
         $admin_url = getAdminTheme();
         echo '<script>window.location.href = "' . URL($admin_url) . '";</script>';

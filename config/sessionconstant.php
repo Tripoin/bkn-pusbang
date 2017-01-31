@@ -17,6 +17,7 @@ define('SESSION_LOCK_SCREEN', 'LOCK_SCREEN');
 
 define('SESSION_ADMIN_USERNAME', 'username');
 define('SESSION_ADMIN_FULLNAME', 'fullname');
+define('SESSION_ADMIN_PASSWORD', 'admin_password');
 define('SESSION_ADMIN_GROUP', 'group');
 define('SESSION_ADMIN_EMAIL', 'email');
 define('SESSION_ADMIN_TOKEN', 'token');

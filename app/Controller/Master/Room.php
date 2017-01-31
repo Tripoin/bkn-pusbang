@@ -33,11 +33,13 @@ class Room extends ControllerRestUI {
         $this->indexUrl = IURLConstant::MASTER_ROOM_INDEX_URL;
         $this->viewPath = IViewConstant::MASTER_ROOM_VIEW_INDEX;
         $this->setAutoCrud();
+        parent::__construct();
     }
 
     public function create() {
         $tripoinRestClient = new TripoinRestClient();
-        $url = $this->url_api . IRestURLConstant::MASTER . SLASH . IRestURLConstant::FACILITY . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::SELECT_LOV;
+        $url = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH. IRestURLConstant::MASTER . SLASH . IRestURLConstant::FACILITY . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::SELECT_LOV;
+//        echo $url;
         $result = $tripoinRestClient->doGET($url, array());
         $this->data_facility = json_decode($result->getBody);
         parent::create();
@@ -45,7 +47,7 @@ class Room extends ControllerRestUI {
 
     public function edit() {
         $tripoinRestClient = new TripoinRestClient();
-        $url = $this->url_api . IRestURLConstant::MASTER . SLASH . IRestURLConstant::FACILITY . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::SELECT_LOV;
+        $url = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH . IRestURLConstant::MASTER . SLASH . IRestURLConstant::FACILITY . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::SELECT_LOV;
         $result = $tripoinRestClient->doGET($url, array());
         $this->data_facility = json_decode($result->getBody);
         parent::edit();

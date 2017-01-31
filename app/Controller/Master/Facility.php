@@ -32,6 +32,7 @@ class Facility extends ControllerRestUI {
         $this->indexUrl = IURLConstant::MASTER_FACILITY_INDEX_URL;
         $this->viewPath = IViewConstant::MASTER_FACILITY_VIEW_INDEX;
         $this->setAutoCrud();
+        parent::__construct();
     }
 
 }

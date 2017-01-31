@@ -122,6 +122,7 @@ abstract class ControllerRestUI implements IController{
     }
 
     public function listData() {
+        $this->url_api  = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
         $Form = new Form();
         $Datatable = new DataTable();
         $Button = new Button();

@@ -1,5 +1,6 @@
 
 <?php
+//echo $_SESSION[SESSION_ADMIN_AUTHORIZATION];
 //    $Datatable->styleHeader(array("text-align:center;"));
 $Datatable->deleteCollection(false);
 $Datatable->styleColumn(array("text-align:center;width:5%;", "", "","text-align:center","text-align:center","text-align:center", "text-align:center;width:150px;"));

@@ -26,7 +26,7 @@ define('END_CONTENT_PAGE_PATH', 'page/end-content-page.html.php');
 
 define('CONTENT_PATH', 'page/content.html.php');
 define('LOGIN_PATH', 'page/login.html.php');
-define('LOCK_SCREEN_PATH', 'view/template/lock_screen.html.php');
+define('LOCK_SCREEN_PATH', 'page/lock_screen.html.php');
 
 
 

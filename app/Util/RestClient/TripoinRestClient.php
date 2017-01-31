@@ -57,6 +57,7 @@ class TripoinRestClient {
 //        print_r($response);
         if (isset(json_decode($response->getBody)->error)) {
             $this->failGetBearer(json_decode($response->getBody)->error);
+
             return false;
         } else {
             $headers = json_decode($response->getHeader);
@@ -73,6 +74,10 @@ class TripoinRestClient {
             session_destroy();
             echo '<script>window.location = \'' . URL() . '\'</script>';
 //            return \Redirect::to(IApplicationConstant::URL_LOGIN)->send();
+        } else {
+            $tripoinRestClient = new TripoinRestClient();
+            $tripoinRestClient->doPOSTLoginNoAuth();
+            return $this->save();
         }
         /* Session::forget(IApplicationConstant::SESSION_USER);
           Session::flush(); */
@@ -126,7 +131,6 @@ class TripoinRestClient {
                 ->setHeader(array("Authorization: " . $_SESSION[SESSION_ADMIN_AUTHORIZATION]))
                 ->post();
 
-
         if (isset(json_decode($response->getBody)->token)) {
             $this->setSessionFromLogin(json_decode($response->getBody)->token);
         } else {
@@ -162,6 +166,7 @@ class TripoinRestClient {
         $page_url = strtok($p_TargetURL, '?');
 //        $this->getRefreshedToken();
         $merge_param_token = array("token" => $_SESSION[SESSION_ADMIN_TOKEN]);
+//        print_r($merge_param_token);
         $merge_param = array_merge($param, $merge_array_key, $merge_param_token);
 //        $merge_header = array(IApplicationConstant::SESSION_TOKEN_NAME . ": " . $_SESSION[SESSION_ADMIN_TOKEN]);
         $merge_header = array();
@@ -171,6 +176,7 @@ class TripoinRestClient {
                 ->setHeader(array_merge($merge_header, $header))
                 ->setBody($body)
                 ->post();
+
 //        echo $_SESSION[IApplicationConstant::SESSION_USER][IApplicationConstant::TOKEN];
 //        print_r($response);
         if (isset(json_decode($response->getBody)->error)) {

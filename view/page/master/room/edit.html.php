@@ -1,5 +1,8 @@
 <?= $Form->formHeader(); ?>
+<?php
+//print_r($get_data);
 
+?>
 <?php echo $Form->id('code')->title(lang('general.code'))->value($get_data->code)->placeholder(lang('general.code') . ' ....')->textbox(); ?>
 <?php echo $Form->id('name')->title(lang('general.name'))->value($get_data->name)->placeholder(lang('general.name') . ' ....')->textbox(); ?>
 <?php echo $Form->id('dimension')->title(lang('master.dimension'))->value($get_data->dimension)->textbox(); ?>

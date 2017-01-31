@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace App\Util;
+namespace app\Util;
 
 class RestClient {
 
@@ -62,21 +62,26 @@ class RestClient {
         if (!empty($this->curlOptions['PARAM_URL'])) {
             $param_url = $this->curlOptions['PARAM_URL'];
         }
+//        echo $this->curlOptions['URL'] . $param_url;
         curl_setopt($ch, CURLOPT_URL, $this->curlOptions['URL'] . $param_url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array_merge($array_http_header, $this->curlOptions['HTTPHEADER']));
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 //        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
         curl_setopt($ch, CURLOPT_HEADER, 1);
         if ($this->curlOptions['USERNAME'] != '' && $this->curlOptions['PASSWORD'] != '') {
-//            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-            
             curl_setopt($ch, CURLOPT_COOKIESESSION, true);
-            curl_setopt($ch, CURLOPT_USERPWD, $this->curlOptions['USERNAME'].":".$this->curlOptions['PASSWORD']);
+            curl_setopt($ch, CURLOPT_USERPWD, $this->curlOptions['USERNAME'] . ":" . $this->curlOptions['PASSWORD']);
         }
         $response = curl_exec($ch);
+        if (curl_error($ch)) {
+//            echo 'error:' . curl_error($ch);
+        }
+        
+//        echo 'oke';
+//        print_r($response);
         $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $this->getHeaderSize = $header_size;
         $header = substr($response, 0, $header_size);
