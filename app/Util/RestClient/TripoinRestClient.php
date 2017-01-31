@@ -61,7 +61,15 @@ class TripoinRestClient {
 //        echo $_SESSION[IApplicationConstant::SESSION_USER][IApplicationConstant::TOKEN];
 //        print_r($response);
         if (isset(json_decode($response->getBody)->error)) {
+            $tripoinRestClient = new TripoinRestClient();
+            if($tripoinRestClient->doPOSTLoginNoAuth() != false){
+                $this->doGET($p_TargetURL, $param, $header);
+            } else {
+                $this->doGET($p_TargetURL, $param, $header);
+            }
+            
             $this->failGetBearer(json_decode($response->getBody)->error);
+            
             return false;
         } else {
             $headers = json_decode($response->getHeader);
@@ -79,8 +87,8 @@ class TripoinRestClient {
             echo '<script>window.location = \'' . URL() . '\'</script>';
 //            return \Redirect::to(IApplicationConstant::URL_LOGIN)->send();
         } else {
-            $tripoinRestClient = new TripoinRestClient();
-            $tripoinRestClient->doPOSTLoginNoAuth();
+//            $tripoinRestClient = new TripoinRestClient();
+//            $tripoinRestClient->doPOSTLoginNoAuth();
 //            return $this->save();
         }
         /* Session::forget(IApplicationConstant::SESSION_USER);
@@ -185,6 +193,13 @@ class TripoinRestClient {
 //        print_r($response);
         if (isset(json_decode($response->getBody)->error)) {
             $this->failGetBearer(json_decode($response->getBody)->error);
+            
+            $tripoinRestClient = new TripoinRestClient();
+            if($tripoinRestClient->doPOSTLoginNoAuth() != false){
+                $this->doPOST($p_TargetURL, $param, $header,$body);
+            } else {
+                $this->doPOST($p_TargetURL, $param, $header,$body);
+            }
 //            $this->setSessionFromBearer(json_decode($response->getHeader)->Authorization);
             return false;
         } else {
@@ -225,6 +240,12 @@ class TripoinRestClient {
 //        print_r($response);
         if (isset(json_decode($response->getBody)->error)) {
             $this->failGetBearer(json_decode($response->getBody)->error);
+            $tripoinRestClient = new TripoinRestClient();
+            if($tripoinRestClient->doPOSTLoginNoAuth() != false){
+                $this->doDelete($p_TargetURL, $param, $header,$body);
+            } else {
+                $this->doDelete($p_TargetURL, $param, $header,$body);
+            }
 //            $this->setSessionFromBearer(json_decode($response->getHeader)->Authorization);
             return false;
         } else {
@@ -264,6 +285,12 @@ class TripoinRestClient {
 //        print_r($response);
         if (isset(json_decode($response->getBody)->error)) {
             $this->failGetBearer(json_decode($response->getBody)->error);
+            $tripoinRestClient = new TripoinRestClient();
+            if($tripoinRestClient->doPOSTLoginNoAuth() != false){
+                $this->doDelete($p_TargetURL, $param, $header,$body);
+            } else {
+                $this->doDelete($p_TargetURL, $param, $header,$body);
+            }
 //            $this->setSessionFromBearer(json_decode($response->getHeader)->Authorization);
             return false;
         } else {
