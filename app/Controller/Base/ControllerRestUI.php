@@ -65,6 +65,7 @@ abstract class ControllerRestUI implements IController{
     }
 
     public function setTitle($title) {
+        setTitle($title);
         setTitleBody($title);
     }
 
