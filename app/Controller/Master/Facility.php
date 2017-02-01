@@ -37,7 +37,7 @@ class Facility extends ControllerRestUI {
     }
     
     public function listData() {
-//        $this->unsetAutoData = array('code');
+        $this->unsetAutoData = array('description');
         parent::listData();
     }
 
