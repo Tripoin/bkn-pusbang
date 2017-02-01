@@ -32,6 +32,7 @@ class Group extends Controller{
         $this->indexUrl = IURLConstant::GROUP_INDEX_URL;
         $this->viewPath = IViewConstant::GROUP_VIEW_INDEX;
         $this->setAutoCrud();
+        
     }
 
 }

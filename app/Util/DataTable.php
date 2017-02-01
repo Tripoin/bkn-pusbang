@@ -39,11 +39,21 @@ class DataTable {
         'PAGE_TABLE' => null,
         'STYLE_BODY' => array(),
         'STYLE_COLUMN' => array(),
+        'STYLE_FIRST_COLUMN' => '',
+        'STYLE_LAST_COLUMN' => '',
         'DELETE_COLLECTION' => true,
         'SEARCH_FILTER' => array(),
         'URL' => null,
         'QUERY' => '',
     );
+
+    public function styleFirstColumn($styleFirstColumn) {
+        return $this->setTableOption('STYLE_FIRST_COLUMN', $styleFirstColumn);
+    }
+
+    public function styleLastColumn($styleLastColumn) {
+        return $this->setTableOption('STYLE_LAST_COLUMN', $styleLastColumn);
+    }
 
     public function setPageTable($pageTable) {
         return $this->setTableOption('PAGE_TABLE', $pageTable);
@@ -124,6 +134,10 @@ class DataTable {
 //        print_r($body);
         $this->body[] = $body;
 //        return $this->setTableOption('BODY', $body);
+    }
+
+    public function getArrayBody() {
+        return $this->body;
     }
 
     protected function setTableOption($key, $value) {
@@ -532,6 +546,9 @@ class DataTable {
 
     function showBody() {
         $styleColumn = $this->tableOption['STYLE_COLUMN'];
+        $styleFirstColumn = $this->tableOption['STYLE_FIRST_COLUMN'];
+        $styleLastColumn = $this->tableOption['STYLE_LAST_COLUMN'];
+
         $body = $this->body;
         $styleBody = $this->tableOption['STYLE_BODY'];
         $attrRowBody = $this->attrRowBody;
@@ -550,10 +567,13 @@ class DataTable {
                 $rs .= '<tr ' . $attrRowBody[$no] . ' >';
             }
 //            foreach ($body[$no] as $body_value) {
+            $countBody = count($body[$no]);
             for ($urut = 0; $urut < count($body[$no]); $urut++) {
 //                if (!isset($styleBody[$urut])) {
 //                    $styleBody[$urut] = '';
 //                }
+
+
                 if (!empty($styleColumn)) {
                     if (!isset($styleColumn[$urut])) {
                         $styleColumn[$urut] = '';
@@ -565,8 +585,22 @@ class DataTable {
                     }
                     $style_body = $styleBody[$urut];
                 }
-                if (isset($body[$no][$urut])) {
-                    $rs .= '<td style="' . $style_body . '">' . $body[$no][$urut] . '</td>';
+                if (is_not_null($body[$no][$urut])) {
+                    if ($urut == 0) {
+//                        echo $styleFirstColumn;
+                        if (!empty($styleFirstColumn)) {
+                            $style_body = $styleFirstColumn;
+                        }
+                    }
+                    if (($urut + 1) == $countBody) {
+                        if (!empty($styleLastColumn)) {
+                            $style_body = $styleLastColumn;
+                        }
+                        $rs .= '<td style="' . $style_body . '">' . $body[$no][$urut] . '</td>';
+                    } else {
+
+                        $rs .= '<td style="' . $style_body . '">' . $body[$no][$urut] . '</td>';
+                    }
                 }
             }
             $rs .= '</tr>';

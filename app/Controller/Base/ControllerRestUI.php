@@ -21,8 +21,9 @@ use app\Constant\IViewConstant;
 use app\Constant\IRestCommandConstant;
 use app\Controller\Base\IController;
 use app\Util\RestClient\TripoinRestClient;
+use app\Model\Auditrail;
 
-abstract class ControllerRestUI implements IController{
+abstract class ControllerRestUI implements IController {
 
     //put your code here
 
@@ -49,6 +50,9 @@ abstract class ControllerRestUI implements IController{
     public $auditrail = true;
     public $restURL = '';
     public $url_api;
+    public $autoData = false;
+    public $listAutoData = array();
+    public $unsetAutoData = array();
 
     public function __construct() {
         if (empty($this->search_filter)) {
@@ -57,7 +61,7 @@ abstract class ControllerRestUI implements IController{
                 "name" => lang('general.name')
             );
         }
-        $this->url_api  = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
+        $this->url_api = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
     }
 
     public function setBreadCrumb($breadcrumb = array()) {
@@ -83,11 +87,11 @@ abstract class ControllerRestUI implements IController{
     }
 
     public function save() {
-        $this->url_api  = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
+        $this->url_api = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
         $tripoinRestClient = new TripoinRestClient();
         $url = $this->url_api . $this->restURL . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::INSERT_SINGLE_DATA;
         $result = $tripoinRestClient->doPOST($url, array(), array(), $_POST);
-       //        print_r(json_decode($result->getBody));
+        //        print_r(json_decode($result->getBody));
         if (is_numeric(json_decode($result->getBody)) > 0) {
             echo toastAlert("success", lang('general.title_insert_success'), lang('general.message_insert_success'));
             echo '<script>$(function(){postAjaxPagination()});</script>';
@@ -100,12 +104,12 @@ abstract class ControllerRestUI implements IController{
     }
 
     public function update() {
-        $this->url_api  = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
+        $this->url_api = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
 //        print_r($db->getResult());
         $tripoinRestClient = new TripoinRestClient();
         $url = $this->url_api . $this->restURL . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::UPDATE_SINGLE_DATA;
         $result = $tripoinRestClient->doPut($url, array(), array(), $_POST);
-        
+
         if (is_numeric(json_decode($result->getBody)) > 0) {
             echo toastAlert("success", lang('general.title_update_success'), lang('general.message_update_success'));
             echo '<script>$(function(){postAjaxPagination()});</script>';
@@ -116,7 +120,7 @@ abstract class ControllerRestUI implements IController{
     }
 
     public function listData() {
-        $this->url_api  = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
+        $this->url_api = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
         $Form = new Form();
         $Datatable = new DataTable();
         $Button = new Button();
@@ -157,18 +161,46 @@ abstract class ControllerRestUI implements IController{
         }
         $list_data = $Datatable->select_pagination_rest($this->url_api . $this->restURL, null, $sorting);
 //        print_r($list_data);
+        if ($this->autoData == true) {
+            $this->listAutoData = $this->unsetDataModel($list_data['item']);
+            include_once FILE_PATH(IViewConstant::CRUD_LIST_VIEW_INDEX);
+        } else {
+            include_once FILE_PATH($this->viewList);
+        }
+    }
 
-
-        include_once FILE_PATH($this->viewList);
+    public function unsetDataModel($data) {
+        $auditrail = new Auditrail();
+//        print_r($auditrail);
+        $createdOn = $auditrail->getCreatedOn();
+        $createdBy = $auditrail->getCreatedByUsername();
+        $modifiedOn = $auditrail->getModifiedOn();
+        $modifiedBy = $auditrail->getModifiedByUsername();
+        $status = $auditrail->getStatus();
+        foreach (array_keys($data) as $key) {
+//            echo $data[$key]['created_on'];
+            unset($data[$key]->$createdOn);
+            unset($data[$key]->$createdBy);
+            unset($data[$key]->$modifiedOn);
+            unset($data[$key]->$modifiedBy);
+            unset($data[$key]->$status);
+        }
+//        print_r(array_keys((array) $data[0]));
+        $_SESSION[SESSION_ADMIN_AUTO_DATA] = array_keys((array) $data[0]);
+        return array_keys((array) $data[0]);
     }
 
     public function create() {
         $Form = new Form();
-        include_once FILE_PATH($this->viewCreate);
+        if ($this->autoData == true) {
+            include_once FILE_PATH(IViewConstant::CRUD_NEW_VIEW_INDEX);
+        } else {
+            include_once FILE_PATH($this->viewCreate);
+        }
     }
 
     public function edit() {
-        $this->url_api  = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
+        $this->url_api = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
         $id = $_POST['id'];
         $Form = new Form();
         $Button = new Button();
@@ -177,14 +209,17 @@ abstract class ControllerRestUI implements IController{
         $result = $tripoinRestClient->doPOST($url, array(), array(), $id);
 //        $db->connect();
 //        $get_data = $db->selectByID($data, $data->getId() . EQUAL . $id);
-        
 //        print_r($result);
         $get_data = json_decode($result->getBody);
-        include_once FILE_PATH($this->viewEdit);
+        if ($this->autoData == true) {
+            include_once FILE_PATH(IViewConstant::CRUD_EDIT_VIEW_INDEX);
+        } else {
+            include_once FILE_PATH($this->viewEdit);
+        }
     }
 
     public function delete() {
-        $this->url_api  = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
+        $this->url_api = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
         $id = $_POST['id'];
         $Form = new Form();
         /*  $db = new Database();
@@ -197,7 +232,7 @@ abstract class ControllerRestUI implements IController{
         $tripoinRestClient = new TripoinRestClient();
         $url = $this->url_api . $this->restURL . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::DELETE_SINGLE_DATA;
         $result = $tripoinRestClient->doDelete($url, array(), array(), $id);
-       
+
         if (is_numeric(json_decode($result->getBody)) > 0) {
 //            echo json_decode($result->getBody);
             echo 1;
@@ -225,7 +260,7 @@ abstract class ControllerRestUI implements IController{
         $tripoinRestClient = new TripoinRestClient();
         $url = $this->url_api . $this->restURL . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::DELETE_COLLECTION;
         $result = $tripoinRestClient->doDelete($url, array(), array(), $id);
-       
+
         if (is_numeric(json_decode($result->getBody)) > 0) {
 //            echo json_decode($result->getBody);
             echo 1;

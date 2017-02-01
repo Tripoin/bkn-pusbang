@@ -19,6 +19,7 @@ use app\Util\Database;
 use app\Util\Button;
 use app\Constant\IViewConstant;
 use app\Controller\Base\IController;
+use app\Model\Auditrail;
 
 abstract class Controller implements IController {
 
@@ -45,6 +46,7 @@ abstract class Controller implements IController {
     public $orderBy = null;
     public $per_page = 5;
     public $auditrail = true;
+    public $list_data = '';
 
     public function __construct() {
         if (empty($this->search_filter)) {
@@ -162,8 +164,32 @@ abstract class Controller implements IController {
         } else {
             $list_data = $Datatable->select_pagination($data, $data->getEntity(), $this->where_list, $this->join_list, $this->search_list, $this->orderBy, $this->select_entity);
         }
-
+        $this->list_data = $list_data;
+//        print_r($this->unsetDataModel($this->list_data['item']));
         include_once FILE_PATH($this->viewList);
+    }
+
+//    public $dataModel = '';
+
+    public function unsetDataModel($data) {
+        $auditrail = new Auditrail();
+//        print_r($auditrail);
+        foreach (array_keys($data) as $key) {
+//            echo $data[$key]['created_on'];
+            unset($data[$key][$auditrail->getCreatedOn()]);
+            unset($data[$key][$auditrail->getCreatedByUsername()]);
+            unset($data[$key][$auditrail->getModifiedOn()]);
+            unset($data[$key][$auditrail->getModifiedByUsername()]);
+            unset($data[$key][$auditrail->getStatus()]);
+//            unset($data[$key]['description']);
+//            if (isset($data[$key]['branch_id'])) {
+                unset($data[$key]['branch_id']);
+//            }
+//            unset($data[$key][$auditrail->get]);
+//            unset($data[$key]['modified_by']);
+        }
+
+        return $data;
     }
 
     public function create() {

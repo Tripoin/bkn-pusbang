@@ -18,6 +18,9 @@ interface IViewConstant {
     //put your code here
 
     const CRUD_VIEW_INDEX = 'view/template/crud/index.html.php';
+    const CRUD_LIST_VIEW_INDEX = 'view/template/crud/list.html.php';
+    const CRUD_NEW_VIEW_INDEX = 'view/template/crud/new.html.php';
+    const CRUD_EDIT_VIEW_INDEX = 'view/template/crud/edit.html.php';
     
 //    const GROUP_VIEW_INDEX = 'view/page/security/group/index.html.php';
     //INDEX VIEW SECURITY

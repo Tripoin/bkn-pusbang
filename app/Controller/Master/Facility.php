@@ -30,9 +30,15 @@ class Facility extends ControllerRestUI {
         $this->setBreadCrumb(array(lang('master.master') => "", lang('master.facility') => FULLURL()));
         $this->search_filter = array("code" => lang('general.code'), "name" => lang('general.name'));
         $this->indexUrl = IURLConstant::MASTER_FACILITY_INDEX_URL;
-        $this->viewPath = IViewConstant::MASTER_FACILITY_VIEW_INDEX;
+//        $this->viewPath = IViewConstant::MASTER_FACILITY_VIEW_INDEX;
         $this->setAutoCrud();
+        $this->autoData = true;
         parent::__construct();
+    }
+    
+    public function listData() {
+//        $this->unsetAutoData = array('code');
+        parent::listData();
     }
 
 }

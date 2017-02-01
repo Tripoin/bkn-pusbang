@@ -24,6 +24,17 @@ class Auditrail {
     protected $modifiedById = 'modified_by_id';
     protected $modifiedByIp = 'modified_by_ip';
     protected $modifiedOn = 'modified_on';
+    protected $description = 'description';
+    
+    function getDescription() {
+        return $this->description;
+    }
+
+    function setDescription($description) {
+        $this->description = $description;
+    }
+
+        
     function getStatus() {
         return $this->status;
     }
