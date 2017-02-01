@@ -59,7 +59,20 @@
                                 </span>
                             </p>
                         </div>
-                    </div>							
+                    </div>
+                    <div class="media">
+                        <div class="media-left">
+                            <i class="fa fa-taxi"></i>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading"><?= lang('general.transportation'); ?></h4>
+                            <p>
+                                <span class="contact-emailto">
+                                    <?= getSystemParameter('CONTACT_TRANSPORTATION'); ?>									
+                                </span>
+                            </p>
+                        </div>
+                    </div>
                 </div>				
             </div>
             <div class="col-md-8 col-sm-8">

@@ -35,6 +35,7 @@ return [
     "CONTACT_EMAIL" => "Company Email",
     "CONTACT_WEB" => "Company Website",
     "CONTACT_LATLONG" => "Latitude & Longitude",
+    "CONTACT_TRANSPORTATION" => "Transportation",
     "GENERAL_COPYRIGHT" => "Copyright",
     "GENERAL_FACEBOOK" => "URL Facebook",
     "GENERAL_TWITTER" => "URL Twitter",

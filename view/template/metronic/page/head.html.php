@@ -18,8 +18,8 @@ $admin_url = getAdminTheme();
                 }
                 ?>
 
-                <span style="font-size: 25px;font-family: 'deftone-stylus'" 
-                      class="logo-default text-logo"> <?= $logo_text; ?></span>
+                <div style="font-size: 25px;font-family: 'deftone-stylus';margin-top: -6px;" 
+                      class="logo-default text-logo"> <?= $logo_text; ?></div>
                 <!--<img src="<?= URL('/assets/img/logotripoin.png'); ?>" height="30" alt="logo" class="logo-default" /> </a>-->
             </a>
             <div class="menu-toggler sidebar-toggler" id="menu-toogle">
@@ -30,7 +30,7 @@ $admin_url = getAdminTheme();
         <!-- END LOGO -->
         <!-- BEGIN RESPONSIVE MENU TOGGLER -->
         <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
-            <!--<span></span>-->
+            <span></span>
         </a>
         <!-- END RESPONSIVE MENU TOGGLER -->
         <!-- BEGIN TOP NAVIGATION MENU -->
@@ -49,15 +49,15 @@ $admin_url = getAdminTheme();
                     <ul class="dropdown-menu dropdown-menu-default">
                         <li>
                             <a href="<?= URL($admin_url . '/profile'); ?>">
-                                <i class="icon-user"></i> My Profile </a>
+                                <i class="icon-user"></i> <?=lang('general.my_profile');?> </a>
                         </li>
                         <li>
                             <a href="<?= URL($admin_url . '/settings'); ?>">
-                                <i class="icon-settings"></i> Settings </a>
+                                <i class="icon-settings"></i> <?=lang('general.settings');?> </a>
                         </li>
                         <li>
                             <a href="<?= URL($admin_url . '/change-password'); ?>">
-                                <i class="icon-key"></i> Change Password </a>
+                                <i class="icon-key"></i> <?=lang('general.change_password');?> </a>
                         </li>
                         <!--                        <li>
                                                     <a href="app_todo.html">
@@ -67,12 +67,16 @@ $admin_url = getAdminTheme();
                                                 </li>-->
                         <li class="divider"> </li>
                         <li>
+                            <a href="<?= URL(''); ?>" target="_blank">
+                                <i class="icon-globe"></i> <?=lang('general.view_website');?> </a>
+                        </li>
+                        <li>
                             <a href="<?= URL($admin_url . '/lock-screen'); ?>">
-                                <i class="icon-lock"></i> Lock Screen </a>
+                                <i class="icon-lock"></i> <?=lang('general.lock_screen');?> </a>
                         </li>
                         <li>
                             <a href="<?= URL($admin_url . '/logout'); ?>">
-                                <i class="icon-key"></i> Log Out </a>
+                                <i class="icon-key"></i> <?=lang('general.log_out');?> </a>
                         </li>
                     </ul>
                 </li>

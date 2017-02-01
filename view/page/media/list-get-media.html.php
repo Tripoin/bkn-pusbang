@@ -42,12 +42,11 @@ $str_replace = str_replace('contents', '', $trim_path);
     $(function () {
         $('#chooseFile').hide();
         $('#file_path').val('<?= $_POST['path']; ?>');
-
-
     });
 
-    
-
+    function viewPicture(url) {
+        return false;
+    }
 
     function checkFile(e) {
         var cekFile = $('#cekFile').val();

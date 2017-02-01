@@ -60,6 +60,7 @@ abstract class Controller implements IController {
     }
 
     public function setTitle($title) {
+        setTitle($title);
         setTitleBody($title);
     }
 

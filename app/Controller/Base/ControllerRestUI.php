@@ -87,12 +87,7 @@ abstract class ControllerRestUI implements IController{
         $tripoinRestClient = new TripoinRestClient();
         $url = $this->url_api . $this->restURL . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::INSERT_SINGLE_DATA;
         $result = $tripoinRestClient->doPOST($url, array(), array(), $_POST);
-        if ($result == false) {
-            $tripoinRestClient = new TripoinRestClient();
-            $tripoinRestClient->doPOSTLoginNoAuth();
-            return $this->save();
-        }
-//        print_r(json_decode($result->getBody));
+       //        print_r(json_decode($result->getBody));
         if (is_numeric(json_decode($result->getBody)) > 0) {
             echo toastAlert("success", lang('general.title_insert_success'), lang('general.message_insert_success'));
             echo '<script>$(function(){postAjaxPagination()});</script>';
@@ -110,11 +105,7 @@ abstract class ControllerRestUI implements IController{
         $tripoinRestClient = new TripoinRestClient();
         $url = $this->url_api . $this->restURL . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::UPDATE_SINGLE_DATA;
         $result = $tripoinRestClient->doPut($url, array(), array(), $_POST);
-        if ($result == false) {
-            $tripoinRestClient = new TripoinRestClient();
-            $tripoinRestClient->doPOSTLoginNoAuth();
-            return $this->update();
-        }
+        
         if (is_numeric(json_decode($result->getBody)) > 0) {
             echo toastAlert("success", lang('general.title_update_success'), lang('general.message_update_success'));
             echo '<script>$(function(){postAjaxPagination()});</script>';
@@ -158,7 +149,7 @@ abstract class ControllerRestUI implements IController{
         if (getActionType(ACTION_TYPE_CREATE) != true) {
             $Datatable->createButton(false);
         }
-
+//echo $this->url_api . $this->restURL;
 //        print_r($testLogin);
         $sorting = array();
         if (!empty($this->orderBy)) {
@@ -186,11 +177,7 @@ abstract class ControllerRestUI implements IController{
         $result = $tripoinRestClient->doPOST($url, array(), array(), $id);
 //        $db->connect();
 //        $get_data = $db->selectByID($data, $data->getId() . EQUAL . $id);
-        if ($result == false) {
-            $tripoinRestClient = new TripoinRestClient();
-            $tripoinRestClient->doPOSTLoginNoAuth();
-            return $this->edit();
-        }
+        
 //        print_r($result);
         $get_data = json_decode($result->getBody);
         include_once FILE_PATH($this->viewEdit);
@@ -210,11 +197,7 @@ abstract class ControllerRestUI implements IController{
         $tripoinRestClient = new TripoinRestClient();
         $url = $this->url_api . $this->restURL . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::DELETE_SINGLE_DATA;
         $result = $tripoinRestClient->doDelete($url, array(), array(), $id);
-        if ($result == false) {
-            $tripoinRestClient = new TripoinRestClient();
-            $tripoinRestClient->doPOSTLoginNoAuth();
-            return $this->delete();
-        }
+       
         if (is_numeric(json_decode($result->getBody)) > 0) {
 //            echo json_decode($result->getBody);
             echo 1;
@@ -242,11 +225,7 @@ abstract class ControllerRestUI implements IController{
         $tripoinRestClient = new TripoinRestClient();
         $url = $this->url_api . $this->restURL . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::DELETE_COLLECTION;
         $result = $tripoinRestClient->doDelete($url, array(), array(), $id);
-        if ($result == false) {
-            $tripoinRestClient = new TripoinRestClient();
-            $tripoinRestClient->doPOSTLoginNoAuth();
-            return $this->deleteCollection();
-        }
+       
         if (is_numeric(json_decode($result->getBody)) > 0) {
 //            echo json_decode($result->getBody);
             echo 1;

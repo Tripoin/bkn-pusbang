@@ -232,7 +232,7 @@ class Form {
         return $this->setFormOption('OPTION_LABEL_VALUE', $data);
     }
 
-     /**
+    /**
      * (PHP 4, PHP 5+)<br/>
      * set Name Form Component used to Textbox,Combobox
      * <br/>
@@ -247,7 +247,7 @@ class Form {
         return $this->setFormOption('NAME', $name);
     }
 
-     /**
+    /**
      * (PHP 4, PHP 5+)<br/>
      * set Manual Attribute or add new Attribute for Form Component used to Textbox,Combobox
      * <br/>
@@ -262,7 +262,7 @@ class Form {
         return $this->setFormOption('MANUAL_ATTRIBUT', $manualattribut);
     }
 
-     /**
+    /**
      * (PHP 4, PHP 5+)<br/>
      * set Value Attribute for Form Component used to Textbox,Combobox
      * <br/>
@@ -292,7 +292,6 @@ class Form {
         return $this->setFormOption('TITLE', $title);
     }
 
-    
     protected function defaultOption() {
         $required = $this->formOption['REQUIRED'];
         if ($required == true) {
@@ -398,6 +397,60 @@ class Form {
             ' . $minlength . $maxlength . '
             class="form-control ' . $this->formOption['CLASS'] . '">';
 //        $textbox .= '<div>';
+        $rs = $this->formGroup($textbox);
+        $this->ResetObject();
+        return $rs;
+    }
+
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component Checkbox <COMBOBOX>
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * @default default class list if set inline => classComponent('mt-checkbox-inline');
+     * </p>
+     * @example $data = '$data = array(array("id"=>1,"label"=>"CHECKBOX 1"),array("id"=>2,"label"=>"CHECKBOX 2"));<br/>$Form->title('Checkbox Example')->id('checkbox')->data($json_data)->checkbox();
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
+    public function checkbox() {
+        $this->defaultOption();
+        $textbox = '';
+//        $textbox = '<div class="col-xs-3">';
+        $type = 'text';
+        if ($this->formOption['TYPE'] != null) {
+            $type = $this->formOption['TYPE'];
+        }
+        $data = $this->formOption['OPTION_LABEL_VALUE'];
+        $classComponent = 'mt-checkbox-list';
+        if($this->formOption['CLASS_COMP'] != null){
+            $classComponent = $this->formOption['CLASS_COMP'];
+        }
+        $textbox .= '<div class="'.$classComponent.'">';
+        if (is_object($data)) {
+            foreach ($data as $value) {
+                $textbox .= '<label class="mt-checkbox mt-checkbox-outline">
+                            <input type="checkbox" 
+                            name="' . $this->formOption['NAME'] . '" 
+                            id="' . $this->formOption['ID'] . '" value="'.$value->id.'"> '.$value->label.'
+                                <span></span>
+                        </label>';
+            }
+        } else {
+            foreach ($data as $value) {
+                $textbox .= '<label class="mt-checkbox mt-checkbox-outline">
+                            <input type="checkbox" 
+                            name="' . $this->formOption['NAME'] . '" 
+                            id="' . $this->formOption['ID'] . '" value="'.$value['id'].'"> '.$value['label'].'
+                                <span></span>
+                        </label>';
+            }
+        }
+
+        $textbox .= '</div>';
         $rs = $this->formGroup($textbox);
         $this->ResetObject();
         return $rs;
@@ -676,7 +729,7 @@ class Form {
         return $rs;
     }
 
-     /**
+    /**
      * (PHP 4, PHP 5+)<br/>
      * Create Component Textbox Password
      * <br/>
@@ -717,7 +770,7 @@ class Form {
         return $rs;
     }
 
-     /**
+    /**
      * (PHP 4, PHP 5+)<br/>
      * Create Component Text Area
      * <br/>
@@ -794,7 +847,7 @@ class Form {
         return $rs;
     }
 
-     /**
+    /**
      * (PHP 4, PHP 5+)<br/>
      * Create Component Default Date <DatePicker>
      * <br/>
@@ -846,7 +899,8 @@ class Form {
      * $json_data = json_decode($data);
      * $Form->title('Combobox Example')->id('combobox')->data($json_data)->combobox();
      */
-     /**
+
+    /**
      * (PHP 4, PHP 5+)<br/>
      * Create Component COMBOBOX <COMBOBOX>
      * <br/>

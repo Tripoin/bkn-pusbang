@@ -44,8 +44,9 @@ $str_replace = str_replace('contents', '', $trim_path);
         $('#path').val('<?= $str_replace; ?>/');
         $('#file_path').val('<?= $_POST['path']; ?>');
 
-        
+
     });
+    var touchtime = 0;
     function uploadFile() {
         var content = 'pageMedia';
         var contents = $('#' + content);
@@ -76,11 +77,27 @@ $str_replace = str_replace('contents', '', $trim_path);
         });
 
     }
-    
-    function viewPicture(url){
-     $('#imagemodal').modal('show');
-     $('#imagepreview').attr("src",url);
-     
+
+    function viewPicture(url) {
+
+        if (touchtime == 0) {
+            //set first click
+            touchtime = new Date().getTime();
+        } else {
+            //compare first click to this click and see if they occurred within double click threshold
+            if (((new Date().getTime()) - touchtime) < 800) {
+                //double click occurred
+//                alert("double clicked");
+
+                $('#imagemodal').modal('show');
+                $('#imagepreview').attr("src", url);
+                touchtime = 0;
+            } else {
+                //not a double click so set as a new first click
+                touchtime = new Date().getTime();
+            }
+        }
+
     }
     function deleteFile() {
         var name = $('#cekFile').val();
@@ -141,9 +158,24 @@ $str_replace = str_replace('contents', '', $trim_path);
             $('#deleteFile').hide();
         }
     }
-    function getFolder(v, e) {
 
-        var action = $(v).attr('action');
-        ajaxPostManual('<?= FULLURL(); ?>', 'pageMedia', 'path=' + action);
+    function getFolder(v, e) {
+        if (touchtime == 0) {
+            //set first click
+            touchtime = new Date().getTime();
+        } else {
+            //compare first click to this click and see if they occurred within double click threshold
+            if (((new Date().getTime()) - touchtime) < 800) {
+                //double click occurred
+//                alert("double clicked");
+
+                var action = $(v).attr('action');
+                ajaxPostManual('<?= FULLURL(); ?>', 'pageMedia', 'path=' + action);
+                touchtime = 0;
+            } else {
+                //not a double click so set as a new first click
+                touchtime = new Date().getTime();
+            }
+        }
     }
 </script>
