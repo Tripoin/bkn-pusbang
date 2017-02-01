@@ -246,17 +246,6 @@ abstract class ControllerRestUI implements IController {
     public function deleteCollection() {
         $id = $_POST['id'];
         $Form = new Form();
-//        $db = new Database();
-//        $group = new SecurityGroup();
-//        $data = $this->modelData;
-//        $db->connect();
-//        $where = $data->getId() . " IN (" . $id . ")";
-//        $delete = 'DELETE FROM ' . $data->getEntity() . ' WHERE ' . $where;
-//        print_r($delete);
-//        $delete_data = $db->delete($data->getEntity(), $where);
-//        $get_data = $db->delete($data->getEntity(), $data->getId() . EQUAL . $id);
-//        echo $delete_data;
-//        print_r($get_group);
         $tripoinRestClient = new TripoinRestClient();
         $url = $this->url_api . $this->restURL . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::DELETE_COLLECTION;
         $result = $tripoinRestClient->doDelete($url, array(), array(), $id);

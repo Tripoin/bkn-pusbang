@@ -6,7 +6,7 @@ $autoData = $this->listAutoData;
 $arrayHeader = array();
 $countAutoData;
 foreach ($autoData as $valueData) {
-    if ($valueData != 'id' && $valueData != 'description') {
+    if ($valueData != 'id') {
         if (!in_array($valueData, $this->unsetAutoData)) {
             array_push($arrayHeader, lang("general." . $valueData));
         }
