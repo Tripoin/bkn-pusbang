@@ -76,5 +76,6 @@ interface IURLConstant {
     
     const MASTER_ROOM_INDEX_URL = '/master/room';
     const MASTER_FACILITY_INDEX_URL = '/master/facility';
+    const MASTER_CITY_INDEX_URL = '/master/city';
 
 }

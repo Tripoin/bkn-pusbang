@@ -147,4 +147,5 @@ return [
     'lock_screen'=>'Kunci Layar',
     'view_website'=>'Lihat Website',
     'log_out'=>'Keluar',
+    'province_id'=>'Provinsi'
 ];

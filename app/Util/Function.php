@@ -67,7 +67,11 @@ function lang($lang) {
 //    echo '';
 
     $langs = require FILE_PATH('resources/lang/' . $language . '/' . $path . '.php');
-    $result = $langs[$explode[1]];
+    if (isset($langs[$explode[1]])) {
+        $result = $langs[$explode[1]];
+    } else {
+        $result = $lang;
+    }
 //    echo $_GET['lang'];
 //    echo $langs[$lang[1]];
     return $result;
@@ -1623,16 +1627,28 @@ function convertJsonCombobox($data = null, $id, $label, $manual_data = array()) 
 //        echo key($value);
             $expl = "";
 //            $ex = explode("-", $label);
-            if (is_array($label)) {
-                foreach ($label as $values) {
-                    $expl .= $value[$values] . " - ";
-                }
-                $expl = rtrim($expl, "- ");
-            } else {
-                $expl = $value[$label];
-            }
 
-            $json .= '{"id":"' . $value[$id] . '","label":"' . $expl . '"},';
+            if (is_array($data)) {
+                if (is_array($label)) {
+                    foreach ($label as $values) {
+                        $expl .= $value[$values] . " - ";
+                    }
+                    $expl = rtrim($expl, "- ");
+                } else {
+                    $expl = $value[$label];
+                }
+                $json .= '{"id":"' . $value[$id] . '","label":"' . $expl . '"},';
+            } else {
+                if (is_array($label)) {
+                    foreach ($label as $values) {
+                        $expl .= $value->$values . " - ";
+                    }
+                    $expl = rtrim($expl, "- ");
+                } else {
+                    $expl = $value->$label;
+                }
+                $json .= '{"id":"' . $value->$id . '","label":"' . $expl . '"},';
+            }
         }
     }
     $json = rtrim($json, ',');
@@ -1790,7 +1806,7 @@ function imageManager($title, $url, $link, $type) {
         $stringCut = substr($file_name, 0, 10);
         $userAgent = getUserAgent();
 //        if ($userAgent == "web") {
-            $txt = '<div class="col-sm-2 col-md-2 hidden-xs">
+        $txt = '<div class="col-sm-2 col-md-2 hidden-xs">
                     <a href="javascript:;"  onclick="viewPicture(\'' . $url . '\')" onclick="checkFile(this)" value="' . $title . '" value-type="0" name="fileimage[]" class="thumbnail" id="file" style="text-align: center;">
                         <img src="' . $url . '" style="height: 102px; width: 100%; display: block;"
                             
@@ -1799,7 +1815,7 @@ function imageManager($title, $url, $link, $type) {
                     </a>
                 </div>';
 //        } else {
-            $txt = '<div class="col-sm-2 col-md-2 hidden-lg">
+        $txt = '<div class="col-sm-2 col-md-2 hidden-lg">
                     <a href="javascript:;"  onclick="viewPicture(\'' . $url . '\')" onclick="checkFile(this)" value="' . $title . '" value-type="0" name="fileimage[]" class="thumbnail" id="file" style="text-align: center;">
                         <img src="' . $url . '" style="height: 185px; width: 100%; display: block;"
                             

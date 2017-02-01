@@ -784,23 +784,44 @@ class DataTable {
         }
         $sql = $sql_select . $sql_all . $sql_from . $sql_search . $order_str . $limit;
 //        echo $sql;
-        LOGGER($sql);
+//        LOGGER($sql);
         $this->sql = $sql;
 
         $db->sql($this->sql);  // Table name, column names and respective values
         $res = $db->getResult();
-        if ($current_page == 1)
-            $from = 1;
-        else
-            $from = $to - $per_page + 1;
-        $this->from = $from;
-        if ($this->to > $this->total)
-            $to = $this->total;
-        $this->to = $to;
+        if (!empty($res)) {
+            if ($current_page == 1)
+                $from = 1;
+            else
+                $from = $to - $per_page + 1;
+            $this->from = $from;
+            if ($this->to > $this->total)
+                $to = $this->total;
+            $this->to = $to;
 //        if($res == FALSE){
 //            $res = array();
 //        }
-        $res = array_merge(array("item" => $res), $this->json_pagination());
+//        echo json_encode($db->selectRelation($entity));
+
+            $relation = $db->selectRelation($entity);
+            if (!empty($relation)) {
+                $key_parent = array_keys($res[0]);
+                foreach ($relation as $val_relation) {
+                    if (in_array($val_relation['COLUMN_NAME'], $key_parent)) {
+                        $ex_val2 = explode('_', $val_relation['COLUMN_NAME']);
+                        foreach ($res as $key => $val2) {
+                            $db->select($val_relation['REFERENCED_TABLE_NAME'], "*", null, $val_relation['REFERENCED_COLUMN_NAME'] . "='" . $val2[$val_relation['COLUMN_NAME']] . "'");
+                            $res_rel = $db->getResult();
+                            $res[$key][$val_relation['COLUMN_NAME']] = $res_rel[0];
+                        }
+                    }
+                }
+            }
+            $res = array_merge(array("item" => $res), $this->json_pagination());
+        } else {
+            $res = array_merge(array("item" => array()), $this->json_pagination());
+        }
+//        echo json_encode($res);
         return $res;
     }
 

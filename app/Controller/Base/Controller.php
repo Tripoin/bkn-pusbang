@@ -46,7 +46,9 @@ abstract class Controller implements IController {
     public $orderBy = null;
     public $per_page = 5;
     public $auditrail = true;
-    public $list_data = '';
+    public $autoData = false;
+    public $listAutoData = array();
+    public $unsetAutoData = array();
 
     public function __construct() {
         if (empty($this->search_filter)) {
@@ -164,9 +166,14 @@ abstract class Controller implements IController {
         } else {
             $list_data = $Datatable->select_pagination($data, $data->getEntity(), $this->where_list, $this->join_list, $this->search_list, $this->orderBy, $this->select_entity);
         }
-        $this->list_data = $list_data;
+//        $this->list_data = $list_data;
 //        print_r($this->unsetDataModel($this->list_data['item']));
-        include_once FILE_PATH($this->viewList);
+        if ($this->autoData == true) {
+            $this->listAutoData = $this->unsetDataModel($list_data['item']);
+            include_once FILE_PATH(IViewConstant::CRUD_LIST_VIEW_INDEX);
+        } else {
+            include_once FILE_PATH($this->viewList);
+        }
     }
 
 //    public $dataModel = '';
@@ -174,27 +181,36 @@ abstract class Controller implements IController {
     public function unsetDataModel($data) {
         $auditrail = new Auditrail();
 //        print_r($auditrail);
-        foreach (array_keys($data) as $key) {
+        $createdOn = $auditrail->getCreatedOn();
+        $createdBy = $auditrail->getCreatedByUsername();
+        $modifiedOn = $auditrail->getModifiedOn();
+        $modifiedBy = $auditrail->getModifiedByUsername();
+        $status = $auditrail->getStatus();
+//        print_r($data);
+        if (!empty($data)) {
+            foreach (array_keys($data) as $key) {
 //            echo $data[$key]['created_on'];
-            unset($data[$key][$auditrail->getCreatedOn()]);
-            unset($data[$key][$auditrail->getCreatedByUsername()]);
-            unset($data[$key][$auditrail->getModifiedOn()]);
-            unset($data[$key][$auditrail->getModifiedByUsername()]);
-            unset($data[$key][$auditrail->getStatus()]);
-//            unset($data[$key]['description']);
-//            if (isset($data[$key]['branch_id'])) {
-                unset($data[$key]['branch_id']);
-//            }
-//            unset($data[$key][$auditrail->get]);
-//            unset($data[$key]['modified_by']);
+                unset($data[$key][$createdOn]);
+                unset($data[$key][$createdBy]);
+                unset($data[$key][$modifiedOn]);
+                unset($data[$key][$modifiedBy]);
+                unset($data[$key][$status]);
+            }
+            $_SESSION[SESSION_ADMIN_AUTO_DATA] = array_keys((array) $data[0]);
+            return array_keys((array) $data[0]);
+        } else {
+            return array();
         }
-
-        return $data;
+//        print_r(array_keys((array) $data[0]));
     }
 
     public function create() {
         $Form = new Form();
-        include_once FILE_PATH($this->viewCreate);
+        if ($this->autoData == true) {
+            include_once FILE_PATH(IViewConstant::CRUD_NEW_VIEW_INDEX);
+        } else {
+            include_once FILE_PATH($this->viewCreate);
+        }
     }
 
     public function edit() {
@@ -207,7 +223,11 @@ abstract class Controller implements IController {
         $db->connect();
         $get_data = $db->selectByID($data, $data->getId() . EQUAL . $id);
         $get_data = $get_data[0];
-        include_once FILE_PATH($this->viewEdit);
+        if ($this->autoData == true) {
+            include_once FILE_PATH(IViewConstant::CRUD_EDIT_VIEW_INDEX);
+        } else {
+            include_once FILE_PATH($this->viewEdit);
+        }
     }
 
     public function delete() {

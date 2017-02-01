@@ -186,6 +186,19 @@ class Database {
         }
     }
 
+    public function selectRelation($table) {
+        $this->connect();
+        $this->sql('' .
+                'select TABLE_NAME,COLUMN_NAME,CONSTRAINT_NAME,REFERENCED_TABLE_NAME,' .
+                'REFERENCED_COLUMN_NAME from INFORMATION_SCHEMA.KEY_COLUMN_USAGE' .
+                ' where TABLE_SCHEMA = "' . $this->db_name . '" and TABLE_NAME = "' . $table . '"' .
+                ' and referenced_column_name is not NULL;');
+        
+        $result = $this->getResult();
+//        echo $this->getSql();
+        return $result;
+    }
+
     public function selectByID($table, $where = null) {
         $this->connect();
         $this->select($table->getEntity(), "*", array(), $where, null);
@@ -226,10 +239,10 @@ class Database {
           }
          * */
         if (!empty($join)) {
-            if(is_array($join)){
-            foreach ($join as $value) {
-                $q .= ' JOIN ' . $value;
-            }
+            if (is_array($join)) {
+                foreach ($join as $value) {
+                    $q .= ' JOIN ' . $value;
+                }
             } else {
                 $q .= ' JOIN ' . $value;
             }
@@ -519,7 +532,7 @@ class Database {
             }
         } else if ($this->db_driver == "mysqli") {
             $tablesInDb = $this->mysql->query('SHOW TABLES FROM ' . $this->db_name . ' LIKE "' . $table . '"');
-            
+
             if ($tablesInDb) {
                 if ($tablesInDb->num_rows == 1) {
                     return true; // The table exists

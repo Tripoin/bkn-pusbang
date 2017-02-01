@@ -145,4 +145,5 @@ return [
     'lock_screen'=>'Lock Screen',
     'view_website'=>'View Website',
     'log_out'=>'Log Out',
+    'province_id'=>'Province'
 ];

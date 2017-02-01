@@ -164,6 +164,7 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
         
         $Routes->setScaffolding($sys_url_admin . IURLConstant::MASTER_ROOM_INDEX_URL, 'app\Controller\Master\Room');
         $Routes->setScaffolding($sys_url_admin . IURLConstant::MASTER_FACILITY_INDEX_URL, 'app\Controller\Master\Facility');
+        $Routes->setScaffolding($sys_url_admin . IURLConstant::MASTER_CITY_INDEX_URL, 'app\Controller\Master\City');
     }
 }
 
