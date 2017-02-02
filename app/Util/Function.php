@@ -17,6 +17,7 @@ use app\Model\MasterLanguage;
 use app\Util\Database;
 use app\Util\RestClient\TripoinRestClient;
 use app\Constant\IRestCommandConstant;
+use app\Util\Form;
 
 function is_not_null($var) {
     return !is_null($var);
@@ -1998,6 +1999,11 @@ function getUserAgent() {
         }
     }
     return $browser_t;
+}
+
+function Form(){
+    $Form = new Form();
+    return $Form;
 }
 
 ?>
