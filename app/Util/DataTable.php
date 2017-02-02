@@ -852,10 +852,15 @@ class DataTable {
             "item_number" => $this->per_page,
             "filter_key" => $search[0],
             "filter_value" => $search[1],
+//            "filter_data" => [array(
+//            "filter_key" => "code",
+//            "filter_value" => ""
+//                )
+//            ],
             "sorting_key" => $keyOrder,
             "sorting_direction" => $valOrder
         ));
-//        print_r($result);
+//print_r($result);
         if ($result == false) {
             $tripoinRestClient = new TripoinRestClient();
             $tripoinRestClient->doPOSTLoginNoAuth();
@@ -863,7 +868,8 @@ class DataTable {
         }
 //        print_r($result);
         $json = json_decode($result->getBody);
-        $this->result = $json;
+        
+//        $this->result = $json;
         if (!empty($json->data)) {
             $this->per_page = $json->per_page;
             $this->current_page = $json->current_page;
@@ -932,6 +938,7 @@ class DataTable {
 //            print_r($json);
             $res = array_merge(array("item" => array()), $this->json_pagination());
         }
+         
         return $res;
     }
 
