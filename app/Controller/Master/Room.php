@@ -34,23 +34,16 @@ class Room extends ControllerRestUI {
         $this->viewPath = IViewConstant::MASTER_ROOM_VIEW_INDEX;
         $this->setAutoCrud();
         parent::__construct();
-        print_r($this->result);
+//        print_r($this->result);
     }
 
     public function create() {
-        $tripoinRestClient = new TripoinRestClient();
-        $url = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH. IRestURLConstant::MASTER . SLASH . IRestURLConstant::FACILITY . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::SELECT_LOV;
-//        echo $url;
-        $result = $tripoinRestClient->doGET($url, array());
-        $this->data_facility = json_decode($result->getBody);
+        $this->data_facility = getRestLov(IRestURLConstant::MASTER . SLASH . IRestURLConstant::FACILITY);
         parent::create();
     }
 
     public function edit() {
-        $tripoinRestClient = new TripoinRestClient();
-        $url = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH . IRestURLConstant::MASTER . SLASH . IRestURLConstant::FACILITY . SLASH . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::SELECT_LOV;
-        $result = $tripoinRestClient->doGET($url, array());
-        $this->data_facility = json_decode($result->getBody);
+        $this->data_facility = getRestLov(IRestURLConstant::MASTER . SLASH . IRestURLConstant::FACILITY);
         parent::edit();
     }
 

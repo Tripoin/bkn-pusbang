@@ -22,6 +22,6 @@ class IRestURLConstant {
     
     
     //COMMAND API MASTER
-    const FACILITY = '130058';
+    const FACILITY = '130059';
     const ROOM = '130049';
 }

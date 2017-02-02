@@ -15,12 +15,28 @@ use app\Model\SecurityFunctionAssignment;
 use app\Model\MasterSystemParameter;
 use app\Model\MasterLanguage;
 use app\Util\Database;
+use app\Util\RestClient\TripoinRestClient;
+use app\Constant\IRestCommandConstant;
 
 function is_not_null($var) {
     return !is_null($var);
 }
 
 $title = '';
+
+function getRestLov($code) {
+    $tripoinRestClient = new TripoinRestClient();
+    $url = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH . 
+             $code . SLASH . 
+            IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::SELECT_LOV;
+    $result = $tripoinRestClient->doGET($url, array());
+    if(empty($result->getBody)){
+        return array();
+    } else {
+        return json_decode($result->getBody);
+    }
+    
+}
 
 function setTitle($value) {
     $GLOBALS['title'] = $value;
