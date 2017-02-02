@@ -11,7 +11,7 @@ $Datatable->header(array(lang("general.no"), lang("general.code")
     , lang("master.capacity"), lang("general.action")));
 $no = $list_data['from'];
 
-
+//print_r($list_data['item']);
 foreach ($list_data['item'] as $value) {
 
         $action_delete = $Button->url($this->deleteUrl)->value($value->id)->buttonDelete();
@@ -20,7 +20,7 @@ foreach ($list_data['item'] as $value) {
 
     $Datatable->body(array($no, $value->code, $value->name
             , $value->dimension
-            , $value->facility_id
+            , $value->facility_id->name
             , $value->capacity, $action_edit . $action_delete));
     $no += 1;
 }

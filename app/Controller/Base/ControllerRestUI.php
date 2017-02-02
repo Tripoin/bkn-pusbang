@@ -173,6 +173,7 @@ abstract class ControllerRestUI implements IController {
     }
 
     public function unsetDataModel($data) {
+//        print_r($data);
         $auditrail = new Auditrail();
 //        print_r($auditrail);
         $createdOn = $auditrail->getCreatedOn();
@@ -189,8 +190,13 @@ abstract class ControllerRestUI implements IController {
             unset($data[$key]->$status);
         }
 //        print_r(array_keys((array) $data[0]));
-        $_SESSION[SESSION_ADMIN_AUTO_DATA] = array_keys((array) $data[0]);
-        return array_keys((array) $data[0]);
+        
+        if (empty($data)) {
+            return array();
+        } else {
+            $_SESSION[SESSION_ADMIN_AUTO_DATA] = array_keys((array) $data[0]);
+            return array_keys((array) $data[0]);
+        }
     }
 
     public function create() {
