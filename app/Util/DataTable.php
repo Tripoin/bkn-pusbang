@@ -812,11 +812,15 @@ class DataTable {
                         foreach ($res as $key => $val2) {
                             $db->select($val_relation['REFERENCED_TABLE_NAME'], "*", null, $val_relation['REFERENCED_COLUMN_NAME'] . "='" . $val2[$val_relation['COLUMN_NAME']] . "'");
                             $res_rel = $db->getResult();
-                            $res[$key][$val_relation['COLUMN_NAME']] = $res_rel[0];
+//                            print_r($res_rel);
+                            if (!empty($res_rel)) {
+                                $res[$key][$val_relation['COLUMN_NAME']] = $res_rel[0];
+                            }
                         }
                     }
                 }
             }
+//            print_r($res);
             $res = array_merge(array("item" => $res), $this->json_pagination());
         } else {
             $res = array_merge(array("item" => array()), $this->json_pagination());
@@ -919,7 +923,7 @@ class DataTable {
             }
 
             $this->pagination_item = rtrim($res_page, ",");
-            
+
             $res = array_merge(array("item" => $json->data), $this->json_pagination());
         } else {
 //            print_r($json);
@@ -927,8 +931,10 @@ class DataTable {
         }
         return $res;
     }
+
     public $result;
-    public function getResult(){
+
+    public function getResult() {
         return $this->result;
     }
 
