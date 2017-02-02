@@ -306,9 +306,9 @@ class TripoinRestClient {
             $this->failGetBearer(json_decode($response->getBody)->error);
             $tripoinRestClient = new TripoinRestClient();
             if($tripoinRestClient->doPOSTLoginNoAuth() != false){
-                return $this->doDelete($p_TargetURL, $param, $header,$body);
+                return $this->doPut($p_TargetURL, $param, $header,$body);
             } else {
-                return $this->doDelete($p_TargetURL, $param, $header,$body);
+                return $this->doPut($p_TargetURL, $param, $header,$body);
             }
 //            $this->setSessionFromBearer(json_decode($response->getHeader)->Authorization);
             return false;
