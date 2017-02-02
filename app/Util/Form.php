@@ -426,16 +426,16 @@ class Form {
         }
         $data = $this->formOption['OPTION_LABEL_VALUE'];
         $classComponent = 'mt-checkbox-list';
-        if($this->formOption['CLASS_COMP'] != null){
+        if ($this->formOption['CLASS_COMP'] != null) {
             $classComponent = $this->formOption['CLASS_COMP'];
         }
-        $textbox .= '<div class="'.$classComponent.'">';
+        $textbox .= '<div class="' . $classComponent . '">';
         if (is_object($data)) {
             foreach ($data as $value) {
                 $textbox .= '<label class="mt-checkbox mt-checkbox-outline">
                             <input type="checkbox" 
                             name="' . $this->formOption['NAME'] . '" 
-                            id="' . $this->formOption['ID'] . '" value="'.$value->id.'"> '.$value->label.'
+                            id="' . $this->formOption['ID'] . '" value="' . $value->id . '"> ' . $value->label . '
                                 <span></span>
                         </label>';
             }
@@ -444,7 +444,7 @@ class Form {
                 $textbox .= '<label class="mt-checkbox mt-checkbox-outline">
                             <input type="checkbox" 
                             name="' . $this->formOption['NAME'] . '" 
-                            id="' . $this->formOption['ID'] . '" value="'.$value['id'].'"> '.$value['label'].'
+                            id="' . $this->formOption['ID'] . '" value="' . $value['id'] . '"> ' . $value['label'] . '
                                 <span></span>
                         </label>';
             }
@@ -928,13 +928,30 @@ class Form {
         } else {
             $combobox .= '<option value="">' . $this->formOption['PLACEHOLDER'] . '</option>';
         }
+//        print_r($data);
+
         foreach ($data as $value) {
-            if ($this->formOption['VALUE'] == $value->id) {
-                $combobox .= '<option value="' . $value->id . '" selected="selected">' . $value->label . '</option>';
+            if (is_object($value)) {
+                if ($this->formOption['VALUE'] == $value->id) {
+                    $combobox .= '<option value="' . $value->id . '" selected="selected">' . $value->label . '</option>';
+                } else {
+                    $combobox .= '<option value="' . $value->id . '">' . $value->label . '</option>';
+                }
             } else {
-                $combobox .= '<option value="' . $value->id . '">' . $value->label . '</option>';
+                if ($this->formOption['VALUE'] == $value['id']) {
+                    $combobox .= '<option value="' . $value['id'] . '" selected="selected">' . $value['label'] . '</option>';
+                } else {
+                    $combobox .= '<option value="' . $value['id'] . '">' . $value['label'] . '</option>';
+                }
             }
         }
+//        } else if (is_array($data)) {
+        /*    foreach ($data as $value) {
+                
+            }
+        }
+         * 
+         */
         $plchldr = '';
         if ($this->formOption['PLACEHOLDER'] != null) {
             $plchldr = '{

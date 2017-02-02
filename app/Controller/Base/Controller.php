@@ -49,6 +49,7 @@ abstract class Controller implements IController {
     public $autoData = false;
     public $listAutoData = array();
     public $unsetAutoData = array();
+    public $result = '';
 
     public function __construct() {
         if (empty($this->search_filter)) {
@@ -166,6 +167,7 @@ abstract class Controller implements IController {
         } else {
             $list_data = $Datatable->select_pagination($data, $data->getEntity(), $this->where_list, $this->join_list, $this->search_list, $this->orderBy, $this->select_entity);
         }
+        
 //        $this->list_data = $list_data;
 //        print_r($this->unsetDataModel($this->list_data['item']));
         if ($this->autoData == true) {

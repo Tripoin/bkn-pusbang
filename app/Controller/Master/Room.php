@@ -34,6 +34,7 @@ class Room extends ControllerRestUI {
         $this->viewPath = IViewConstant::MASTER_ROOM_VIEW_INDEX;
         $this->setAutoCrud();
         parent::__construct();
+        print_r($this->result);
     }
 
     public function create() {

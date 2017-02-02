@@ -53,6 +53,7 @@ abstract class ControllerRestUI implements IController {
     public $autoData = false;
     public $listAutoData = array();
     public $unsetAutoData = array();
+    public $result = '';
 
     public function __construct() {
         if (empty($this->search_filter)) {
@@ -161,6 +162,8 @@ abstract class ControllerRestUI implements IController {
         }
         $list_data = $Datatable->select_pagination_rest($this->url_api . $this->restURL, null, $sorting);
 //        print_r($list_data);
+        $this->result = $Datatable->getResult();
+//        print_r($Datatable->getResult());
         if ($this->autoData == true) {
             $this->listAutoData = $this->unsetDataModel($list_data['item']);
             include_once FILE_PATH(IViewConstant::CRUD_LIST_VIEW_INDEX);

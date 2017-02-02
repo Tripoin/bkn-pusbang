@@ -76,6 +76,7 @@ class RestClient {
             curl_setopt($ch, CURLOPT_USERPWD, $this->curlOptions['USERNAME'] . ":" . $this->curlOptions['PASSWORD']);
         }
         $response = curl_exec($ch);
+//        print_r($response);
         if (curl_error($ch)) {
 //            echo 'error:' . curl_error($ch);
         }

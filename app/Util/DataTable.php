@@ -848,6 +848,7 @@ class DataTable {
             "sorting_key" => $keyOrder,
             "sorting_direction" => $valOrder
         ));
+//        print_r($result);
         if ($result == false) {
             $tripoinRestClient = new TripoinRestClient();
             $tripoinRestClient->doPOSTLoginNoAuth();
@@ -855,6 +856,7 @@ class DataTable {
         }
 //        print_r($result);
         $json = json_decode($result->getBody);
+        $this->result = $json;
         if (!empty($json->data)) {
             $this->per_page = $json->per_page;
             $this->current_page = $json->current_page;
@@ -917,12 +919,17 @@ class DataTable {
             }
 
             $this->pagination_item = rtrim($res_page, ",");
-
+            
             $res = array_merge(array("item" => $json->data), $this->json_pagination());
         } else {
+//            print_r($json);
             $res = array_merge(array("item" => array()), $this->json_pagination());
         }
         return $res;
+    }
+    public $result;
+    public function getResult(){
+        return $this->result;
     }
 
     function json_pagination() {
