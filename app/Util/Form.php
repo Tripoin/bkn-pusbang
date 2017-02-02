@@ -929,27 +929,28 @@ class Form {
             $combobox .= '<option value="">' . $this->formOption['PLACEHOLDER'] . '</option>';
         }
 //        print_r($data);
-
-        foreach ($data as $value) {
-            if (is_object($value)) {
-                if ($this->formOption['VALUE'] == $value->id) {
-                    $combobox .= '<option value="' . $value->id . '" selected="selected">' . $value->label . '</option>';
+        if (!empty($data)) {
+            foreach ($data as $value) {
+                if (is_object($value)) {
+                    if ($this->formOption['VALUE'] == $value->id) {
+                        $combobox .= '<option value="' . $value->id . '" selected="selected">' . $value->label . '</option>';
+                    } else {
+                        $combobox .= '<option value="' . $value->id . '">' . $value->label . '</option>';
+                    }
                 } else {
-                    $combobox .= '<option value="' . $value->id . '">' . $value->label . '</option>';
-                }
-            } else {
-                if ($this->formOption['VALUE'] == $value['id']) {
-                    $combobox .= '<option value="' . $value['id'] . '" selected="selected">' . $value['label'] . '</option>';
-                } else {
-                    $combobox .= '<option value="' . $value['id'] . '">' . $value['label'] . '</option>';
+                    if ($this->formOption['VALUE'] == $value['id']) {
+                        $combobox .= '<option value="' . $value['id'] . '" selected="selected">' . $value['label'] . '</option>';
+                    } else {
+                        $combobox .= '<option value="' . $value['id'] . '">' . $value['label'] . '</option>';
+                    }
                 }
             }
         }
 //        } else if (is_array($data)) {
         /*    foreach ($data as $value) {
-                
-            }
-        }
+
+          }
+          }
          * 
          */
         $plchldr = '';

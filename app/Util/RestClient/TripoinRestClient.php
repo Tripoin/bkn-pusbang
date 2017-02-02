@@ -49,7 +49,11 @@ class TripoinRestClient {
         $merge_array_key = $this->queryParamURL($p_TargetURL);
         $page_url = strtok($p_TargetURL, '?');
 //        $this->getRefreshedToken();
-        $merge_param_token = array("token" => $_SESSION[SESSION_ADMIN_TOKEN]);
+        $session_token = '';
+        if(isset($_SESSION[SESSION_ADMIN_TOKEN])){
+            $session_token = $_SESSION[SESSION_ADMIN_TOKEN];
+        }
+        $merge_param_token = array("token" => $session_token);
         $merge_param = array_merge($param, $merge_array_key, $merge_param_token);
 //        $merge_header = array(IApplicationConstant::SESSION_TOKEN_NAME . ": " . $_SESSION[SESSION_ADMIN_TOKEN]);
         $merge_header = array();
@@ -137,8 +141,12 @@ class TripoinRestClient {
         $api_command_login = $url_api . IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::LOGIN;
 
         $rs_url = new RestClient();
+        $session_authorization = '';
+        if(isset($_SESSION[SESSION_ADMIN_AUTHORIZATION])){
+            $session_authorization = $_SESSION[SESSION_ADMIN_AUTHORIZATION];
+        }
         $response = $rs_url->to($api_command_login)
-                ->setHeader(array("Authorization: " . $_SESSION[SESSION_ADMIN_AUTHORIZATION]))
+                ->setHeader(array("Authorization: " . $session_authorization))
                 ->post();
 
         if (isset(json_decode($response->getBody)->token)) {
@@ -163,6 +171,10 @@ class TripoinRestClient {
 
     public function doPOST($p_TargetURL, $param = array(), $header = array(), $body = array()) {
 //        $tripoinRestClient = new TripoinRestClient();
+        $session_token = '';
+        if(isset($_SESSION[SESSION_ADMIN_TOKEN])){
+            $session_token = $_SESSION[SESSION_ADMIN_TOKEN];
+        }
         if (isset($_SESSION[SESSION_ADMIN_TOKEN])) {
             if ($_SESSION[SESSION_ADMIN_TOKEN] == "") {
                 $this->doPOSTLoginNoAuth();
@@ -175,7 +187,8 @@ class TripoinRestClient {
         $merge_array_key = $this->queryParamURL($p_TargetURL);
         $page_url = strtok($p_TargetURL, '?');
 //        $this->getRefreshedToken();
-        $merge_param_token = array("token" => $_SESSION[SESSION_ADMIN_TOKEN]);
+        
+        $merge_param_token = array("token" => $session_token);
 //        print_r($merge_param_token);
         $merge_param = array_merge($param, $merge_array_key, $merge_param_token);
 //        $merge_header = array(IApplicationConstant::SESSION_TOKEN_NAME . ": " . $_SESSION[SESSION_ADMIN_TOKEN]);
@@ -212,6 +225,10 @@ class TripoinRestClient {
     }
 
     public function doDelete($p_TargetURL, $param = array(), $header = array(), $body = array()) {
+        $session_token = '';
+        if(isset($_SESSION[SESSION_ADMIN_TOKEN])){
+            $session_token = $_SESSION[SESSION_ADMIN_TOKEN];
+        }
         if (isset($_SESSION[SESSION_ADMIN_TOKEN])) {
             if ($_SESSION[SESSION_ADMIN_TOKEN] == "") {
                 $this->doPOSTLoginNoAuth();
@@ -224,7 +241,7 @@ class TripoinRestClient {
         $merge_array_key = $this->queryParamURL($p_TargetURL);
         $page_url = strtok($p_TargetURL, '?');
 //        $this->getRefreshedToken();
-        $merge_param_token = array("token" => $_SESSION[SESSION_ADMIN_TOKEN]);
+        $merge_param_token = array("token" => $session_token);
         $merge_param = array_merge($param, $merge_array_key, $merge_param_token);
 //        $merge_header = array(IApplicationConstant::SESSION_TOKEN_NAME . ": " . $_SESSION[SESSION_ADMIN_TOKEN]);
         $merge_header = array();
@@ -257,6 +274,10 @@ class TripoinRestClient {
     }
 
     public function doPut($p_TargetURL, $param = array(), $header = array(), $body = array()) {
+        $session_token = '';
+        if(isset($_SESSION[SESSION_ADMIN_TOKEN])){
+            $session_token = $_SESSION[SESSION_ADMIN_TOKEN];
+        }
         if (isset($_SESSION[SESSION_ADMIN_TOKEN])) {
             if ($_SESSION[SESSION_ADMIN_TOKEN] == "") {
                 $this->doPOSTLoginNoAuth();
@@ -269,7 +290,7 @@ class TripoinRestClient {
         $merge_array_key = $this->queryParamURL($p_TargetURL);
         $page_url = strtok($p_TargetURL, '?');
 //        $this->getRefreshedToken();
-        $merge_param_token = array("token" => $_SESSION[SESSION_ADMIN_TOKEN]);
+        $merge_param_token = array("token" => $session_token);
         $merge_param = array_merge($param, $merge_array_key, $merge_param_token);
 //        $merge_header = array(IApplicationConstant::SESSION_TOKEN_NAME . ": " . $_SESSION[SESSION_ADMIN_TOKEN]);
         $merge_header = array();
