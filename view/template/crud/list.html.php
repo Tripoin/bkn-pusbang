@@ -8,7 +8,14 @@ $countAutoData;
 foreach ($autoData as $valueData) {
     if ($valueData != 'id') {
         if (!in_array($valueData, $this->unsetAutoData)) {
-            array_push($arrayHeader, lang("general." . $valueData));
+            $ex_val2 = explode('_', $valueData);
+            if (isset($ex_val2[1])) {
+                if ($ex_val2[1] == 'id') {
+                    
+                }
+            } else {
+                array_push($arrayHeader, lang("general." . $valueData));
+            }
         }
     }
 }
@@ -47,7 +54,14 @@ foreach ($list_data['item'] as $value) {
                 $countBody += 1;
                 if (!in_array($valueData, $this->unsetAutoData)) {
                     if (!is_array($value[$valueData])) {
-                        array_push($arrayBody, $value[$valueData]);
+                        $ex_val2 = explode('_', $valueData);
+                        if (isset($ex_val2[1])) {
+                            if ($ex_val2[1] == 'id') {
+                                
+                            }
+                        } else {
+                            array_push($arrayBody, $value[$valueData]);
+                        }
                     } else {
 //                        echo $valueData;
                         array_push($arrayBody, $value[$valueData]['name']);

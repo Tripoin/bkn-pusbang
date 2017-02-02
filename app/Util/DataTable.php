@@ -814,7 +814,10 @@ class DataTable {
                             $res_rel = $db->getResult();
 //                            print_r($res_rel);
                             if (!empty($res_rel)) {
-                                $res[$key][$val_relation['COLUMN_NAME']] = $res_rel[0];
+//                                $res[$key][$val_relation['COLUMN_NAME']] = $res_rel[0];
+                                $res[$key][$ex_val2[0]] = $res_rel[0];
+                            } else {
+                                $res[$key][$ex_val2[0]] = array();
                             }
                         }
                     }
