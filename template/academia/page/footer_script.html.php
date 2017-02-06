@@ -5,6 +5,7 @@
 <script src="<?= getTemplateURL('/assets/js/jquery.meanmenu.min.js'); ?>"></script>
 <script src="<?= getTemplateURL('/assets/js/owl.carousel.min.js'); ?>"></script>
 <script src="<?= getTemplateURL('/assets/js/jquery.scrollUp.min.js'); ?>"></script>
+<script src="<?= URL('/assets/plugins/bootstrap-toastr/toastr.min.js'); ?>" type="text/javascript"></script>
 <script src="<?= URL('/assets/plugins/select2/js/select2.full.min.js'); ?>" type="text/javascript"></script>
 <script src="<?= getTemplateURL('/assets/js/atvImg-min.js'); ?>"></script>
 <script src="<?= getTemplateURL('/assets/plugins/venobox/venobox.min.js'); ?>"></script>

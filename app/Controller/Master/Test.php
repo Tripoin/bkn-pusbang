@@ -15,6 +15,7 @@ namespace app\Controller\Master;
  */
 use app\Util\Database;
 use app\Util\PasswordLib\TripoinCrypt;
+use app\Util\PHPMail\PHPMailer;
 
 class Test {
 
@@ -148,6 +149,76 @@ class Test {
 //        $tripoinCrypt = new TripoinCrypt();
 //        $user = array("code" => "12345", "password" => "admin123");
 //        print_r($tripoinCrypt->encrypt('tripoin:trijep3t3'));
+    }
+    
+    public function testMail(){
+        $pic_name = "Syahrial Fandrianah";
+        $pic_email = "sfandrianah2@gmail.com";
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+
+            $mail->Debugoutput = 'html';
+            $mail->SMTPDebug = 4;
+            $mail->Host = MAIL_HOST;
+//            $mail->MessageID = "<721c8cc0-d7f9-419d-a833-8e24ca5fbce8@email.android.com>";
+//            $mail->ContentType = "multipart/mixed; boundary=\"----OT8XXE9JORYX4R6QORCCRKUESJGIU4";
+//            $mail->Mim
+//        $mail->SMTPDebug  = 2;
+
+            /*       $mail->Port = 465;
+              $mail->SMTPSecure = 'ssl';
+              $mail->SMTPAuth = true;
+
+              $mail->Username = "talaindonesia2@gmail.com";
+              $mail->Password = "t4l4indonesia";
+             */
+            $mail->Port = MAIL_SMTP_PORT;
+            $mail->SMTPSecure = 'tls';
+            $mail->SMTPAuth = false;
+//        $mail->SMTPAutoTLS = ['ssl'=> ['allow_self_signed' => true]];
+
+            $mail->Username = MAIL_USERNAME;
+            $mail->Password = MAIL_PASSWORD;
+            
+
+            $mail->isHTML(true);
+
+//Set who the message is to be sent from
+            $mail->setFrom(MAIL_USERNAME, MAIL_FULLNAME);
+
+//Set an alternative reply-to address
+            $mail->addReplyTo($pic_email, $pic_name);
+
+//Set who the message is to be sent to
+            $mail->addAddress($pic_email, $pic_name);
+            $img_logo_tala = 'http://54.251.168.102/e-portal/contents/logo-kecil.png';
+            $mail->Subject = 'Validasi Reset Password';
+            $mail->Body = '<div style="border-style: solid;border-width: thin;font-family: \'Roboto\';">
+                      <div align="center" style="margin:15px;"><img src="' . $img_logo_tala . '" width="70" height="40"/></div>
+                        <div align="left" style="margin:15px;">
+                            Halo ' . $pic_name . ',
+                        <br/><br/>
+                       ' . lang('general.message_register_member') . '
+                        
+                        <br/>
+                        <a href="' . URL('') . '" target="_blank">' . URL('') . '</a>
+                        </div>
+                        </div>
+                            ';
+            if ($mail->smtpConnect()) {
+                $mail->smtpClose();
+                if (!$mail->send()) {
+                    echo $mail->ErrorInfo;
+                } else {
+                    return 1;
+                }
+            } else {
+                return 0;
+            }
+        } catch (\Exception $e) {
+            echo $e->getMessage(); //Boring error messages from anything else!
+        }
     }
 
 }

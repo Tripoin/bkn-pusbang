@@ -31,6 +31,10 @@ use app\Util\Form;
 use app\Model\SecurityUser;
 use app\Model\SecurityUserProfile;
 use app\Util\PHPMail\PHPMailer;
+use app\Model\TransactionRegistration;
+use app\Model\LinkRegistration;
+use app\Model\MasterAttachment;
+//use app\Model\Master;
 
 class Auth {
 
@@ -46,83 +50,188 @@ class Auth {
     public function register() {
         $this->registerProses();
     }
-
+    
+    public function registerProsesTest(){
+        echo resultPageMsg("success", lang('general.title_register_success'), lang('general.message_register_member'));
+        echo '<script>$(\'#form-newedit\').remove()</script>';
+    }
+    
     public function registerProses() {
-        $user = new SecurityUser();
-        $userProfile = new SecurityUserProfile();
-//        $username = $_POST['username'];
-        $firstname = $_POST['firstname'];
-        $lastname = $_POST['lastname'];
-        $email = $_POST['email'];
-        $telephone = $_POST['telephone'];
-        $password = $_POST['password'];
-        $confirm = $_POST['confirm'];
-        $code = explode("@", $email);
-        $salt = substr(md5(uniqid(rand(), true)), 0, 9);
-        $password_e = sha1($salt . sha1($salt . sha1($password)));
+        $db = new Database();
+        $transactionRegistration = new TransactionRegistration();
+        $security_code = $_POST['security_code'];
+        if ($security_code == $_SESSION[SESSION_CAPTCHA]['code']) {
+            $participant_category = $_POST['participant_category'];
 
+            $subject_name = $_POST['subject_name'];
+            $recommend_letter = $_FILES['recommend_letter'];
+            $pic_name = $_POST['pic_name'];
+            $pic_email = $_POST['pic_email'];
+            $pic_telephone = $_POST['pic_telephone'];
+            $pic_fax = $_POST['pic_fax'];
+            $pic_address = $_POST['pic_address'];
+            $province = $_POST['province'];
+            $city = $_POST['city'];
+            $district = $_POST['district'];
+            $village = $_POST['village'];
 
-//        $user->setCode($code[0]);
-//        $user->setEmail($email);
-//        $user->setPassword($password_e);
-//        $user->setSalt($salt);
-//        print_r($user);
-        $dbNew = new Database();
-        $dbNew->connect();
-//        $dbNew->insert($user->getEntity(),$user);
+            $subject = $_POST['subject'];
+            $message = $_POST['message'];
 
-        $res_user = $dbNew->selectByID($user, $user->getEmail() . "='" . $email . "'");
-        if ($password == $confirm) {
-            if (empty($res_user)) {
-                $dbNew->insert($user->getEntity(), array(
-                    $user->getEmail() => $email,
-                    $user->getCode() => $code[0],
-//                    $user->getName() => $firstname . ' ' . $lastname,
-                    $user->getPassword() => $password_e,
-                    $user->getSalt() => $salt,
-                    $user->getStatus() => 1,
-                    $user->getApproved() => 1,
-                    $user->getGroup()->getId() => 2,
-                    $user->getCreatedOn() => date('Y-m-d h:i:s'),
-                    $user->getCreatedByUsername() => $code[0],
-                    $user->getCreatedByIp() => getClientIp(),
-                ));
-                $rsPostNew = $dbNew->getResult();
-//        print_r($rsPostNew);
-                if (!is_numeric($rsPostNew[0])) {
-//            echo 'Login Failed';
-                    echo toastAlert("error", lang('general.title_register_failed'), lang('general.message_register_failed'));
-//            echo "<script>$(function(){ajaxPostModal('".URL('/page/login')."'); })</script>";
-//            echo "<script>$(function(){window.history.back()})</script>";
-//            echo "<script>$(function(){historyBackNoReset('".$_POST."')})</script>";
-                } else {
-                    $dbNew->insert($userProfile->getEntity(), array(
-                        $userProfile->getId() => $rsPostNew[0],
-                        $userProfile->getEmail() => $email,
-                        $userProfile->getCode() => $code[0],
-                        $userProfile->getTelp() => $telephone,
-                        $userProfile->getFullname() => $firstname . ' ' . $lastname
-                    ));
-                    $rsPostNew_2 = $dbNew->getResult();
-                    if (!is_numeric($rsPostNew_2[0])) {
-                        echo toastAlert("error", lang('general.title_register_failed'), lang('general.message_register_failed'));
+            if (!filter_var($pic_email, FILTER_VALIDATE_EMAIL)) {
+                echo resultPageMsg('danger', lang('general.title_register_failed'), lang('member.pic_email') . ' is Invalid');
+                echo toastAlert('error', lang('general.title_register_failed'), lang('member.pic_email') . ' is Invalid');
+            } else {
+                $explode_email = explode("@", $pic_email);
+                $reArray = reArrayFiles($recommend_letter);
+                $result = array("upload_result" => 1, "upload_message" => "");
+                foreach ($reArray as $value) {
+                    $temporary = explode(".", $value['name']);
+                    $upload_img = uploadFileImg($value, $temporary[0] . '-' . date('Ymdhis'), FILE_PATH('uploads/member/' . $explode_email[0] . '/'));
+                    if ($upload_img['result'] != 1) {
+                        $result = array("upload_result" => 0, "upload_message" => $upload_img['message']);
                     } else {
-                        $_SESSION[SESSION_USERNAME] = $code[0];
-                        $_SESSION[SESSION_EMAIL] = $email;
-                        $_SESSION[SESSION_FULLNAME] = $firstname . ' ' . $lastname;
-                        $_SESSION[SESSION_GROUP] = 2;
-//            echo '<h3 align="center">Login Sukses</h3>';
-                        echo toastAlert("success", lang('general.title_register_success'), lang('general.message_register_success'));
-                        echo '<script>window.location.href = "' . URL('') . '";</script>';
+                        $result = array(
+                            "upload_result" => 1,
+                            "upload_message" => $upload_img['message'],
+                            "upload_file_name" => $upload_img['file_name']
+                        );
                     }
                 }
-            } else {
-                echo toastAlert("error", lang('general.title_register_failed'), lang('general.message_register_failed_email'));
-                echo "<script>$(function(){postAjaxGetValue('" . URL('/page/register') . "','modal-body-self','" . json_encode($_POST) . "'); })</script>";
+                if ($result['upload_result'] == 1) {
+
+
+                    $code = createRandomBooking();
+                    $db->connect();
+                    $db->insert($transactionRegistration->getEntity(), array(
+                        $transactionRegistration->getCode() => $code,
+                        $transactionRegistration->getDelegationName() => $pic_name,
+                        $transactionRegistration->getDelegationEmail() => $pic_email,
+                        $transactionRegistration->getDelegationPhoneNumber() => $pic_telephone,
+                        $transactionRegistration->getDelegationFax() => $pic_fax,
+                        $transactionRegistration->getDelegationAddress() => $pic_address,
+                        $transactionRegistration->getProvinceId() => $province,
+                        $transactionRegistration->getCityId() => $city,
+                        $transactionRegistration->getDistrictId() => $district,
+                        $transactionRegistration->getVillageId() => $village,
+                        $transactionRegistration->getParticipantTypeId() => $participant_category,
+                        $transactionRegistration->getMessageTitle() => $subject,
+                        $transactionRegistration->getMessageContent() => $message,
+                        $transactionRegistration->getCreatedByUsername() => $explode_email[0]
+                    ));
+                    $rs_registration = $db->getResult();
+                    if (is_numeric($rs_registration[0])) {
+                        $masterAttachment = new MasterAttachment();
+                        $code_attachment = createRandomBooking() . $result['upload_file_name'];
+                        $db->insert($masterAttachment->getEntity(), array(
+                            $masterAttachment->getCode() => $code_attachment,
+                            $masterAttachment->getName() => $result['upload_file_name'],
+                            $masterAttachment->getStatus() => 1,
+                            $masterAttachment->getCreatedByUsername() => $explode_email[0]
+                        ));
+                        $rs_attach = $db->getResult();
+                        if (is_numeric($rs_attach[0])) {
+                            $linkRegistration = new LinkRegistration();
+                            $db->insert($linkRegistration->getEntity(), array(
+                                $linkRegistration->getRegistrationId() => $rs_registration[0],
+                                $linkRegistration->getAttachmentLetterId() => $rs_attach[0],
+                                $linkRegistration->getSubjectId() => $subject_name,
+                            ));
+                            $rs_link_regis = $db->getResult();
+                            if (is_numeric($rs_link_regis[0])) {
+                                $sendMail = $this->sendMailRegister();
+                                if ($sendMail == 1) {
+                                    echo resultPageMsg("success", lang('general.title_register_success'), lang('general.message_register_member'));
+                                    echo toastAlert('success', lang('general.title_register_success'), lang('general.message_register_member'));
+                                    echo '<script>$(\'#form-newedit\').remove()</script>';
+                                } else {
+                                    echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                                    echo toastAlert('error', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                                }
+                            } else {
+                                echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.message_register_failed') . json_encode($rs_link_regis));
+                                echo toastAlert('error', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                            }
+                        } else {
+                            echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                            echo toastAlert('error', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                        }
+                    } else {
+                        echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                        echo toastAlert('error', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                    }
+                } else {
+                    echo resultPageMsg('danger', lang('general.title_register_failed'), $result['upload_message']);
+                    echo toastAlert('error', lang('general.title_register_failed'), $result['upload_message']);
+                }
+
+                if ($participant_category != 1) {
+                    
+                }
             }
         } else {
-            echo toastAlert("error", lang('general.title_register_failed'), lang('general.message_register_failed_not_same_password'));
-            echo "<script>$(function(){postAjaxGetValue('" . URL('/page/register') . "','modal-body-self','" . json_encode($_POST) . "'); })</script>";
+            echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.security_code') . ' is Wrong');
+            echo toastAlert('error', lang('general.title_register_failed'), lang('general.security_code') . ' is Wrong');
+        }
+    }
+
+    public function sendMailRegister() {
+        $pic_name = $_POST['pic_name'];
+        $pic_email = $_POST['pic_email'];
+
+        $mail = new PHPMailer;
+        try {
+            $mail->isSMTP();
+
+            $mail->Debugoutput = 'html';
+//            $mail->SMTPDebug = 4;
+            $mail->Host = MAIL_HOST;
+
+            $mail->Port = MAIL_SMTP_PORT;
+            $mail->SMTPSecure = MAIL_SMTPSECURE;
+            $mail->SMTPAuth = MAIL_SMTPAUTH;
+//        $mail->SMTPAutoTLS = ['ssl'=> ['allow_self_signed' => true]];
+
+            $mail->Username = MAIL_USERNAME;
+            $mail->Password = MAIL_PASSWORD;
+            
+
+            $mail->isHTML(true);
+
+//Set who the message is to be sent from
+            $mail->setFrom(MAIL_USERNAME, MAIL_FULLNAME);
+
+//Set an alternative reply-to address
+            $mail->addReplyTo($pic_email, $pic_name);
+
+//Set who the message is to be sent to
+            $mail->addAddress($pic_email, $pic_name);
+            $img_logo_tala = 'http://54.251.168.102/e-portal/contents/logo-kecil.png';
+            $mail->Subject = 'Registrasi Peserta Pusbang BKN';
+            $mail->Body = '<div style="border-style: solid;border-width: thin;font-family: \'Roboto\';">
+                      <div align="center" style="margin:15px;"><img src="' . $img_logo_tala . '" width="120" height="40"/></div>
+                        <div align="left" style="margin:15px;">
+                            Halo ' . $pic_name . ',
+                        <br/><br/>
+                       ' . lang('general.message_register_member') . '
+                        
+                        <br/>
+                        <a href="' . URL('') . '" target="_blank">' . URL('') . '</a>
+                        </div>
+                        </div>
+                            ';
+            if ($mail->smtpConnect()) {
+                $mail->smtpClose();
+                if (!$mail->send()) {
+                    echo $mail->ErrorInfo;
+                } else {
+                    return 1;
+                }
+            } else {
+                return 0;
+            }
+        } catch (\Exception $e) {
+            echo $e->getMessage(); //Boring error messages from anything else!
         }
     }
 
@@ -208,7 +317,7 @@ class Auth {
             $userProfile = new SecurityUserProfile();
             $dbNew = new Database();
             $dbNew->connect();
-            $rsPostUser = $dbNew->selectByID($user, $user->getCode() . "='" . $exp_token[0] . "' AND ". $user->getPassword() . "='" . $exp_token[1] . "'");
+            $rsPostUser = $dbNew->selectByID($user, $user->getCode() . "='" . $exp_token[0] . "' AND " . $user->getPassword() . "='" . $exp_token[1] . "'");
             if (empty($rsPostUser)) {
                 include FILE_PATH(PAGE_404);
             } else {
@@ -237,7 +346,7 @@ class Auth {
             $dbNew->update($user->getEntity(), array(
                 $user->getPassword() => $password_e,
                 $user->getSalt() => $salt
-                    ), $user->getCode() . "='" . $exp_token[0] . "' AND ". $user->getPassword() . "='" . $exp_token[1] . "'");
+                    ), $user->getCode() . "='" . $exp_token[0] . "' AND " . $user->getPassword() . "='" . $exp_token[1] . "'");
             $rs_c_password = $dbNew->getResult();
             if ($rs_c_password[0] == 1) {
                 echo resultPageMsg('success', lang('user.title_change_password_success'), lang('user.title_change_password_success'));
@@ -287,20 +396,20 @@ class Auth {
 //$mail->SMTPDebug = 2;
                 $mail->Host = MAIL_HOST;
 
-         /*       $mail->Port = 465;
-                $mail->SMTPSecure = 'ssl';
-                $mail->SMTPAuth = true;
+                /*       $mail->Port = 465;
+                  $mail->SMTPSecure = 'ssl';
+                  $mail->SMTPAuth = true;
 
-                $mail->Username = "talaindonesia2@gmail.com";
-                $mail->Password = "t4l4indonesia";
-           */     
+                  $mail->Username = "talaindonesia2@gmail.com";
+                  $mail->Password = "t4l4indonesia";
+                 */
                 $mail->Port = MAIL_SMTP_PORT;
                 $mail->SMTPSecure = 'ssl';
                 $mail->SMTPAuth = true;
 
                 $mail->Username = MAIL_USERNAME;
                 $mail->Password = MAIL_PASSWORD;
-                
+
                 $mail->isHTML(true);
 
 //Set who the message is to be sent from
@@ -316,13 +425,13 @@ class Auth {
                 $mail->Body = '<div style="border-style: solid;border-width: thin;font-family: \'Roboto\';">
                       <div align="center" style="margin:15px;"><img src="' . $img_logo_tala . '" width="70" height="40"/></div>
                         <div align="left" style="margin:15px;">
-                            Halo '.$rsPostUP[0][$userProfile->getFullname()].',
+                            Halo ' . $rsPostUP[0][$userProfile->getFullname()] . ',
                         <br/><br/>
                         Kami menerima permintaan melakukan reset password Anda. Jika Anda merasa tidak melakukan ini, mohon abaikan saja email ini. Email ini tidak akan berguna setelah 2 jam.
                         <br/><br/>
                         Untuk melakukan reset password Anda, silahkan klik link dibawah:
                         <br/><br/>
-                        <a href="' . URL('/page/forgot-password?v=' . $rsPostUP2[0][$user->getCode()].'-' . $rsPostUP2[0][$user->getPassword()]) . '" target="_blank">' . URL('/page/forgot-password?v=' . $rsPostUP2[0][$user->getCode()].'-' . $rsPostUP2[0][$user->getPassword()]) . '</a>
+                        <a href="' . URL('/page/forgot-password?v=' . $rsPostUP2[0][$user->getCode()] . '-' . $rsPostUP2[0][$user->getPassword()]) . '" target="_blank">' . URL('/page/forgot-password?v=' . $rsPostUP2[0][$user->getCode()] . '-' . $rsPostUP2[0][$user->getPassword()]) . '</a>
                         <br/><br/>
                         Setelah Anda meng-klik link di atas, password Anda akan direset dan kemudian sebuah password baru akan dikirimkan ke email Anda.
                         <br/><br/>
@@ -349,7 +458,6 @@ class Auth {
 //                        echo toastAlert("success", lang('general.send_email_success'), lang('general.send_email_success_msg'));
 //                        echo "<script>$(function(){postAjaxGetValue('" . URL('/page/forgot-password') . "','modal-body-self','" . json_encode($_POST) . "'); })</script>";
                         echo resultPageMsg('success', lang('general.send_email_success'), lang('general.send_email_success_msg'));
-                       
                     }
                 } else {
 //            echo json_encode($statusgagal);
@@ -415,7 +523,5 @@ class Auth {
         session_unset($_SESSION[SESSION_GROUP]);
         echo '<script>window.location.href = "' . URL('') . '";</script>';
     }
-    
-   
 
 }

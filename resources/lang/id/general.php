@@ -150,4 +150,5 @@ return [
     'province'=>'Provinsi',
     'activity'=>'Aktivitas',
     'documentation_image_url'=>'Image Url',
+    'message_register_member'=>"Kami menerima permintaan melakukan Pendaftaran Peserta. Mohon Menunggu 1x24 Jam, Administator kami akan mengecek data terlebih dahulu <br/>  <br/> Terima Kasih  <br/>  <br/>  Pusbang BKN"
 ];

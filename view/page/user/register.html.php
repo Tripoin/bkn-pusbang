@@ -4,7 +4,6 @@ use app\Model\MasterSubject;
 use app\Model\MasterGovernmentAgency;
 use app\Model\MasterWorkingUnit;
 use app\Model\MasterParticipantType;
-
 use app\Util\Database;
 
 $db = new Database();
@@ -30,9 +29,10 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
 //echo $t;
 ?>
 <?php include_once getTemplatePath('page/content-page.html.php'); ?>
+<div id="form-message">
+</div>
 <form role="form" id="form-newedit" action="#" onsubmit="return false;" method="POST" novalidate="novalidate">
-    <div id="form-message">
-    </div>
+
     <div class="signup">
         <div class="row">
             <div class="col-md-12">
@@ -71,10 +71,10 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
                 <?php
                 echo $Form->id('pic_fax')->placeholder(lang('member.pic_fax') . ' ....')
                         ->title(lang('member.pic_fax'))
+                        ->required(false)
                         ->textbox();
                 ?>
                 <?php
-                
 //                $data_radio = array(
 //                    array("id" => "1", "label" => "Instansi Pemerintahan"),
 //                    array("id" => "2", "label" => "Individu")
@@ -82,6 +82,7 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
                 echo Form()->id('participant_category')->placeholder(lang('member.participant_category') . ' ....')
                         ->title(lang('member.participant_category'))
                         ->data($data_participant_type)
+                        ->value(1)
                         ->attr('onchange="changeCategoryParticipant(this)"')
                         ->radiobox();
                 ?>
@@ -92,6 +93,7 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
                 <?php
                 echo $Form->id('pic_address')->placeholder(lang('member.pic_address') . ' ....')
                         ->title(lang('member.pic_address'))
+                        ->required(false)
                         ->textbox();
                 ?>
                 <?php
@@ -122,7 +124,7 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
                         ->combobox();
                 ?>
                 <?php
-                echo $Form->id('post_code')->placeholder(lang('member.zip_code') . ' ....')
+                echo $Form->id('zip_code')->placeholder(lang('member.zip_code') . ' ....')
                         ->title(lang('member.zip_code'))
                         ->textbox();
                 ?>
@@ -131,7 +133,7 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
             </div>
             <div class="col-md-12" id="pageInstansi">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><?=lang('member.government_agencies');?></div>
+                    <div class="panel-heading"><?= lang('member.government_agencies'); ?></div>
                     <div class="panel-body">
                         <div class="col-md-6">
                             <?php
@@ -140,7 +142,6 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
                                     ->data($data_working_unit)
                                     ->attr('onchange="openBlankField(this,\'working_unit\')"')
                                     ->combobox();
-                            
                             ?>
                             <?php
                             echo Form()->id('government_agencies')->placeholder(lang('member.government_agencies') . ' ....')
@@ -159,14 +160,14 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
                                     ->title(lang('member.office_fax'))
                                     ->textbox();
                             ?>
-                             <?php
+                            <?php
                             echo Form()->id('pic_address')->placeholder(lang('member.pic_address') . ' ....')
                                     ->title(lang('member.pic_address'))
                                     ->textarea();
                             ?>
                         </div>
                         <div class="col-md-6">
-                           
+
                             <?php
                             echo Form()->id('province_instansi')->placeholder('Selected ....')
                                     ->title(lang('member.province'))
@@ -215,10 +216,11 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
                 </div>
             </div>
             <div class="col-md-12">
-                <button type="button" class="btn btn-danger" onclick="ajaxPostModal('<?= URL('member/register'); ?>', '<?= lang('general.sign_up'); ?>')"><?= lang('general.sign_up'); ?></button>
+                <button type="button" class="btn btn-danger" onclick="postRegisterMember('<?= URL('member/register/proses'); ?>', 'form-newedit')"><?= lang('general.sign_up'); ?></button>
             </div>
         </div>
     </div>
+    
 </form>
 <script>
     $(function () {
@@ -229,6 +231,8 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
 //        $('#city').select2();
 //        jQuery(document).on("keyup",".select2-input", function (event) { alert(jQuery(this).val()); });
         $('#pageInstansi').hide();
+        $('#compgovernment_agencies').append('<input type="text" placeholder="Kosongkan jika ada pada pilihan ..." class="form-control" id="government_agencies_2">');
+        $('#compworking_unit').append('<input type="text" placeholder="Kosongkan jika ada pada pilihan ..." class="form-control" id="working_unit_2">');
     });
 
     function changeCategoryParticipant(e) {
@@ -238,15 +242,15 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
             $('#pageInstansi').hide();
         }
     }
-    
-    function openBlankField(e,id){
-        if(e.value==""){
-            $('#comp'+id).append('<input type="text" placeholder="Kosongkan jika ada pada pilihan ..." class="form-control" id="'+id+'_2">');
+
+    function openBlankField(e, id) {
+        if (e.value == "") {
+            $('#comp' + id).append('<input type="text" placeholder="Kosongkan jika ada pada pilihan ..." class="form-control" id="' + id + '_2">');
         } else {
-            $('#'+id+'_2').remove();
+            $('#' + id + '_2').remove();
         }
     }
-    
+
     function ajaxComboboxProvince(parent, page, target, value) {
         $('#' + target).html('');
 

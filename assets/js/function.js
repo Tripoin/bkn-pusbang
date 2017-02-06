@@ -342,6 +342,14 @@ function spinnerLoader() {
     return txt;
 }
 
+function spinnerLoader_2() {
+     var txt = '<svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">';
+     txt += '<circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>';
+     txt += '</svg>';
+    
+    return txt;
+}
+
 function highlightLoader() {
     var panel = '<div class="background-overlay" align="center">' + spinnerLoader() + '</div>';
     return panel;
@@ -1507,6 +1515,7 @@ function postFormAjaxPostSetContent(page, content) {
             }, error: function (jqXHR, textStatus, errorThrown) {
 //                alert(jqXHR.responseText);
                 $('#form-message').html(jqXHR.responseText);
+                $('.background-overlay').remove();
             }
         });
     }
@@ -1530,4 +1539,43 @@ function ajaxPostModalGallery(page, target, value) {
             $('#modal-body-self').html(data.responseText);
         },
     });
+}
+
+function focusLayout(id){
+    $('html, body').animate({ scrollTop: $(id).offset().top }, 'slow');
+}
+
+function postRegisterMember(page, content) {
+
+    CKupdate();
+    var form = $('#form-newedit');
+    var ti = document.getElementById('form-newedit');
+//    var content = 'bodyPage';
+    var contents = $('#' + content);
+//alert(form.valid());
+    if (form.valid()) {
+        contents.append('<div class="background-overlay" style="padding: 50%;"><div class="overlay-spinner2"></div></div>');
+        $.ajax({
+            type: "POST",
+            url: page,
+//            data: datastring,
+            data: new FormData(ti),
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (data) {
+                try {
+                    $('#form-message').html(data);
+                    $('.background-overlay').remove();
+                } catch (e) {
+                    $('#form-message').html(data);
+                    $('.background-overlay').remove();
+                }
+            }, error: function (jqXHR, textStatus, errorThrown) {
+//                alert(jqXHR.responseText);
+                $('#form-message').html(jqXHR.responseText);
+                $('.background-overlay').remove();
+            }
+        });
+    }
 }

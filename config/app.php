@@ -13,6 +13,7 @@ return [
         "config/config.php",
         "config/db.php",
         "config/url.php",
+        "config/mail.php",
         "app/Util/Function.php",
         "app/Util/Form.php",
 //        "app/Util/PasswordLib/PhpPasswordLib.php",

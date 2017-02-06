@@ -346,8 +346,14 @@ function LIKE($like) {
 function FILE_PATH($path = "") {
 //    echo json_encode($_SERVER);
     $str = str_replace("index.php", "", $_SERVER['SCRIPT_FILENAME']);
-
-    return $str . $path;
+    $path_str = '';
+//    echo $str;
+    if (substr($path, 0, 1) != "/") {
+        $path_str = "/" . $path;
+    } else {
+        $path_str = $path;
+    }
+    return $str . $path_str;
 }
 
 function FULLURL($url = '') {
@@ -1834,18 +1840,23 @@ function getSubMenu($countitem, $count_function_parent, $value_function_parent, 
 }
 
 function uploadFileImg($img, $filenames, $path) {
+    if (!file_exists($path)) {
+        mkdir($path, 0777, true);
+    }
+//    print_r($img);
     if ($img['error'] == 0) {
-        $validextensions = array("jpeg", "jpg", "png");
+        $validextensions = array("jpeg", "jpg", "png", "JPEG", "JPG", "PNG");
         $temporary = explode(".", $img["name"]);
         $file_extension = end($temporary);
         $file_name = $filenames . "." . $file_extension;
         $file_path_name = $path . $file_name;
         if ($img["size"] > 2097152) {
-//            echo '0,' . lang('message.051');
             return array("result" => 0, "message" => lang('message.051'));
         } else if ((($img["type"] == "image/png") || ($img["type"] == "image/jpg") || ($img["type"] == "image/jpeg")
                 ) && in_array($file_extension, $validextensions)) {
+
             if (file_exists($file_name)) {
+
                 $sourcePath = $img['tmp_name'];
                 move_uploaded_file($sourcePath, $file_path_name);
             } else {
@@ -1854,6 +1865,7 @@ function uploadFileImg($img, $filenames, $path) {
             }
             return array("result" => 1, "message" => "Upload Success", "file_name" => $file_name);
         } else {
+
             return array("result" => 0, "message" => lang('message.054'));
         }
     } else {

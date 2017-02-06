@@ -41,19 +41,33 @@ and open the template in the editor.
 .signup textarea{
     border-radius: 0px;
     border: 1px solid #d01c24;
-    background: #efefef;
+    background: #ffffff;
 }
 
 .signup select{
     border-radius: 0px;
     border: 1px solid #d01c24;
-    background: #efefef;
+    background: #ffffff;
+}
+
+.signup .select2-selection__rendered{
+    border-radius: 0px;
+    border: 1px solid #d01c24;
+    background: #ffffff;
+    height: 27px;
+}
+
+.signup .select2-selection{
+    border-radius: 0px;
+    height: 27px;
+    border: 1px solid #d01c24;
+    background: #ffffff;
 }
 
 .signup .inputfiles{
     border-radius: 0px;
     border: 1px solid #d01c24;
-    background: #efefef;
+    background: #ffffff;
 }
 
 

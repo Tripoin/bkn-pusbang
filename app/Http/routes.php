@@ -35,6 +35,7 @@ $Routes->set($sys_url_admin . '/logout', 'app\Controller\Base\AuthAdmin@logout')
 //$Routes->set('page/about-tala', 'app\Controller\Master\About@page');
 $Routes->set('page/contact', 'app\Controller\Master\Contact@page');
 $Routes->set('test-hashing', 'app\Controller\Master\Test@hashing');
+$Routes->set('test-mail', 'app\Controller\Master\Test@testMail');
 //$Routes->set('page/carrer', 'app\Controller\Master\Carrer@page');
 //$Routes->set('page/tala-membership', 'app\Controller\Master\MemberShip@page');
 $Routes->set('chat/send', 'app\Controller\Base\Chat@sendChat');
@@ -50,7 +51,7 @@ $Routes->set('page/login', 'app\Controller\Base\Auth@loginPage');
 $Routes->set('page/login/proses', 'app\Controller\Base\Auth@login');
 $Routes->set('page/logout', 'app\Controller\Base\Auth@logout');
 $Routes->set('member/register', 'app\Controller\Base\Auth@registerPage');
-$Routes->set('page/register/proses', 'app\Controller\Base\Auth@register');
+$Routes->set('member/register/proses', 'app\Controller\Base\Auth@register');
 $Routes->set('page/forgot-password', 'app\Controller\Base\Auth@forgotPasswordPage');
 $Routes->set('page/forgot-password/proses', 'app\Controller\Base\Auth@forgotPassword');
 $Routes->set('page/change-password/member', 'app\Controller\Base\Auth@changePassword');

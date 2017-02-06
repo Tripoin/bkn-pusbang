@@ -61,7 +61,7 @@ class Form {
     public function autocomplete($autocomplete) {
         return $this->setFormOption('AUTO_COMPLETE', $autocomplete);
     }
-    
+
     public function layoutTypeAhead($layoutTypeAhead) {
         return $this->setFormOption('LAYOUT_TYPEAHEAD', $layoutTypeAhead);
     }
@@ -456,7 +456,7 @@ class Form {
             class="form-control typeahead ' . $this->formOption['CLASS'] . '">';
         $data = $this->formOption['OPTION_LABEL_VALUE'];
         $LAYOUT_TYPEAHEAD = $this->formOption['LAYOUT_TYPEAHEAD'];
-        
+
         $textbox .= '</div>';
         $textbox .= '<script>'
                 . '$(function () {'
@@ -469,7 +469,7 @@ class Form {
                 . 'hint: true,highlight: true,minLength: 1,},{name: \'icon\',display: \'name\',source: icon.ttAdapter(),'
                 . 'templates: {'
                 . 'empty: \'Not Found\','
-                . 'suggestion: Handlebars.compile(\''.$LAYOUT_TYPEAHEAD.'\'),'
+                . 'suggestion: Handlebars.compile(\'' . $LAYOUT_TYPEAHEAD . '\'),'
                 . '}});'
                 . '});'
                 . '</script>';
@@ -564,21 +564,29 @@ class Form {
 //        print_r($data);
         if (is_object($data[0])) {
             foreach ($data as $value) {
+                $checked = '';
+                if ($value->id == $this->formOption['VALUE']) {
+                    $checked = ' checked="checked"';
+                }
                 $textbox .= '<label class="mt-checkbox mt-checkbox-outline">
                             <input type="radio" 
                             ' . $this->formOption['MANUAL_ATTRIBUT'] . ' 
                             name="' . $this->formOption['NAME'] . '" 
-                            id="' . $this->formOption['ID'] . '" value="' . $value->id . '"> ' . $value->label . '
+                            id="' . $this->formOption['ID'] . '" '.$checked.' value="' . $value->id . '"> ' . $value->label . '
                                 <span></span>
                         </label><br/>';
             }
         } else {
             foreach ($data as $value) {
+                $checked = '';
+                if ($value['id'] == $this->formOption['VALUE']) {
+                    $checked = ' checked="checked"';
+                }
                 $textbox .= '<label class="mt-checkbox mt-checkbox-outline">
                             <input type="radio" 
                             ' . $this->formOption['MANUAL_ATTRIBUT'] . ' 
                             name="' . $this->formOption['NAME'] . '" 
-                            id="' . $this->formOption['ID'] . '" value="' . $value['id'] . '"> ' . $value['label'] . '
+                            id="' . $this->formOption['ID'] . '" '.$checked.' value="' . $value['id'] . '"> ' . $value['label'] . '
                                 <span></span>
                         </label><br/>';
             }
