@@ -96,7 +96,7 @@ return [
     'home' => 'Halaman Utama',
     'confirm_topup_saldo' => 'Konfirmasi Topup Saldo',
     'notes' => 'Catatan',
-    'edit'=>'Rubah',
+    'edit'=>'Ubah',
     'view' => 'Lihat',
     'create'=>'Buat Baru',
     'delete'=>'Hapus',

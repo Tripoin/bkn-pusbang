@@ -8,6 +8,7 @@
 
 return [
     "master"=>"Master",
+    "parent"=>"Parent",
     "bank_account" => "Bank Account",
     "bank" => "Bank",
     "bank_no_account" => "Bank No Account",
@@ -26,4 +27,6 @@ return [
     "facility" => "Fasilitas",
     "dimension"=>"Dimensi",
     "capacity"=>"Kapasitas",
+    "answer_category"=> "Answer Category",
+    "category_assess"=> "Category Assessment",
 ];
