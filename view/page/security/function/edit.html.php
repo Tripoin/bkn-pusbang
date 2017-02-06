@@ -80,10 +80,11 @@ $dt_icon = $res_icon->getBody;
             </div>
         </div>
         <div class="col-md-6">
+            <?php $div = '<div><div class="typeahead-inner"><div class="item-body"><p class="item-heading"><i class="{{name}}" ></i> {{name}}</p></div></div></div>';?>
             <?php echo $Form->id('actionParameter')->value($get_data[$data->getActionParameter()])->title(lang('security.action_parameter'))->data($this->data_action_parameter)->combobox(); ?>
             <?php echo $Form->id('typeUrl')->value($get_data[$data->getTypeUrl()])->title(lang('security.page_type'))->data($this->data_url_type)->combobox(); ?>
             <?php echo $Form->id('type')->value($get_data[$data->getTypeId()])->title(lang('security.menu_type'))->data($this->data_type)->combobox(); ?>
-            <?php echo Form()->value($get_data[$data->getStyle()])->data($dt_icon)->id('style')->title(lang('security.icon_menu'))->required(false)->placeholder(lang('security.icon_menu') . ' ....')->typeahead(); ?>
+            <?php echo Form()->layoutTypeAhead($div)->value($get_data[$data->getStyle()])->data($dt_icon)->id('style')->title(lang('security.icon_menu'))->required(false)->placeholder(lang('security.icon_menu') . ' ....')->typeahead(); ?>
         </div>
 
     </div>

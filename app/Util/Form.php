@@ -48,7 +48,8 @@ class Form {
         'OPTION_LABEL_VALUE' => array(),
         'MESSAGE_REQUIRED_ERROR' => null,
         'MANUAL_ATTRIBUT' => null,
-        'AUTO_COMPLETE' => true
+        'AUTO_COMPLETE' => true,
+        'LAYOUT_TYPEAHEAD'
     );
     public $response;
 
@@ -59,6 +60,10 @@ class Form {
 
     public function autocomplete($autocomplete) {
         return $this->setFormOption('AUTO_COMPLETE', $autocomplete);
+    }
+    
+    public function layoutTypeAhead($layoutTypeAhead) {
+        return $this->setFormOption('LAYOUT_TYPEAHEAD', $layoutTypeAhead);
     }
 
     public function alignLabel($alignLabel) {
@@ -450,6 +455,8 @@ class Form {
             ' . $minlength . $maxlength . '
             class="form-control typeahead ' . $this->formOption['CLASS'] . '">';
         $data = $this->formOption['OPTION_LABEL_VALUE'];
+        $LAYOUT_TYPEAHEAD = $this->formOption['LAYOUT_TYPEAHEAD'];
+        
         $textbox .= '</div>';
         $textbox .= '<script>'
                 . '$(function () {'
@@ -462,7 +469,7 @@ class Form {
                 . 'hint: true,highlight: true,minLength: 1,},{name: \'icon\',display: \'name\',source: icon.ttAdapter(),'
                 . 'templates: {'
                 . 'empty: \'Not Found\','
-                . 'suggestion: Handlebars.compile(\'<div><div class="typeahead-inner"><div class="item-body"><p class="item-heading"><i class="{{name}}" ></i> {{name}}</p></div></div></div>\'),'
+                . 'suggestion: Handlebars.compile(\''.$LAYOUT_TYPEAHEAD.'\'),'
                 . '}});'
                 . '});'
                 . '</script>';

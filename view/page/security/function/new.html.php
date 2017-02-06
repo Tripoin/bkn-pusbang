@@ -57,10 +57,11 @@ $dt_icon = $res_icon->getBody;
             </div>
         </div>
         <div class="col-md-6">
+            <?php $div = '<div><div class="typeahead-inner"><div class="item-body"><p class="item-heading"><i class="{{name}}" ></i> {{name}}</p></div></div></div>';?>
             <?php echo $Form->id('actionParameter')->title(lang('security.action_parameter'))->data($this->data_action_parameter)->combobox(); ?>
             <?php echo $Form->id('typeUrl')->title(lang('security.page_type'))->data($this->data_url_type)->combobox(); ?>
             <?php echo $Form->id('type')->title(lang('security.menu_type'))->data($this->data_type)->combobox(); ?>
-            <?php echo Form()->id('style')->data($dt_icon)->title(lang('security.icon_menu'))->required(false)->placeholder(lang('security.icon_menu') . ' ....')->typeahead(); ?>
+            <?php echo Form()->layoutTypeAhead($div)->id('style')->data($dt_icon)->title(lang('security.icon_menu'))->required(false)->placeholder(lang('security.icon_menu') . ' ....')->typeahead(); ?>
         </div>
 
     </div>
