@@ -15,25 +15,24 @@ namespace app\Model;
  */
 use app\Model\GeneralAuditrail;
 
-class MasterCity extends GeneralAuditrail {
+class MasterVillage extends GeneralAuditrail {
 
     //put your code here
     public function __construct() {
-        $this->setEntity('mst_city');
+        $this->setEntity('mst_village');
     }
     
-    public $province_id = 'province_id';
+    public $district_id = 'district_id';
     
-    function getProvince_id() {
-        return $this->province_id;
-    }
-
-    function setProvince_id($province_id) {
-        $this->province_id = $province_id;
+    function getDistrict_id() {
+        return $this->district_id;
     }
 
+    function setDistrict_id($district_id) {
+        $this->district_id = $district_id;
+    }
+
     
-        
     public function search($key) {
         return $this->$key;
     }

@@ -22,8 +22,8 @@ class MasterDocumentation extends GeneralAuditrail {
         $this->setEntity('mst_documentation');
     }
     
-    private $activityId = 'activity_id';
-    private $imageUrl = 'documentation_image_url';
+    private $activity_id = 'activity_id';
+    private $documentation_image_url = 'documentation_image_url';
     
     public function search($key) {
         return $this->$key;
@@ -37,20 +37,23 @@ class MasterDocumentation extends GeneralAuditrail {
         return $array_data;
     }
 
-    function getActivityId() {
-        return $this->activityId;
+    function getActivity_id() {
+        return $this->activity_id;
     }
 
-    function setActivityId($activityId) {
-        $this->activityId = $activityId;
-    }
-    function getImageUrl() {
-        return $this->imageUrl;
+    function setActivity_id($activity_id) {
+        $this->activity_id = $activity_id;
     }
 
-    function setImageUrl($imageUrl) {
-        $this->imageUrl = $imageUrl;
+    function getDocumentation_image_url() {
+        return $this->documentation_image_url;
     }
+
+    function setDocumentation_image_url($documentation_image_url) {
+        $this->documentation_image_url = $documentation_image_url;
+    }
+
+
 
 
 

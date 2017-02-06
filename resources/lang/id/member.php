@@ -20,4 +20,23 @@ return [
     "input_image" => "Masukkan Gambar",
     "notes_message_gallery" => "Pastikan anda telah mengisi Form Input Galeri Baru",
     "notes_message_article" => "Pastikan anda telah mengisi Form Input Artikel Baru",
+    "subject_name"=>"Nama Kegiatan",
+    "recommend_letter"=>"Surat Pengantar/Rekomendasi",
+    "pic_name"=>"Nama PIC",
+    "pic_email"=>"Email PIC",
+    "pic_telephone"=>"Telepon PIC",
+    "pic_fax"=>"Fax PIC",
+    "pic_address"=>"Alamat PIC",
+    "province"=>"Provinsi",
+    "city"=>"Kota",
+    "district"=>"Kecamatan",
+    "village"=>"Kelurahan",
+    "participant_category"=>"Kategori Partisipasi",
+    "zip_code"=>"Kode Pos",
+    "government_agencies"=>"Instansi Pemerintahan",
+    "working_unit"=>"Unit Kerja",
+    "office_telephone"=>"Telepon Kantor",
+    "office_fax"=>"Fax Kantor",
+    
+    
 ];

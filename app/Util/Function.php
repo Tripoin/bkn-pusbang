@@ -18,6 +18,7 @@ use app\Util\Database;
 use app\Util\RestClient\TripoinRestClient;
 use app\Constant\IRestCommandConstant;
 use app\Util\Form;
+use app\Util\Button;
 
 function is_not_null($var) {
     return !is_null($var);
@@ -27,16 +28,15 @@ $title = '';
 
 function getRestLov($code) {
     $tripoinRestClient = new TripoinRestClient();
-    $url = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH . 
-             $code . SLASH . 
+    $url = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH .
+            $code . SLASH .
             IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::SELECT_LOV;
     $result = $tripoinRestClient->doGET($url, array());
-    if(empty($result->getBody)){
+    if (empty($result->getBody)) {
         return array();
     } else {
         return json_decode($result->getBody);
     }
-    
 }
 
 function setTitle($value) {
@@ -1530,6 +1530,27 @@ function pageBody() {
     return $result;
 }
 
+function pageAutoCrudBody() {
+    $result = '';
+    $result .= '<div class="page-content-wrapper">
+    <div class="page-content">
+        <div class="page-bar">
+            ' . breadCrumb() . '
+        </div>
+        <div class="row" style="margin-top:20px;">
+            <div class="col-md-12 ">
+                <div class="portlet light bordered">';
+    $result .= pageHeadBody();
+    return $result;
+}
+
+function pageAutoCrudHeadBody() {
+    $result = '';
+    $result .= '<div class="portlet-body form" id="bodyPage">';
+
+    return $result;
+}
+
 function endPageBody() {
     $result = '</div></div></div></div></div></div>';
     return $result;
@@ -1665,6 +1686,72 @@ function convertJsonCombobox($data = null, $id, $label, $manual_data = array()) 
                     $expl = $value->$label;
                 }
                 $json .= '{"id":"' . $value->$id . '","label":"' . $expl . '"},';
+            }
+        }
+    }
+    $json = rtrim($json, ',');
+    $json .= ']';
+//    print_r($data);
+    return json_decode($json);
+}
+
+/**
+ * (PHP 4, PHP 5+)<br/>
+ * Convert Combobox From Array to set ID and Label in Jquery
+ * <br/>
+ * Licensed by Tripoin Team
+ * @link http://www.tripoin.co.id/
+ * @param Array() $data <p>
+ * Data Array Multidimensional from get Table Database or Web Service
+ * </p>
+ * @param String $id [optional] <p>
+ * change array key be from $data id combobox.
+ * </p>
+ * @param string $label [optional] <p>
+ *  change array key from $data be label combobox.
+ * </p>
+ * @param Array() $manual_data [optional] <p>
+ * Sets Manual Combobox 
+ * example =>
+ * $manual_data = [array("id"=>1,"label","Option 1"),array("id"=>2,"label","Option 2")];
+ * </p>
+ * @return json_decode A formatted version of <i>$data</i>.
+ */
+function convertJsonComboboxJquery($data = null, $id, $label, $manual_data = array()) {
+//    print_r($data);
+    $json = '[';
+    if (!empty($manual_data)) {
+        foreach ($manual_data as $value_manual) {
+            $json .= '{"id":"' . $value_manual['id'] . '","text":"' . $value_manual['label'] . '"},';
+        }
+    }
+    if ($data != null) {
+
+        foreach ($data as $value) {
+//        echo key($value);
+            $expl = "";
+//            $ex = explode("-", $label);
+
+            if (is_array($data)) {
+                if (is_array($label)) {
+                    foreach ($label as $values) {
+                        $expl .= $value[$values] . " - ";
+                    }
+                    $expl = rtrim($expl, "- ");
+                } else {
+                    $expl = $value[$label];
+                }
+                $json .= '{"id":"' . $value[$id] . '","text":"' . $expl . '"},';
+            } else {
+                if (is_array($label)) {
+                    foreach ($label as $values) {
+                        $expl .= $value->$values . " - ";
+                    }
+                    $expl = rtrim($expl, "- ");
+                } else {
+                    $expl = $value->$label;
+                }
+                $json .= '{"id":"' . $value->$id . '","text":"' . $expl . '"},';
             }
         }
     }
@@ -1822,8 +1909,8 @@ function imageManager($title, $url, $link, $type) {
         }
         $stringCut = substr($file_name, 0, 10);
         $userAgent = getUserAgent();
-//        if ($userAgent == "web") {
-        $txt = '<div class="col-sm-2 col-md-2 hidden-xs">
+        if ($userAgent == "web") {
+            $txt = '<div class="col-sm-2 col-md-2 hidden-xs hidden-sm">
                     <a href="javascript:;"  onclick="viewPicture(\'' . $url . '\')" onclick="checkFile(this)" value="' . $title . '" value-type="0" name="fileimage[]" class="thumbnail" id="file" style="text-align: center;">
                         <img src="' . $url . '" style="height: 102px; width: 100%; display: block;"
                             
@@ -1831,8 +1918,8 @@ function imageManager($title, $url, $link, $type) {
                         <span>' . $stringCut . '.' . end($exp_name) . '</span>
                     </a>
                 </div>';
-//        } else {
-        $txt = '<div class="col-sm-2 col-md-2 hidden-lg">
+        } else {
+            $txt = '<div class="col-sm-2 col-md-2 hidden-lg">
                     <a href="javascript:;"  onclick="viewPicture(\'' . $url . '\')" onclick="checkFile(this)" value="' . $title . '" value-type="0" name="fileimage[]" class="thumbnail" id="file" style="text-align: center;">
                         <img src="' . $url . '" style="height: 185px; width: 100%; display: block;"
                             
@@ -1840,7 +1927,53 @@ function imageManager($title, $url, $link, $type) {
                         <span>' . $stringCut . '.' . end($exp_name) . '</span>
                     </a>
                 </div>';
-//        }
+        }
+    }
+    return $txt;
+}
+
+function imageManagerList($title, $url, $link, $type) {
+
+    if ($type == 1) {
+        $stringCut = substr($title, 0, 10);
+        $txt = '<div class="col-sm-2 col-md-2">
+                    <a href="javascript:;" class="thumbnail"  
+                    id="folder" action="' . $link . '" onclick="getFolder(this,event)" style="text-align: center;">
+                        <img src="' . $url . '" style="padding-top: 25px;padding-bottom: 25px;"
+                             height="50" width="50"
+                             >
+                        <span>' . $stringCut . '</span>
+                    </a>
+                </div>';
+    } else {
+        $exp_name = explode(".", $title);
+        $file_name = '';
+        foreach ($exp_name as $value) {
+            if (end($exp_name) != $value) {
+                $file_name .= $value;
+            }
+        }
+        $stringCut = substr($file_name, 0, 10);
+        $userAgent = getUserAgent();
+        if ($userAgent == "web") {
+            $txt = '<div class="col-sm-2 col-md-2 hidden-xs hidden-sm">
+                    <a href="javascript:;"  onclick="checkFile(this)" value="' . $title . '" value-type="0" name="fileimage[]" class="thumbnail" id="file" style="text-align: center;">
+                        <img src="' . $url . '" style="height: 102px; width: 100%; display: block;"
+                            
+                             >
+                        <span>' . $stringCut . '.' . end($exp_name) . '</span>
+                    </a>
+                </div>';
+        } else {
+            $txt = '<div class="col-sm-2 col-md-2 hidden-lg">
+                    <a href="javascript:;"  onclick="checkFile(this)" value="' . $title . '" value-type="0" name="fileimage[]" class="thumbnail" id="file" style="text-align: center;">
+                        <img src="' . $url . '" style="height: 185px; width: 100%; display: block;"
+                            
+                             >
+                        <span>' . $stringCut . '.' . end($exp_name) . '</span>
+                    </a>
+                </div>';
+        }
     }
     return $txt;
 }
@@ -2001,9 +2134,51 @@ function getUserAgent() {
     return $browser_t;
 }
 
-function Form(){
+function Form() {
     $Form = new Form();
     return $Form;
+}
+
+function Button() {
+    $Button = new Button();
+    return $Button;
+}
+
+function valueComboBoxParent($entity, $id, $name, $parent) {
+    $db = new Database();
+    $db->connect();
+    $db->sql("SELECT " . $id . ", " . $name . ", " . $parent . " 
+                    FROM " . $entity . " WHERE " . $id . " NOT IN 
+                    (SELECT " . $id . " FROM " . $entity . " WHERE " . $id . " IN (SELECT " . $parent . " FROM " . $entity . "))");
+    $res_subject = $db->getResult();
+//echo json_encode($res_subject);
+    $data = array();
+    $t = '';
+    foreach ($res_subject as $v_subj) {
+        $t = getParentManual($entity, $id, $name, $parent, $v_subj[$parent], $v_subj[$name]);
+        array_push($data, array("label" => $t, "id" => $v_subj[$id]));
+    }
+    return $data;
+}
+
+function getParentManual($entity, $id_field, $name_field, $parent_field, $parentId, $names, $tx = '') {
+    $db = new Database();
+//    $masterSubject = new MasterSubject();
+    if ($parentId == null) {
+        $tx .= $names;
+    } else {
+//        $res_subject_parent = $db->selectByID($masterSubject, $masterSubject->getId() . EQUAL . $parentId);
+        $db->connect();
+
+        $db->select($entity, "*", null, $id_field . EQUAL . $parentId);
+        $res_subject_parent = $db->getResult();
+        foreach ($res_subject_parent as $value) {
+            $tx = $value[$name_field] . " => " . $tx;
+//            echo $value[$masterSubject->getName()];
+            return getParentManual($entity, $id_field, $name_field, $parent_field, $value[$parent_field], $names, $tx);
+        }
+    }
+    return $tx;
 }
 
 ?>

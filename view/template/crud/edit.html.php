@@ -57,8 +57,20 @@ if ($this->modelData == null) {
                         if (in_array($valueData, $checkLov)) {
                             
                         } else {
-                            echo $Form->id($valueData)->title(lang('general.' . $valueData))
-                                    ->value($get_data[$valueData])->placeholder(lang('general.' . $valueData) . ' ....')->textbox();
+                            if (empty($this->changeValueNewEdit)) {
+                                echo $Form->id($valueData)->title(lang('general.' . $valueData))
+                                        ->value($get_data[$valueData])->placeholder(lang('general.' . $valueData) . ' ....')->textbox();
+                            } else {
+                                foreach ($this->changeValueNewEdit as $key => $value) {
+                                    if ($key == $valueData) {
+                                        echo $value;
+                                    } else {
+                                        echo $Form->id($valueData)->title(lang('general.' . $valueData))
+                                                ->value($get_data[$valueData])->placeholder(lang('general.' . $valueData) . ' ....')->textbox();
+                                    }
+                                }
+                            }
+                            
                         }
                     }
                 }

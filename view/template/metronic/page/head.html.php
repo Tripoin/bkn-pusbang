@@ -18,7 +18,7 @@ $admin_url = getAdminTheme();
                 }
                 ?>
 
-                <div style="font-size: 25px;font-family: 'deftone-stylus';margin-top: -6px;" 
+                <div style="font-size: 20px;font-weight: bold;margin-top: -3px;" 
                       class="logo-default text-logo"> <?= $logo_text; ?></div>
                 <!--<img src="<?= URL('/assets/img/logotripoin.png'); ?>" height="30" alt="logo" class="logo-default" /> </a>-->
             </a>

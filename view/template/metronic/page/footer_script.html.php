@@ -31,7 +31,7 @@
 <script src="<?= URL('/assets/plugins/jquery-validation/js/jquery.validate.min.js'); ?>" type="text/javascript"></script>
 <script src="<?= URL('/assets/plugins/jquery-validation/js/additional-methods.min.js'); ?>" type="text/javascript"></script>
 <script src="<?= getAdminTemplateURL('/assets/js/howler.js'); ?>"></script>
-<script src="<?= URL('/assets/js/function.js'); ?>?v=1.0"></script>
+<script src="<?= URL('/assets/js/function.js'); ?>?v="<?=createRandomBooking();?>></script>
 
 <div class="modal fade" id="myModal_self" role="dialog">
     <div class="modal-dialog modal-lg">

@@ -1001,6 +1001,14 @@ function postAjaxPagination() {
     if (typeof search_pagination == 'undefined') {
         search_pagination = "";
     }
+    
+    var form_search = $('#form-search');
+    var datastringform = "";
+    if (typeof form_search == 'undefined') {
+        datastringform = "";
+    } else {
+        datastringform = form_search.serialize();
+    }
     var search_by = $('#list_search_by').val();
     if (typeof search_by == 'undefined') {
         search_by = "";
@@ -1012,7 +1020,7 @@ function postAjaxPagination() {
     if (typeof currentPage == 'undefined') {
         currentPage = 1;
     }
-    var datastring = 'search_by=' + search_by + '&current_page=' + currentPage + '&per_page=' + per_page + '&search_pagination=' + search_pagination;
+    var datastring = datastringform+'&search_by=' + search_by + '&current_page=' + currentPage + '&per_page=' + per_page + '&search_pagination=' + search_pagination;
     $.ajax({
         type: "POST",
         url: page,
@@ -1041,6 +1049,8 @@ function postAjaxPagination() {
     });
 //    }
 }
+
+
 
 function currentPagePaginationManual(urut, ctn) {
     $('#currentPage-' + ctn).val(urut);

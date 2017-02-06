@@ -17,6 +17,10 @@ use app\Util\Form;
 use app\Model\SecurityUser;
 use app\Model\SecurityUserProfile;
 use app\Util\Database;
+use app\Model\MasterProvince;
+use app\Model\MasterCity;
+use app\Model\MasterDistrict;
+use app\Model\MasterVillage;
 
 //use app\Model\D
 class General {
@@ -124,6 +128,48 @@ class General {
                                                                 <i class="fa fa-group" style="font-size:30px;"></i>
                                                                 <div  style="font-size:15px;"> Users </div>
                                                             </a>';
+    }
+
+    public function getArea() {
+        $db = new Database();
+
+        $selected = $_GET['action'];
+        if ($selected == "province") {
+            $search = $_GET['search'];
+            $masterProvince = new MasterProvince();
+            $db->connect();
+            $db->select($masterProvince->getEntity(), "*", null, null, null);
+            $rs = $db->getResult();
+            $data = convertJsonComboboxJquery($rs, $masterProvince->getId(), $masterProvince->getName());
+        } else if ($selected == "city") {
+            $masterCity = new MasterCity();
+            $search = $_GET['search'];
+            $db->connect();
+            $db->select($masterCity->getEntity(), "*", null, $masterCity->getProvince_id() . EQUAL . $search, null);
+            $rs = $db->getResult();
+//            print_r($rs);
+//            echo $db->getSql();
+            $data = convertJsonComboboxJquery($rs, $masterCity->getId(), $masterCity->getName());
+        }  else if ($selected == "district") {
+            $masterDistrict = new MasterDistrict();
+            $search = $_GET['search'];
+            $db->connect();
+            $db->select($masterDistrict->getEntity(), "*", null, $masterDistrict->getCity_id() . EQUAL . $search, null);
+            $rs = $db->getResult();
+//            print_r($rs);
+//            echo $db->getSql();
+            $data = convertJsonComboboxJquery($rs, $masterDistrict->getId(), $masterDistrict->getName());
+        }  else if ($selected == "village") {
+            $masterVillage = new MasterVillage();
+            $search = $_GET['search'];
+            $db->connect();
+            $db->select($masterVillage->getEntity(), "*", null, $masterVillage->getDistrict_id() . EQUAL . $search, null);
+            $rs = $db->getResult();
+//            print_r($rs);
+//            echo $db->getSql();
+            $data = convertJsonComboboxJquery($rs, $masterVillage->getId(), $masterVillage->getName());
+        }
+        echo json_encode($data);
     }
 
 }

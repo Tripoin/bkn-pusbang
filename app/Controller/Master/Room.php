@@ -36,6 +36,21 @@ class Room extends ControllerRestUI {
         parent::__construct();
 //        print_r($this->result);
     }
+    
+    public function index() {
+//        $this->listWithParameter(true);
+        parent::index();
+    }
+    public function listData() {
+        /*
+        $this->param_body = array(
+            "filter_key" => 'code',
+            "filter_value" => $_POST['code'],
+        );
+         * 
+         */
+        parent::listData();
+    }
 
     public function create() {
         $this->data_facility = getRestLov(IRestURLConstant::MASTER . SLASH . IRestURLConstant::FACILITY);

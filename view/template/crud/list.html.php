@@ -5,6 +5,7 @@ $autoData = $this->listAutoData;
 //$Datatable->deleteCollection(false);
 $arrayHeader = array();
 $countAutoData;
+//print_r($autoData);
 foreach ($autoData as $valueData) {
     if ($valueData != 'id') {
         if (!in_array($valueData, $this->unsetAutoData)) {
@@ -12,11 +13,18 @@ foreach ($autoData as $valueData) {
             if (isset($ex_val2[1])) {
                 if ($ex_val2[1] == 'id') {
                     
+                } else {
+                    array_push($arrayHeader, lang("general." . $valueData));
                 }
             } else {
                 array_push($arrayHeader, lang("general." . $valueData));
             }
         }
+    }
+}
+if (!empty($this->issetAutoData)) {
+    foreach ($this->issetAutoData as $keyValueData => $issetValueData) {
+        array_push($arrayHeader, $issetValueData);
     }
 }
 $Datatable->styleFirstColumn("text-align:center;width:5%;");
@@ -58,6 +66,8 @@ foreach ($list_data['item'] as $value) {
                         if (isset($ex_val2[1])) {
                             if ($ex_val2[1] == 'id') {
                                 
+                            } else {
+                                array_push($arrayBody, $value[$valueData]);
                             }
                         } else {
                             array_push($arrayBody, $value[$valueData]);
@@ -68,6 +78,11 @@ foreach ($list_data['item'] as $value) {
                     }
                 }
             }
+        }
+    }
+    if (!empty($this->issetAutoData)) {
+        foreach ($this->issetAutoData as $keyValueData => $issetValueData) {
+            array_push($arrayBody, $value[$keyValueData]);
         }
     }
     $arrayMergeBody = array_merge(array($no), $arrayBody, array($action_edit . $action_delete));

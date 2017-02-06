@@ -832,7 +832,7 @@ class DataTable {
         return $res;
     }
 
-    public function select_pagination_rest($url, $param, $order = array()) {
+    public function select_pagination_rest($url, $param = array(), $order = array()) {
         $search = explode('>', $this->search);
 
         $tripoinRestClient = new TripoinRestClient();
@@ -848,18 +848,13 @@ class DataTable {
             $keyOrder = key($order);
             $valOrder = $order[key($order)];
         }
-        $result = $tripoinRestClient->doPOST($full_url, array(), array(), array(
+        $result = $tripoinRestClient->doPOST($full_url, array(), array(), array_merge(array(
             "item_number" => $this->per_page,
             "filter_key" => $search[0],
             "filter_value" => $search[1],
-//            "filter_data" => [array(
-//            "filter_key" => "code",
-//            "filter_value" => ""
-//                )
-//            ],
             "sorting_key" => $keyOrder,
             "sorting_direction" => $valOrder
-        ));
+                        ), $param));
 //print_r($result);
         if ($result == false) {
             $tripoinRestClient = new TripoinRestClient();
@@ -868,7 +863,7 @@ class DataTable {
         }
 //        print_r($result);
         $json = json_decode($result->getBody);
-        
+
 //        $this->result = $json;
         if (!empty($json->data)) {
             $this->per_page = $json->per_page;
@@ -938,7 +933,7 @@ class DataTable {
 //            print_r($json);
             $res = array_merge(array("item" => array()), $this->json_pagination());
         }
-         
+
         return $res;
     }
 

@@ -43,7 +43,7 @@ class Functions extends Controller {
         $this->setTitle(lang('security.function'));
 //        $this->setSubtitle($subtitle);
         $this->setBreadCrumb(array(lang('security.security') => "", lang('security.function') => URL()));
-
+        $this->search_filter = array("code"=>lang("general.code"),"name"=>lang("general.name"));
         $db = new Database();
 
         $manual_data = [array("id" => 0, "label" => "Parent Menu")];

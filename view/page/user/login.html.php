@@ -19,7 +19,11 @@
             <div class="col-md-6">
                 <p style="margin: 15%;">
                     Anda Belum Memiliki Akun??<br/>
-                    <button type="button" class="btn btn-danger" onclick="ajaxPostModal('<?=URL('member/register');?>','<?= lang('general.sign_up'); ?>')"><?= lang('general.sign_up'); ?></button>
+                    <a type="button" class="btn btn-danger" href="<?=URL('member/register');?>"
+                            
+                            >
+                            <?= lang('general.sign_up'); ?>
+                    </a>
                 </p>
             </div>
         </div>

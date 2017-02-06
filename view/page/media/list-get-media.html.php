@@ -26,13 +26,13 @@ if (count($exp_folder) >= 2) {
     array_pop($exp_folder);
     $path_back = implode('/', $exp_folder);
 //    $exp_folder_1 = explode($file_name, $string);
-    echo imageManager('Back', URL('assets/img/back.png'), $path_back, 1);
+    echo imageManagerList('Back', URL('assets/img/back.png'), $path_back, 1);
 }
 foreach ($folders as $folder) {
-    echo imageManager($folder, URL('assets/img/folders.png'), $trim_path . '/' . $folder . '/', 1);
+    echo imageManagerList($folder, URL('assets/img/folders.png'), $trim_path . '/' . $folder . '/', 1);
 }
 foreach ($files as $file) {
-    echo imageManager($file, URL($trim_path . '/' . $file), '', 2);
+    echo imageManagerList($file, URL($trim_path . '/' . $file), '', 2);
 }
 
 $str_replace = str_replace('contents', '', $trim_path);
@@ -45,7 +45,7 @@ $str_replace = str_replace('contents', '', $trim_path);
     });
 
     function viewPicture(url) {
-        return false;
+//        checkFile(this);
     }
 
     function checkFile(e) {

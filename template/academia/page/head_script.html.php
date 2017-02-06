@@ -21,7 +21,7 @@
 
     <!--<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>-->
     <!--<link href="http://allfont.net/allfont.css?fonts=montserrat-light" rel="stylesheet" type="text/css" />-->
-    <link href="<?= getTemplateURL('/assets/css/css.css'); ?>" rel="stylesheet"  type="text/css">
+    <link href="<?= getTemplateURL('/assets/css/css.css?tripoin=').  createRandomBooking(); ?>" rel="stylesheet"  type="text/css">
     <link href="<?= getTemplateURL('/assets/css/montserrat-light.css') ?>" rel="stylesheet"  type="text/css">
     
     
@@ -34,6 +34,8 @@
     <link href="<?= getTemplateURL('/assets/css/themes/'.$them_style.'.css?tripoin=').  createRandomBooking(); ?>" rel="stylesheet"  type="text/css">
     <link href="<?= getTemplateURL('/assets/css/responsive.css'); ?>" rel="stylesheet"  type="text/css">
     <link href="<?= getTemplateURL('/assets/css/form.css'); ?>" rel="stylesheet"  type="text/css">
+    <link href="<?= URL('/assets/plugins/select2/css/select2.css'); ?>" rel="stylesheet" type="text/css">
+    <link href="<?= URL('/assets/plugins/select2/css/select2-bootstrap.min.css'); ?>" rel="stylesheet" type="text/css">
     
     <script src="<?= getTemplateURL('/assets/js/modernizr-2.8.3.min.js'); ?>"></script>
     <script src="<?= getTemplateURL('/assets/js/jquery-1.11.3.min.js'); ?>"></script>

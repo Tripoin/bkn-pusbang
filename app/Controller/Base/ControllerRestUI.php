@@ -54,6 +54,8 @@ abstract class ControllerRestUI implements IController {
     public $listAutoData = array();
     public $unsetAutoData = array();
     public $result = '';
+    public $list_parameter = false;
+    public $param_body = array();
 
     public function __construct() {
         if (empty($this->search_filter)) {
@@ -64,7 +66,13 @@ abstract class ControllerRestUI implements IController {
         }
         $this->url_api = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
     }
+    
+    
 
+    function listWithParameter($value = false){
+        $this->list_parameter = $value;
+    }
+    
     public function setBreadCrumb($breadcrumb = array()) {
         setBreadCrumb($breadcrumb);
     }
@@ -160,7 +168,7 @@ abstract class ControllerRestUI implements IController {
         if (!empty($this->orderBy)) {
             $sorting = array(key($this->orderBy) => $this->orderBy[key($this->orderBy)]);
         }
-        $list_data = $Datatable->select_pagination_rest($this->url_api . $this->restURL, null, $sorting);
+        $list_data = $Datatable->select_pagination_rest($this->url_api . $this->restURL, $this->param_body, $sorting);
 //        print_r($list_data);
         $this->result = $Datatable->getResult();
 //        print_r($Datatable->getResult());
@@ -170,6 +178,7 @@ abstract class ControllerRestUI implements IController {
         } else {
             include_once FILE_PATH($this->viewList);
         }
+        echo '<script>$(function(){$(\'#form-search\').show()});</script>';
     }
 
     public function unsetDataModel($data) {
@@ -206,6 +215,7 @@ abstract class ControllerRestUI implements IController {
         } else {
             include_once FILE_PATH($this->viewCreate);
         }
+        echo '<script>$(function(){$(\'#form-search\').hide()});</script>';
     }
 
     public function edit() {
@@ -225,6 +235,7 @@ abstract class ControllerRestUI implements IController {
         } else {
             include_once FILE_PATH($this->viewEdit);
         }
+        echo '<script>$(function(){$(\'#form-search\').hide()});</script>';
     }
 
     public function delete() {

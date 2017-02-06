@@ -16,7 +16,7 @@ foreach ($list_data['item'] as $value) {
             array($no,
                 $value[$data->getCode()],
                 $value[$data->getName()],
-                $value[$data->getUrl()],
+                $value[$data->getUrl()]['name'],
                 $action_edit . $action_delete
     ));
     $no += 1;

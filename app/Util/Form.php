@@ -76,16 +76,23 @@ class Form {
     public function titleBtn($titleBtn) {
         return $this->setFormOption('TITLE_BUTTON', $titleBtn);
     }
+    
+    
 
     public function formHeader() {
+        $id = "form-newedit";
+        if($this->formOption['ID'] != ""){
+            $id = $this->formOption['ID'];
+        }
         $txt = '';
-        $txt .= '<form role="form" id="form-newedit" action="#" onsubmit="return false;" method="POST" novalidate="novalidate">
+        $txt .= '<form role="form" id="'.$id.'" action="#" onsubmit="return false;" method="POST" novalidate="novalidate">
     <div class="form-body">
     <div id="form-message">
     </div>
         <div class="alert alert-danger display-hide">
             <button class="close" data-close="alert"></button> You have some form errors. Please check below. 
         </div>';
+        $this->ResetObject();
         return $txt;
     }
 
@@ -458,6 +465,63 @@ class Form {
 
     /**
      * (PHP 4, PHP 5+)<br/>
+     * Create Component Checkbox <COMBOBOX>
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * @default default class list if set inline => classComponent('mt-checkbox-inline');
+     * </p>
+     * @example $data = '$data = array(array("id"=>1,"label"=>"CHECKBOX 1"),array("id"=>2,"label"=>"CHECKBOX 2"));<br/>$Form->title('Checkbox Example')->id('checkbox')->data($json_data)->checkbox();
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
+    public function radiobox() {
+        $this->defaultOption();
+        $textbox = '';
+//        $textbox = '<div class="col-xs-3">';
+        $type = 'text';
+        if ($this->formOption['TYPE'] != null) {
+            $type = $this->formOption['TYPE'];
+        }
+        $data = $this->formOption['OPTION_LABEL_VALUE'];
+        $classComponent = 'mt-checkbox-list';
+        if ($this->formOption['CLASS_COMP'] != null) {
+            $classComponent = $this->formOption['CLASS_COMP'];
+        }
+        $textbox .= '<div class="' . $classComponent . '">';
+//        print_r($data);
+        if (is_object($data[0])) {
+            foreach ($data as $value) {
+                $textbox .= '<label class="mt-checkbox mt-checkbox-outline">
+                            <input type="radio" 
+                            ' . $this->formOption['MANUAL_ATTRIBUT'] . ' 
+                            name="' . $this->formOption['NAME'] . '" 
+                            id="' . $this->formOption['ID'] . '" value="' . $value->id . '"> ' . $value->label . '
+                                <span></span>
+                        </label><br/>';
+            }
+        } else {
+            foreach ($data as $value) {
+                $textbox .= '<label class="mt-checkbox mt-checkbox-outline">
+                            <input type="radio" 
+                            ' . $this->formOption['MANUAL_ATTRIBUT'] . ' 
+                            name="' . $this->formOption['NAME'] . '" 
+                            id="' . $this->formOption['ID'] . '" value="' . $value['id'] . '"> ' . $value['label'] . '
+                                <span></span>
+                        </label><br/>';
+            }
+        }
+
+        $textbox .= '</div>';
+        $rs = $this->formGroup($textbox);
+        $this->ResetObject();
+        return $rs;
+    }
+
+    /**
+     * (PHP 4, PHP 5+)<br/>
      * Create Component Tripoin Captcha 
      * <br/>
      * Licensed by Tripoin Team
@@ -504,11 +568,20 @@ class Form {
             ' . $this->formOption['MANUAL_ATTRIBUT'] . ' 
             value="' . $this->formOption['VALUE'] . '"
             ' . $minlength . $maxlength . '
-            class="form-control ' . $this->formOption['CLASS'] . '">
-                <span class="input-group-btn"><button style="margin-top:18px;height:34px;" type="button" 
+            class="form-control ' . $this->formOption['CLASS'] . '">';
+        if ($this->formOption['FORM_LAYOUT'] == 'horizontal') {
+            $captcha .= '<span class="input-group-btn">
+                <button style="margin-top:18px;height:34px;" type="button" 
                 onclick="ajaxPostManual(\'' . URL('captcha/reload') . '\',\'captcha_image_' . $this->formOption['ID'] . '\',\'\')" 
-                    class="read_more buttonc">Reload</button></span>
+                    class="read_more button">Reload</button></span>
                 </div></div>';
+        } else {
+            $captcha .= '<span class="input-group-btn">
+                <button style="margin-top:18px;height:34px;margin-right:1000px;" type="button" 
+                onclick="ajaxPostManual(\'' . URL('captcha/reload') . '\',\'captcha_image_' . $this->formOption['ID'] . '\',\'\')" 
+                    class="read_more button btn-danger">Reload</button></span>
+                </div></div>';
+        }
 
         $rs = $this->formGroup($captcha);
         $this->ResetObject();
@@ -548,8 +621,13 @@ class Form {
         }
         $textbox .= '<div class="box">
             <input type="file"  name="' . $this->formOption['NAME'] . '[]" id="' . $this->formOption['ID'] . '" class="inputfile inputfile-6" data-multiple-caption="{count} files selected" multiple />
-            <label for="' . $this->formOption['ID'] . '"><span></span> <strong><i class="fa fa-upload"></i> Choose a file &hellip;</strong></label>
+            <label style="height:35px;"  for="' . $this->formOption['ID'] . '" ><span id="file-' . $this->formOption['ID'] . '"></span> 
+                <strong><i class="fa fa-upload"></i> Choose a file &hellip;</strong>
+           </label>
         </div>';
+        $textbox .= '<script>$(function(){$("input[type=file]").on(\'change\',function(){'
+                . '$(\'#file-' . $this->formOption['ID'] . '\').html(this.files[0].name);'
+                . '});});</script>';
 //        $textbox .= '<div>';
         $rs = $this->formGroup($textbox);
         $this->ResetObject();
@@ -972,6 +1050,31 @@ class Form {
         return $rs;
     }
 
+    public function ajaxCombobox() {
+        $this->defaultOption();
+        $combobox = '<select type="text" 
+            name="' . $this->formOption['NAME'] . '" 
+            id="' . $this->formOption['ID'] . '" 
+            ' . $this->formOption['REQUIRED'] . ' 
+            ' . $this->formOption['MANUAL_ATTRIBUT'] . '
+            value="' . $this->formOption['VALUE'] . '"
+            class="form-control select2">';
+
+        $combobox .= '</select>';
+        $combobox .= '<div id="msg' . $this->formOption['ID'] . '">';
+        $combobox .= '</div>';
+//        $combobox .= '<script>$(function(){ $(\'#' . $this->formOption['ID'] . '\').select2(' . $plchldr . '); });</script>';
+        if ($this->formOption['AUTO_COMPLETE'] == true) {
+            $combobox .= '<script>$(function(){ $(\'#' . $this->formOption['ID'] . '\').select2({'
+                    . 'data :[{id:\'value\',text:\'TEST DULU\'}]'
+                    . '}); });</script>';
+        }
+        $rs = $this->formGroup($combobox);
+        $this->data(array());
+        $this->ResetObject();
+        return $rs;
+    }
+
     function ResetObject() {
         $new = new $this;
         $this->formOption = $new->formOption;
@@ -1022,7 +1125,7 @@ class Form {
                 $rs .= '<span class="material-input"></span>
     </div>';
             } else {
-                $rs = '<div class="form-group">
+                $rs = '<div class="form-group" style="margin-bottom:40px;">
                 <label class="col-md-3 control-label" for="focusedinput"  align="' . $this->formOption['ALIGN_LABEL'] . '">' . $title . $rq_l . '</label>
                 <div class="col-md-9 ' . $this->formOption['CLASS_COMP'] . '" id="comp' . $this->formOption['ID'] . '">';
                 $rs .= $component;
@@ -1248,6 +1351,28 @@ class Form {
     protected function result($response) {
         $this->response = $response;
         return $this;
+    }
+
+    public function getInputMedia() {
+        $txt = '';
+//        $txt .= $this->id($this->formOption['ID'])->title($this->formOption['TITLE'])->fileinputimage();
+        $txt .= '<div class="input-group" id="input-' . $this->formOption['ID'] . '">
+                    <div class="input-icon">
+                        <i class="fa fa-globe fa-fw"></i>
+                        <input class="form-control" type="text"  value="' . $this->formOption['VALUE'] . '"
+                            placeholder="' . $this->formOption['PLACEHOLDER'] . '"
+                               name="' . $this->formOption['ID'] . '" id="' . $this->formOption['ID'] . '"> 
+                    </div>
+                    <span class="input-group-btn">
+                        <button id="chooseMediaThumbnail" 
+                                onclick="getMedia(\'' . URL(getAdminTheme() . '/get-media') . '\', \'' . $this->formOption['ID'] . '\')" 
+                                class="btn btn-success" type="button">
+                            <i class="fa fa-picture-o fa-fw"></i> Media</button>
+                    </span>
+                </div>';
+        $rs = $this->formGroup($txt);
+        $this->ResetObject();
+        return $rs;
     }
 
 }

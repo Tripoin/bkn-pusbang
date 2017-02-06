@@ -145,5 +145,7 @@ return [
     'lock_screen'=>'Lock Screen',
     'view_website'=>'View Website',
     'log_out'=>'Log Out',
-    'province'=>'Province'
+    'province'=>'Province',
+    'activity'=>'Activity',
+    'documentation_image_url'=>'Image Url',
 ];

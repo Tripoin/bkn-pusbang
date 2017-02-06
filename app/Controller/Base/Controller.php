@@ -49,7 +49,12 @@ abstract class Controller implements IController {
     public $autoData = false;
     public $listAutoData = array();
     public $unsetAutoData = array();
+    public $issetAutoData = array();
     public $result = '';
+    public $changeValueNewEdit = array();
+    public $get_data;
+    public $list_parameter = false;
+    public $param_body = array();
 
     public function __construct() {
         if (empty($this->search_filter)) {
@@ -58,6 +63,14 @@ abstract class Controller implements IController {
                 "name" => lang('general.name')
             );
         }
+    }
+    
+    function listWithParameter($value = false){
+        $this->list_parameter = $value;
+    }
+
+    public function setChangevalueNewEdit($value) {
+        $this->changeValueNewEdit = $value;
     }
 
     public function setBreadCrumb($breadcrumb = array()) {
@@ -122,7 +135,8 @@ abstract class Controller implements IController {
             echo toastAlert("success", lang('general.title_update_success'), lang('general.message_update_success'));
             echo '<script>$(function(){postAjaxPagination()});</script>';
         } else {
-            echo toastAlert("error", lang('general.title_update_error'), lang('general.message_update_error') . '<br/>' . stripslashes($db->getResult()[0]));
+            echo toastAlert("error", lang('general.title_update_error'), lang('general.message_update_error') . '<br/>' .
+                    json_encode($db->getResult()));
         }
     }
 
@@ -167,15 +181,18 @@ abstract class Controller implements IController {
         } else {
             $list_data = $Datatable->select_pagination($data, $data->getEntity(), $this->where_list, $this->join_list, $this->search_list, $this->orderBy, $this->select_entity);
         }
-        
+
 //        $this->list_data = $list_data;
 //        print_r($this->unsetDataModel($this->list_data['item']));
+//        echo json_encode($list_data['item']);
+//        print_r($this->modelData);
         if ($this->autoData == true) {
             $this->listAutoData = $this->unsetDataModel($list_data['item']);
             include_once FILE_PATH(IViewConstant::CRUD_LIST_VIEW_INDEX);
         } else {
             include_once FILE_PATH($this->viewList);
         }
+        echo '<script>$(function(){$(\'#form-search\').show()});</script>';
     }
 
 //    public $dataModel = '';
@@ -213,23 +230,33 @@ abstract class Controller implements IController {
         } else {
             include_once FILE_PATH($this->viewCreate);
         }
+        echo '<script>$(function(){$(\'#form-search\').hide()});</script>';
+    }
+
+    public function getData($id) {
+        $data = $this->modelData;
+        $db = new Database();
+        $db->connect();
+        $select_data = $db->selectByID($data, $data->getId() . EQUAL . $id);
+        $this->get_data = $select_data[0];
+//        return $select_data;
     }
 
     public function edit() {
         $id = $_POST['id'];
         $Form = new Form();
         $db = new Database();
+        $db->connect();
         $Button = new Button();
 //        $group = new SecurityGroup();
-        $data = $this->modelData;
-        $db->connect();
-        $get_data = $db->selectByID($data, $data->getId() . EQUAL . $id);
-        $get_data = $get_data[0];
+
+        $get_data = $this->get_data;
         if ($this->autoData == true) {
             include_once FILE_PATH(IViewConstant::CRUD_EDIT_VIEW_INDEX);
         } else {
             include_once FILE_PATH($this->viewEdit);
         }
+        echo '<script>$(function(){$(\'#form-search\').hide()});</script>';
     }
 
     public function delete() {

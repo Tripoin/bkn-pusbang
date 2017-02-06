@@ -147,5 +147,7 @@ return [
     'lock_screen'=>'Kunci Layar',
     'view_website'=>'Lihat Website',
     'log_out'=>'Keluar',
-    'province'=>'Provinsi'
+    'province'=>'Provinsi',
+    'activity'=>'Aktivitas',
+    'documentation_image_url'=>'Image Url',
 ];
