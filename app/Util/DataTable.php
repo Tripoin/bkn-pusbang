@@ -596,6 +596,7 @@ class DataTable {
                         if (!empty($styleLastColumn)) {
                             $style_body = $styleLastColumn;
                         }
+//                        echo $cou
                         $rs .= '<td style="' . $style_body . '">' . $body[$no][$urut] . '</td>';
                     } else {
 

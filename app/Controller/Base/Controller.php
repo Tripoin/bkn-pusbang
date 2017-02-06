@@ -64,8 +64,8 @@ abstract class Controller implements IController {
             );
         }
     }
-    
-    function listWithParameter($value = false){
+
+    function listWithParameter($value = false) {
         $this->list_parameter = $value;
     }
 
@@ -249,7 +249,13 @@ abstract class Controller implements IController {
         $db->connect();
         $Button = new Button();
 //        $group = new SecurityGroup();
-
+//        $this->getData($id);
+        $data = $this->modelData;
+//        $db = new Database();
+//        $db->connect();
+        $select_data = $db->selectByID($data, $data->getId() . EQUAL . $id);
+        $this->get_data = $select_data[0];
+        
         $get_data = $this->get_data;
         if ($this->autoData == true) {
             include_once FILE_PATH(IViewConstant::CRUD_EDIT_VIEW_INDEX);
