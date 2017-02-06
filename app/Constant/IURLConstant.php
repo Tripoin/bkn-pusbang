@@ -78,8 +78,10 @@ interface IURLConstant {
     const MASTER_FACILITY_INDEX_URL = '/master/facility';
     const MASTER_SUPPORT_ROOM_INDEX_URL = '/master/support-room';
     const MASTER_ANSWER_CATEGORY_INDEX_URL = '/master/answer-category';
+    const MASTER_ANSWER_TYPE_INDEX_URL = '/master/answer-type';
     const MASTER_CATEGORY_ASSESS_INDEX_URL = '/master/category-assess';
     const MASTER_CITY_INDEX_URL = '/master/city';
+    const MASTER_QUESTION_CATEGORY_INDEX_URL = '/master/question-category';
     const DOCUMENTATION_INDEX_URL = '/documentation';
 
 }

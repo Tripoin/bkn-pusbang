@@ -170,6 +170,8 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
         $Routes->setScaffolding($sys_url_admin . IURLConstant::MASTER_CITY_INDEX_URL, 'app\Controller\Master\City');
         $Routes->setScaffolding($sys_url_admin . IURLConstant::DOCUMENTATION_INDEX_URL, 'app\Controller\Documentation\Documentation');
         $Routes->setScaffolding($sys_url_admin . IURLConstant::MASTER_CATEGORY_ASSESS_INDEX_URL, 'app\Controller\Master\CategoryAssess');
+        $Routes->setScaffolding($sys_url_admin . IURLConstant::MASTER_QUESTION_CATEGORY_INDEX_URL, 'app\Controller\Master\QuestionCategory');
+        $Routes->setScaffolding($sys_url_admin . IURLConstant::MASTER_ANSWER_TYPE_INDEX_URL, 'app\Controller\Master\AnswerType');
     }
 }
 

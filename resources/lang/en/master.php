@@ -29,5 +29,7 @@ return [
     "capacity"=>"Capacity",
     "documentation"=>"Documentation",
     "answer_category"=> "Answer Category",
+    "answer_type"=> "Answer Type",
     "category_assess"=> "Category Assessment",
+    "question_category" => "Question Category",
 ];

@@ -24,7 +24,9 @@ class IRestURLConstant {
     //COMMAND API MASTER
     const FACILITY = '130059';
     const ROOM = '130049';
-    const SUPPORT = '';
+    const SUPPORT_ROOM = '130065';
     const ANSWER_CATEGORY = '130050';
+    const ANSWER_TYPE = '130051';
     const CATEGORY_ASSESS =  '130063';
+    const QUESTION_CATEGORY = '130025';
 }

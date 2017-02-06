@@ -29,5 +29,7 @@ return [
     "capacity"=>"Kapasitas",
     "documentation"=>"Dokumentasi",
     "answer_category"=> "Kategori Jawaban",
+    "answer_type"=> "Tipe Jawaban",
     "category_assess"=> "Kategory Penilaian",
+    "question_category" => "Kategori Pertanyaan",
 ];
