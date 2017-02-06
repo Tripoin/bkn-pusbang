@@ -76,16 +76,14 @@ class Form {
     public function titleBtn($titleBtn) {
         return $this->setFormOption('TITLE_BUTTON', $titleBtn);
     }
-    
-    
 
     public function formHeader() {
         $id = "form-newedit";
-        if($this->formOption['ID'] != ""){
+        if ($this->formOption['ID'] != "") {
             $id = $this->formOption['ID'];
         }
         $txt = '';
-        $txt .= '<form role="form" id="'.$id.'" action="#" onsubmit="return false;" method="POST" novalidate="novalidate">
+        $txt .= '<form role="form" id="' . $id . '" action="#" onsubmit="return false;" method="POST" novalidate="novalidate">
     <div class="form-body">
     <div id="form-message">
     </div>
@@ -403,6 +401,71 @@ class Form {
             value="' . $this->formOption['VALUE'] . '"
             ' . $minlength . $maxlength . '
             class="form-control ' . $this->formOption['CLASS'] . '">';
+//        $textbox .= '<div>';
+        $rs = $this->formGroup($textbox);
+        $this->ResetObject();
+        return $rs;
+    }
+
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component textbox 
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * </p>
+     * @example $Form->id('textbox')->title('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->value('EXAMPLE')->placeholder('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->textbox();<br/>
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
+    public function typeahead() {
+        $this->defaultOption();
+        $textbox = '';
+//        $textbox = '<div class="col-xs-3">';
+        $type = 'text';
+        if ($this->formOption['TYPE'] != null) {
+            $type = $this->formOption['TYPE'];
+        }
+
+        $minlength = "";
+        $maxlength = "";
+        if ($this->formOption['MINLENGTH'] != null) {
+            $minlength = ' minlength="' . $this->formOption['MINLENGTH'] . '"';
+        }
+
+        if ($this->formOption['MAXLENGTH'] != null) {
+            $maxlength = ' maxlength="' . $this->formOption['MAXLENGTH'] . '"';
+        }
+        $textbox .= '<div id="layout-' . $this->formOption['ID'] . '">';
+        $textbox .= '<input type="' . $type . '" 
+            placeholder="' . $this->formOption['PLACEHOLDER'] . '" 
+            name="' . $this->formOption['NAME'] . '" 
+            id="' . $this->formOption['ID'] . '" 
+            ' . $this->formOption['REQUIRED'] . ' 
+            ' . $this->formOption['MANUAL_ATTRIBUT'] . ' 
+            style="' . $this->formOption['STYLE'] . '"
+            value="' . $this->formOption['VALUE'] . '"
+            ' . $minlength . $maxlength . '
+            class="form-control typeahead ' . $this->formOption['CLASS'] . '">';
+        $data = $this->formOption['OPTION_LABEL_VALUE'];
+        $textbox .= '</div>';
+        $textbox .= '<script>'
+                . '$(function () {'
+                . 'var icon = new Bloodhound({'
+                . 'datumTokenizer: Bloodhound.tokenizers.obj.whitespace(\'name\'),'
+                . 'queryTokenizer: Bloodhound.tokenizers.whitespace,'
+                . 'local: ' . $data
+                . '});'
+                . '$(\'#layout-style .typeahead\').typeahead({'
+                . 'hint: true,highlight: true,minLength: 1,},{name: \'icon\',display: \'name\',source: icon.ttAdapter(),'
+                . 'templates: {'
+                . 'empty: \'Not Found\','
+                . 'suggestion: Handlebars.compile(\'<div><div class="typeahead-inner"><div class="item-body"><p class="item-heading"><i class="{{name}}" ></i> {{name}}</p></div></div></div>\'),'
+                . '}});'
+                . '});'
+                . '</script>';
 //        $textbox .= '<div>';
         $rs = $this->formGroup($textbox);
         $this->ResetObject();

@@ -1,5 +1,5 @@
 <?php
-
+use app\Util\RestClient\TripoinRestClient;
 use app\Model\SecurityFunctionLanguage;
 use app\Util\Database;
 
@@ -7,6 +7,11 @@ $db = new Database();
 $sfl = new SecurityFunctionLanguage();
 
 $db->connect();
+
+
+$tripoinRestClient = new TripoinRestClient();
+$res_icon = $tripoinRestClient->doGET(URL('icon.json'));
+$dt_icon = $res_icon->getBody;
 ?>
 <?= $Form->formHeader(); ?>
 
@@ -78,7 +83,7 @@ $db->connect();
             <?php echo $Form->id('actionParameter')->value($get_data[$data->getActionParameter()])->title(lang('security.action_parameter'))->data($this->data_action_parameter)->combobox(); ?>
             <?php echo $Form->id('typeUrl')->value($get_data[$data->getTypeUrl()])->title(lang('security.page_type'))->data($this->data_url_type)->combobox(); ?>
             <?php echo $Form->id('type')->value($get_data[$data->getTypeId()])->title(lang('security.menu_type'))->data($this->data_type)->combobox(); ?>
-            <?php echo $Form->id('style')->value($get_data[$data->getStyle()])->title(lang('security.icon_menu'))->required(false)->placeholder(lang('security.icon_menu') . ' ....')->textbox(); ?>
+            <?php echo Form()->value($get_data[$data->getStyle()])->data($dt_icon)->id('style')->title(lang('security.icon_menu'))->required(false)->placeholder(lang('security.icon_menu') . ' ....')->typeahead(); ?>
         </div>
 
     </div>

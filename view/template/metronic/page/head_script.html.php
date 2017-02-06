@@ -37,6 +37,7 @@
     <link href="<?= URL('/assets/plugins/jquery-nestable/jquery.nestable.css'); ?>" rel="stylesheet" type="text/css">
     <link href="<?= URL('/assets/plugins/select2/css/select2.css'); ?>" rel="stylesheet" type="text/css">
     <link href="<?= URL('/assets/plugins/select2/css/select2-bootstrap.min.css'); ?>" rel="stylesheet" type="text/css">
+    <link href="<?= URL('/assets/plugins/typeahead/typeahead.css'); ?>" rel="stylesheet" type="text/css">
     <link href="<?= getAdminTemplateURL('/assets/css/components.min.css'); ?>?tripoin=<?= createRandomBooking(); ?>" rel="stylesheet" type="text/css">
     <link href="<?= getAdminTemplateURL('/assets/css/plugins.min.css'); ?>" rel="stylesheet" type="text/css">
     <link href="<?= getAdminTemplateURL('/assets/css/layout.min.css'); ?>" rel="stylesheet" type="text/css">

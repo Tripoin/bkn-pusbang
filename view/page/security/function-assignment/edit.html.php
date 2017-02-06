@@ -19,10 +19,6 @@ $db->select(
 );
 $function_parent = $db->getResult();
 $adminthemeurl = getAdminTheme();
-//print_r($get_data);
-//print_r($function_parent);
-//LOGGER($function_parent);
-//LOGGER($db->getSql());
 ?>
 <?= $Form->formHeader(); ?>
 
