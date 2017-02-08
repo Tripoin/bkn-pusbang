@@ -78,6 +78,35 @@ $str_replace = str_replace('contents', '', $trim_path);
 
     }
 
+    function inputFolderPage() {
+        $('#foldermodal').modal('show');
+    }
+
+    function addFolder() {
+        var file_path = $('#file_path').val();
+        var name = $('#folder-name').val();
+        $.ajax({
+            type: "POST",
+            url: '<?= FULLURL(); ?>',
+            data: 'action=add-folder&name=' + name + '&file_path=' + file_path,
+            success: function (data) {
+                console.log(data);
+                if (data == 1) {
+                    $('#foldermodal').modal('hide');
+                    toastr.success('Folder Has been Added Successfully!', 'Add Folder Success');
+                    ajaxPostManual('<?= FULLURL(); ?>', 'pageMedia', 'path=' + file_path);
+//                            $('#' + content).html(data);
+                } else {
+                    toastr.error('Folder Has been Added Failed!', 'Add Folder Failed!');
+                }
+                $('.background-overlay').remove();
+            }, error: function (jqXHR, textStatus, errorThrown) {
+                toastr.error('Folder Has been Added Failed!', 'Add Folder Failed!');
+            }
+        });
+
+    }
+
     function viewPicture(url) {
 
         if (touchtime == 0) {

@@ -32,4 +32,5 @@ return [
     "answer_type"=> "Tipe Jawaban",
     "category_assess"=> "Kategory Penilaian",
     "question_category" => "Kategori Pertanyaan",
+    "slider"=>"Slider",
 ];

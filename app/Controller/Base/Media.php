@@ -40,6 +40,9 @@ class Media {
                 case 'upload':
                     $this->uploadFile();
                     break;
+                case 'add-folder':
+                    $this->addFolder();
+                    break;
                 default:
                     break;
             }
@@ -47,17 +50,18 @@ class Media {
             include FILE_PATH('view/page/media/index.html.php');
         }
     }
+
     public function listGetMedia() {
         $Form = new Form();
         $db = new Database();
         include FILE_PATH('view/page/media/list-get-media.html.php');
     }
+
     public function getMedia() {
         $Form = new Form();
         $db = new Database();
         include FILE_PATH('view/page/media/get-media.html.php');
     }
-    
 
     public function uploadFile() {
         $path = FILE_PATH($_POST['file_path']);
@@ -72,6 +76,19 @@ class Media {
         }
         echo $result;
 //        print_r($reArray);
+    }
+
+    public function addFolder() {
+        $path = FILE_PATH($_POST['file_path']);
+        $name = $_POST['name'];
+        if (!file_exists($path.$name)) {
+            mkdir($path.$name, 0777, true);
+            $result = 1;
+        } else {
+            $result = 0;
+        }
+        
+        echo $result;
     }
 
     public function deleteFile() {

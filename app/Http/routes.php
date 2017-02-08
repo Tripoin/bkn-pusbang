@@ -63,6 +63,9 @@ $Routes->set('captcha/reload', 'app\Util\TCaptcha\TCaptcha@reloadCaptcha');
 $Routes->set('contact-us', 'app\Controller\Guest\ContactUs@index');
 $Routes->set('contact-us/submit', 'app\Controller\Guest\ContactUs@save');
 
+$Routes->set('activity', 'app\Controller\Guest\Activity@index');
+$Routes->set('alumni', 'app\Controller\Guest\Alumni@index');
+
 $Routes->set('selected', 'app\Controller\Base\General@getArea');
 if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
 
@@ -173,6 +176,7 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
         $Routes->setScaffolding($sys_url_admin . IURLConstant::MASTER_CATEGORY_ASSESS_INDEX_URL, 'app\Controller\Master\CategoryAssess');
         $Routes->setScaffolding($sys_url_admin . IURLConstant::MASTER_QUESTION_CATEGORY_INDEX_URL, 'app\Controller\Master\QuestionCategory');
         $Routes->setScaffolding($sys_url_admin . IURLConstant::MASTER_ANSWER_TYPE_INDEX_URL, 'app\Controller\Master\AnswerType');
+        $Routes->setScaffolding($sys_url_admin . IURLConstant::MASTER_SLIDER_INDEX_URL, 'app\Controller\Master\Slider');
     }
 }
 

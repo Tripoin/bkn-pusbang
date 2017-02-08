@@ -37,6 +37,7 @@ class Form {
         'NAME' => null,
         'LABEL' => '',
         'ATTR_BUTTON' => '',
+        'WITH_BUTTON' => array(),
         'ALIGN_LABEL' => '',
         'TITLE_BUTTON' => '',
         'ONCLICK' => '',
@@ -56,6 +57,10 @@ class Form {
     public function __construct() {
 //        echo 'masuk';
 //        $this->ResetObject();
+    }
+
+    public function withButton($withButton) {
+        return $this->setFormOption('WITH_BUTTON', $withButton);
     }
 
     public function autocomplete($autocomplete) {
@@ -387,6 +392,13 @@ class Form {
         if ($this->formOption['TYPE'] != null) {
             $type = $this->formOption['TYPE'];
         }
+        
+        $withButton = $this->formOption['WITH_BUTTON'];
+        $str_withButton = "";
+        if (!empty($withButton)) {
+            $button = new Button();
+            $str_withButton = $button->arrayButton($withButton);
+        }
 
         $minlength = "";
         $maxlength = "";
@@ -397,6 +409,9 @@ class Form {
         if ($this->formOption['MAXLENGTH'] != null) {
             $maxlength = ' maxlength="' . $this->formOption['MAXLENGTH'] . '"';
         }
+        if (!empty($withButton)) {
+            $textbox .= '<div class="input-group">';
+        }
         $textbox .= '<input type="' . $type . '" 
             placeholder="' . $this->formOption['PLACEHOLDER'] . '" 
             name="' . $this->formOption['NAME'] . '" 
@@ -406,6 +421,12 @@ class Form {
             value="' . $this->formOption['VALUE'] . '"
             ' . $minlength . $maxlength . '
             class="form-control ' . $this->formOption['CLASS'] . '">';
+        if (!empty($withButton)) {
+            $textbox .= '<span class="input-group-btn">'
+                    . $str_withButton
+                    . '</span>'
+                    . '</div>';
+        }
 //        $textbox .= '<div>';
         $rs = $this->formGroup($textbox);
         $this->ResetObject();
@@ -434,6 +455,13 @@ class Form {
             $type = $this->formOption['TYPE'];
         }
 
+        $withButton = $this->formOption['WITH_BUTTON'];
+        $str_withButton = "";
+        if (!empty($withButton)) {
+            $button = new Button();
+            $str_withButton = $button->arrayButton($withButton);
+        }
+
         $minlength = "";
         $maxlength = "";
         if ($this->formOption['MINLENGTH'] != null) {
@@ -442,6 +470,9 @@ class Form {
 
         if ($this->formOption['MAXLENGTH'] != null) {
             $maxlength = ' maxlength="' . $this->formOption['MAXLENGTH'] . '"';
+        }
+        if (!empty($withButton)) {
+            $textbox .= '<div class="input-group">';
         }
         $textbox .= '<div id="layout-' . $this->formOption['ID'] . '">';
         $textbox .= '<input type="' . $type . '" 
@@ -458,6 +489,13 @@ class Form {
         $LAYOUT_TYPEAHEAD = $this->formOption['LAYOUT_TYPEAHEAD'];
 
         $textbox .= '</div>';
+        if (!empty($withButton)) {
+            $textbox .= '<span class="input-group-btn">'
+                    . $str_withButton
+                    . '</span>'
+                    . '</div>';
+        }
+        
         $textbox .= '<script>'
                 . '$(function () {'
                 . 'var icon = new Bloodhound({'
@@ -572,7 +610,7 @@ class Form {
                             <input type="radio" 
                             ' . $this->formOption['MANUAL_ATTRIBUT'] . ' 
                             name="' . $this->formOption['NAME'] . '" 
-                            id="' . $this->formOption['ID'] . '" '.$checked.' value="' . $value->id . '"> ' . $value->label . '
+                            id="' . $this->formOption['ID'] . '" ' . $checked . ' value="' . $value->id . '"> ' . $value->label . '
                                 <span></span>
                         </label><br/>';
             }
@@ -586,7 +624,7 @@ class Form {
                             <input type="radio" 
                             ' . $this->formOption['MANUAL_ATTRIBUT'] . ' 
                             name="' . $this->formOption['NAME'] . '" 
-                            id="' . $this->formOption['ID'] . '" '.$checked.' value="' . $value['id'] . '"> ' . $value['label'] . '
+                            id="' . $this->formOption['ID'] . '" ' . $checked . ' value="' . $value['id'] . '"> ' . $value['label'] . '
                                 <span></span>
                         </label><br/>';
             }

@@ -138,15 +138,19 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
                         <div class="col-md-6">
                             <?php
                             echo Form()->id('working_unit')->placeholder(lang('member.working_unit') . ' ....')
+                                    ->required(false)
                                     ->title(lang('member.working_unit'))
                                     ->data($data_working_unit)
                                     ->attr('onchange="openBlankField(this,\'working_unit\')"')
+                                    
                                     ->combobox();
                             ?>
                             <?php
                             echo Form()->id('government_agencies')->placeholder(lang('member.government_agencies') . ' ....')
+                                    ->required(false)
                                     ->title(lang('member.government_agencies'))
                                     ->data($data_gov)
+                                    
                                     ->attr('onchange="openBlankField(this,\'government_agencies\')"')
                                     ->combobox();
                             ?>
@@ -161,8 +165,8 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
                                     ->textbox();
                             ?>
                             <?php
-                            echo Form()->id('pic_address')->placeholder(lang('member.pic_address') . ' ....')
-                                    ->title(lang('member.pic_address'))
+                            echo Form()->id('address_instansi')->placeholder(lang('member.address_instansi') . ' ....')
+                                    ->title(lang('member.address_instansi'))
                                     ->textarea();
                             ?>
                         </div>
@@ -231,8 +235,8 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
 //        $('#city').select2();
 //        jQuery(document).on("keyup",".select2-input", function (event) { alert(jQuery(this).val()); });
         $('#pageInstansi').hide();
-        $('#compgovernment_agencies').append('<input type="text" placeholder="Kosongkan jika ada pada pilihan ..." class="form-control" id="government_agencies_2">');
-        $('#compworking_unit').append('<input type="text" placeholder="Kosongkan jika ada pada pilihan ..." class="form-control" id="working_unit_2">');
+        $('#compgovernment_agencies').append('<input type="text" placeholder="Kosongkan jika ada pada pilihan ..." class="form-control"  name="government_agencies_2" id="government_agencies_2">');
+        $('#compworking_unit').append('<input type="text" placeholder="Kosongkan jika ada pada pilihan ..." class="form-control"  name="working_unit_2" id="working_unit_2">');
     });
 
     function changeCategoryParticipant(e) {
@@ -245,7 +249,7 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
 
     function openBlankField(e, id) {
         if (e.value == "") {
-            $('#comp' + id).append('<input type="text" placeholder="Kosongkan jika ada pada pilihan ..." class="form-control" id="' + id + '_2">');
+            $('#comp' + id).append('<input type="text" placeholder="Kosongkan jika ada pada pilihan ..." class="form-control"  name="' + id + '_2" id="' + id + '_2">');
         } else {
             $('#' + id + '_2').remove();
         }

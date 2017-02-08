@@ -83,5 +83,6 @@ interface IURLConstant {
     const MASTER_CITY_INDEX_URL = '/master/city';
     const MASTER_QUESTION_CATEGORY_INDEX_URL = '/master/question-category';
     const DOCUMENTATION_INDEX_URL = '/documentation';
+    const MASTER_SLIDER_INDEX_URL = '/master/slider';
 
 }

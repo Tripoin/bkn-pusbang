@@ -22,11 +22,11 @@ class MasterSlider extends GeneralAuditrail {
         $this->setEntity('mst_slider');
     }
     
-    private $title = 'title';
-    private $subtitle = 'subtitle';
-    private $img = 'img';
-    private $link = 'link';
-    private $textButton = 'text_button';
+    protected $title = 'title';
+    protected $subtitle = 'subtitle';
+    protected $img = 'img';
+    protected $link = 'link';
+    protected $textButton = 'text_button';
     
     
     function getTextButton() {

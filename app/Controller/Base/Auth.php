@@ -34,7 +34,10 @@ use app\Util\PHPMail\PHPMailer;
 use app\Model\TransactionRegistration;
 use app\Model\LinkRegistration;
 use app\Model\MasterAttachment;
-//use app\Model\Master;
+use app\Model\MasterAddress;
+use app\Model\MasterContact;
+use app\Model\MasterWorkingUnit;
+use app\Model\MasterGovernmentAgencies;
 
 class Auth {
 
@@ -50,12 +53,12 @@ class Auth {
     public function register() {
         $this->registerProses();
     }
-    
-    public function registerProsesTest(){
+
+    public function registerProsesTest() {
         echo resultPageMsg("success", lang('general.title_register_success'), lang('general.message_register_member'));
         echo '<script>$(\'#form-newedit\').remove()</script>';
     }
-    
+
     public function registerProses() {
         $db = new Database();
         $transactionRegistration = new TransactionRegistration();
@@ -74,6 +77,7 @@ class Auth {
             $city = $_POST['city'];
             $district = $_POST['district'];
             $village = $_POST['village'];
+            $zipCode = $_POST['zip_code'];
 
             $subject = $_POST['subject'];
             $message = $_POST['message'];
@@ -99,7 +103,7 @@ class Auth {
                     }
                 }
                 if ($result['upload_result'] == 1) {
-
+                    $result_all = false;
 
                     $code = createRandomBooking();
                     $db->connect();
@@ -139,15 +143,19 @@ class Auth {
                             ));
                             $rs_link_regis = $db->getResult();
                             if (is_numeric($rs_link_regis[0])) {
-                                $sendMail = $this->sendMailRegister();
-                                if ($sendMail == 1) {
-                                    echo resultPageMsg("success", lang('general.title_register_success'), lang('general.message_register_member'));
-                                    echo toastAlert('success', lang('general.title_register_success'), lang('general.message_register_member'));
-                                    echo '<script>$(\'#form-newedit\').remove()</script>';
-                                } else {
-                                    echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.message_register_failed'));
-                                    echo toastAlert('error', lang('general.title_register_failed'), lang('general.message_register_failed'));
+
+                                if ($participant_category == 1) {
+                                    $sendMail = $this->sendMailRegister();
+                                    if ($sendMail == 1) {
+                                        echo resultPageMsg("success", lang('general.title_register_success'), lang('general.message_register_member'));
+                                        echo toastAlert('success', lang('general.title_register_success'), lang('general.message_register_member'));
+                                        echo '<script>$(\'#form-newedit\').remove()</script>';
+                                    } else {
+                                        echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                                        echo toastAlert('error', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                                    }
                                 }
+                                $result_all = true;
                             } else {
                                 echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.message_register_failed') . json_encode($rs_link_regis));
                                 echo toastAlert('error', lang('general.title_register_failed'), lang('general.message_register_failed'));
@@ -164,9 +172,128 @@ class Auth {
                     echo resultPageMsg('danger', lang('general.title_register_failed'), $result['upload_message']);
                     echo toastAlert('error', lang('general.title_register_failed'), $result['upload_message']);
                 }
+                if ($result_all == true) {
+                    if ($participant_category != 1) {
+                        $workingUnit = $_POST['working_unit'];
 
-                if ($participant_category != 1) {
-                    
+                        $addressInstansi = $_POST['address_instansi'];
+                        $provinceInstansi = $_POST['province_instansi'];
+                        $cityInstansi = $_POST['city_instansi'];
+                        $districtInstansi = $_POST['district_instansi'];
+                        $villageInstansi = $_POST['village_instansi'];
+                        $masterAddress = new MasterAddress();
+
+                        $code_address = createRandomBooking();
+                        $db->insert($masterAddress->getEntity(), array(
+                            $masterAddress->getCode() => $code_address,
+                            $masterAddress->getName() => $addressInstansi,
+                            $masterAddress->getProvinceId() => $provinceInstansi,
+                            $masterAddress->getCityId() => $cityInstansi,
+                            $masterAddress->getVillageId() => $villageInstansi,
+                            $masterAddress->getDistrictId() => $districtInstansi,
+                            $masterAddress->getZipCode() => $zipCode
+                        ));
+
+                        $rs_address = $db->getResult();
+                        if (is_numeric($rs_address[0])) {
+                            $governmentAgentcies = $_POST['government_agencies'];
+                            $masterContact = new MasterContact();
+                            $officeTelephone = $_POST['office_telephone'];
+                            $officeFax = $_POST['office_fax'];
+
+                            $code_contact = createRandomBooking();
+                            $db->insert($masterContact->getEntity(), array(
+                                $masterContact->getCode() => $code_contact,
+                                $masterContact->getPhoneNumber1() => $officeTelephone,
+                                $masterContact->getFax() => $officeFax,
+                            ));
+                            $rs_contact = $db->getResult();
+                            if (is_numeric($rs_contact[0])) {
+                                $governmentAgentcies_id = null;
+                                if ($governmentAgentcies == "") {
+                                    $code_agencies = createRandomBooking();
+                                    $masterGovernmentAgencies = new MasterGovernmentAgencies();
+                                    $governmentAgentcies_name = $_POST['government_agencies_2'];
+                                    $db->insert($masterGovernmentAgencies->getEntity(), array(
+                                        $masterGovernmentAgencies->getCode() => $code_agencies,
+                                        $masterGovernmentAgencies->getName() => $governmentAgentcies_name,
+                                    ));
+                                    $rs_agencies = $db->getResult();
+                                    if (is_numeric($rs_agencies[0])) {
+                                        $governmentAgentcies_id = $rs_agencies[0];
+                                    } else {
+                                        $governmentAgentcies_id = null;
+                                    }
+                                } else {
+                                    $governmentAgentcies_id = $governmentAgentcies;
+                                }
+                                $workingUnitId = null;
+                                if ($workingUnit == "") {
+                                    $masterWorkingUnit = new MasterWorkingUnit();
+                                    $code_working_unit = createRandomBooking();
+                                    $workingUnit_name = $_POST['working_unit_2'];
+                                    $db->insert($masterWorkingUnit->getEntity(), array(
+                                        $masterWorkingUnit->getCode() => $code_working_unit,
+                                        $masterWorkingUnit->getName() => $workingUnit_name,
+                                        $masterWorkingUnit->getAddress_id() => $rs_address[0],
+                                        $masterWorkingUnit->getContact_id() => $rs_contact[0],
+                                        $masterWorkingUnit->getGovernment_agency_id() => $governmentAgentcies_id,
+                                        $masterWorkingUnit->getStatus() => 1
+                                    ));
+                                    $rs_working_unit = $db->getResult();
+                                    if (is_numeric($rs_working_unit[0])) {
+                                        $workingUnitId = $rs_working_unit[0];
+                                    } else {
+                                        $workingUnitId = null;
+                                    }
+                                } else {
+                                    $masterWorkingUnit = new MasterWorkingUnit();
+                                    $code_working_unit = createRandomBooking();
+                                    $workingUnit_name = $_POST['working_unit_2'];
+                                    $db->update($masterWorkingUnit->getEntity(), array(
+                                        $masterWorkingUnit->getCode() => $code_working_unit,
+                                        $masterWorkingUnit->getName() => $workingUnit_name,
+                                        $masterWorkingUnit->getAddress_id() => $rs_address[0],
+                                        $masterWorkingUnit->getContact_id() => $rs_contact[0],
+                                        $masterWorkingUnit->getGovernment_agency_id() => $governmentAgentcies_id,
+                                        $masterWorkingUnit->getStatus() => 1
+                                            ), $masterWorkingUnit->getId() . EQUAL . $workingUnit);
+                                    $workingUnitId = $workingUnit;
+                                }
+//                            $rs_registration[0];
+                                $db->update($transactionRegistration->getEntity(), array(
+                                    $transactionRegistration->getWorkingUnitId() => $workingUnitId,
+                                        ), $transactionRegistration->getId() . EQUAL . $rs_registration[0]);
+                                $rs_update_registration = $db->getResult();
+                                if ($rs_update_registration[0] == 1) {
+//                                    echo resultPageMsg("success", lang('general.title_register_success'), lang('general.message_register_member'));
+//                                    echo toastAlert('success', lang('general.title_register_success'), lang('general.message_register_member'));
+//                                    echo '<script>$(\'#form-newedit\').remove()</script>';
+                                    $sendMail = $this->sendMailRegister();
+                                    if ($sendMail == 1) {
+                                        echo resultPageMsg("success", lang('general.title_register_success'), lang('general.message_register_member'));
+                                        echo toastAlert('success', lang('general.title_register_success'), lang('general.message_register_member'));
+                                        echo '<script>$(\'#form-newedit\').remove()</script>';
+                                    } else {
+                                        echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                                        echo toastAlert('error', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                                    }
+                                } else {
+                                    echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                                    echo toastAlert('error', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                                }
+                            } else {
+                                echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                                echo toastAlert('error', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                            }
+                        } else {
+                            echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                            echo toastAlert('error', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                        }
+                    }
+                } else {
+                    echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                    echo toastAlert('error', lang('general.title_register_failed'), lang('general.message_register_failed'));
                 }
             }
         } else {
@@ -194,7 +321,7 @@ class Auth {
 
             $mail->Username = MAIL_USERNAME;
             $mail->Password = MAIL_PASSWORD;
-            
+
 
             $mail->isHTML(true);
 

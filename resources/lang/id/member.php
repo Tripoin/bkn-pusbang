@@ -31,6 +31,7 @@ return [
     "city"=>"Kota",
     "district"=>"Kecamatan",
     "village"=>"Kelurahan",
+    "address_instansi"=>"Alamat Kantor",
     "participant_category"=>"Kategori Partisipasi",
     "zip_code"=>"Kode Pos",
     "government_agencies"=>"Instansi Pemerintahan",

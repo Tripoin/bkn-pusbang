@@ -76,7 +76,11 @@ foreach ($list_data['item'] as $value) {
 //                        echo $valueData;
                         array_push($arrayBody, $value[$valueData]['name']);
                     }
+                } else {
+//                    array_push($arrayBody, " ");
                 }
+            } else {
+//                array_push($arrayBody, " ");
             }
         }
     }
@@ -85,6 +89,7 @@ foreach ($list_data['item'] as $value) {
             array_push($arrayBody, $value[$keyValueData]);
         }
     }
+
     $arrayMergeBody = array_merge(array($no), $arrayBody, array($action_edit . $action_delete));
     $Datatable->body($arrayMergeBody);
     $no += 1;

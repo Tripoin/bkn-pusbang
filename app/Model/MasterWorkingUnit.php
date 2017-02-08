@@ -22,7 +22,7 @@ class MasterWorkingUnit extends GeneralAuditrail {
         $this->setEntity('mst_working_unit');
     }
 
-    public $government_agency_id = 'government_agency_id';
+    public $government_agency_id = 'government_agencies_id';
     public $address_id = 'address_id';
     public $contact_id = 'contact_id';
     function getGovernment_agency_id() {

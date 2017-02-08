@@ -32,4 +32,5 @@ return [
     "answer_type"=> "Answer Type",
     "category_assess"=> "Category Assessment",
     "question_category" => "Question Category",
+    "slider"=>"Slider",
 ];

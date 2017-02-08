@@ -8,7 +8,7 @@ $transactionActivity = new TransactionActivity();
 $masterDocumentation = new MasterDocumentation();
 $db = new Database();
 $db->connect();
-$db->select($masterDocumentation->getEntity(), "*", null, $masterDocumentation->getActivityId() . EQUAL . $_POST['id'], $masterDocumentation->getCreatedOn() . " DESC ");
+$db->select($masterDocumentation->getEntity(), "*", null, $masterDocumentation->getActivity_id() . EQUAL . $_POST['id'], $masterDocumentation->getCreatedOn() . " DESC ");
 $rest_doc = $db->getResult();
 ?>
 <style>
@@ -18,12 +18,12 @@ $rest_doc = $db->getResult();
     <?php
     foreach ($rest_doc as $value) {
         $url = '';
-        if (substr($value[$masterDocumentation->getImageUrl()], 0, 7) == "http://") {
-            $url = $value[$masterDocumentation->getImageUrl()];
-        } else if (substr($value[$masterDocumentation->getImageUrl()], 0, 8) == "https://") {
-            $url = $value[$masterDocumentation->getImageUrl()];
+        if (substr($value[$masterDocumentation->getDocumentation_image_url()], 0, 7) == "http://") {
+            $url = $value[$masterDocumentation->getDocumentation_image_url()];
+        } else if (substr($value[$masterDocumentation->getDocumentation_image_url()], 0, 8) == "https://") {
+            $url = $value[$masterDocumentation->getDocumentation_image_url()];
         } else {
-            $url = URL('contents/' . $value[$masterDocumentation->getImageUrl()]);
+            $url = URL('contents/' . $value[$masterDocumentation->getDocumentation_image_url()]);
         }
         ?>
         <a href="<?= $url; ?>"><img src="<?= $url; ?>" data-title="<?= $value[$masterDocumentation->getName()]; ?>" data-description="<?= $value[$masterDocumentation->getName()]; ?>"></a>

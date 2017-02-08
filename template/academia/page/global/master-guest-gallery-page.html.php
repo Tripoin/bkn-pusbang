@@ -29,16 +29,16 @@ $rest_activity = $db->getResult();
             <div class="col-sm-12 margin-bottom">
                 <?php
                 foreach ($rest_activity as $value) {
-                    $db->select($masterDocumentation->getEntity(), "*", null, $masterDocumentation->getActivityId() . EQUAL . $value[$transactionActivity->getId()], $masterDocumentation->getCreatedOn() . " DESC ", "0,1");
+                    $db->select($masterDocumentation->getEntity(), "*", null, $masterDocumentation->getActivity_id() . EQUAL . $value[$transactionActivity->getId()], $masterDocumentation->getCreatedOn() . " DESC ", "0,1");
                     $res_doc = $db->getResult();
 //                    LOGGER();
                     $url = '';
-                    if (substr($res_doc[0][$masterDocumentation->getImageUrl()], 0, 7) == "http://") {
-                        $url = $res_doc[0][$masterDocumentation->getImageUrl()];
-                    } else if (substr($res_doc[0][$masterDocumentation->getImageUrl()], 0, 8) == "https://") {
-                        $url = $res_doc[0][$masterDocumentation->getImageUrl()];
+                    if (substr($res_doc[0][$masterDocumentation->getDocumentation_image_url()], 0, 7) == "http://") {
+                        $url = $res_doc[0][$masterDocumentation->getDocumentation_image_url()];
+                    } else if (substr($res_doc[0][$masterDocumentation->getDocumentation_image_url()], 0, 8) == "https://") {
+                        $url = $res_doc[0][$masterDocumentation->getDocumentation_image_url()];
                     } else {
-                        $url = URL('contents/' . $res_doc[0][$masterDocumentation->getImageUrl()]);
+                        $url = URL('contents/' . $res_doc[0][$masterDocumentation->getDocumentation_image_url()]);
                     }
                     ?>
                     <div class="col-md-3 col-sm-3">

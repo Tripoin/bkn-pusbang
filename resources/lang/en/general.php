@@ -148,5 +148,10 @@ return [
     'province'=>'Province',
     'activity'=>'Activity',
     'documentation_image_url'=>'Image Url',
-    'message_register_member'=>"Kami menerima permintaan melakukan Pendaftaran Peserta. Mohon Menunggu 1x24 Jam, Administator kami akan mengecek data terlebih dahulu <br/> Terima Kasih <br/> Pusbang BKN"
+    'message_register_member'=>"Kami menerima permintaan melakukan Pendaftaran Peserta. Mohon Menunggu 1x24 Jam, Administator kami akan mengecek data terlebih dahulu <br/> Terima Kasih <br/> Pusbang BKN",
+    'img'=>'Image',
+    'title'=>'Title',
+    'text_button'=>'Text Button',
+    'subtitle'=>'Subtitle',
+    'link'=>'Link',
 ];

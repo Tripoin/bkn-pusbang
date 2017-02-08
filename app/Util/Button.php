@@ -30,6 +30,44 @@ class Button {
         'PLACEHOLDER' => '',
         'ICON' => '',
     );
+    
+    public function arrayButton($data=array()){
+        $class = 'btn btn-primary';
+        if(!empty($data['class'])){
+            $class = $data['class'];
+        }
+        
+        $title = 'Submit';
+        if(!empty($data['title'])){
+            $title = $data['title'];
+        }
+        
+        $onclick = '#';
+        if(!empty($data['onclick'])){
+            $onclick = $data['onclick'];
+        }
+        
+        $attr = '';
+        if(!empty($data['attr'])){
+            $attr = $data['attr'];
+        }
+        $icon = '';
+        if(!empty($data['icon'])){
+            $icon = $data['icon'];
+        }
+        
+        
+        $txt = '<button '
+                . ' class="'.$class.'" '
+                . ' onclick="'.$onclick.'" '
+                . ' '. $attr.' '
+                . ' type="button"> '
+                . ' <i class="'.$icon.'"></i> '
+                . ' '.$title.' '
+                . '</button>';
+        
+        return $txt;
+    }
 
     public function buttonDelete() {
         $txt = '';

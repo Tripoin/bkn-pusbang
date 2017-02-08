@@ -31,6 +31,7 @@ return [
     "city"=>"City",
     "district"=>"District",
     "village"=>"Village",
+    "address_instansi"=>"Office Address",
     "participant_category"=>"Participant Category",
     "zip_code"=>"ZIP Code",
     "government_agencies"=>"Government Agencies",

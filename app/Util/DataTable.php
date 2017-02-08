@@ -602,6 +602,8 @@ class DataTable {
 
                         $rs .= '<td style="' . $style_body . '">' . $body[$no][$urut] . '</td>';
                     }
+                } else {
+                    $rs .= '<td style="' . $style_body . '"></td>';
                 }
             }
             $rs .= '</tr>';

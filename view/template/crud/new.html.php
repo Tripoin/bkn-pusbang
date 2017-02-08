@@ -10,11 +10,15 @@ $autoData = $_SESSION[SESSION_ADMIN_AUTO_DATA];
 $arrayNew = array();
 $countAutoData;
 
+//print_r($this->modelData);
+$modelDataArray = $this->modelData->toArray();
 if ($this->modelData == null) {
     foreach ($autoData as $valueData) {
         if ($valueData != 'id') {
             if (!in_array($valueData, $this->unsetAutoData)) {
-                echo $Form->id($valueData)->title(lang('general.' . $valueData))->placeholder(lang('general.' . $valueData) . ' ....')->textbox();
+                echo $Form->id($valueData)
+                        ->title(lang('general.' . $valueData))
+                        ->placeholder(lang('general.' . $valueData) . ' ....')->textbox();
             }
         }
     }
@@ -44,7 +48,8 @@ if ($this->modelData == null) {
                         } else {
                             $langData = $valueData;
                         }
-                        echo $Form->id($valueData)->title(lang('general.' . $langData))
+                        $keys = array_search ($valueData, $modelDataArray);
+                        echo $Form->id($keys)->title(lang('general.' . $langData))
                                 ->data($cv)->placeholder('Select')->combobox();
                     }
                 }
@@ -56,12 +61,14 @@ if ($this->modelData == null) {
                         
                     } else {
                         if (empty($this->changeValueNewEdit)) {
-                            echo $Form->id($valueData)->title(lang('general.' . $valueData))->placeholder(lang('general.' . $valueData) . ' ....')->textbox();
+                            $keys = array_search ($valueData, $modelDataArray);
+                            echo $Form->id($keys)->title(lang('general.' . $valueData))->placeholder(lang('general.' . $valueData) . ' ....')->textbox();
                         } else {
                             foreach ($this->changeValueNewEdit as $key => $value) {
                                 if($key == $valueData){
                                     echo $value;
                                 } else {
+                                    $keys = array_search ($valueData, $modelDataArray);
                                     echo $Form->id($valueData)->title(lang('general.' . $valueData))->placeholder(lang('general.' . $valueData) . ' ....')->textbox();
                                 }
                             }

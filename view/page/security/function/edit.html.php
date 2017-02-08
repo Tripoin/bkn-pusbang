@@ -1,4 +1,5 @@
 <?php
+
 use app\Util\RestClient\TripoinRestClient;
 use app\Model\SecurityFunctionLanguage;
 use app\Util\Database;
@@ -17,7 +18,7 @@ $dt_icon = $res_icon->getBody;
 
 <?php // echo $Form->id('code')->title(lang('general.code'))->value($get_data[$data->getCode()])->placeholder(lang('general.code') . ' ....')->textbox(); ?>
 <?php // echo $Form->id('name')->title(lang('general.name'))->value($get_data[$data->getName()])->placeholder(lang('general.name') . ' ....')->textbox(); ?>
-<?php // echo $Form->id('url')->title(lang('function.url'))->value($get_data[$data->getUrl()])->placeholder(lang('function.url') . ' ....')->textbox();  ?>
+<?php // echo $Form->id('url')->title(lang('function.url'))->value($get_data[$data->getUrl()])->placeholder(lang('function.url') . ' ....')->textbox();   ?>
 <div>
     <ul class="nav nav-tabs">
         <?php
@@ -64,27 +65,37 @@ $dt_icon = $res_icon->getBody;
                                 echo $Form->id('name_' . $val_lang[$this->lang->getCode()])->value($ms_lang[0][$data->getName()])->title(lang('general.name'))->placeholder(lang('general.name') . ' ....')->textbox();
                             }
                             ?>
-                        <?php } ?>
+                    <?php } ?>
                     </div>
                 <?php } ?>
-                <?php 
+                <?php
                 $getParent = 0;
-                if($get_data[$data->getParent()] != null){
+                if ($get_data[$data->getParent()] != null) {
                     $getParent = $get_data[$data->getParent()];
                 }
                 ?>
                 <?php echo $Form->id('url')->required(false)->value($get_data[$data->getUrl()])->title(lang('security.url'))->placeholder(lang('security.url') . ' ....')->textbox(); ?>
-                <?php echo $Form->id('parent')->value($getParent)->title(lang('security.function'))->data($this->data_function)->combobox(); ?>
+<?php echo $Form->id('parent')->value($getParent)->title(lang('security.function'))->data($this->data_function)->combobox(); ?>
 
 
             </div>
         </div>
         <div class="col-md-6">
-            <?php $div = '<div><div class="typeahead-inner"><div class="item-body"><p class="item-heading"><i class="{{name}}" ></i> {{name}}</p></div></div></div>';?>
+            <?php $div = '<div><div class="typeahead-inner"><div class="item-body"><p class="item-heading"><i class="{{name}}" ></i> {{name}}</p></div></div></div>'; ?>
             <?php echo $Form->id('actionParameter')->value($get_data[$data->getActionParameter()])->title(lang('security.action_parameter'))->data($this->data_action_parameter)->combobox(); ?>
             <?php echo $Form->id('typeUrl')->value($get_data[$data->getTypeUrl()])->title(lang('security.page_type'))->data($this->data_url_type)->combobox(); ?>
             <?php echo $Form->id('type')->value($get_data[$data->getTypeId()])->title(lang('security.menu_type'))->data($this->data_type)->combobox(); ?>
-            <?php echo Form()->layoutTypeAhead($div)->value($get_data[$data->getStyle()])->data($dt_icon)->id('style')->title(lang('security.icon_menu'))->required(false)->placeholder(lang('security.icon_menu') . ' ....')->typeahead(); ?>
+            <?php
+            echo Form()->layoutTypeAhead($div)->id('style')
+                    ->data($dt_icon)->title(lang('security.icon_menu'))
+                    ->required(false)->placeholder(lang('security.icon_menu') . ' ....')
+                    ->value($get_data[$data->getStyle()])
+                    ->withButton(array(
+                        "title" => "Cari",
+                        "icon" => "fa fa-search",
+                        "onclick" => "getIcon()"
+                    ))->typeahead();
+            ?>
         </div>
 
     </div>
@@ -92,3 +103,57 @@ $dt_icon = $res_icon->getBody;
 <input type="hidden" id="id" name="id" value="<?= $_POST['id']; ?>"/>
 
 <?= $Form->formFooter($this->updateUrl); ?>
+<script>
+    $(function () {
+
+    });
+
+    function searchIcon(e) {
+        $("#page-icon > a[data-original-title!='" + e.value + "']").hide();
+        $("#page-icon > a[data-original-title*='" + e.value + "']").show();
+    }
+
+    function setToStyle(e) {
+        var text = $(e).attr('data-original-title');
+        $('#style').val(text);
+        $('#modal-icon').modal("hide");
+//        
+    }
+    function getIcon() {
+        $('#modal-icon').modal("show");
+    }
+</script>
+<div class='modal fade' id="modal-icon" data-color="grey" aria-hidden="true"> 
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header" id="modal-header-self">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-11">
+                            <h4 class="modal-title" id="modal-title-self">
+                                Pilih Icon
+                            </h4>
+                        </div>
+                        <div class="col-md-1">
+                            <button type="button" class="btn btn-circle btn-icon-only pull-right" data-dismiss="modal"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body" id="modal-body-self">
+                <input type="text" class="form-control" onkeyup="searchIcon(this)" placeholder="Search Icon ..."/>
+                <br/>
+                <div id="page-icon">
+                    <?php
+                    foreach (json_decode($dt_icon) as $value) {
+                        ?>
+                        <a href="javascript:void(0)" onclick="setToStyle(this)" title="<?= $value->name; ?>" rel="tooltip" style="margin-bottom: 3px;" class="btn btn-icon-only default">
+                            <i class="<?= $value->name; ?>"></i>
+                        </a>
+<?php } ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
