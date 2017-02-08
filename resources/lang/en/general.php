@@ -47,6 +47,7 @@ return [
     'email' => 'Email Address',
     'password' => 'Password',
     'telephone' => 'Telephone',
+    'fax' => 'Fax',
     'phone' => 'Phone',
     'address' => 'Alamat',
     'confirm_password' => 'Confirm Password',

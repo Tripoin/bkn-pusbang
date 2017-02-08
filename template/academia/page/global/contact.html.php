@@ -38,6 +38,17 @@
                     </div>
                     <div class="media">
                         <div class="media-left">
+                            <i class="fa fa-fax"></i>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading"><?= lang('general.fax'); ?></h4>
+                            <p>
+                                <span class="contact-emailto"><?= getSystemParameter('CONTACT_FAX'); ?></span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="media">
+                        <div class="media-left">
                             <i class="fa fa-envelope"></i>
                         </div>
                         <div class="media-body">
@@ -47,6 +58,7 @@
                             </p>
                         </div>
                     </div>
+                    
                     <div class="media">
                         <div class="media-left">
                             <i class="fa fa-map-marker"></i>

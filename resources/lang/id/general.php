@@ -79,6 +79,7 @@ return [
     'you' => 'Anda',
     'back' => 'Kembali',
     'handphone' => 'Handphone',
+    'fax' => 'Fax',
     'city' => 'Kota',
     'address' => 'Alamat',
     'gallery' => 'Galeri',
