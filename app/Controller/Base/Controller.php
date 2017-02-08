@@ -200,6 +200,7 @@ abstract class Controller implements IController {
     public function unsetDataModel($data) {
         $auditrail = new Auditrail();
 //        print_r($auditrail);
+        $_SESSION[SESSION_ADMIN_AUTO_DATA] = array();
         $createdOn = $auditrail->getCreatedOn();
         $createdBy = $auditrail->getCreatedByUsername();
         $modifiedOn = $auditrail->getModifiedOn();

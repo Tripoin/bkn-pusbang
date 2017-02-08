@@ -1567,6 +1567,11 @@ $subtitle_body_global = '';
 $url_create = '';
 $url_datatable = '';
 $url_edit = '';
+$showActionHeader = true;
+
+function showActionHeader($value) {
+    $GLOBALS['showActionHeader'] = $value;
+}
 
 function pageHeadBody() {
     $result = '<div class="portlet-title">
@@ -1575,13 +1580,12 @@ function pageHeadBody() {
                                 ' . $GLOBALS['title_body_global'] . '
                                 <small style="text-transform: none;color: #969696">' . $GLOBALS['subtitle_body_global'] . ' </small>
                             </span>
-                        </div>
-                        <div class="actions" id="actionHeader">
-                           
-                                
-                                    
-                        </div>
-                    </div>';
+                        </div>';
+    if ($GLOBALS['showActionHeader'] == true) {
+        $result .= '<div class="actions" id="actionHeader">
+                        </div>';
+    }
+    $result .= '</div>';
     $url = $GLOBALS['url_datatable'];
     $result .= '<input type="hidden" id="urlPage" value="' . $url . '"/>';
     return $result;

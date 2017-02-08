@@ -53,6 +53,7 @@ abstract class ControllerRestUI implements IController {
     public $autoData = false;
     public $listAutoData = array();
     public $unsetAutoData = array();
+    public $issetAutoData = array();
     public $result = '';
     public $list_parameter = false;
     public $param_body = array();
@@ -66,13 +67,11 @@ abstract class ControllerRestUI implements IController {
         }
         $this->url_api = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH;
     }
-    
-    
 
-    function listWithParameter($value = false){
+    function listWithParameter($value = false) {
         $this->list_parameter = $value;
     }
-    
+
     public function setBreadCrumb($breadcrumb = array()) {
         setBreadCrumb($breadcrumb);
     }
@@ -181,8 +180,20 @@ abstract class ControllerRestUI implements IController {
         echo '<script>$(function(){$(\'#form-search\').show()});</script>';
     }
 
+    public function issetAutoDataModel($data = array()) {
+        if (isset($_SESSION[SESSION_ADMIN_AUTO_DATA])) {
+            $setarray = $_SESSION[SESSION_ADMIN_AUTO_DATA];
+            if (is_array($setarray)) {
+                $setarray = array_merge($setarray, $data);
+            }
+
+            $_SESSION[SESSION_ADMIN_AUTO_DATA] = $setarray;
+        }
+    }
+
     public function unsetDataModel($data) {
 //        print_r($data);
+        $_SESSION[SESSION_ADMIN_AUTO_DATA] = array();
         $auditrail = new Auditrail();
 //        print_r($auditrail);
         $createdOn = $auditrail->getCreatedOn();
@@ -199,10 +210,11 @@ abstract class ControllerRestUI implements IController {
             unset($data[$key]->$status);
         }
 //        print_r(array_keys((array) $data[0]));
-        
+
         if (empty($data)) {
             return array();
         } else {
+
             $_SESSION[SESSION_ADMIN_AUTO_DATA] = array_keys((array) $data[0]);
             return array_keys((array) $data[0]);
         }

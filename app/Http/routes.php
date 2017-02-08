@@ -167,6 +167,8 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
         $Routes->set($sys_url_admin . '/list-get-media', 'app\Controller\Base\Media@listGetMedia');
         $Routes->set($sys_url_admin . '/lock-screen', 'app\Controller\Base\AuthAdmin@lockScreen');
         
+        $Routes->set($sys_url_admin . '/security/guest-menu', 'app\Controller\Base\GuestMenu@index');
+        
         
         $Routes->setScaffolding($sys_url_admin . IURLConstant::MASTER_ROOM_INDEX_URL, 'app\Controller\Master\Room');
         $Routes->setScaffolding($sys_url_admin . IURLConstant::MASTER_FACILITY_INDEX_URL, 'app\Controller\Master\Facility');

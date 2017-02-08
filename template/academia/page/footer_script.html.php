@@ -12,7 +12,7 @@
 <script src="<?= getTemplateURL('/assets/js/plugins.js'); ?>"></script>
 <script src="<?= URL('/assets/js/function.js'); ?>?tripoin=<?=createRandomBooking();?>"></script>
 
-<script src="<?= getTemplateURL('/assets/js/main.js'); ?>"></script>
+<script src="<?= getTemplateURL('/assets/js/main.js'); ?>?tripoin=<?=createRandomBooking();?>"></script>
 
 
 <script type="text/javascript">

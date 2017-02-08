@@ -12,8 +12,8 @@ foreach ($list_data['item'] as $value) {
     $action_delete = $Button->url($this->deleteUrl)->value($value[$data->getId()])->buttonDelete();
     $action_edit = $Button->url($this->editUrl)->value($value[$data->getId()])->buttonEdit();
     $url_name = "";
-    if (isset($value[$data->getUrl()]['name'])) {
-        $url_name = $value[$data->getUrl()]['name'];
+    if (isset($value['url'])) {
+        $url_name = $value['url'];
     }
     $Datatable->body(
             array($no,

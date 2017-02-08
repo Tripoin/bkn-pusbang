@@ -15,7 +15,7 @@ $data_slider = $db->selectByID($slider, $slider->getStatus() . EQUAL . ONE);
         <?php } ?>
     </div>
     <?php foreach ($data_slider as $val_slider) { ?>
-        <div id="<?= $val_slider[$slider->getCode()]; ?>" class="nivo-html-caption slider-caption-1">
+    <div id="<?= $val_slider[$slider->getCode()]; ?>" class="nivo-html-caption slider-caption-1">
             <div class="slider-progress"></div>	
             <div class="container">
                 <div class="row">
@@ -23,13 +23,13 @@ $data_slider = $db->selectByID($slider, $slider->getStatus() . EQUAL . ONE);
                         <div class="slide1-text slide-text">
                             <div class="middle-text">
                                 <div class="left_sidet1">
-                                    <div class="cap-title wow slideInRight" data-wow-duration=".9s" data-wow-delay="0s">
+                                    <div  style="margin-top:300px;" class="cap-title wow slideInRight"data-wow-duration=".9s" data-wow-delay="0s">
                                         <h1><?= $val_slider[$slider->getTitle()]; ?></h1>
                                     </div>
-                                    <div class="cap-dec wow slideInRight" data-wow-duration="1s" data-wow-delay=".5s">
+                                    <div  style="margin-top:0;" class="cap-dec wow slideInRight" data-wow-duration="1s" data-wow-delay=".5s">
                                         <h2><?= $val_slider[$slider->getSubtitle()]; ?></h2>
                                     </div>	
-                                    <?php if ($val_slider[$slider->getTextButton()] != "") { ?>
+                                    <?php if (!ctype_space($val_slider[$slider->getTextButton()])) { ?>
                                         <div class="cap-readmore animated fadeInUpBig" data-wow-duration="2s" data-wow-delay=".5s">
                                             <a href="<?= $val_slider[$slider->getLink()]; ?>" ><?= $val_slider[$slider->getTextButton()]; ?></a>
                                         </div>
@@ -44,3 +44,20 @@ $data_slider = $db->selectByID($slider, $slider->getStatus() . EQUAL . ONE);
     <?php } ?>
 
 </div>
+
+<script>
+    $(function () {
+        $('#mainSlider').nivoSlider({
+            directionNav: true,
+            animSpeed: 500,
+            effect: 'random',
+            slices: 15,
+            pauseTime: 6000,
+            pauseOnHover: true,
+            controlNav: false,
+            prevText: '<i class="fa fa-angle-left nivo-prev-icon"></i>',
+            nextText: '<i class="fa fa-angle-right nivo-next-icon"></i>'
+        });
+        new WOW().init();
+    });
+</script>

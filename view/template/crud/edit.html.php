@@ -9,7 +9,7 @@ $autoData = $_SESSION[SESSION_ADMIN_AUTO_DATA];
 $arrayNew = array();
 $countAutoData;
 
-$modelDataArray = $this->modelData->toArray();
+
 if ($this->modelData == null) {
     foreach ($autoData as $valueData) {
         if ($valueData != 'id') {
@@ -25,6 +25,7 @@ if ($this->modelData == null) {
         }
     }
 } else {
+    $modelDataArray = $this->modelData->toArray();
     $relation = $db->selectRelation($this->modelData->getEntity());
     $checkLov = array();
     foreach ($autoData as $valueData) {

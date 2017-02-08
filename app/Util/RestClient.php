@@ -66,23 +66,24 @@ class RestClient {
         curl_setopt($ch, CURLOPT_URL, $this->curlOptions['URL'] . $param_url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array_merge($array_http_header, $this->curlOptions['HTTPHEADER']));
         curl_setopt($ch, CURLOPT_POST, 1);
+//        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 //        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_VERBOSE, true);
+        curl_setopt($ch, CURLOPT_VERBOSE, 1);
         curl_setopt($ch, CURLOPT_HEADER, 1);
         if ($this->curlOptions['USERNAME'] != '' && $this->curlOptions['PASSWORD'] != '') {
             curl_setopt($ch, CURLOPT_COOKIESESSION, true);
             curl_setopt($ch, CURLOPT_USERPWD, $this->curlOptions['USERNAME'] . ":" . $this->curlOptions['PASSWORD']);
         }
         $response = curl_exec($ch);
-//        print_r($response);
+//        print_r($this->curlOptions['URL'] . $param_url);
         if (curl_error($ch)) {
-//            echo 'error:' . curl_error($ch);
+            echo 'error:' . curl_error($ch);
         }
         
 //        echo 'oke';
-//        print_r($response);
+        
         $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $this->getHeaderSize = $header_size;
         $header = substr($response, 0, $header_size);
@@ -91,6 +92,7 @@ class RestClient {
         $body = substr($response, $header_size);
         $this->getBody = $body;
         curl_close($ch);  // Seems like good practice
+//        print_r($response);
         return $this->result($response);
     }
 

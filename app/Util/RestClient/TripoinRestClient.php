@@ -182,6 +182,7 @@ class TripoinRestClient {
         } else {
             $this->doPOSTLoginNoAuth();
         }
+//        echo $_SESSION[SESSION_ADMIN_TOKEN];
 //        $testLogin = 
 
         $merge_array_key = $this->queryParamURL($p_TargetURL);
@@ -201,6 +202,7 @@ class TripoinRestClient {
                 ->post();
 
 //        echo $_SESSION[IApplicationConstant::SESSION_USER][IApplicationConstant::TOKEN];
+//        print_r($response);
 //        print_r($response);
         if (isset(json_decode($response->getBody)->error)) {
             $this->failGetBearer(json_decode($response->getBody)->error);

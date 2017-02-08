@@ -812,15 +812,22 @@ class DataTable {
                 foreach ($relation as $val_relation) {
                     if (in_array($val_relation['COLUMN_NAME'], $key_parent)) {
                         $ex_val2 = explode('_', $val_relation['COLUMN_NAME']);
+                        $count_ex_val2 = count($ex_val2);
+                        $min_ex_val2 = $count_ex_val2 - 1;
+                        $parent_class_data = '';
+                        for($no=0;$no<$count_ex_val2;$no++){
+                            $parent_class_data .= $ex_val2[$no].'_';
+                        }
+                        $parent_class_data = rtrim($parent_class_data, '_');
                         foreach ($res as $key => $val2) {
                             $db->select($val_relation['REFERENCED_TABLE_NAME'], "*", null, $val_relation['REFERENCED_COLUMN_NAME'] . "='" . $val2[$val_relation['COLUMN_NAME']] . "'");
                             $res_rel = $db->getResult();
 //                            print_r($res_rel);
                             if (!empty($res_rel)) {
 //                                $res[$key][$val_relation['COLUMN_NAME']] = $res_rel[0];
-                                $res[$key][$ex_val2[0]] = $res_rel[0];
+                                $res[$key][$parent_class_data] = $res_rel[0];
                             } else {
-                                $res[$key][$ex_val2[0]] = array();
+                                $res[$key][$parent_class_data] = array();
                             }
                         }
                     }
@@ -862,7 +869,7 @@ class DataTable {
         if ($result == false) {
             $tripoinRestClient = new TripoinRestClient();
             $tripoinRestClient->doPOSTLoginNoAuth();
-            return $this->select_pagination_rest($url, $param);
+            return $this->select_pagination_rest($url, $param,$order);
         }
 //        print_r($result);
         $json = json_decode($result->getBody);

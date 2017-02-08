@@ -11,7 +11,7 @@ $arrayNew = array();
 $countAutoData;
 
 //print_r($this->modelData);
-$modelDataArray = $this->modelData->toArray();
+
 if ($this->modelData == null) {
     foreach ($autoData as $valueData) {
         if ($valueData != 'id') {
@@ -23,6 +23,7 @@ if ($this->modelData == null) {
         }
     }
 } else {
+    $modelDataArray = $this->modelData->toArray();
     $relation = $db->selectRelation($this->modelData->getEntity());
     $checkLov = array();
     foreach ($autoData as $valueData) {
@@ -65,7 +66,7 @@ if ($this->modelData == null) {
                             echo $Form->id($keys)->title(lang('general.' . $valueData))->placeholder(lang('general.' . $valueData) . ' ....')->textbox();
                         } else {
                             foreach ($this->changeValueNewEdit as $key => $value) {
-                                if($key == $valueData){
+                                if($keys == $valueData){
                                     echo $value;
                                 } else {
                                     $keys = array_search ($valueData, $modelDataArray);
