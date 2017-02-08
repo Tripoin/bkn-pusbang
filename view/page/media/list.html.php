@@ -107,10 +107,11 @@ $str_replace = str_replace('contents', '', $trim_path);
 
     }
 
-    function viewPicture(url) {
+    function viewPicture(e, url) {
 
         if (touchtime == 0) {
             //set first click
+            checkFile(e);
             touchtime = new Date().getTime();
         } else {
             //compare first click to this click and see if they occurred within double click threshold
@@ -118,15 +119,20 @@ $str_replace = str_replace('contents', '', $trim_path);
                 //double click occurred
 //                alert("double clicked");
 
-                $('#imagemodal').modal('show');
-                $('#imagepreview').attr("src", url);
+                viewPicture2(url);
                 touchtime = 0;
             } else {
+                checkFile(e);
                 //not a double click so set as a new first click
                 touchtime = new Date().getTime();
             }
         }
 
+    }
+
+    function viewPicture2(url) {
+        $('#imagemodal').modal('show');
+        $('#imagepreview').attr("src", url);
     }
     function deleteFile() {
         var name = $('#cekFile').val();

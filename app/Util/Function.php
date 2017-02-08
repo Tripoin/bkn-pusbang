@@ -1923,7 +1923,7 @@ function imageManager($title, $url, $link, $type) {
         $userAgent = getUserAgent();
         if ($userAgent == "web") {
             $txt = '<div class="col-sm-2 col-md-2 hidden-xs hidden-sm">
-                    <a href="javascript:;"  onclick="viewPicture(\'' . $url . '\')" onclick="checkFile(this)" value="' . $title . '" value-type="0" name="fileimage[]" class="thumbnail" id="file" style="text-align: center;">
+                    <a href="javascript:;" onclick="checkFile(this)" ondblclick="viewPicture2(\'' . $url . '\')" value="' . $title . '" value-type="0" name="fileimage[]" class="thumbnail" id="file" style="text-align: center;">
                         <img src="' . $url . '" style="height: 102px; width: 100%; display: block;"
                             
                              >
@@ -1932,7 +1932,7 @@ function imageManager($title, $url, $link, $type) {
                 </div>';
         } else {
             $txt = '<div class="col-sm-2 col-md-2 hidden-lg">
-                    <a href="javascript:;"  onclick="viewPicture(\'' . $url . '\')" onclick="checkFile(this)" value="' . $title . '" value-type="0" name="fileimage[]" class="thumbnail" id="file" style="text-align: center;">
+                    <a href="javascript:;"  onclick="viewPicture(this,\'' . $url . '\')" value="' . $title . '" value-type="0" name="fileimage[]" class="thumbnail" id="file" style="text-align: center;">
                         <img src="' . $url . '" style="height: 185px; width: 100%; display: block;"
                             
                              >
