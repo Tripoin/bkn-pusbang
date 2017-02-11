@@ -54,14 +54,18 @@ class Routes {
 //        echo Routes::$urut;
 //        echo Routes::$url_group."<br/>";
         $fix_url = '';
+//        echo Routes::$urut;
         if (Routes::$url_group != null) {
+
             $fix_url = Routes::$urlgr . $url;
+//            echo $fix_url.'<br/>';
             Routes::$urlClass[] = array(Routes::$urlgr . $url, $class);
         } else {
             $fix_url = $url;
             Routes::$urlClass[] = array($url, $class);
         }
-        $data = Routes::checkURL($fix_url, $class);
+        $rpl_url = str_replace("//", "/", $fix_url);
+        $data = Routes::checkURL($rpl_url, $class);
         if (!empty($data)) {
             Routes::$fix_data = $data;
         }
@@ -87,23 +91,29 @@ class Routes {
         $param = array();
         if (count($ex_url) == count($ex_page_url2)) {
             for ($nok = 0; $nok < count($ex_page_url2); $nok++) {
-                $check_param = get_string_between($ex_url[$nok], '{', '}');
-                $url_str = "";
-                if ($check_param == "") {
+//                echo $ex_url[$nok].'<br/>';
+                if (!empty($ex_url[$nok])) {
+                    $check_param = get_string_between($ex_url[$nok], '{', '}');
+                    $url_str = "";
+                    if ($check_param == "") {
 
-                    $url_str = $ex_url[$nok];
+                        $url_str = $ex_url[$nok];
 //                    echo $ex_url[$nok];
-                } else {
+                    } else {
 //                    echo $ex_page_url[0];
-                    $url_str = $check_param;
+                        $url_str = $check_param;
 //                    echo $check_param;
-                    $param[] = $ex_page_url2[$nok];
+                        $param[] = $ex_page_url2[$nok];
 //                    echo $url_str;
-                }
-                if (!empty($url)) {
-//                    echo 'masuk';
-                    if (strpos($ex_page_url[0], $url_str) !== false) {
-                        $url_1 .= '/' . $ex_page_url2[$nok];
+                    }
+                    if (!empty($url)) {
+                        if (!empty($url_str)) {
+//                        echo $url_str."<br/>";
+                            if (strpos($ex_page_url[0], $url_str) !== false) {
+                                $url_1 .= '/' . $ex_page_url2[$nok];
+//                                echo $url_1;
+                            }
+                        }
                     }
                 }
             }
@@ -122,7 +132,7 @@ class Routes {
             }
         } else {
 
-//            echo $ex_page_url[0];
+//            echo $url_3;
             if (!empty($ex_page_url[0])) {
                 if (strpos($url_3, $ex_page_url[0]) !== false) {
                     $url_2 = $ex_page_url[0];
@@ -169,6 +179,7 @@ class Routes {
 //            Routes::$urlClass[] = array($test => Routes::$url_group2);
             $function();
             Routes::$urut = 0;
+            Routes::$urlgr = "";
 //            print_r(Routes::$url_group2);
             Routes::$url_group = null;
 //            echo json_encode($function()->getUrlClass());
@@ -189,15 +200,27 @@ class Routes {
         return Routes::$instance;
     }
 
-    public function setScaffolding($url, $class) {
-        Routes::$route[] = [$url, $class . "@index"];
-        Routes::$route[] = [$url . '/list', $class . "@listData"];
-        Routes::$route[] = [$url . '/create', $class . "@create"];
-        Routes::$route[] = [$url . '/edit', $class . "@edit"];
-        Routes::$route[] = [$url . '/delete', $class . "@delete"];
-        Routes::$route[] = [$url . '/save', $class . "@save"];
-        Routes::$route[] = [$url . '/update', $class . "@update"];
-        Routes::$route[] = [$url . '/deleteCollection', $class . "@deleteCollection"];
+    public static function setScaffolding($url, $class) {
+        Routes::set($url, $class . "@index");
+        Routes::set($url . '/list', $class . "@listData");
+        Routes::set($url . '/create', $class . "@create");
+        Routes::set($url . '/edit', $class . "@edit");
+        Routes::set($url . '/delete', $class . "@delete");
+        Routes::set($url . '/save', $class . "@save");
+        Routes::set($url . '/update', $class . "@update");
+        Routes::set($url . '/deleteCollection', $class . "@deleteCollection");
+//        echo 'masuk';
+        /*
+          Routes::$route[] = [$url, $class . "@index"];
+          Routes::$route[] = [$url . '/list', $class . "@listData"];
+          Routes::$route[] = [$url . '/create', $class . "@create"];
+          Routes::$route[] = [$url . '/edit', $class . "@edit"];
+          Routes::$route[] = [$url . '/delete', $class . "@delete"];
+          Routes::$route[] = [$url . '/save', $class . "@save"];
+          Routes::$route[] = [$url . '/update', $class . "@update"];
+          Routes::$route[] = [$url . '/deleteCollection', $class . "@deleteCollection"];
+         * 
+         */
     }
 
     public static function getTest() {

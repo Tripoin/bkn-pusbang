@@ -58,11 +58,11 @@ Routes::set('page/logout', 'app\Controller\Base\Auth@logout');
 Routes::group(['prefix' => 'member'], function() {
     Routes::set('register', 'app\Controller\Base\Auth@registerPage');
     Routes::set('register/proses', 'app\Controller\Base\Auth@register');
-    
     Routes::group(['prefix' => 'register'], function() {
         Routes::set('proses', 'app\Controller\Base\Auth@loginPage');
     });
 });
+
 Routes::set('member/login', 'app\Controller\Base\Auth@loginPage');
 
 
@@ -184,15 +184,17 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
         Routes::set($sys_url_admin . '/security/guest-menu', 'app\Controller\Base\GuestMenu@index');
 
 
-        Routes::setScaffolding($sys_url_admin . IURLConstant::MASTER_ROOM_INDEX_URL, 'app\Controller\Master\Room');
-        Routes::setScaffolding($sys_url_admin . IURLConstant::MASTER_FACILITY_INDEX_URL, 'app\Controller\Master\Facility');
-        Routes::setScaffolding($sys_url_admin . IURLConstant::MASTER_ANSWER_CATEGORY_INDEX_URL, 'app\Controller\Master\AnswerCategory');
-        Routes::setScaffolding($sys_url_admin . IURLConstant::MASTER_CITY_INDEX_URL, 'app\Controller\Master\City');
-        Routes::setScaffolding($sys_url_admin . IURLConstant::DOCUMENTATION_INDEX_URL, 'app\Controller\Documentation\Documentation');
-        Routes::setScaffolding($sys_url_admin . IURLConstant::MASTER_CATEGORY_ASSESS_INDEX_URL, 'app\Controller\Master\CategoryAssess');
-        Routes::setScaffolding($sys_url_admin . IURLConstant::MASTER_QUESTION_CATEGORY_INDEX_URL, 'app\Controller\Master\QuestionCategory');
-        Routes::setScaffolding($sys_url_admin . IURLConstant::MASTER_ANSWER_TYPE_INDEX_URL, 'app\Controller\Master\AnswerType');
-        Routes::setScaffolding($sys_url_admin . IURLConstant::MASTER_SLIDER_INDEX_URL, 'app\Controller\Master\Slider');
+        Routes::group(["prefix" => $sys_url_admin], function() {
+            Routes::setScaffolding(IURLConstant::MASTER_ROOM_INDEX_URL, 'app\Controller\Master\Room');
+            Routes::setScaffolding(IURLConstant::MASTER_FACILITY_INDEX_URL, 'app\Controller\Master\Facility');
+            Routes::setScaffolding(IURLConstant::MASTER_ANSWER_CATEGORY_INDEX_URL, 'app\Controller\Master\AnswerCategory');
+            Routes::setScaffolding(IURLConstant::MASTER_CITY_INDEX_URL, 'app\Controller\Master\City');
+            Routes::setScaffolding(IURLConstant::DOCUMENTATION_INDEX_URL, 'app\Controller\Documentation\Documentation');
+            Routes::setScaffolding(IURLConstant::MASTER_CATEGORY_ASSESS_INDEX_URL, 'app\Controller\Master\CategoryAssess');
+            Routes::setScaffolding(IURLConstant::MASTER_QUESTION_CATEGORY_INDEX_URL, 'app\Controller\Master\QuestionCategory');
+            Routes::setScaffolding(IURLConstant::MASTER_ANSWER_TYPE_INDEX_URL, 'app\Controller\Master\AnswerType');
+            Routes::setScaffolding(IURLConstant::MASTER_SLIDER_INDEX_URL, 'app\Controller\Master\Slider');
+        });
     }
 }
 
