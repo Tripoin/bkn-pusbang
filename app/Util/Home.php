@@ -22,28 +22,19 @@ abstract class Home {
         setSessionLang();
 
         include 'app/Http/routes.php';
-        $dec = json_decode($Routes->get());
-        
-//        echo $Routes->get();
-//        $rute = $Routes;
-//        $Routes = new Routes();
-        $page_include = $this->routes($dec);
-        LOGGER($page_include);
-//        echo $page_include;
-//        $page_include = '';
-        $page_decode = json_decode($page_include);
+//        echo Routes::getTest();
+        $result = Routes::get();
+//        print_r($result);
+//        print_r($result);
+//        $dec;
+//        $page_include = $this->routes($dec);
+//        $page_decode = json_decode($page_include);
 //        echo $page_include;
 //        print_r($page_decode);
-        if ($page_include != '') {
-            $rpl = str_replace('/', '\\', $page_decode->files);
+        if (!empty($result)) {
+            $rpl = str_replace('/', '\\', $result['class']);
             $str = explode('@', $rpl);
-            if (!isset($str[1]))
-                $str[1] = '';
-            $str2 = explode('(', $str[1]);
-            if (!isset($str2[1]))
-                $str2[1] = '';
-            $trim = rtrim($str2[1], ')');
-            $exd = explode(',', $trim);
+            
             $filename = str_replace('\\', '/', $str[0]) . '.php';
             $exists = file_exists($filename);
 //            LOGGER($filename);
@@ -54,16 +45,17 @@ abstract class Home {
                 $txt = '';
 //                print_r($exd);
 //                echo $str2[0];
-                if ($exd[0] == "") {
-                    $str5 = $str2[0];
+//                echo $str[1];
+                if (empty($result['param'])) {
+                    $str5 = $str[1];
                     echo $class->$str5();
-//                    echo call_user_func_array(array($class, $str2[0]), '');
                 } else {
-                    foreach ($exd as $value) {
-                        $txt .= $page_decode->data->$value . ',';
+                  foreach ($result['param'] as $value) {
+                        $txt .= $value . ',';
                     }
                     $txt = rtrim($txt, ',');
-                    echo call_user_func_array(array($class, $str2[0]), explode(',', $txt));
+                    $str5 = $str[1];
+                    echo call_user_func_array(array($class, $str5), explode(',', $txt));
                 }
             } else {
 //                LOGGER('NOT FOUND PAGE');
@@ -75,32 +67,12 @@ abstract class Home {
     }
 
     public function routes($page) {
-//        $ltrim = ltrim($_SERVER['PHP_SELF'], "/");
-//        print_r($_SERVER['PHP_SELF']);
-//        echo json_encode($_SERVER);
         $str = str_replace("index.php", "", $_SERVER['PHP_SELF']);
-//        echo "str:".$str."<br/>";
-//        print_r($str);
-//        echo $str.":".$_SERVER['REQUEST_URI'];
-//        $str2 = str_replace($str, "", $_SERVER['REQUEST_URI']);
-//        echo $_SERVER['REQUEST_URI'];
-//        $str2 = ltrim($_SERVER['REQUEST_URI'],$str);
         $str2 = ltrim(str_replace(URL(), "", FULLURL()), "/");
-//$exp_url = explode("/", $replace_url);
-//        print_r( $_SERVER['PHP_SELF']);
-//        print_r($str2);
-//        echo "str2:".$str2;
-//        $str2 .= $str2.'/';
         $ex_str = explode('?', $str2);
 //        print_r($ex_str);
 //        $page_ex = ['page/reservation/{id}/find{no}'];
         $ex_str1 = explode('/', $ex_str[0]);
-//        print_r($ex_str1);
-//        $ex_str1 .= ;
-//        echo count($ex_str1);
-//        print_r($page);
-//                print_r($ex_str[0]);
-//        echo $page;
         $ck_url = null;
         $json = '';
         for ($nok = 0; $nok < count($page); $nok++) {
@@ -133,11 +105,6 @@ abstract class Home {
 
 
                                 $class_1 = $page_ex1[$no] . '/';
-
-//                             echo $str_class[1].'<br/>';
-//                            echo $msk.'<br/>';
-//                            echo $betwen_url_param . '<br/>';
-//                            echo $page[$nok][1].'<br/>';
                             }
                         } else {
                             $check_spec[] = [$no, $ex_str1[$no]];
@@ -151,14 +118,6 @@ abstract class Home {
                 $str_class = explode('@', $page[$nok][1]);
                 $betwen_class_param = get_string_between($str_class[1], '(', ')');
                 $ex_bw_class = explode(',', $betwen_class_param);
-//            $betwen_url_param = get_string_between($page_ex1[$no], '{', '}');
-//                foreach ($ex_bw_class as $value) {
-//                    
-//                }
-//            echo $betwen_class_param.'-';
-//            echo $class_1.'</br>';
-//            echo count($check_spec);
-//        print_r($check_spec);
 
 
                 $json .= '{';

@@ -132,8 +132,10 @@ class General {
 
     public function getArea() {
         $db = new Database();
-
-        $selected = $_GET['action'];
+        $selected = "";
+        if (isset($_GET['action'])) {
+            $selected = $_GET['action'];
+        }
         if ($selected == "province") {
             $search = $_GET['search'];
             $masterProvince = new MasterProvince();
@@ -150,7 +152,7 @@ class General {
 //            print_r($rs);
 //            echo $db->getSql();
             $data = convertJsonComboboxJquery($rs, $masterCity->getId(), $masterCity->getName());
-        }  else if ($selected == "district") {
+        } else if ($selected == "district") {
             $masterDistrict = new MasterDistrict();
             $search = $_GET['search'];
             $db->connect();
@@ -159,7 +161,7 @@ class General {
 //            print_r($rs);
 //            echo $db->getSql();
             $data = convertJsonComboboxJquery($rs, $masterDistrict->getId(), $masterDistrict->getName());
-        }  else if ($selected == "village") {
+        } else if ($selected == "village") {
             $masterVillage = new MasterVillage();
             $search = $_GET['search'];
             $db->connect();
@@ -168,7 +170,10 @@ class General {
 //            print_r($rs);
 //            echo $db->getSql();
             $data = convertJsonComboboxJquery($rs, $masterVillage->getId(), $masterVillage->getName());
+        } else {
+            $data = array();
         }
+
         echo json_encode($data);
     }
 

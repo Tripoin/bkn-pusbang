@@ -146,9 +146,9 @@ class Test {
 
     public function hashing() {
 //        echo password_hash('trijep3t3', PASSWORD_BCRYPT);
-//        $tripoinCrypt = new TripoinCrypt();
-//        $user = array("code" => "12345", "password" => "admin123");
-//        print_r($tripoinCrypt->encrypt('tripoin:trijep3t3'));
+        $tripoinCrypt = new TripoinCrypt();
+        $user = array("code" => "12345", "password" => "admin123");
+        print_r($tripoinCrypt->encrypt('tripoin:trijep3t3'));
     }
     
     public function testMail(){
@@ -219,6 +219,10 @@ class Test {
         } catch (\Exception $e) {
             echo $e->getMessage(); //Boring error messages from anything else!
         }
+    }
+    
+    public function testParam($param){
+        echo 'masuk-s'.$param;
     }
 
 }
