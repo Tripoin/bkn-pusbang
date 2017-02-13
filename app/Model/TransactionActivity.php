@@ -21,11 +21,12 @@ class TransactionActivity extends GeneralAuditrail {
     public function __construct() {
         $this->setEntity('trx_activity');
     }
-    
+
     public $subjectName = 'subject_name';
+    public $subjectId = 'subject_id';
     public $subjectCategoryName = 'subject_category_name';
     public $subjectTypeName = 'subject_type_name';
-	public $quota = 'quota';
+    public $quota = 'quota';
     public $generation = 'generation';
     public $location = 'location';
     public $startActivity = 'start_activity';
@@ -33,19 +34,19 @@ class TransactionActivity extends GeneralAuditrail {
     public $yearActivity = 'year_activity';
     public $duration = 'duration';
     public $unitId = 'unit_id';
-    
+
     public function search($key) {
         return $this->$key;
     }
-	
-	 function getQuota() {
+
+    function getQuota() {
         return $this->quota;
     }
 
     function setQuota($quota) {
         $this->quota = $quota;
     }
-    
+
     function setData($data) {
         $array_data = array();
         foreach ($data as $key => $value) {
@@ -53,7 +54,15 @@ class TransactionActivity extends GeneralAuditrail {
         }
         return $array_data;
     }
+    function getSubjectId() {
+        return $this->subjectId;
+    }
 
+    function setSubjectId($subjectId) {
+        $this->subjectId = $subjectId;
+    }
+
+    
     function getSubjectName() {
         return $this->subjectName;
     }
@@ -133,6 +142,5 @@ class TransactionActivity extends GeneralAuditrail {
     function setUnitId($unitId) {
         $this->unitId = $unitId;
     }
-
 
 }

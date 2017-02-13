@@ -2189,7 +2189,7 @@ function getParentManual($entity, $id_field, $name_field, $parent_field, $parent
         $db->select($entity, "*", null, $id_field . EQUAL . $parentId);
         $res_subject_parent = $db->getResult();
         foreach ($res_subject_parent as $value) {
-            $tx = $value[$name_field] . " => " . $tx;
+            $tx = $value[$name_field] . " > " . $tx;
 //            echo $value[$masterSubject->getName()];
             return getParentManual($entity, $id_field, $name_field, $parent_field, $value[$parent_field], $names, $tx);
         }

@@ -893,6 +893,25 @@ class Form {
         $this->ResetObject();
         return $rs;
     }
+    
+    public function onlyDatepicker() {
+        $this->defaultOption();
+        $textbox = '';
+//        $textbox = '<div class="col-xs-3">';
+        $textbox .= '<input type="text" 
+            placeholder="' . $this->formOption['PLACEHOLDER'] . '" 
+            name="' . $this->formOption['NAME'] . '" 
+            id="' . $this->formOption['ID'] . '" 
+            ' . $this->formOption['REQUIRED'] . ' 
+            ' . $this->formOption['MANUAL_ATTRIBUT'] . ' 
+            value="' . $this->formOption['VALUE'] . '"
+            data-date-format="' . DATE_FORMAT . '"
+            class="form-control datepicker">';
+        $textbox .= '<script>$(function(){$(\'#' . $this->formOption['ID'] . '\').datepicker()});</script>';
+//        $rs = $this->formGroup($textbox);
+        $this->ResetObject();
+        return $textbox;
+    }
 
     /**
      * (PHP 4, PHP 5+)<br/>
@@ -1212,7 +1231,7 @@ class Form {
      * @version 1.0
      * @desc Sorry cuk masih belajar
      */
-    protected function formGroup($component) {
+    public function formGroup($component) {
         $msg_rq_tx = $this->formOption['MESSAGE_REQUIRED_ERROR'];
         $rq_tx = $this->formOption['REQUIRED'];
         $rq_l = '';

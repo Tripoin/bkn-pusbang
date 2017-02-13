@@ -2,8 +2,8 @@
 <?php
 //    $Datatable->styleHeader(array("text-align:center;"));
 $Datatable->styleColumn(array("text-align:center;width:5%;", "", "", "text-align:center;width:100px;"));
-$Datatable->header(array(lang("general.no"), lang("general.code"),
-    lang("general.name"),
+$Datatable->header(array(lang("general.no"), lang("transaction.type"),
+//    lang("general.name"),
     lang("transaction.excecution_time"),
     lang("transaction.number_of_participants"),
     lang("transaction.assignment"),
@@ -24,7 +24,7 @@ foreach ($list_data['item'] as $value) {
     $Datatable->body(array(
         $no,
         $value[$data->getSubjectName()],
-        $value[$data->getName()],
+//        $value[$data->getName()],
         $detailSubject,
         $value[$data->getQuota()],
         $panitia,

@@ -15,11 +15,11 @@ namespace app\Controller\Transaction;
  */
 use app\Controller\Base\Controller;
 use app\Model\TransactionActivity;
-use app\Model\MasterSubject;
 use app\Constant\IURLConstant;
 use app\Constant\IViewConstant;
 use app\Model\MasterUserAssignment;
 use app\Model\MasterUserMain;
+use app\Model\MasterSubject;
 use app\Model\SecurityUserProfile;
 use app\Model\SecurityUser;
 use app\Model\SecurityGroup;
@@ -32,6 +32,7 @@ class AgendaKegiatan extends Controller {
 
     //put your code here
     public $modelSubject;
+    public $data_subject;
 
     public function __construct() {
         $this->admin_theme_url = getAdminTheme();
@@ -45,6 +46,87 @@ class AgendaKegiatan extends Controller {
         $this->autoData = false;
         $this->setAutoCrud();
         parent::__construct();
+    }
+
+    public function create() {
+        $masterSubject = new MasterSubject();
+        $this->data_subject = valueComboBoxParent($masterSubject->getEntity(), $masterSubject->getId(), $masterSubject->getName(), $masterSubject->getParentId());
+        parent::create();
+    }
+    
+    public function edit() {
+        $masterSubject = new MasterSubject();
+        $this->data_subject = valueComboBoxParent($masterSubject->getEntity(), $masterSubject->getId(), $masterSubject->getName(), $masterSubject->getParentId());
+        parent::edit();
+    }
+
+    public function save() {
+        $db = new Database();
+        $subjectId = $_POST['subjectId'];
+        $startActivity = $_POST['startActivity'];
+        $endActivity = $_POST['endActivity'];
+        $quota = $_POST['quota'];
+
+//        $group = new SecurityGroup();
+        $data = new TransactionActivity();
+        $db->connect();
+        $db->createAuditrail();
+
+        $subject = new MasterSubject();
+        $data_subject = $db->selectByID($subject, $subject->getId() . EQUAL . $subjectId);
+
+        $data_insert = array(
+            $data->getCode() => createRandomBooking(),
+            $data->getSubjectName() => $data_subject[0][$subject->getName()],
+            $data->getSubjectId() => $data_subject[0][$subject->getId()],
+            $data->getStartActivity() => $startActivity,
+            $data->getEndActivity() => $endActivity,
+            $data->getQuota() => $quota,
+        );
+//        $datas = $data->setData($data);
+        $db->insert($data->getEntity(), $data_insert);
+        $rs = $db->getResult();
+        if (is_numeric($rs[0])) {
+            echo toastAlert("success", lang('general.title_insert_success'), lang('general.message_insert_success'));
+            echo '<script>$(function(){postAjaxPagination()});</script>';
+        } else {
+            echo toastAlert("error", lang('general.title_insert_error'), lang('general.message_insert_error'));
+            echo resultPageMsg('danger', lang('general.title_insert_error'), $rs[0]);
+        }
+    }
+
+    public function update() {
+        $db = new Database();
+        $id = $_POST['id'];
+        $subjectId = $_POST['subjectId'];
+        $startActivity = $_POST['startActivity'];
+        $endActivity = $_POST['endActivity'];
+        $quota = $_POST['quota'];
+
+//        $group = new SecurityGroup();
+        $data = new TransactionActivity();
+        $db->connect();
+        $db->updateAuditrail();
+
+        $subject = new MasterSubject();
+        $data_subject = $db->selectByID($subject, $subject->getId() . EQUAL . $subjectId);
+
+        $data_insert = array(
+            $data->getSubjectName() => $data_subject[0][$subject->getName()],
+            $data->getSubjectId() => $data_subject[0][$subject->getId()],
+            $data->getStartActivity() => $startActivity,
+            $data->getEndActivity() => $endActivity,
+            $data->getQuota() => $quota,
+        );
+//        $datas = $data->setData($data);
+        $db->update($data->getEntity(), $data_insert,$data->getId().EQUAL.$id);
+        if ($db->getResult()[0] == 1) {
+            echo toastAlert("success", lang('general.title_update_success'), lang('general.message_update_success'));
+            echo '<script>$(function(){postAjaxPagination()});</script>';
+        } else {
+            echo toastAlert("error", lang('general.title_update_error'), lang('general.message_update_error') . '<br/>' .
+                    json_encode($db->getResult()));
+        }
     }
 
     public function listPanitia($activity) {
