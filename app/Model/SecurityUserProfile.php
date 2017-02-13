@@ -16,6 +16,7 @@ class SecurityUserProfile extends GeneralAuditrail {
     public $place = 'pob';
     public $email = 'email';
     public $group = 'group_id';
+    public $userId = 'user_id';
     public $gender = 'gender';
     public $religi = 'religion';
     public $address = 'address';
@@ -32,6 +33,15 @@ class SecurityUserProfile extends GeneralAuditrail {
         $this->setEntity('sec_user_profile');
     }
     
+    function getUserId() {
+        return $this->userId;
+    }
+
+    function setUserId($userId) {
+        $this->userId = $userId;
+    }
+
+        
     public function getUser(){
         return new SecurityUser();
     }

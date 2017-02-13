@@ -25,6 +25,7 @@ class TransactionActivity extends GeneralAuditrail {
     public $subjectName = 'subject_name';
     public $subjectCategoryName = 'subject_category_name';
     public $subjectTypeName = 'subject_type_name';
+	public $quota = 'quota';
     public $generation = 'generation';
     public $location = 'location';
     public $startActivity = 'start_activity';
@@ -35,6 +36,14 @@ class TransactionActivity extends GeneralAuditrail {
     
     public function search($key) {
         return $this->$key;
+    }
+	
+	 function getQuota() {
+        return $this->quota;
+    }
+
+    function setQuota($quota) {
+        $this->quota = $quota;
     }
     
     function setData($data) {

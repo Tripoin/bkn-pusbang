@@ -81,7 +81,7 @@ class Routes {
 
     public static function checkURL($url, $class) {
 //        $str = str_replace("index.php", "", $_SERVER['PHP_SELF']);
-//        echo URL()."<br/>";
+//        echo $url."<br/>";
         $page_url = ltrim(str_replace(URL(), "", FULLURL()), "/");
         $ex_page_url = explode('?', $page_url);
         $ex_page_url2 = explode('/', $ex_page_url[0]);
@@ -91,8 +91,9 @@ class Routes {
         $param = array();
         if (count($ex_url) == count($ex_page_url2)) {
             for ($nok = 0; $nok < count($ex_page_url2); $nok++) {
-//                echo $ex_url[$nok].'<br/>';
+
                 if (!empty($ex_url[$nok])) {
+
                     $check_param = get_string_between($ex_url[$nok], '{', '}');
                     $url_str = "";
                     if ($check_param == "") {
@@ -101,17 +102,21 @@ class Routes {
 //                    echo $ex_url[$nok];
                     } else {
 //                    echo $ex_page_url[0];
-                        $url_str = $check_param;
-//                    echo $check_param;
-                        $param[] = $ex_page_url2[$nok];
+                       $url_str = $ex_page_url2[$nok];
+//                       $url_str = $check_param;
 //                    echo $url_str;
+                        $param[] = $ex_page_url2[$nok];
+//                    echo $url;
                     }
                     if (!empty($url)) {
                         if (!empty($url_str)) {
-//                        echo $url_str."<br/>";
+//                        echo $url."<br/>";
+                            if (!empty($param)) {
+                            }
                             if (strpos($ex_page_url[0], $url_str) !== false) {
                                 $url_1 .= '/' . $ex_page_url2[$nok];
-//                                echo $url_1;
+//                                $url_1 = '/' .$ex_page_url[0];
+//                                echo $url_1.'<br/>';
                             }
                         }
                     }
@@ -132,7 +137,7 @@ class Routes {
             }
         } else {
 
-//            echo $url_3;
+
             if (!empty($ex_page_url[0])) {
                 if (strpos($url_3, $ex_page_url[0]) !== false) {
                     $url_2 = $ex_page_url[0];
@@ -141,6 +146,7 @@ class Routes {
         }
 //        echo $url_2;
         if ($url_2 != "") {
+
             return array(
                 "url" => $url_2,
                 "param" => $param,

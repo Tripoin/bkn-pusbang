@@ -55,6 +55,7 @@ abstract class Controller implements IController {
     public $get_data;
     public $list_parameter = false;
     public $param_body = array();
+    public $admin_theme_url="";
 
     public function __construct() {
         if (empty($this->search_filter)) {
@@ -63,6 +64,7 @@ abstract class Controller implements IController {
                 "name" => lang('general.name')
             );
         }
+        $this->admin_theme_url  = getAdminTheme();
     }
 
     function listWithParameter($value = false) {
@@ -300,13 +302,14 @@ abstract class Controller implements IController {
     }
 
     public function autoViewURL() {
-        setCreateURL(URL(getAdminTheme() . $this->indexUrl . '/create'));
-        setDatatableURL(URL(getAdminTheme() . $this->indexUrl . '/list'));
-        $this->editUrl = URL(getAdminTheme() . $this->indexUrl . '/edit');
-        $this->deleteUrl = URL(getAdminTheme() . $this->indexUrl . '/delete');
-        $this->insertUrl = URL(getAdminTheme() . $this->indexUrl . '/save');
-        $this->updateUrl = URL(getAdminTheme() . $this->indexUrl . '/update');
-        $this->urlDeleteCollection = URL(getAdminTheme() . $this->indexUrl . '/deleteCollection');
+        $this->admin_theme_url  = getAdminTheme();
+        setCreateURL(URL($this->admin_theme_url . $this->indexUrl . '/create'));
+        setDatatableURL(URL($this->admin_theme_url . $this->indexUrl . '/list'));
+        $this->editUrl = URL($this->admin_theme_url . $this->indexUrl . '/edit');
+        $this->deleteUrl = URL($this->admin_theme_url . $this->indexUrl . '/delete');
+        $this->insertUrl = URL($this->admin_theme_url . $this->indexUrl . '/save');
+        $this->updateUrl = URL($this->admin_theme_url . $this->indexUrl . '/update');
+        $this->urlDeleteCollection = URL($this->admin_theme_url . $this->indexUrl . '/deleteCollection');
     }
 
     public function autoViewPath() {

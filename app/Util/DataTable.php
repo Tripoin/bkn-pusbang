@@ -36,6 +36,7 @@ class DataTable {
         'OPTION_PAGINATION_RECORD' => array(),
         'STYLE_HEADER' => array(),
         'BODY_ROW_ATTRIBUT_MANUAL' => "",
+        'HEADER_BUTTON' => "",
         'PAGE_TABLE' => null,
         'STYLE_BODY' => array(),
         'STYLE_COLUMN' => array(),
@@ -43,9 +44,18 @@ class DataTable {
         'STYLE_LAST_COLUMN' => '',
         'DELETE_COLLECTION' => true,
         'SEARCH_FILTER' => array(),
+        'DEBUG' => false,
         'URL' => null,
         'QUERY' => '',
     );
+
+    public function debug($debug = false) {
+        return $this->setTableOption('DEBUG', $debug);
+    }
+
+    public function headerButton($headerButton) {
+        return $this->setTableOption('HEADER_BUTTON', $headerButton);
+    }
 
     public function styleFirstColumn($styleFirstColumn) {
         return $this->setTableOption('STYLE_FIRST_COLUMN', $styleFirstColumn);
@@ -536,6 +546,9 @@ class DataTable {
         } else {
             $rs .= "$(\"#buttonCreate\").remove();";
         }
+        if ($this->tableOption['HEADER_BUTTON'] != "") {
+            $rs .= " $(\"#actionHeader\").append('" . $this->tableOption['HEADER_BUTTON'] . "');";
+        }
 
         $rs .= "});
             </script>
@@ -624,7 +637,7 @@ class DataTable {
     public $total = null;
     public $sql;
 
-    public function select_pagination($dto, $entity, $where = null, $join = null, $search_pagination = null, $order = null, $select_entity = null) {
+    public function select_pagination($dto, $entity, $where = null, $join = null, $search_pagination = null, $order = null, $select_entity = null, $group_by = null) {
 //        $this->current_page = $_POST['current_page'];
 //        $this->per_page = $_POST['per_page'];
 //        echo $this->per_page;
@@ -639,7 +652,13 @@ class DataTable {
         }
         $join_str = '';
         if ($join != null) {
-            $join_str .= " JOIN " . $join;
+            if (is_array($join)) {
+                foreach ($join as $value_join) {
+                    $join_str .= " JOIN " . $value_join;
+                }
+            } else {
+                $join_str .= " JOIN " . $join;
+            }
         }
 
         $search_pagination_str = '';
@@ -785,13 +804,23 @@ class DataTable {
         if ($order != null) {
             $order_str .= " ORDER BY " . $order;
         }
+
+        $group_by_str = '';
+        if ($group_by != null) {
+            $group_by_str .= " GROUP BY " . $group_by;
+        }
         $sql = $sql_select . $sql_all . $sql_from . $sql_search . $order_str . $limit;
-//        echo $sql;
+        if ($this->tableOption['DEBUG'] == true) {
+            echo $sql;
+        }
 //        LOGGER($sql);
         $this->sql = $sql;
 
         $db->sql($this->sql);  // Table name, column names and respective values
         $res = $db->getResult();
+        if ($this->tableOption['DEBUG'] == true) {
+            print_r($res);
+        }
         if (!empty($res)) {
             if ($current_page == 1)
                 $from = 1;
@@ -815,8 +844,8 @@ class DataTable {
                         $count_ex_val2 = count($ex_val2);
                         $min_ex_val2 = $count_ex_val2 - 1;
                         $parent_class_data = '';
-                        for($no=0;$no<$count_ex_val2;$no++){
-                            $parent_class_data .= $ex_val2[$no].'_';
+                        for ($no = 0; $no < $count_ex_val2; $no++) {
+                            $parent_class_data .= $ex_val2[$no] . '_';
                         }
                         $parent_class_data = rtrim($parent_class_data, '_');
                         foreach ($res as $key => $val2) {
@@ -869,7 +898,7 @@ class DataTable {
         if ($result == false) {
             $tripoinRestClient = new TripoinRestClient();
             $tripoinRestClient->doPOSTLoginNoAuth();
-            return $this->select_pagination_rest($url, $param,$order);
+            return $this->select_pagination_rest($url, $param, $order);
         }
 //        print_r($result);
         $json = json_decode($result->getBody);

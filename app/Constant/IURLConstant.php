@@ -84,5 +84,6 @@ interface IURLConstant {
     const MASTER_QUESTION_CATEGORY_INDEX_URL = '/master/question-category';
     const DOCUMENTATION_INDEX_URL = '/documentation';
     const MASTER_SLIDER_INDEX_URL = '/master/slider';
+	const AGENDA_KEGIATAN_INDEX_URL = '/agenda-kegiatan';
 
 }
