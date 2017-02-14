@@ -34,7 +34,7 @@
 <script src="<?= URL('/assets/plugins/typeahead/handlebars.min.js'); ?>" type="text/javascript"></script>
 <script src="<?= URL('/assets/plugins/typeahead/typeahead.bundle.min.js'); ?>" type="text/javascript"></script>
 <script src="<?= getAdminTemplateURL('/assets/js/howler.js'); ?>"></script>
-<script src="<?= URL('/assets/js/function.js'); ?>?v="<?=createRandomBooking();?>></script>
+<script src="<?= URL('/assets/js/function.js'); ?>?v=<?=createRandomBooking();?>"></script>
 
 <div class="modal fade" id="myModal_self" role="dialog">
     <div class="modal-dialog modal-lg">

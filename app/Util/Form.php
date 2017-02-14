@@ -42,6 +42,7 @@ class Form {
         'TITLE_BUTTON' => '',
         'ONCLICK' => '',
         'ICON' => '',
+        'ONLY_COMPONENT' => false,
         'VALUE' => null,
         'MINLENGTH' => null,
         'MAXLENGTH' => null,
@@ -57,6 +58,10 @@ class Form {
     public function __construct() {
 //        echo 'masuk';
 //        $this->ResetObject();
+    }
+
+    public function onlyComponent($onlyComponent) {
+        return $this->setFormOption('ONLY_COMPONENT', $onlyComponent);
     }
 
     public function withButton($withButton) {
@@ -428,7 +433,79 @@ class Form {
                     . '</div>';
         }
 //        $textbox .= '<div>';
-        $rs = $this->formGroup($textbox);
+        if ($this->formOption['ONLY_COMPONENT'] == false) {
+            $rs = $this->formGroup($textbox);
+        } else {
+            $rs = $textbox;
+        }
+        $this->ResetObject();
+        return $rs;
+    }
+
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component textbox 
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * </p>
+     * @example $Form->id('textbox')->title('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->value('EXAMPLE')->placeholder('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->textbox();<br/>
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
+    public function inputSpinner() {
+        $this->defaultOption();
+        $textbox = '';
+//        $textbox = '<div class="col-xs-3">';
+        $type = 'text';
+        if ($this->formOption['TYPE'] != null) {
+            $type = $this->formOption['TYPE'];
+        }
+
+        $withButton = $this->formOption['WITH_BUTTON'];
+        $str_withButton = "";
+        if (!empty($withButton)) {
+            $button = new Button();
+            $str_withButton = $button->arrayButton($withButton);
+        }
+
+        $minlength = "";
+        $maxlength = "";
+        if ($this->formOption['MINLENGTH'] != null) {
+            $minlength = ' minlength="' . $this->formOption['MINLENGTH'] . '"';
+        }
+
+        if ($this->formOption['MAXLENGTH'] != null) {
+            $maxlength = ' maxlength="' . $this->formOption['MAXLENGTH'] . '"';
+        }
+        if ($this->formOption['VALUE'] == "") {
+            $this->formOption['VALUE'] = 0;
+        }
+        $textbox .= '<div class="input-group input-spinner">';
+        $textbox .= '<input type="number" 
+            placeholder="' . $this->formOption['PLACEHOLDER'] . '" 
+            name="' . $this->formOption['NAME'] . '" 
+            id="' . $this->formOption['ID'] . '" 
+            ' . $this->formOption['REQUIRED'] . ' 
+            ' . $this->formOption['MANUAL_ATTRIBUT'] . ' 
+            value="' . $this->formOption['VALUE'] . '"
+            
+                min="0"
+            ' . $minlength . $maxlength . '
+            class="form-control ' . $this->formOption['CLASS'] . '">';
+        $textbox .= '<div class="input-group-btn-vertical">'
+                . '<button onclick="upPlus(\'' . $this->formOption['ID'] . '\')" class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+      <button class="btn btn-default"  onclick="downMinus(\'' . $this->formOption['ID'] . '\')" type="button"><i class="fa fa-caret-down"></i></button>'
+                . '</div>'
+                . '</div>';
+//        $textbox .= '<div>';
+        if ($this->formOption['ONLY_COMPONENT'] == false) {
+            $rs = $this->formGroup($textbox);
+        } else {
+            $rs = $textbox;
+        }
         $this->ResetObject();
         return $rs;
     }
@@ -926,7 +1003,7 @@ class Form {
         $this->ResetObject();
         return $rs;
     }
-    
+
     public function onlyTimepicker() {
         $this->defaultOption();
         $textbox = '';
@@ -1230,7 +1307,11 @@ class Form {
         if ($this->formOption['AUTO_COMPLETE'] == true) {
             $combobox .= '<script>$(function(){ $(\'#' . $this->formOption['ID'] . '\').select2(); });</script>';
         }
-        $rs = $this->formGroup($combobox);
+        if ($this->formOption['ONLY_COMPONENT'] == false) {
+            $rs = $this->formGroup($combobox);
+        } else {
+            $rs = $combobox;
+        }
         $this->data(array());
         $this->ResetObject();
         return $rs;

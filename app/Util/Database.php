@@ -369,6 +369,8 @@ class Database {
                 foreach ($params as $key => $value) {
                     if ($value !== NULL) {
                         $sql_insert .= $key . " = '" . $this->mysql->real_escape_string($value) . "',";
+                    } else if ($value === NULL) {
+                        $sql_insert .= $key . " = null,";
                     } else {
                         LOGGER($key . ":" . $value);
                     }
@@ -491,6 +493,8 @@ class Database {
                 foreach ($params as $key => $value) {
                     if ($value !== NULL) {
                         $sql_insert .= $key . " = '" . $this->mysql->real_escape_string($value) . "',";
+                    } else if ($value === NULL) {
+                        $sql_insert .= $key . " = null,";
                     }
                 }
                 $sql_insert2 = rtrim($sql_insert, ',');

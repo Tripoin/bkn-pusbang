@@ -5,6 +5,36 @@
  */
 
 
+
+function upPlus(id) {
+    var jumlah = $('#' + id).val();
+    if (isNaN(jumlah)) {
+        $('#' + id).val(0);
+    }
+    $('#' + id).val(parseInt($('#' + id).val(), 10) + 1);
+}
+
+function downMinus(id) {
+    var jumlah = $('#' + id).val();
+    if (isNaN(jumlah)) {
+        $('#' + id).val(0);
+    }
+    if (jumlah <= 0) {
+
+    } else {
+        $('#' + id).val(parseInt($('#' + id).val(), 10) - 1);
+    }
+}
+
+$("[type='number']").keypress(function (e) {
+     //if the letter is not digit then display error and don't type anything
+     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+        //display error message
+//        $("#errmsg").html("Digits Only").show().fadeOut("slow");
+               return false;
+    }
+   });
+
 $(document).keydown(function (e) {
     var event = window.event ? window.event : e;
 //    alert(event.keyCode);
@@ -343,10 +373,10 @@ function spinnerLoader() {
 }
 
 function spinnerLoader_2() {
-     var txt = '<svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">';
-     txt += '<circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>';
-     txt += '</svg>';
-    
+    var txt = '<svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">';
+    txt += '<circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>';
+    txt += '</svg>';
+
     return txt;
 }
 
@@ -1009,7 +1039,7 @@ function postAjaxPagination() {
     if (typeof search_pagination == 'undefined') {
         search_pagination = "";
     }
-    
+
     var form_search = $('#form-search');
     var datastringform = "";
     if (typeof form_search == 'undefined') {
@@ -1028,7 +1058,7 @@ function postAjaxPagination() {
     if (typeof currentPage == 'undefined') {
         currentPage = 1;
     }
-    var datastring = datastringform+'&search_by=' + search_by + '&current_page=' + currentPage + '&per_page=' + per_page + '&search_pagination=' + search_pagination;
+    var datastring = datastringform + '&search_by=' + search_by + '&current_page=' + currentPage + '&per_page=' + per_page + '&search_pagination=' + search_pagination;
     $.ajax({
         type: "POST",
         url: page,
@@ -1541,8 +1571,8 @@ function ajaxPostModalGallery(page, target, value) {
     });
 }
 
-function focusLayout(id){
-    $('html, body').animate({ scrollTop: $(id).offset().top }, 'slow');
+function focusLayout(id) {
+    $('html, body').animate({scrollTop: $(id).offset().top}, 'slow');
 }
 
 function postRegisterMember(page, content) {

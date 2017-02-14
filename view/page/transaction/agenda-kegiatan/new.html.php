@@ -11,7 +11,7 @@ $startdate = '<div class="row"><div class="col-md-5">'.Form()->id('startActivity
 $enddate = '<div class="col-md-6">'.Form()->id('endActivity')->placeholder(lang('transaction.enddate') . ' ....')->onlyDatepicker().'</div></div>';
 echo Form()->label(lang('transaction.excecution_time'))->title(lang('transaction.excecution_time'))->formGroup($startdate.$enddate);
 ?>
-<?php echo $Form->id('quota')->attr('style="width:20%;"')->title(lang('transaction.number_of_participants'))->placeholder(lang('transaction.number_of_participants') . ' ....')->textbox(); ?>
+<?php echo Form()->id('quota')->title(lang('transaction.number_of_participants'))->placeholder(lang('transaction.number_of_participants') . ' ....')->inputSpinner(); ?>
 
 <?= $Form->formFooter($this->insertUrl); ?>
 

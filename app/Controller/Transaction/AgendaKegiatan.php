@@ -162,11 +162,9 @@ class AgendaKegiatan extends Controller {
         } else {
             $search = " AND " . $userMain->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search . "%'";
         }
-        $db->select($data->getEntity(), $data->getId(), array(),$data->getActivity_id().EQUAL.$activity);
-        $rs_user = $db->getResult();
-        print_r($rs_user);
+
 //        echo $Datatable->search;
-        
+
         $whereList = $data->getEntity() . "." . $data->getActivity_id() . EQUAL . $activity . " AND " .
                 $userMain->getEntity() . "." . $userMain->getId() . EQUAL . $data->getUser_main_id() . $search;
 
@@ -182,7 +180,7 @@ class AgendaKegiatan extends Controller {
     public function createPanitia($activity) {
         $Form = new Form();
         $id = 0;
-        
+
         include_once FILE_PATH(IViewConstant::AGENDA_KEGIATAN_VIEW_INDEX . '/assignment/create.html.php');
     }
 
@@ -215,7 +213,7 @@ class AgendaKegiatan extends Controller {
         $this->data_user = convertJsonCombobox($rs_user, $userMain->getId(), $userProfile->getName());
         include_once FILE_PATH(IViewConstant::AGENDA_KEGIATAN_VIEW_INDEX . '/details/create.html.php');
     }
-    
+
     public function editDetails($activity) {
         $db = new Database();
         $Form = new Form();
@@ -243,9 +241,9 @@ class AgendaKegiatan extends Controller {
                 ), $whereList);
         $rs_user = $db->getResult();
 //        print_r($rs_user);
-        
-        $get_data = $db->selectByID($activityDetails, $activityDetails->getId().EQUAL.$id);
-        
+
+        $get_data = $db->selectByID($activityDetails, $activityDetails->getId() . EQUAL . $id);
+
 //        print_r($get_data);
         $this->data_user = convertJsonCombobox($rs_user, $userMain->getId(), $userProfile->getName());
         include_once FILE_PATH(IViewConstant::AGENDA_KEGIATAN_VIEW_INDEX . '/details/create.html.php');
@@ -342,11 +340,25 @@ class AgendaKegiatan extends Controller {
         }
 
 //        echo $Datatable->search;
+        $db->connect();
+        $db->select($data->getEntity(), $data->getUser_main_id(), array(), $data->getActivity_id() . EQUAL . $activity);
+        $rs_user = $db->getResult();
+        $list_user = "";
+        foreach ($rs_user as $value) {
+            $list_user .= $value[$data->getUser_main_id()] . ",";
+        }
+        $list_users = rtrim($list_user, ",");
+        $where_by_user = "";
+        if ($list_users != "") {
+            $where_by_user = " AND " . $userMain->getEntity() . "." . $userMain->getId() . " NOT IN (" . $list_users . ")";
+        }
+//        print_r($rs_user);
         $whereList = ""
                 . $userMain->getEntity() . "." . $userMain->getUser_profile_id() . EQUAL . $userProfile->getEntity() . "." . $userProfile->getId() . " AND "
                 . $userProfile->getEntity() . "." . $userProfile->getUserId() . EQUAL . $user->getEntity() . "." . $user->getId() . " AND "
                 . $user->getEntity() . "." . $user->getGroupId() . EQUAL . $group->getEntity() . "." . $group->getId() . " AND "
-                . $group->getEntity() . "." . $group->getCode() . EQUAL . "'INTERNAL'"
+                . $group->getEntity() . "." . $group->getCode() . EQUAL . "'INTERNAL' "
+                . "" . $where_by_user
                 . "" . $search;
 //        $Datatable->debug(true);
         $list_data = $Datatable->select_pagination($userMain, $userMain->getEntity(), $whereList, array($user->getEntity(), $userProfile->getEntity(), $group->getEntity()), "", $this->orderBy, ""
@@ -399,18 +411,47 @@ class AgendaKegiatan extends Controller {
 
 
         $rs_cur = $db->selectByID($curriculumModel, $curriculumModel->getId() . EQUAL . $curriculumId);
-        $db->insert($data->getEntity(), array(
+
+
+        $ar_dt = array(
             $data->getCode() => createRandomBooking(),
             $data->getActivityId() => $activity,
             $data->getStartTime() => $date . " " . $startActivity,
             $data->getEndTime() => $date . " " . $endActivity,
-            $data->getCurriculumId() => $curriculumId,
-            $data->getMaterialName() => $rs_cur[0][$curriculumModel->getName()],
             $data->getDuration() => $lesson_time,
-            $data->getUserMainId() => $trainer,
-            $data->getUserMainName() => $rs_user[0][$userProfile->getName()],
             $data->getDescription() => 'Hadir',
-        ));
+        );
+
+        $ar_dt_cr = array();
+        if ($curriculumId != "") {
+            $ar_dt_cr = array(
+                $data->getCurriculumId() => $curriculumId,
+                $data->getMaterialName() => $rs_cur[0][$curriculumModel->getName()],
+            );
+        } else {
+            $curriculumName = $_POST['curriculum_name'];
+            $ar_dt_cr = array(
+                $data->getCurriculumId() => null,
+                $data->getMaterialName() => $curriculumName,
+            );
+        }
+
+        $ar_dt_trainer = array();
+        if ($trainer != "") {
+
+            $ar_dt_trainer = array(
+                $data->getUserMainId() => $trainer,
+                $data->getUserMainName() => $rs_user[0][$userProfile->getName()],
+            );
+        } else {
+            $trainerName = $_POST['trainer_name'];
+            $ar_dt_trainer = array(
+                $data->getUserMainId()=>null,
+                $data->getUserMainName() => $trainerName,
+            );
+        }
+
+        $db->insert($data->getEntity(), array_merge($ar_dt, $ar_dt_cr, $ar_dt_trainer));
         $result = $db->getResult();
         if (is_numeric($result[0])) {
             echo toastAlert('success', 'Add Activity Details Success', 'Data Has been Added Successfully');
@@ -457,18 +498,45 @@ class AgendaKegiatan extends Controller {
 
 
         $rs_cur = $db->selectByID($curriculumModel, $curriculumModel->getId() . EQUAL . $curriculumId);
-        $db->update($data->getEntity(), array(
-            $data->getCode() => createRandomBooking(),
+        
+        $ar_dt = array(
             $data->getActivityId() => $activity,
             $data->getStartTime() => $date . " " . $startActivity,
             $data->getEndTime() => $date . " " . $endActivity,
-            $data->getCurriculumId() => $curriculumId,
-            $data->getMaterialName() => $rs_cur[0][$curriculumModel->getName()],
             $data->getDuration() => $lesson_time,
-            $data->getUserMainId() => $trainer,
-            $data->getUserMainName() => $rs_user[0][$userProfile->getName()],
             $data->getDescription() => 'Hadir',
-                ), $data->getId() . EQUAL . $id);
+        );
+
+        $ar_dt_cr = array();
+        if ($curriculumId != "") {
+            $ar_dt_cr = array(
+                $data->getCurriculumId() => $curriculumId,
+                $data->getMaterialName() => $rs_cur[0][$curriculumModel->getName()],
+            );
+        } else {
+            $curriculumName = $_POST['curriculum_name'];
+            $ar_dt_cr = array(
+                $data->getCurriculumId() => null,
+                $data->getMaterialName() => $curriculumName,
+            );
+        }
+
+        $ar_dt_trainer = array();
+        if ($trainer != "") {
+
+            $ar_dt_trainer = array(
+                $data->getUserMainId() => $trainer,
+                $data->getUserMainName() => $rs_user[0][$userProfile->getName()],
+            );
+        } else {
+            $trainerName = $_POST['trainer_name'];
+            $ar_dt_trainer = array(
+                $data->getUserMainId()=>null,
+                $data->getUserMainName() => $trainerName,
+            );
+        }
+        
+        $db->update($data->getEntity(),  array_merge($ar_dt, $ar_dt_cr, $ar_dt_trainer), $data->getId() . EQUAL . $id);
         $result = $db->getResult();
         if ($result[0] == 1) {
             echo toastAlert('success', 'Update Activity Details Success', 'Data Has been Update Successfully');

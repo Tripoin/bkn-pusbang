@@ -157,4 +157,5 @@ return [
     'text_button'=>'Teks Tombol',
     'subtitle'=>'Sub Judul',
     'link'=>'Link',
+    'empty_if_there_option'=>'Kosongkan Jika ada pada Pilihan',
 ];

@@ -35,7 +35,7 @@ $action_kirim = Button()->onClick('ajaxPostModalManual(\'' . URL($this->admin_th
         initPanitia();
     });
     function initPanitia() {
-        $('#actionHeader').html(comButtonCreate('Create', 'btn btn-warning', 'fa fa-plus', '') + " " + comButtonBack('Back', 'btn btn-danger', 'fa fa-back'));
+        $('#actionHeader').html(comButtonCreate('<?= lang('general.create'); ?>', 'btn btn-warning', 'fa fa-plus', '') + " " + comButtonBack('<?= lang('general.back'); ?>', 'btn btn-danger', 'fa fa-back'));
         $('#buttonBack').attr("onclick", "pageParent()");
         $('#buttonCreate').attr("onclick", "ajaxPostModalManual('<?= URL(getAdminTheme() . $this->indexUrl . '/assignment/' . $activity . '/create'); ?>')");
         $('#url_delete_collection').val('<?= URL($this->admin_theme_url . $this->indexUrl . '/assignment/' . $activity . '/deleteCollection'); ?>');
