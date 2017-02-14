@@ -810,6 +810,14 @@ function subMonth($tgl) {
     return $date . ' ' . $month . ' ' . $year;
 }
 
+function subMonthDay($tgl) {
+    $day = date("N", strtotime($tgl));
+    $date = date("d", strtotime($tgl));
+    $month = getMonth(date("m", strtotime($tgl)));
+    $year = date("Y", strtotime($tgl));
+    return $day.' '.$date . ' ' . $month . ' ' . $year;
+}
+
 function selectMonth($month) {
     $bln = getMonth($month);
     return $bln;

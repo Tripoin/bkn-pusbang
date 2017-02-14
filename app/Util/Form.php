@@ -392,7 +392,7 @@ class Form {
         if ($this->formOption['TYPE'] != null) {
             $type = $this->formOption['TYPE'];
         }
-        
+
         $withButton = $this->formOption['WITH_BUTTON'];
         $str_withButton = "";
         if (!empty($withButton)) {
@@ -495,7 +495,7 @@ class Form {
                     . '</span>'
                     . '</div>';
         }
-        
+
         $textbox .= '<script>'
                 . '$(function () {'
                 . 'var icon = new Bloodhound({'
@@ -888,12 +888,63 @@ class Form {
             value="' . $this->formOption['VALUE'] . '"
             data-date-format="' . DATE_FORMAT . '"
             class="form-control datepicker">';
+        $textbox .= '<script>$(function(){$(\'#' . $this->formOption['ID'] . '\').datepicker()});</script>';
 //        $textbox .= '<div>';
         $rs = $this->formGroup($textbox);
         $this->ResetObject();
         return $rs;
     }
+
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component File Input <Upload Only Image>
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * </p>
+     * @example $Form->id('datepicker')->title('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->value('EXAMPLE')->placeholder('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->fileinputimage();<br/>
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
+    public function timepicker() {
+        $this->defaultOption();
+        $textbox = '';
+//        $textbox = '<div class="col-xs-3">';
+        $textbox .= '<input type="text" 
+            placeholder="' . $this->formOption['PLACEHOLDER'] . '" 
+            name="' . $this->formOption['NAME'] . '" 
+            id="' . $this->formOption['ID'] . '" 
+            ' . $this->formOption['REQUIRED'] . ' 
+            ' . $this->formOption['MANUAL_ATTRIBUT'] . ' 
+            value="' . $this->formOption['VALUE'] . '"
+            data-date-format="' . DATE_FORMAT . '"
+            class="form-control datepicker">';
+        $textbox .= '<script>$(function(){$(\'#' . $this->formOption['ID'] . '\').timepicker({showMeridian: false})});</script>';
+        $rs = $this->formGroup($textbox);
+        $this->ResetObject();
+        return $rs;
+    }
     
+    public function onlyTimepicker() {
+        $this->defaultOption();
+        $textbox = '';
+//        $textbox = '<div class="col-xs-3">';
+        $textbox .= '<input type="text" 
+            placeholder="' . $this->formOption['PLACEHOLDER'] . '" 
+            name="' . $this->formOption['NAME'] . '" 
+            id="' . $this->formOption['ID'] . '" 
+            ' . $this->formOption['REQUIRED'] . ' 
+            ' . $this->formOption['MANUAL_ATTRIBUT'] . ' 
+            value="' . $this->formOption['VALUE'] . '"
+            data-date-format="' . DATE_FORMAT . '"
+            class="form-control datepicker">';
+        $textbox .= '<script>$(function(){$(\'#' . $this->formOption['ID'] . '\').timepicker({showMeridian: false})});</script>';
+        $this->ResetObject();
+        return $textbox;
+    }
+
     public function onlyDatepicker() {
         $this->defaultOption();
         $textbox = '';

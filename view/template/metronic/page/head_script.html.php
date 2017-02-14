@@ -33,6 +33,7 @@
 
     <link href="<?= URL('/assets/plugins/bootstrap-fileinput/bootstrap-fileinput.css'); ?>" rel="stylesheet" type="text/css">
     <link href="<?= URL('/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'); ?>" rel="stylesheet" type="text/css">
+    <link href="<?= URL('/assets/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css'); ?>" rel="stylesheet" type="text/css">
 
     <link href="<?= URL('/assets/plugins/jquery-nestable/jquery.nestable.css'); ?>" rel="stylesheet" type="text/css">
     <link href="<?= URL('/assets/plugins/select2/css/select2.css'); ?>" rel="stylesheet" type="text/css">

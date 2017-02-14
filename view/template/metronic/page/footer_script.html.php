@@ -24,6 +24,7 @@
 <script src="<?= URL('assets/plugins/ckeditor/ckeditor.js'); ?>" ></script>
 <script src="<?= URL('assets/plugins/bootstrap-fileinput/bootstrap-fileinput.js'); ?>" ></script>
 <script src="<?= URL('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js'); ?>" ></script>
+<script src="<?= URL('assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js'); ?>" ></script>
 
 
 <!--	Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->

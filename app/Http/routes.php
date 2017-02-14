@@ -195,6 +195,7 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
             Routes::setScaffolding(IURLConstant::MASTER_ANSWER_TYPE_INDEX_URL, 'app\Controller\Master\AnswerType');
             Routes::setScaffolding(IURLConstant::MASTER_SLIDER_INDEX_URL, 'app\Controller\Master\Slider');
             Routes::setScaffolding(IURLConstant::AGENDA_KEGIATAN_INDEX_URL, 'app\Controller\Transaction\AgendaKegiatan');
+            
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/assignment/{activity}', 'app\Controller\Transaction\AgendaKegiatan@listPanitia');
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/assignment/{activity}/create', 'app\Controller\Transaction\AgendaKegiatan@createPanitia');
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/assignment/{activity}/edit', 'app\Controller\Transaction\AgendaKegiatan@editPanitia');
@@ -203,6 +204,15 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/assignment/{activity}/update', 'app\Controller\Transaction\AgendaKegiatan@updatePanitia');
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/assignment/{activity}/delete', 'app\Controller\Transaction\AgendaKegiatan@deletePanitia');
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/assignment/{activity}/deleteCollection', 'app\Controller\Transaction\AgendaKegiatan@deleteCollectionPanitia');
+            
+            Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/details/{activity}', 'app\Controller\Transaction\AgendaKegiatan@listDetails');
+            Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/details/{activity}/create', 'app\Controller\Transaction\AgendaKegiatan@createDetails');
+            Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/details/{activity}/edit', 'app\Controller\Transaction\AgendaKegiatan@editDetails');
+            Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/details/{activity}/list-user', 'app\Controller\Transaction\AgendaKegiatan@listDetails');
+            Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/details/{activity}/save', 'app\Controller\Transaction\AgendaKegiatan@saveDetails');
+            Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/details/{activity}/update', 'app\Controller\Transaction\AgendaKegiatan@updateDetails');
+            Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/details/{activity}/delete', 'app\Controller\Transaction\AgendaKegiatan@deleteDetails');
+            Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/details/{activity}/deleteCollection', 'app\Controller\Transaction\AgendaKegiatan@deleteCollectionDetails');
         });
     }
 }

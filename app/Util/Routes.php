@@ -170,9 +170,10 @@ class Routes {
 
     public static $urlgr = '';
 
-    public static function group($path = array(), $function) {
+    public static function group($path = array(), $function,$no=1) {
 //        echo json_encode(Routes::getUrlClass());
         if (isset($path['prefix'])) {
+            $no+=1;
 //            Routes::$group['prefix'][] = $path['prefix'];
 //            Routes::$urlClass['prefix'][] = $path['prefix'];
             Routes::$url_group = $path['prefix'];
@@ -182,6 +183,9 @@ class Routes {
 //            print_r($path);
 //            $test = Routes::$urlgr;
 //            echo $test . '<br/>';
+//            echo $no;
+//            echo Routes::$urlgr;
+//            echo Routes::$urut."<br/>";
 //            Routes::$urlClass[] = array($test => Routes::$url_group2);
             $function();
             Routes::$urut = 0;
@@ -192,6 +196,7 @@ class Routes {
 //            Routes::set($function());
 //            Routes::$group['prefix'][] = $function();
 //            print_r($function());
+//            return false;
         }
 
 //        print_r($function());
