@@ -33,4 +33,7 @@ return [
     "category_assess"=> "Category Assessment",
     "question_category" => "Question Category",
     "slider"=>"Slider",
+    "budget_type_id"=>"Type",
+    "curriculum"=>"Curriculum",
+
 ];

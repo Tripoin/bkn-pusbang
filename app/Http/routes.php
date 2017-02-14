@@ -194,6 +194,7 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
             Routes::setScaffolding(IURLConstant::MASTER_QUESTION_CATEGORY_INDEX_URL, 'app\Controller\Master\QuestionCategory');
             Routes::setScaffolding(IURLConstant::MASTER_ANSWER_TYPE_INDEX_URL, 'app\Controller\Master\AnswerType');
             Routes::setScaffolding(IURLConstant::MASTER_SLIDER_INDEX_URL, 'app\Controller\Master\Slider');
+            Routes::setScaffolding(IURLConstant::MASTER_SUBJECT_INDEX_URL, 'app\Controller\Master\Subject');
             Routes::setScaffolding(IURLConstant::AGENDA_KEGIATAN_INDEX_URL, 'app\Controller\Transaction\AgendaKegiatan');
             
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/assignment/{activity}', 'app\Controller\Transaction\AgendaKegiatan@listPanitia');
