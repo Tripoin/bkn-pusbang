@@ -21,8 +21,8 @@
                         ->captcha();
                 ?>
                 <div class="col-md-12">
-                <button type="button" style="width:100%" onclick="return postAjax('login_form', 'form-message-login')"  
-                        class="btn btn-danger"><?= lang('general.sign_in'); ?></button>
+                    <button type="button" style="width:100%" onclick="return postAjax('login_form', 'form-message-login')"  
+                            class="btn btn-danger"><?= strtoupper(lang('general.sign_in')); ?></button>
                 </div>
             </div>
 
@@ -32,8 +32,8 @@
 <script>
     $(function () {
 //        location.reload(true);
-$('.myModal_self-title').attr('class','modal-dialog modal-sm');
-$('.modal-dialog').attr('class','modal-dialog modal-sm');
+        $('.myModal_self-title').attr('class', 'modal-dialog modal-sm');
+        $('.modal-dialog').attr('class', 'modal-dialog modal-sm');
         $('[rel="tooltip"]').tooltip();
     })
 </script>

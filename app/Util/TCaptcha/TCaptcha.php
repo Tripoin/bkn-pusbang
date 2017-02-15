@@ -15,6 +15,8 @@ namespace app\Util\TCaptcha;
  * @author sfandrianah
  */
 use app\Util\Form;
+
+
 class TCaptcha {
 
     //put your code here
@@ -129,7 +131,11 @@ class TCaptcha {
 //if( isset($_GET['_CAPTCHA']) ) {
     public function getCaptcha() {
 //        session_start();
-
+//        sleep(5);
+        if(!isset($_SESSION['_CAPTCHA'])){
+            $_SESSION[SESSION_CAPTCHA] = $this->simple_php_captcha();
+        }
+        
         $captcha_config = unserialize($_SESSION['_CAPTCHA']['config']);
         if (!$captcha_config)
             exit();
@@ -187,10 +193,13 @@ class TCaptcha {
         // Output image
         header("Content-type: image/png");
         imagepng($captcha);
+//        return $data_captcha;
     }
     
     public function reloadCaptcha(){
-        $_SESSION[SESSION_CAPTCHA] = $this->simple_php_captcha();
+//        $this->getCaptcha();
+        $test = $this->simple_php_captcha();
+        $_SESSION[SESSION_CAPTCHA] = $test;
         $captcha = '<img src="' . $_SESSION[SESSION_CAPTCHA]['image_src'] . '" alt="CAPTCHA code"></div>';
         echo $captcha;
     }

@@ -435,22 +435,22 @@ class AuthAdmin {
 //        ini_set("display_errors", "Off");
         session_destroy();
         if (isset($_SESSION[SESSION_ADMIN_USERNAME])) {
-            session_unset($_SESSION[SESSION_ADMIN_USERNAME]);
+            unset($_SESSION[SESSION_ADMIN_USERNAME]);
         }
         if (isset($_SESSION[SESSION_ADMIN_EMAIL])) {
-            session_unset($_SESSION[SESSION_ADMIN_EMAIL]);
+            unset($_SESSION[SESSION_ADMIN_EMAIL]);
         }
         if (isset($_SESSION[SESSION_ADMIN_FULLNAME])) {
-            session_unset($_SESSION[SESSION_ADMIN_FULLNAME]);
+            unset($_SESSION[SESSION_ADMIN_FULLNAME]);
         }
         if (isset($_SESSION[SESSION_ADMIN_GROUP])) {
-            session_unset($_SESSION[SESSION_ADMIN_GROUP]);
+            unset($_SESSION[SESSION_ADMIN_GROUP]);
         }
         if (isset($_SESSION[SESSION_ADMIN_TOKEN])) {
-            session_unset($_SESSION[SESSION_ADMIN_TOKEN]);
+            unset($_SESSION[SESSION_ADMIN_TOKEN]);
         }
         if (isset($_SESSION[SESSION_ADMIN_AUTHORIZATION])) {
-            session_unset($_SESSION[SESSION_ADMIN_AUTHORIZATION]);
+            unset($_SESSION[SESSION_ADMIN_AUTHORIZATION]);
         }
         $admin_url = getAdminTheme();
         echo '<script>window.location.href = "' . URL($admin_url) . '";</script>';

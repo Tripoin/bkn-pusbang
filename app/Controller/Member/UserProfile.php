@@ -70,14 +70,17 @@ class UserProfile {
         $su = new SecurityUser();
         $up = new SecurityUserProfile();
         $db->connect();
-        $user = $db->selectByID($su, $su->getCode() . "='" . $_SESSION[SESSION_USERNAME_GUEST_GUEST] . "'");
+        $user = $db->selectByID($su, $su->getCode() . "='" . $_SESSION[SESSION_USERNAME_GUEST] . "'");
         $cek_user_profile = $db->selectByID($up, $up->getUserId() . "=" . $user[0][$su->getId()] . "");
-
-        $masterContact = new MasterContact();
-        $cek_contact = $db->selectByID($masterContact, $masterContact->getId() . "=" . $cek_user_profile[0][$up->getContactId()] . "");
-        $contact = "";
-        if (!empty($cek_contact)) {
-            $contact = $cek_contact[0][$masterContact->getPhoneNumber1()];
+        if (!empty($cek_user_profile)) {
+            $masterContact = new MasterContact();
+            $cek_contact = $db->selectByID($masterContact, $masterContact->getId() . "=" . $cek_user_profile[0][$up->getContactId()] . "");
+            $contact = "";
+            if (is_array($cek_contact[0])) {
+                $contact = $cek_contact[0][$masterContact->getPhoneNumber1()];
+            }
+        } else {
+            $contact = "";
         }
 //        $confirm = new Confirm();
 //        $list_data = $Datatable->select_pagination($confirm, $confirm->getEntity());
@@ -92,47 +95,33 @@ class UserProfile {
 
     public function changePasswordProses() {
         $user = new SecurityUser();
-//        $userProfile = new SecurityUserProfile();
-//        $username = $_POST['username'];
         $passwordOld = $_POST['password-old'];
         $passwordNew = $_POST['password-new'];
         $passwordRenew = $_POST['password-renew'];
 
-//        $salt = substr(md5(uniqid(rand(), true)), 0, 9);
-//        $password_e = sha1($salt . sha1($salt . sha1($passwordOld)));
         $dbNew = new Database();
         $dbNew->connect();
-//        $dbNew->insert($user->getEntity(),$user);
 
         $res_user = $dbNew->selectByID($user, $user->getCode() . "='" . $_SESSION[SESSION_USERNAME_GUEST] . "'");
         if (!empty($res_user)) {
-            $salt = $res_user[0][$user->getSalt()];
-            $password_e = sha1($salt . sha1($salt . sha1($passwordOld)));
-            $password_e_new = sha1($salt . sha1($salt . sha1($passwordNew)));
-            if ($res_user[0][$user->getPassword()] == $password_e) {
-                if ($password_e_new == $res_user[0][$user->getPassword()]) {
+            if (password_verify($passwordOld, $res_user[0][$user->getPassword()])) {
+                if (password_verify($passwordRenew, $res_user[0][$user->getPassword()])) {
                     echo toastAlert("error", lang('user.title_change_password_failed'), lang('user.message_change_password_failed_new'));
                     echo "<script>$(function(){postAjaxGetValue('" . URL('/page/member/user-profile/change-password') . "','pageMember','" . json_encode($_POST) . "'); })</script>";
                 } else if ($passwordNew != $passwordRenew) {
                     echo toastAlert("error", lang('user.title_change_password_failed'), lang('user.message_change_password_failed_not_same'));
                     echo "<script>$(function(){postAjaxGetValue('" . URL('/page/member/user-profile/change-password') . "','pageMember','" . json_encode($_POST) . "'); })</script>";
                 } else {
-//                    $db->connect();
-
-                    $salt_new = substr(md5(uniqid(rand(), true)), 0, 9);
-                    $passwordHashNew = sha1($salt_new . sha1($salt_new . sha1($passwordNew)));
+                    $passwordHashNew = password_hash($passwordRenew, PASSWORD_BCRYPT);
                     $dbNew->update($user->getEntity(), array(
-                        $user->getSalt() => $salt_new,
                         $user->getPassword() => $passwordHashNew,
-                        $user->getModifiedById() => $res_user[0][$user->getId()],
                         $user->getModifiedOn() => date('Y-m-d h:i:s'),
                         $user->getModifiedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
-                            ), $user->getId() . "=" . $res_user[0][$user->getId()]);
+                            ), $user->getId() . EQUAL . $res_user[0][$user->getId()]);
                     $result_change = $dbNew->getResult();
                     if ($result_change[0] == 1) {
                         echo toastAlert("success", lang('user.title_change_password_success'), lang('user.title_change_password_success'));
                         echo '<script>window.location.href = "' . URL('/page/member/user-profile/change-password') . '";</script>';
-//                         echo "<script>$(function(){postAjaxGetValue('" . URL('/page/member/user-profile/change-password') . "','pageMember','" . json_encode($_POST) . "'); })</script>";
                     } else {
                         echo toastAlert("error", lang('user.title_change_password_failed'), lang('user.message_change_password_failed'));
                         echo "<script>$(function(){postAjaxGetValue('" . URL('/page/member/user-profile/change-password') . "','pageMember','" . json_encode($_POST) . "'); })</script>";
@@ -146,9 +135,6 @@ class UserProfile {
             echo toastAlert("error", lang('user.title_change_password_failed'), lang('user.message_change_password_failed'));
             echo "<script>$(function(){postAjaxGetValue('" . URL('/page/member/user-profile/change-password') . "','pageMember','" . json_encode($_POST) . "'); })</script>";
         }
-
-
-//        $res_user = $dbNew->selectByID($user, $user->getEmail() . "='" . $email . "'");
     }
 
     public function save() {
@@ -163,35 +149,48 @@ class UserProfile {
             $telephone = $_POST['telephone'];
 
             $uploadImg = $_FILES['upload_img'];
-            $random = createRandomBooking();
-            $path = 'uploads/member/' . $_SESSION[SESSION_USERNAME_GUEST_GUEST] . '/';
-            $upload = uploadImage($uploadImg, $path, $uploadImg["name"][0] . '-' . $random . '-' . date('Ymdhis'));
-            $exp_up = explode(",", $upload);
+//            print_r($uploadImg);
+            $ar_up_img = array();
+            if ($uploadImg["name"][0] != "") {
+                $random = createRandomBooking();
+                $path = 'uploads/member/' . $_SESSION[SESSION_USERNAME_GUEST] . '/';
+                $upload = uploadImage($uploadImg, $path, $uploadImg["name"][0] . '-' . $random . '-' . date('Ymdhis'));
+                $exp_up = explode(",", $upload);
+                if ($exp_up[0] == 1) {
+                    $ar_up_img = array($up->getPathimage() => $exp_up[1]);
+                }
+            }
+
+            if ($uploadImg["name"][0] == "") {
+                $exp_up[0] = 1;
+            }
             if ($exp_up[0] == 1) {
-                $user = $db->selectByID($users, $users->getCode() . "='" . $_SESSION[SESSION_USERNAME_GUEST_GUEST] . "'");
+                $user = $db->selectByID($users, $users->getCode() . "='" . $_SESSION[SESSION_USERNAME_GUEST] . "'");
                 $userProfile = $db->selectByID($up, $up->getUserId() . "='" . $user[0][$users->getId()] . "'");
 //        $user = $db->getResult();
 //        print_r($user);
                 $db->connect();
                 $db->update($users->getEntity(), array(
                     $users->getModifiedOn() => date('Y-m-d h:i:s'),
-                    $users->getModifiedByUsername() => $_SESSION[SESSION_USERNAME_GUEST_GUEST],
+                    $users->getModifiedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
                         ), $users->getId() . "=" . $user[0][$users->getId()]);
                 $rs_upd_user = $db->getResult();
 //                print_r($rs_upd_user);
                 $masterContact = new MasterContact();
                 $contact = $db->selectByID($masterContact, $masterContact->getId() . "='" . $userProfile[0][$up->getContactId()] . "'");
+//                print_r($contact);
                 $contactId = 0;
                 if (empty($contact)) {
                     $db->insert($masterContact->getEntity(), array(
+                        $masterContact->getCode() => createRandomBooking(),
                         $masterContact->getPhoneNumber1() => $telephone
                     ));
-                    $rs_contact = $db->getResult();
                     $rs_insert_contact = $db->getResult();
-                    if ($rs_insert_contact[0] != 1) {
+//                    print_r($rs_insert_contact);
+                    if (!is_numeric($rs_insert_contact[0])) {
                         $contactId = null;
                     } else {
-                        $contactId = $rs_contact[0];
+                        $contactId = $rs_insert_contact[0];
                     }
                 } else {
                     $contactId = $contact[0][$masterContact->getId()];
@@ -199,14 +198,15 @@ class UserProfile {
                         $masterContact->getPhoneNumber1() => $telephone
                             ), $masterContact->getId() . EQUAL . $contactId);
                 }
-
-                $db->update($up->getEntity(), array(
+//                print_r($contactId);
+                $up_profile = array(
                     $up->getName() => $firstname . ' ' . $lastname,
                     $up->getPlace() => $placeofbirth,
                     $up->getBirthdate() => $birthdate,
                     $up->getContactId() => $contactId,
-                    $up->getPathimage() => $exp_up[1],
-                        ), $up->getId() . "=" . $userProfile[0][$up->getId()]);
+                );
+                $merge_dt_profile = array_merge($ar_up_img, $up_profile);
+                $db->update($up->getEntity(), $merge_dt_profile, $up->getId() . "=" . $userProfile[0][$up->getId()]);
                 $rs_u = $db->getResult();
 //                print_r($rs_u);
                 if ($rs_u[0] != 1) {

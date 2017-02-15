@@ -35,7 +35,7 @@ class ContactUs {
         $email = $_POST['email'];
         $subject = $_POST['subject'];
         $message = $_POST['message'];
-        $security_code = $_POST['security_code'];
+        $security_code = $_POST['security_code_contact'];
 //        echo $_SESSION[SESSION_CAPTCHA];
 //        print_r($_SESSION['captcha']);
         if ($security_code == $_SESSION[SESSION_CAPTCHA]['code']) {

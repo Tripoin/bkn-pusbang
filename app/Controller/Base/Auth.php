@@ -684,10 +684,11 @@ class Auth {
 
     public function logout() {
         ini_set("display_errors", "Off");
-        session_unset($_SESSION[SESSION_USERNAME]);
-        session_unset($_SESSION[SESSION_EMAIL]);
-        session_unset($_SESSION[SESSION_FULLNAME]);
-        session_unset($_SESSION[SESSION_GROUP]);
+        unset($_SESSION[SESSION_USERNAME_GUEST]);
+        unset($_SESSION[SESSION_EMAIL_GUEST]);
+        unset($_SESSION[SESSION_FULLNAME_GUEST]);
+        unset($_SESSION[SESSION_GROUP_GUEST]);
+        unset($_SESSION[SESSION_EXPIRED_DATE_GUEST]);
         echo '<script>window.location.href = "' . URL('') . '";</script>';
     }
 

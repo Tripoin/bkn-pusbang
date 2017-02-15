@@ -23,18 +23,13 @@ $db->select(
 $cek_user_profile = $db->getResult();
 //$db = new Database();
 //        $db->connect();
-$notif = new Notification();
-$db->sql("SELECT COUNT(" . $notif->getRead() . ") as total_notif FROM " . $notif->getEntity() . " WHERE " . $notif->getRead() . EQUAL . "0 AND " . $notif->getTo() . "='" . $_SESSION[SESSION_USERNAME] . "'");
-$sql_read = $db->getResult();
-
-
 ?>
 <style>
     .menu-member > a{
         color:#888888;
         font-weight: lighter;
     }
-    
+
     .menu-member:hover{
         background: #b7b7b7;
     }
@@ -50,7 +45,7 @@ $sql_read = $db->getResult();
         <div class="panel panel-default col-md-3" style="text-align:center;background: #F6F6F6">
             <a href="<?= URL('/page/member/user-profile'); ?>">
                 <img src="<?= URL('uploads/member/' . $_SESSION[SESSION_USERNAME_GUEST] . '/' . $cek_user_profile[0][$sup->getPathimage()]); ?>"  <?= notFoundImg('noim.jpg'); ?>
-                     style="box-shadow: 0px 0px 0px 2px #B7B7B7;margin-top: -100px;"
+                     style="box-shadow: 0px 0px 0px 2px #888888;margin-top: -100px;"
                      id="img-user-profile"
                      class="img-circle" alt="<?= $_SESSION[SESSION_FULLNAME_GUEST]; ?>" width="200" height="200"/>
             </a>
@@ -63,11 +58,10 @@ $sql_read = $db->getResult();
                 <div class="profile-usermenu" style="text-align: left;margin-top: -0px;">
                     <ul class="nav nav-inline">
                         <?php
-                        
                         $db->connect();
                         $db->select(
                                 $secFuncAssg->getEntity(), $secFuncAssg->getFunction()->getEntity() . ".*", array(
-                                    $secFuncAssg->getFunction()->getEntity(), $secFuncAssg->getGroup()->getEntity()), $secFuncAssg->getFunction()->getEntity() . DOT . $secFuncAssg->getFunction()->getId() . EQUAL . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getFunctionId()
+                            $secFuncAssg->getFunction()->getEntity(), $secFuncAssg->getGroup()->getEntity()), $secFuncAssg->getFunction()->getEntity() . DOT . $secFuncAssg->getFunction()->getId() . EQUAL . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getFunctionId()
                                 . " AND " . $secFuncAssg->getGroup()->getEntity() . DOT . $secFuncAssg->getGroup()->getId() . EQUAL . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getGroupId()
                                 . " AND " . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getStatus() . EQUAL . "1"
                                 . " AND " . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getGroupId() . EQUAL . $_SESSION[SESSION_GROUP_GUEST]
@@ -124,7 +118,7 @@ $sql_read = $db->getResult();
                                 if ($countitem != 0) {
                                     $db->select(
                                             $secFuncAssg->getEntity(), $secFuncAssg->getFunction()->getEntity() . ".*", array(
-                                                $secFuncAssg->getFunction()->getEntity(), $secFuncAssg->getGroup()->getEntity()), $secFuncAssg->getFunction()->getEntity() . DOT . $secFuncAssg->getFunction()->getId() . EQUAL . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getFunctionId()
+                                        $secFuncAssg->getFunction()->getEntity(), $secFuncAssg->getGroup()->getEntity()), $secFuncAssg->getFunction()->getEntity() . DOT . $secFuncAssg->getFunction()->getId() . EQUAL . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getFunctionId()
                                             . " AND " . $secFuncAssg->getGroup()->getEntity() . DOT . $secFuncAssg->getGroup()->getId() . EQUAL . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getGroupId()
                                             . " AND " . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getStatus() . EQUAL . "1"
                                             . " AND " . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getGroupId() . EQUAL . $_SESSION[SESSION_GROUP_GUEST]
@@ -144,7 +138,7 @@ $sql_read = $db->getResult();
                                             }
                                             ?>
 
-                                        <li <?= $act_menu_1; ?>>
+                                            <li <?= $act_menu_1; ?>>
                                                 <a <?= $act_menu_1; ?> href="<?= URL($val_func_member_child[$secFuncAssg->getFunction()->getUrl()]); ?>">
                                                     &nbsp;&nbsp;&nbsp;<i class="<?= $val_func_member_child[$secFuncAssg->getFunction()->getStyle()]; ?>"></i>
                                                     <?= FunctionLanguageName($val_func_member_child); ?>
@@ -157,7 +151,12 @@ $sql_read = $db->getResult();
                             <?php
                         }
                         ?>
-
+                        <li class=" menu-member">
+                            <a href="<?= URL('/page/logout'); ?>">
+                                <i class="fa fa-sign-out"></i>
+                                <?= lang('general.sign_out'); ?>
+                            </a>
+                        </li>
 
                     </ul>
                 </div>

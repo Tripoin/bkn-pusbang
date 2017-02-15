@@ -97,7 +97,7 @@
                     <?php echo $Form->id('email')->alignLabel('right')->title(lang('general.email'))->classComponent('i_box')->formLayout('horizontal')->placeholder(lang('general.email') . ' ....')->textbox(); ?>
                     <?php echo $Form->id('subject')->alignLabel('right')->title(lang('general.subject'))->classComponent('i_box')->formLayout('horizontal')->placeholder(lang('general.subject') . ' ....')->textbox(); ?>
                     <?php echo $Form->id('message')->alignLabel('right')->title(lang('general.message'))->classComponent('i_box')->formLayout('horizontal')->placeholder(lang('general.message') . ' ....')->textarea(); ?>
-                    <?php echo $Form->id('security_code')->alignLabel('right')->title(lang('general.security_code'))->classComponent('i_box')->formLayout('horizontal')->placeholder(lang('general.security_code') . ' ....')->captcha(); ?>
+                    <?php echo $Form->id('security_code_contact')->alignLabel('right')->title(lang('general.security_code'))->classComponent('i_box')->formLayout('horizontal')->placeholder(lang('general.security_code') . ' ....')->captcha(); ?>
                     
                     <?= $Form->formFooter(null, '<button type="submit" onclick="postFormAjaxPostSetContent(\''.  FULLURL('submit').'\',\'form-newedit\')" class="read_more buttonc">submit</button>'); ?>
                     <br/>

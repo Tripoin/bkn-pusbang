@@ -29,7 +29,7 @@ include_once getTemplatePath('page/content-page.html.php');
             
         </fieldset>
 
-        <button id="btn_signup" type="submit" onsubmit="return false;" onclick="return postAjax('signup_form', 'signup_form')" class="btn"><?= lang('general.save'); ?></button>
+        <button id="btn_signup" class="btn btn-danger" type="submit" onsubmit="return false;" onclick="return postAjax('signup_form', 'signup_form')" class="btn"><?= lang('general.save'); ?></button>
     </form>
 </div>
 <?php include_once FILE_PATH(END_PAGE_MEMBER_PATH); ?>

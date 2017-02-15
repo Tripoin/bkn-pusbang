@@ -749,7 +749,7 @@ class Form {
         if ($this->formOption['FORM_LAYOUT'] == 'horizontal') {
             $captcha .= '<div class="col-md-4" style="background:#fffdcd;" id="captcha_image_' . $this->formOption['ID'] . '">';
         } else {
-            $captcha .= '<div style="background:#fffdcd;" id="captcha_image_' . $this->formOption['ID'] . '">';
+            $captcha .= '<div style="" id="captcha_image_' . $this->formOption['ID'] . '">';
         }
         $captcha .= '<img src="' . $_SESSION[SESSION_CAPTCHA]['image_src'] . '" alt="CAPTCHA code">';
         $captcha .= '</div>';
@@ -772,13 +772,13 @@ class Form {
             $captcha .= '<span class="input-group-btn">
                 <button style="margin-top:18px;height:34px;" type="button" 
                 onclick="ajaxPostManual(\'' . URL('captcha/reload') . '\',\'captcha_image_' . $this->formOption['ID'] . '\',\'\')" 
-                    class="read_more button">Reload</button></span>
+                    class="read_more button"><i class="fa fa-repeat"></i></button></span>
                 </div></div>';
         } else {
             $captcha .= '<span class="input-group-btn">
                 <button style="margin-top:18px;height:34px;margin-right:1000px;" type="button" 
                 onclick="ajaxPostManual(\'' . URL('captcha/reload') . '\',\'captcha_image_' . $this->formOption['ID'] . '\',\'\')" 
-                    class="read_more button btn-danger">Reload</button></span>
+                    class="read_more button btn-danger"><i class="fa fa-repeat"></i></button></span>
                 </div></div>';
         }
 

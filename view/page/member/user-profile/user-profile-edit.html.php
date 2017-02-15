@@ -15,7 +15,7 @@
     <?= Form()->id('telephone')->value($contact)->title(lang('general.telephone'))->placeholder(lang('general.telephone') . ' ....')->textbox(); ?>
     <?= Form()->id('place')->value($cek_user_profile[0][$up->getPlace()])->title(lang('user.place_of_birth'))->placeholder(lang('user.place_of_birth') . ' ....')->textbox(); ?>
     <?= Form()->id('birthdate')->value($cek_user_profile[0][$up->getBirthdate()])->title(lang('user.birthdate'))->placeholder(lang('user.birthdate') . ' ....')->datepicker(); ?>
-    <?= Form()->id('upload_img')->value($cek_user_profile[0][$up->getPathimage()])->title(lang('user.change_profile_img'))->placeholder($cek_user_profile[0][$up->getPathimage()])->fileinput(); ?>
+    <?= Form()->id('upload_img')->required(false)->value($cek_user_profile[0][$up->getPathimage()])->title(lang('user.change_profile_img'))->placeholder($cek_user_profile[0][$up->getPathimage()])->fileinput(); ?>
 
 
 </fieldset>

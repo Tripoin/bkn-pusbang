@@ -96,6 +96,9 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
     Routes::set('page/member/topup-saldo/konfirmasi/save', 'app\Controller\Member\TopupSaldo@uploadImage');
 
 
+    Routes::set('page/member/dashboard', 'app\Controller\Member\Dashboard@index');
+    
+    
     Routes::set('page/member/gallery', 'app\Controller\Member\Gallery@index');
     Routes::set('page/member/gallery/list', 'app\Controller\Member\Gallery@lists');
     Routes::set('page/member/gallery/create', 'app\Controller\Member\Gallery@create');

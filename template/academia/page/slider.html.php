@@ -23,14 +23,14 @@ $data_slider = $db->selectByID($slider, $slider->getStatus() . EQUAL . ONE);
                         <div class="slide1-text slide-text">
                             <div class="middle-text">
                                 <div class="left_sidet1">
-                                    <div  style="margin-top:300px;" class="cap-title wow slideInRight"data-wow-duration=".9s" data-wow-delay="0s">
-                                        <h1><?= $val_slider[$slider->getTitle()]; ?></h1>
+                                    <div  style="margin-top:35%" class="cap-title wow slideInRight"data-wow-duration=".9s" data-wow-delay="0s">
+                                        <h1 style="font-size:30px;color:#F8F8F8"><?= $val_slider[$slider->getTitle()]; ?></h1>
                                     </div>
-                                    <div  style="margin-top:0;" class="cap-dec wow slideInRight" data-wow-duration="1s" data-wow-delay=".5s">
-                                        <h2><?= $val_slider[$slider->getSubtitle()]; ?></h2>
+                                    <div style="margin-top:10px;" class="cap-dec wow slideInRight" data-wow-duration="1s" data-wow-delay=".5s">
+                                        <h2 style="font-size:15px;color:#F8F8F8"><?= $val_slider[$slider->getSubtitle()]; ?></h2>
                                     </div>	
                                     <?php if (!ctype_space($val_slider[$slider->getTextButton()])) { ?>
-                                        <div class="cap-readmore animated fadeInUpBig" data-wow-duration="2s" data-wow-delay=".5s">
+                                        <div class="cap-readmore animated fadeInUpSmall" data-wow-duration="2s" data-wow-delay=".5s">
                                             <a href="<?= $val_slider[$slider->getLink()]; ?>" ><?= $val_slider[$slider->getTextButton()]; ?></a>
                                         </div>
                                     <?php } ?>

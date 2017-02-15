@@ -111,7 +111,7 @@ $sfLanguage = new SecurityFunctionLanguage();
                     <div class="search pull-right" id="btnUserLogin">
                         <div class="search-box">
                             <span class="search-open">
-                                <i class="fa fa-user" rel="tooltip" onclick="ajaxPostModal('<?= URL('member/login'); ?>', 'LOGIN PAGE')" title="<?= lang('general.sign_in'); ?>"></i>
+                                <i class="fa fa-user" rel="tooltip" onclick="ajaxPostModal('<?= URL('member/login'); ?>', 'E-PORTAL')" title="<?= lang('general.sign_in'); ?>"></i>
                             </span>
                         </div>
                     </div>
@@ -119,7 +119,7 @@ $sfLanguage = new SecurityFunctionLanguage();
                     <nav class="menu">
                         <ul class="navid pull-right">
                             <li>
-                                <a href="">HI, <?= $_SESSION[SESSION_FULLNAME_GUEST]; ?></a>
+                                <a href="#"><i class="fa fa-home" style="font-size: 20px;"></i></a>
                                 <?php
                                 $db->connect();
                                 $db->select(
@@ -137,11 +137,10 @@ $sfLanguage = new SecurityFunctionLanguage();
 //                                print_r($_SESSION[SESSION_GROUP_GUEST]);
                                 ?>
                                 <ul>
-                                   
                                     <li>
-                                        <a href="<?= URL('/page/dashboard'); ?>">
+                                        <a href="<?= URL('/page/member/dashboard'); ?>">
                                             <i class="fa fa-pie-chart"></i>
-                                            DASHBOARD
+                                            <?=lang('general.dashboard');?>
                                         </a>
                                     </li>
                                     <li>
