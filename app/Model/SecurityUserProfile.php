@@ -22,7 +22,8 @@ class SecurityUserProfile extends GeneralAuditrail {
     public $address = 'address';
     public $marriage = 'marriage';
     public $telp = 'telp';
-    public $pathimage = 'profile_img';
+    public $contactId = 'contact_id';
+    public $pathimage = 'profile_image';
     public $province = 'province_id';
     public $city = 'city_id';
     public $district = 'district_id';
@@ -33,7 +34,16 @@ class SecurityUserProfile extends GeneralAuditrail {
         $this->setEntity('sec_user_profile');
     }
     
-    function getUserId() {
+    
+    function getContactId() {
+        return $this->contactId;
+    }
+
+    function setContactId($contactId) {
+        $this->contactId = $contactId;
+    }
+
+        function getUserId() {
         return $this->userId;
     }
 

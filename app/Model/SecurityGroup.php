@@ -11,13 +11,22 @@ class SecurityGroup extends Auditrail {
     private $id = 'id';
     private $code = 'code';
     private $name = 'name';
+    private $parentId = 'parent_id';
 
 //    private $firstMenu = 'first_menu';
 
     public function __construct() {
         
     }
+    function getParentId() {
+        return $this->parentId;
+    }
 
+    function setParentId($parentId) {
+        $this->parentId = $parentId;
+    }
+
+    
     public function GroupEntity() {
         return $this->entity;
     }

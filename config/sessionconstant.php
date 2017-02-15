@@ -15,6 +15,16 @@ define('SESSION_EMAIL', 'email');
 define('SESSION_TOKEN', 'token');
 define('SESSION_LOCK_SCREEN', 'LOCK_SCREEN');
 
+
+define('SESSION_USERNAME_GUEST', 'username_guest_e_portal');
+define('SESSION_FULLNAME_GUEST', 'fullname_guest_e_portal');
+define('SESSION_GROUP_GUEST', 'group_guest_e_portal');
+define('SESSION_EMAIL_GUEST', 'email_guest_e_portal');
+define('SESSION_TOKEN_GUEST', 'token_guest_e_portal');
+define('SESSION_LOCK_SCREEN_GUEST', 'LOCK_SCREEN_guest_e_portal');
+define('SESSION_EXPIRED_DATE_GUEST', 'EXPIRED_DATE_guest_e_portal');
+
+
 define('SESSION_ADMIN_USERNAME', 'username');
 define('SESSION_ADMIN_FULLNAME', 'fullname');
 define('SESSION_ADMIN_PASSWORD', 'admin_password');

@@ -203,6 +203,7 @@ class Database {
         $this->connect();
         $this->select($table->getEntity(), "*", array(), $where, null);
         $result = $this->getResult();
+        
         return $result;
     }
 

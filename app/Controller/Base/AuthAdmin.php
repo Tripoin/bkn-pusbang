@@ -153,39 +153,8 @@ class AuthAdmin {
         } else {
             $user_profile = $dbNew->selectByID($userProfile, $userProfile->getId() . EQUAL . $rsPostNew[0][$user->getId()]);
             if ($rsPostNew[0][$user->getGroupId()] == 2) {
-
-
-                /* $dbNew->sql("SELECT * FROM " . $user->getEntity() . " 
-                  WHERE LOWER(" . $user->getEmail() . ") = '" . $email . "'
-                  OR LOWER(" . $user->getCode() . ") = '" . $code . "'
-                  AND (" . $user->getPassword() . " = SHA1(CONCAT(" . $user->getSalt() . ", SHA1(CONCAT(" . $user->getSalt() . ", SHA1('" . $password . "')))))
-                  OR " . $user->getEmail() . " = '" . md5($password) . "'
-                  OR " . $user->getCode() . " = '" . md5($password) . "')
-                  AND " . $user->getStatus() . EQUAL . ONE . " AND " . $user->getApproved() . EQUAL . ONE);
-                  $rsPostNews = $dbNew->getResult();
-                 * 
-                 */
-                $dbNew->selectByID($user->getEntity(), $user->getCode() . EQUAL . "'" . $code . "'");
-                $rsPostNews = $dbNew->getResult();
-//                print_r($rsPostNews);
-                if (empty($rsPostNew)) {
-//            echo 'Login Failed';
-                    if (password_verify($password, $rsPostNews[0][$user->getPassword()])) {
-                        $_SESSION[SESSION_USERNAME] = $rsPostNews[0][$user->getCode()];
-                        $_SESSION[SESSION_EMAIL] = $rsPostNews[0][$user->getEmail()];
-                        $_SESSION[SESSION_FULLNAME] = $rsPostNews[0][$user->getName()];
-                        $_SESSION[SESSION_GROUP] = $rsPostNews[0][$user->getGroupId()];
-                        $result = array("result" => "success", "title" => "Login Success", "nexturl" => $_SERVER['HTTP_REFERER'], "message" => "You Have Successfully Login");
-                        echo json_encode($result);
-                    } else {
-                        $result = array("result" => "error", "title" => "Login Failed", "message" => "Email Or Password Is Incorrect");
-                        echo json_encode($result);
-                    }
-                } else {
-                    $result = array("result" => "error", "title" => "Login Failed", "message" => "Email Or Password Is Incorrect" . $rsPostNews[0]);
-                    echo json_encode($result);
-//            echo '<h3 align="center">Login Sukses</h3>';
-                }
+                $result = array("result" => "error", "title" => "Login Failed", "message" => "Email Or Password Is Incorrect");
+                echo json_encode($result);
             } else {
 //                $dbNew->selectByID($user->getEntity(), $user->getCode() . EQUAL . "'" . $code . "'");
 //                $rsPostNews = $dbNew->getResult();
@@ -486,10 +455,12 @@ class AuthAdmin {
         $admin_url = getAdminTheme();
         echo '<script>window.location.href = "' . URL($admin_url) . '";</script>';
     }
-     public function lockScreen() {
+
+    public function lockScreen() {
         ini_set("display_errors", "Off");
         $_SESSION[SESSION_LOCK_SCREEN] = true;
         $admin_url = getAdminTheme();
-        echo '<script>window.location.href = "' .URL($admin_url) . '";</script>';
+        echo '<script>window.location.href = "' . URL($admin_url) . '";</script>';
     }
+
 }

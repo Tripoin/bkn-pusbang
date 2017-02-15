@@ -12,6 +12,9 @@
 
 use app\Model\SecurityFunctionLanguage;
 use app\Model\SecurityFunctionAssignment;
+use app\Model\SecurityUser;
+use app\Model\SecurityUserProfile;
+use app\Model\SecurityGroup;
 use app\Model\MasterSystemParameter;
 use app\Model\MasterLanguage;
 use app\Util\Database;
@@ -22,6 +25,46 @@ use app\Util\Button;
 
 function is_not_null($var) {
     return !is_null($var);
+}
+
+function checkUserLogin() {
+    $db = new Database();
+    $groupModel = new SecurityGroup();
+    $user_data = array();
+    $username = array();
+    if (isset($_SESSION[SESSION_USERNAME_GUEST])) {
+        $username = array(SESSION_USERNAME_GUEST => $_SESSION[SESSION_USERNAME_GUEST]);
+    }
+    
+    $email = array();
+    if (isset($_SESSION[SESSION_EMAIL_GUEST])) {
+        $email = array(SESSION_EMAIL_GUEST => $_SESSION[SESSION_EMAIL_GUEST]);
+    }
+    
+    $fullname = array();
+    if (isset($_SESSION[SESSION_FULLNAME_GUEST])) {
+        $fullname = array(SESSION_FULLNAME_GUEST => $_SESSION[SESSION_FULLNAME_GUEST]);
+    }
+    
+    $group = array();
+    if (isset($_SESSION[SESSION_GROUP_GUEST])) {
+        if($_SESSION[SESSION_GROUP_GUEST] == 2){
+            $group = array(SESSION_GROUP_GUEST => $_SESSION[SESSION_GROUP_GUEST]);
+        } else {
+            $res_group = $db->selectByID($groupModel, $groupModel->getId().EQUAL.$_SESSION[SESSION_GROUP_GUEST]);
+            if($res_group[0][$groupModel->getParentId()] ==2){
+                $group = array(SESSION_GROUP_GUEST => $_SESSION[SESSION_GROUP_GUEST]);
+            } else {
+                $group = array();
+            }
+        }
+        
+    }
+    
+    if(!empty($group)){
+        $user_data = array_merge($username,$email,$fullname,$group);
+    }
+    return $user_data;
 }
 
 $title = '';
@@ -263,26 +306,21 @@ function getActiveMenuMember() {
 }
 
 function pageMember($title_breadcrumb = '', $title = '') {
-    echo contentPage();
+    include_once getTemplatePath('page/content-page.html.php');
     echo '<div id="content" class="container-fluid" style="padding-top: 130px;">
-    <div class="col-md-offset-3 col-lg-offset-3 col-lg-21 zeropad">
-        <ul class="breadcrumb" id="breadcrumb">
-            <li><a href="<?= URL(); ?>">' . lang('general.home') . '</a></li>
-            <li><a class="active">' . $title_breadcrumb . '</a></li>
-        </ul>
-    </div>
+    
 </div>';
     include_once FILE_PATH(PAGE_MEMBER_PATH);
-    echo '<div class="signup col-md-17"  style="text-align: left;">';
+    echo '<div class="signup col-md-9"  style="box-shadow: 0px 0px 0px 1px #B7B7B7;text-align: left;margin-top: -100px;">';
     echo '<h1>' . $title . '</h1>';
-    echo '<div id="pageMember">';
+    echo '<div id="pageMember" style="background:#FFFFFF;">';
 }
 
 function endPageMember($page = null) {
     echo '</div>';
     echo '</div>';
     include_once FILE_PATH(END_PAGE_MEMBER_PATH);
-    echo endContentPage();
+    include_once getTemplatePath('page/end-content-page.html.php'); 
     echo '<script>
     $(function () {
 
@@ -815,7 +853,7 @@ function subMonthDay($tgl) {
     $date = date("d", strtotime($tgl));
     $month = getMonth(date("m", strtotime($tgl)));
     $year = date("Y", strtotime($tgl));
-    return $day.' '.$date . ' ' . $month . ' ' . $year;
+    return $day . ' ' . $date . ' ' . $month . ' ' . $year;
 }
 
 function selectMonth($month) {

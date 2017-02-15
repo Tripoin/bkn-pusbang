@@ -37,6 +37,9 @@
     <link href="<?= URL('/assets/plugins/select2/css/select2.css'); ?>" rel="stylesheet" type="text/css">
     <link href="<?= URL('/assets/plugins/select2/css/select2-bootstrap.min.css'); ?>" rel="stylesheet" type="text/css">
     <link href="<?= URL('/assets/plugins/bootstrap-toastr/toastr.min.css'); ?>" rel="stylesheet" type="text/css">
+    <link href="<?= URL('/assets/plugins/bootstrap-fileinput/bootstrap-fileinput.css'); ?>" rel="stylesheet" type="text/css">
+    <link href="<?= URL('/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'); ?>" rel="stylesheet" type="text/css">
+    <link href="<?= URL('/assets/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css'); ?>" rel="stylesheet" type="text/css">
     
     <script src="<?= getTemplateURL('/assets/js/modernizr-2.8.3.min.js'); ?>"></script>
     <script src="<?= getTemplateURL('/assets/js/jquery-1.11.3.min.js'); ?>"></script>

@@ -131,7 +131,7 @@ class SecurityFunction extends Auditrail {
     }
 
     function getType() {
-//        return $this->type;
+        return $this->type;
     }
 
     function getTypeId() {

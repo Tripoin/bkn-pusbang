@@ -30,6 +30,7 @@ use app\Util\Database;
 use app\Util\Form;
 use app\Model\SecurityUser;
 use app\Model\SecurityUserProfile;
+use app\Model\SecurityGroup;
 use app\Util\PHPMail\PHPMailer;
 use app\Model\TransactionRegistration;
 use app\Model\LinkRegistration;
@@ -363,31 +364,70 @@ class Auth {
     }
 
     public function loginProses() {
+
         $user = new SecurityUser();
         $userProfile = new SecurityUserProfile();
+        $group = new SecurityGroup();
 //        $username = $_POST['username'];
-        $email = $_POST['emaillogin'];
-        $password = $_POST['passwordlogin'];
-        $dbNew = new Database();
-        $dbNew->connect();
-        $dbNew->sql("SELECT * FROM " . $user->getEntity() . " 
+        $email = $_POST['username'];
+        $password = $_POST['password'];
+        $security_code = $_POST['security_code'];
+        if ($security_code == $_SESSION[SESSION_CAPTCHA]['code']) {
+
+            $dbNew = new Database();
+            $dbNew->connect();
+
+            $dbNew->sql("SELECT * FROM " . $user->getEntity() . " 
+            WHERE LOWER(" . $user->getCode() . ") = '" . $email . "' 
+                AND " . $user->getStatus() . EQUAL . ONE);
+            $rsPostNew = $dbNew->getResult();
+            if (empty($rsPostNew)) {
+                $dbNew->sql("SELECT * FROM " . $user->getEntity() . " 
             WHERE LOWER(" . $user->getEmail() . ") = '" . $email . "' 
-            AND (" . $user->getPassword() . " = SHA1(CONCAT(user_salt, SHA1(CONCAT(user_salt, SHA1('" . $password . "'))))) 
-            OR " . $user->getEmail() . " = '" . md5($password) . "') AND status = '1' AND " . $user->getApproved() . " = '1'");
-        $rsPostNew = $dbNew->getResult();
-        if (empty($rsPostNew)) {
-//            echo 'Login Failed';
-            echo toastAlert("error", lang('general.login_failed'), lang('general.login_failed_username'));
-            echo "<script>$(function(){postAjaxGetValue('" . URL('/page/login') . "','modal-body-self','" . json_encode($_POST) . "'); })</script>";
+                AND " . $user->getStatus() . EQUAL . ONE);
+                $rsPostNew = $dbNew->getResult();
+            }
+
+            if (empty($rsPostNew)) {
+                echo resultPageMsg("danger", lang('general.login_failed'), lang('general.login_failed_username'));
+                echo '<script>ajaxPostManual(\'' . URL('captcha/reload') . '\',\'captcha_image_security_code\');</script>';
+            } else {
+                $result_group = false;
+                if ($rsPostNew[0][$user->getGroupId()] != 2) {
+                    $res_group = $dbNew->selectByID($group, $group->getId() . "='" . $rsPostNew[0][$user->getGroupId()] . "'");
+                    if (!empty($res_group)) {
+                        if ($res_group[0][$group->getParentId()] == 2) {
+                            $result_group = true;
+                        }
+                    }
+                } else {
+                    $result_group = true;
+                }
+
+                if ($result_group == false) {
+                    echo resultPageMsg("danger", lang('general.login_failed'), lang('general.login_failed_username'));
+                    echo '<script>ajaxPostManual(\'' . URL('captcha/reload') . '\',\'captcha_image_security_code\');</script>';
+                } else {
+                    if (password_verify($password, $rsPostNew[0][$user->getPassword()])) {
+                        $res_user = $dbNew->selectByID($userProfile, $userProfile->getUserId() . "='" . $rsPostNew[0][$user->getId()] . "'");
+                        $_SESSION[SESSION_USERNAME_GUEST] = $rsPostNew[0][$user->getCode()];
+                        $_SESSION[SESSION_EMAIL_GUEST] = $rsPostNew[0][$user->getEmail()];
+                        $_SESSION[SESSION_FULLNAME_GUEST] = $res_user[0][$userProfile->getName()];
+                        $_SESSION[SESSION_GROUP_GUEST] = $rsPostNew[0][$user->getGroupId()];
+                        $_SESSION[SESSION_EXPIRED_DATE_GUEST] = $rsPostNew[0][$user->getExpiredDate()];
+                        echo resultPageMsg("success", lang('general.login_success'), lang('general.login_success_message'));
+                        echo '<script>window.location.href = "' . URL('') . '";</script>';
+                    } else {
+                        echo resultPageMsg("danger", lang('general.login_failed'), lang('general.login_failed_username'));
+                        echo '<script>ajaxPostManual(\'' . URL('captcha/reload') . '\',\'captcha_image_security_code\');</script>';
+                    }
+
+//                
+                }
+            }
         } else {
-            $res_user = $dbNew->selectByID($userProfile, $userProfile->getEmail() . "='" . $email . "'");
-            $_SESSION[SESSION_USERNAME] = $rsPostNew[0][$user->getCode()];
-            $_SESSION[SESSION_EMAIL] = $rsPostNew[0][$user->getEmail()];
-            $_SESSION[SESSION_FULLNAME] = $res_user[0][$userProfile->getFullname()];
-            $_SESSION[SESSION_GROUP] = $rsPostNew[0][$user->getGroup()->getId()];
-//            echo '<h3 align="center">Login Sukses</h3>';
-            echo toastAlert("success", lang('general.login_success'), lang('general.login_success_message'));
-            echo '<script>window.location.href = "' . URL('') . '";</script>';
+            echo resultPageMsg("danger", lang('general.login_failed'), lang('general.security_code') . " is Wrong");
+            echo '<script>ajaxPostManual(\'' . URL('captcha/reload') . '\',\'captcha_image_security_code\');</script>';
         }
     }
 

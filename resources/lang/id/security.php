@@ -59,6 +59,7 @@ return [
     "title_user_profile" => "User Profile",
     "title_change_password" => "Merubah Kata Sandi",
     "username" => "Nama Pengguna",
+    "id_username" => "ID Pengguna",
     "firstname" => "Nama Depan",
     "lastname" => "Nama Belakang",
     "fullname" => "Fullname",

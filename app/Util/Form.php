@@ -746,11 +746,17 @@ class Form {
         if ($this->formOption['MAXLENGTH'] != null) {
             $maxlength = ' maxlength="' . $this->formOption['MAXLENGTH'] . '"';
         }
-
-        $captcha .= '<div class="col-md-4" style="background:#fffdcd;" 
-            id="captcha_image_' . $this->formOption['ID'] . '">
-                <img src="' . $_SESSION[SESSION_CAPTCHA]['image_src'] . '" alt="CAPTCHA code"></div>';
-        $captcha .= '<div class="col-md-8" style="background:#fffdcd;height:73px;">
+        if ($this->formOption['FORM_LAYOUT'] == 'horizontal') {
+            $captcha .= '<div class="col-md-4" style="background:#fffdcd;" id="captcha_image_' . $this->formOption['ID'] . '">';
+        } else {
+            $captcha .= '<div style="background:#fffdcd;" id="captcha_image_' . $this->formOption['ID'] . '">';
+        }
+        $captcha .= '<img src="' . $_SESSION[SESSION_CAPTCHA]['image_src'] . '" alt="CAPTCHA code">';
+        $captcha .= '</div>';
+        if ($this->formOption['FORM_LAYOUT'] == 'horizontal') {
+            $captcha .= '<div class="col-md-8" style="background:#fffdcd;height:73px;">';
+        }
+        $captcha .= '
             <div class="input-group">
             <input type="' . $type . '" 
             style="width:200px;margin-top:18px;"

@@ -15,7 +15,7 @@ define('BODY_CONTENT_PATH', 'page/body.html.php');
 define('FOOTER_PATH', 'page/footer.html.php');
 define('FOOTER_MODAL', 'view/template/footer_modal_login.html.php');
 define('FOOTER_SCRIPT', 'page/footer_script.html.php');
-define('PAGE_MEMBER_PATH', 'page/page-member.html.php');
+define('PAGE_MEMBER_PATH', 'view/template/member/page-member.html.php');
 define('END_PAGE_MEMBER_PATH', 'view/template/member/end-page-member.html.php');
 define('PAGE_404', 'view/404/index.php');
 
@@ -49,6 +49,7 @@ define('SLASH', "/");
 
 define('ZERO', "0");
 define('ONE', "1");
+define('TWO', "2");
 
 define('PASSWORD_DEFAULT_USER', "tripoin123");
 

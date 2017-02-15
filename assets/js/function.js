@@ -27,13 +27,13 @@ function downMinus(id) {
 }
 
 $("[type='number']").keypress(function (e) {
-     //if the letter is not digit then display error and don't type anything
-     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+    //if the letter is not digit then display error and don't type anything
+    if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
         //display error message
 //        $("#errmsg").html("Digits Only").show().fadeOut("slow");
-               return false;
+        return false;
     }
-   });
+});
 
 $(document).keydown(function (e) {
     var event = window.event ? window.event : e;
@@ -811,14 +811,18 @@ function postAjax(id, content) {
         spinner.attr("style", "position: absolute;left: 50%;top: 50%;margin-top: 0px;margin-left: -40px;");
 //    $('#modal-body-login').hide();
 //    $('#modal-body-login').html(spinnerLoader());
-        var datastring = form.serialize();
-        var formData = getJsonFromUrl(datastring);
-//                alert(formData);
+//        var datastring = form.serialize();
+//        var formData = getJsonFromUrl(datastring);
+        var datastring = document.getElementById(id);
         var page = form.attr("action");
         $.ajax({
             type: "POST",
             url: page,
-            data: datastring,
+//            data: datastring,
+            data: new FormData(datastring),
+            contentType: false,
+            cache: false,
+            processData: false,
             success: function (data) {
 //            alert(data);
                 $('#' + content).html(data);
@@ -1608,4 +1612,16 @@ function postRegisterMember(page, content) {
             }
         });
     }
+}
+
+function ajaxGetPage(page, id) {
+    $('#' + id).html(highlightLoader());
+    $.ajax({
+        type: "POST",
+        url: page,
+        success: function (data) {
+            $('#' + id).html(data);
+            $("[rel='tooltip']").tooltip();
+        }
+    });
 }

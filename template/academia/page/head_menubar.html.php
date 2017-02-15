@@ -101,15 +101,61 @@ $sfLanguage = new SecurityFunctionLanguage();
                         ?>
                     </ul>
                 </nav>
-                <!--end  nav menu-->	
-                <?php // echo json_encode($db->getResult());  ?>
-                
-                <div class="search pull-right">
-                    <div class="search-box">
-                        <span class="search-open"><i class="fa fa-user" rel="tooltip" onclick="ajaxPostModal('<?=URL('member/login');?>','LOGIN PAGE')" title="<?=lang('general.sign_in');?>"></i></span>
+                <!--end  nav menu-->
+
+                <?php
+                $data_user_login = checkUserLogin();
+                if (empty($data_user_login)) {
+                    ?>
+
+                    <div class="search pull-right" id="btnUserLogin">
+                        <div class="search-box">
+                            <span class="search-open">
+                                <i class="fa fa-user" rel="tooltip" onclick="ajaxPostModal('<?= URL('member/login'); ?>', 'LOGIN PAGE')" title="<?= lang('general.sign_in'); ?>"></i>
+                            </span>
+                        </div>
                     </div>
-                </div>
-                
+                <?php } else { ?>
+                    <nav class="menu">
+                        <ul class="navid pull-right">
+                            <li>
+                                <a href="">HI, <?= $_SESSION[SESSION_FULLNAME_GUEST]; ?></a>
+                                <?php
+                                $db->connect();
+                                $db->select(
+                                        $secFuncAssg->getEntity(), $secFuncAssg->getFunction()->getEntity() . ".*", array($secFuncAssg->getFunction()->getEntity(), $secFuncAssg->getGroup()->getEntity()), $secFuncAssg->getFunction()->getEntity() . DOT . $secFuncAssg->getFunction()->getId() . EQUAL . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getFunctionId()
+                                        . " AND " . $secFuncAssg->getGroup()->getEntity() . DOT . $secFuncAssg->getGroup()->getId() . EQUAL . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getGroupId()
+                                        . " AND " . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getStatus() . EQUAL . ONE
+                                        . " AND " . $secFuncAssg->getFunction()->getEntity() . DOT . $secFuncAssg->getStatus() . EQUAL . ONE
+                                        . " AND " . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getGroupId() . EQUAL . $_SESSION[SESSION_GROUP_GUEST]
+                                        . " AND " . $secFuncAssg->getFunction()->getEntity() . DOT . $secFuncAssg->getFunction()->getTypeId() . EQUAL . ONE
+                                        . " AND " . $secFuncAssg->getFunction()->getEntity() . DOT . $secFuncAssg->getFunction()->getLevel() . EQUAL . ZERO
+                                        . " AND " . $secFuncAssg->getGroup()->getEntity() . DOT . $secFuncAssg->getGroup()->getId() . EQUAL . $_SESSION[SESSION_GROUP_GUEST], $secFuncAssg->getFunctionAssignmentOrder() . ASC
+                                );
+//                        echo $db->getSql();
+                                $function_parent_member = $db->getResult();
+//                                print_r($_SESSION[SESSION_GROUP_GUEST]);
+                                ?>
+                                <ul>
+                                   
+                                    <li>
+                                        <a href="<?= URL('/page/dashboard'); ?>">
+                                            <i class="fa fa-pie-chart"></i>
+                                            DASHBOARD
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= URL('/page/logout'); ?>">
+                                            <i class="fa fa-sign-out"></i>
+                                            <?= lang('general.sign_out'); ?>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                <?php } ?>
+
                 <div class="search pull-right">
                     <div class="search-box">
                         <input type="text" class="form_control" placeholder="<?= lang('general.search'); ?>" />
@@ -118,7 +164,7 @@ $sfLanguage = new SecurityFunctionLanguage();
 
 
                 </div>
-                
+
             </div>
             <!--end nav item -->
         </div>	
@@ -126,7 +172,7 @@ $sfLanguage = new SecurityFunctionLanguage();
 
 </div>
 <script>
-    $(function(){
+    $(function () {
         $('[rel="tooltip"]').tooltip();
     })
-    </script>
+</script>

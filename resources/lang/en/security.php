@@ -59,6 +59,7 @@ return [
     "title_user_profile" => "User Profile",
     "title_change_password" => "Change Password",
     "username" => "Username",
+    "id_username" => "Username",
     "firstname" => "Firstname",
     "lastname" => "Lastname",
     "fullname" => "Fullname",

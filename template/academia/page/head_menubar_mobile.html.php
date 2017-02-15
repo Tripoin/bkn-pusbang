@@ -16,7 +16,9 @@ $sfLanguage = new SecurityFunctionLanguage();
             <!--nav item-->
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <!--  nav menu-->
+
                 <div class="mobile_memu">
+
                     <nav>
                         <ul class="navid">
                             <?php
@@ -84,9 +86,15 @@ $sfLanguage = new SecurityFunctionLanguage();
                             }
                             ?>
                         </ul>
+                        <div class="search pull-right">
+                            <div class="search-box">
+                                <span class="search-open"><i class="fa fa-user" rel="tooltip" onclick="ajaxPostModal('<?= URL('member/login'); ?>', 'LOGIN PAGE')" title="<?= lang('general.sign_in'); ?>"></i></span>
+                            </div>
+                        </div>
                     </nav>
                     <!--end  nav menu-->	
                     <?php // echo json_encode($db->getResult());  ?>
+
                 </div>
             </div>
             <!--end nav item -->

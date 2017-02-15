@@ -5,6 +5,9 @@
 <script src="<?= getTemplateURL('/assets/js/jquery.meanmenu.min.js'); ?>"></script>
 <script src="<?= getTemplateURL('/assets/js/owl.carousel.min.js'); ?>"></script>
 <script src="<?= getTemplateURL('/assets/js/jquery.scrollUp.min.js'); ?>"></script>
+<script src="<?= URL('/assets/plugins/bootstrap-fileinput/bootstrap-fileinput.js'); ?>" ></script>
+<script src="<?= URL('/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js'); ?>" ></script>
+<script src="<?= URL('/assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js'); ?>" ></script>
 <script src="<?= URL('/assets/plugins/bootstrap-toastr/toastr.min.js'); ?>" type="text/javascript"></script>
 <script src="<?= URL('/assets/plugins/select2/js/select2.full.min.js'); ?>" type="text/javascript"></script>
 <script src="<?= getTemplateURL('/assets/js/atvImg-min.js'); ?>"></script>
@@ -28,14 +31,14 @@
         <div class="modal-content">
             <div class="modal-header" id="modal-header-self" style="background:#d01c24;">
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="col-md-11">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-md-10 col-sm-10 col-xs-10">
                             <h4 class="modal-title" id="modal-title-self" style="color:#FFFFFF">
 
 
                             </h4>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-2 col-sm-2 col-xs-2">
                             <button type="button" class="btn btn-circle btn-icon-only pull-right close" data-dismiss="modal">
                                 <i class="fa fa-times" ></i>
                             </button>

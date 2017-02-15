@@ -138,11 +138,18 @@ class FunctionAssignment extends Controller {
 
         $id = $_POST['id'];
         $function = $db->selectByID($sf, $sf->getId() . EQUAL . $id);
-
+        if (!is_array($function[0])) {
+            $function = array();
+        }
         if (!empty($function)) {
 //            print_r($function);
-            $actionType = $db->selectByID($sap, $sap->getId() . EQUAL . $function[0][$sf->getActionParameter()]);
-            $exActionType = explode(',', $actionType[0][$sap->getName()]);
+            if ($function[0][$sf->getActionParameter()] == "") {
+                $actionTypeName = "view";
+            } else {
+                $actionType = $db->selectByID($sap, $sap->getId() . EQUAL . $function[0][$sf->getActionParameter()]);
+                $actionTypeName = $actionType[0][$sap->getName()];
+            }
+            $exActionType = explode(',', $actionTypeName);
 
             $combobox = '<label class="control-label" for="focusedinput"><span style="color:red;">*</span>' . lang('security.action_type') . '</label>
                 <div id="comp_acton_type">
@@ -199,7 +206,9 @@ class FunctionAssignment extends Controller {
             $id_group = $_POST['id_group'];
             $db->connect();
             $db->select(
-                    $sfa->getEntity(), $sfa->getFunction()->getId(), array($sfa->getFunction()->getEntity(), $sfa->getGroup()->getEntity()), $sfa->getFunction()->getEntity() . DOT . $sfa->getFunction()->getId() . EQUAL . $sfa->getEntity() . DOT . $sfa->getFunctionId()
+                    $sfa->getEntity(), $sfa->getFunction()->getEntity() . "." . $sfa->getFunction()->getId(), array(
+                $sfa->getFunction()->getEntity(),
+                $sfa->getGroup()->getEntity()), $sfa->getFunction()->getEntity() . DOT . $sfa->getFunction()->getId() . EQUAL . $sfa->getEntity() . DOT . $sfa->getFunctionId()
                     . " AND " . $sfa->getGroup()->getEntity() . DOT . $sfa->getGroup()->getId() . EQUAL . $sfa->getEntity() . DOT . $sfa->getGroupId()
                     . " AND " . $sfa->getEntity() . DOT . $sfa->getStatus() . EQUAL . "1"
                     . " AND " . $sfa->getEntity() . DOT . $sfa->getGroupId() . EQUAL . $id_group
@@ -207,6 +216,7 @@ class FunctionAssignment extends Controller {
                     , $sfa->getFunctionAssignmentOrder() . ' ASC'
             );
             $function_parent = $db->getResult();
+//            print_r($function_parent);
             LOGGER($function_parent);
             LOGGER("tet");
             $listIdParent = '';
@@ -332,7 +342,7 @@ class FunctionAssignment extends Controller {
                 $sfa->getFunctionAssignmentOrder() => $ttl_order
                     ), $sfa->getId() . EQUAL . $result_save[0]);
             $rs_update = $db->getResult();
-            
+
             $db->select($sfa->getFunction()->getEntity(), $sfa->getFunction()->getLevel(), null, $sfa->getFunction()->getId() . EQUAL . $function_id);
             $cek_level = $db->getResult();
 //            LOGGER($db->getSql());
