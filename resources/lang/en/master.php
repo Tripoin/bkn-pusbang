@@ -37,6 +37,7 @@ return [
     "subject_name"=>"Subject Name",
     "budget_type_id"=>"Budget Type",
     "budget_amount"=>"Buget Amount",
+
     "curriculum"=>"Curriculum",
 
 ];

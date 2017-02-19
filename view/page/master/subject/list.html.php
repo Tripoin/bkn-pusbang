@@ -2,6 +2,9 @@
 <?php
 //echo $_SESSION[SESSION_ADMIN_AUTHORIZATION];
 //    $Datatable->styleHeader(array("text-align:center;"));
+
+
+$Datatable->createButton(false);
 $Datatable->deleteCollection(false);
 $Datatable->styleColumn(array("text-align:center;width:5%;", "", "","text-align:center","text-align:center","text-align:center", "text-align:center;width:150px;"));
 $Datatable->header(array(lang("general.no"), lang("general.code")
@@ -28,7 +31,6 @@ foreach ($list_data['item'] as $value) {
             , $action_edit . $action_delete));
     $no += 1;
 }
-
 echo $Datatable->show();
 ?>
 <!--<script>location.reload(true);</script>-->
