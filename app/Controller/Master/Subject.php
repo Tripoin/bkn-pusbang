@@ -23,7 +23,7 @@ use app\Util\RestClient\TripoinRestClient;
 class Subject extends ControllerRestUI {
 
     //put your code here
-    public $data_facility = array();
+    public $budget_types= array();
 
     public function __construct() {
         $this->restURL = IRestURLConstant::MASTER . SLASH . IRestURLConstant::SUBJECT;
@@ -53,12 +53,12 @@ class Subject extends ControllerRestUI {
     }
 
     public function create() {
-        $this->data_facility = getRestLov(IRestURLConstant::MASTER . SLASH . IRestURLConstant::FACILITY);
+        $this->budget_types = getRestLov(IRestURLConstant::MASTER . SLASH . IRestURLConstant::BUDGET_TYPE);
         parent::create();
     }
 
     public function edit() {
-        $this->data_facility = getRestLov(IRestURLConstant::MASTER . SLASH . IRestURLConstant::FACILITY);
+        $this->budget_types = getRestLov(IRestURLConstant::MASTER . SLASH . IRestURLConstant::BUDGET_TYPE);
         parent::edit();
     }
 

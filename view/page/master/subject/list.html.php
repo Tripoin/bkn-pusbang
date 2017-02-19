@@ -9,17 +9,22 @@ $Datatable->header(array(lang("general.no"), lang("general.code")
     , lang("master.budget_type_id"),lang("master.curriculum"), lang("general.action")));
 $no = $list_data['from'];
 
-//print_r($list_data['item']);
+
 foreach ($list_data['item'] as $value) {
 
         $action_delete = $Button->url($this->deleteUrl)->value($value->id)->buttonDelete();
         $action_edit = $Button->url($this->editUrl)->value($value->id)->buttonEdit();
-        $kurikulum = 'Kurikulum';
+        $curicullum_detail = '<a href="javascript:void(0)" onclick="pageDetails(' . $value->budget_type_id . ')">' . ' Link to Curicullum detail' . '</a>';
 
 
+ //   $budgetName='';
+//if(isset($value->budget_type_id)){
+  //  $budgetName=$value->budget_type_id->name;
+
+//}
     $Datatable->body(array($no, $value->code, $value->name
-            , $value->budget_type_id->name
-            , $kurikulum
+            , $value->budget_type_id
+            , $curicullum_detail
             , $action_edit . $action_delete));
     $no += 1;
 }

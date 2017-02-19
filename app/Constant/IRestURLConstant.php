@@ -22,6 +22,8 @@ class IRestURLConstant {
     
     
     //COMMAND API MASTER
+    const SUBJECT = '130001';
+    const BUDGET_TYPE = '130004';
     const FACILITY = '130059';
     const ROOM = '130049';
     const SUPPORT_ROOM = '130065';
@@ -29,5 +31,4 @@ class IRestURLConstant {
     const ANSWER_TYPE = '130051';
     const CATEGORY_ASSESS =  '130063';
     const QUESTION_CATEGORY = '130025';
-    const SUBJECT = '130001';
 }

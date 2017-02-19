@@ -33,7 +33,10 @@ return [
     "category_assess"=> "Kategory Penilaian",
     "question_category" => "Kategori Pertanyaan",
     "slider"=>"Slider",
-    "budget_type_id"=>"Tipe",
+    "subject"=>"Subjek",
+    "subject_name"=>"Nama Subjek",
+    "budget_type_id"=>"Tipe Anggaran",
+    "budget_amount"=>"Jumlah Anggaran",
     "curriculum"=>"Kurikulum",
 
 ];
