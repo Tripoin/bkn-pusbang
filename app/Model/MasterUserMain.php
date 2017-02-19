@@ -25,8 +25,108 @@ class MasterUserMain extends GeneralAuditrail {
     public $user_profile_id = 'user_profile_id';
     public $front_degree = 'front_degree';
     public $behind_degree = 'behind_degree';
+    public $participantTypeId = 'participant_type_id';
+    public $workingUnitId = 'working_unit_id';
+    public $idNumber = 'id_number';
+    public $userProfileId = 'user_profile_id';
+    public $governmentClassificationId = 'government_classification_id';
+    public $jsonOccupation = 'json_occupation';
+    public $degree = 'degree';
+    public $college = 'college';
+    public $faculty = 'faculty';
+    public $studyProgram = 'study_program';
+    public $graduationYear = 'graduation_year';
+
+    function getGraduationYear() {
+        return $this->graduationYear;
+    }
+
+    function setGraduationYear($graduationYear) {
+        $this->graduationYear = $graduationYear;
+    }
+
+    function getFaculty() {
+        return $this->faculty;
+    }
+
+    function setFaculty($faculty) {
+        $this->faculty = $faculty;
+    }
 
     
+    function getStudyProgram() {
+        return $this->studyProgram;
+    }
+
+
+    function setStudyProgram($studyProgram) {
+        $this->studyProgram = $studyProgram;
+    }
+
+    function getCollege() {
+        return $this->college;
+    }
+
+    function setCollege($college) {
+        $this->college = $college;
+    }
+
+    function getDegree() {
+        return $this->degree;
+    }
+
+    function setDegree($degree) {
+        $this->degree = $degree;
+    }
+
+    function getJsonOccupation() {
+        return $this->jsonOccupation;
+    }
+
+    function setJsonOccupation($jsonOccupation) {
+        $this->jsonOccupation = $jsonOccupation;
+    }
+
+    function getGovernmentClassificationId() {
+        return $this->governmentClassificationId;
+    }
+
+    function setGovernmentClassificationId($governmentClassificationId) {
+        $this->governmentClassificationId = $governmentClassificationId;
+    }
+
+    function getUserProfileId() {
+        return $this->userProfileId;
+    }
+
+    function setUserProfileId($userProfileId) {
+        $this->userProfileId = $userProfileId;
+    }
+
+    function getIdNumber() {
+        return $this->idNumber;
+    }
+
+    function setIdNumber($idNumber) {
+        $this->idNumber = $idNumber;
+    }
+
+    function getWorkingUnitId() {
+        return $this->workingUnitId;
+    }
+
+    function setWorkingUnitId($workingUnitId) {
+        $this->workingUnitId = $workingUnitId;
+    }
+
+    function getParticipantTypeId() {
+        return $this->participantTypeId;
+    }
+
+    function setParticipantTypeId($participantTypeId) {
+        $this->participantTypeId = $participantTypeId;
+    }
+
     function getFront_degree() {
         return $this->front_degree;
     }
@@ -35,7 +135,6 @@ class MasterUserMain extends GeneralAuditrail {
         $this->front_degree = $front_degree;
     }
 
-    
     function getBehind_degree() {
         return $this->behind_degree;
     }
@@ -44,7 +143,7 @@ class MasterUserMain extends GeneralAuditrail {
         $this->behind_degree = $behind_degree;
     }
 
-        function getUser_profile_id() {
+    function getUser_profile_id() {
         return $this->user_profile_id;
     }
 

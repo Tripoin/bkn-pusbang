@@ -158,4 +158,6 @@ return [
     'subtitle'=>'Sub Judul',
     'link'=>'Link',
     'empty_if_there_option'=>'Kosongkan Jika ada pada Pilihan',
+    "male"=>"Laki-laki",
+    "female"=>"Perempuan",
 ];

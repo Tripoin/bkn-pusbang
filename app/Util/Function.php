@@ -35,34 +35,33 @@ function checkUserLogin() {
     if (isset($_SESSION[SESSION_USERNAME_GUEST])) {
         $username = array(SESSION_USERNAME_GUEST => $_SESSION[SESSION_USERNAME_GUEST]);
     }
-    
+
     $email = array();
     if (isset($_SESSION[SESSION_EMAIL_GUEST])) {
         $email = array(SESSION_EMAIL_GUEST => $_SESSION[SESSION_EMAIL_GUEST]);
     }
-    
+
     $fullname = array();
     if (isset($_SESSION[SESSION_FULLNAME_GUEST])) {
         $fullname = array(SESSION_FULLNAME_GUEST => $_SESSION[SESSION_FULLNAME_GUEST]);
     }
-    
+
     $group = array();
     if (isset($_SESSION[SESSION_GROUP_GUEST])) {
-        if($_SESSION[SESSION_GROUP_GUEST] == 2){
+        if ($_SESSION[SESSION_GROUP_GUEST] == 2) {
             $group = array(SESSION_GROUP_GUEST => $_SESSION[SESSION_GROUP_GUEST]);
         } else {
-            $res_group = $db->selectByID($groupModel, $groupModel->getId().EQUAL.$_SESSION[SESSION_GROUP_GUEST]);
-            if($res_group[0][$groupModel->getParentId()] ==2){
+            $res_group = $db->selectByID($groupModel, $groupModel->getId() . EQUAL . $_SESSION[SESSION_GROUP_GUEST]);
+            if ($res_group[0][$groupModel->getParentId()] == 2) {
                 $group = array(SESSION_GROUP_GUEST => $_SESSION[SESSION_GROUP_GUEST]);
             } else {
                 $group = array();
             }
         }
-        
     }
-    
-    if(!empty($group)){
-        $user_data = array_merge($username,$email,$fullname,$group);
+
+    if (!empty($group)) {
+        $user_data = array_merge($username, $email, $fullname, $group);
     }
     return $user_data;
 }
@@ -320,7 +319,7 @@ function endPageMember($page = null) {
     echo '</div>';
     echo '</div>';
     include_once FILE_PATH(END_PAGE_MEMBER_PATH);
-    include_once getTemplatePath('page/end-content-page.html.php'); 
+    include_once getTemplatePath('page/end-content-page.html.php');
     echo '<script>
     $(function () {
 
@@ -2241,6 +2240,16 @@ function getParentManual($entity, $id_field, $name_field, $parent_field, $parent
         }
     }
     return $tx;
+}
+
+function convertGender($type) {
+    $result = "";
+    if ($type == "M") {
+        $result = lang('general.male');
+    } else if ($type == "F") {
+        $result = lang('general.female');
+    }
+    return $result;
 }
 
 ?>

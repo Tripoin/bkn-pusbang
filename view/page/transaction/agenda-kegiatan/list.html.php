@@ -20,13 +20,14 @@ foreach ($list_data['item'] as $value) {
       $value[$this->modelSubject->getParentId()],
       $value[$this->modelSubject->getName()]); */
     $panitia = '<a href="javascript:void(0)" onclick="pageAssignment(' . $value[$data->getId()] . ')">' . lang("transaction.organizer") . '</a>';
+    $list_peserta = '<a href="javascript:void(0)" onclick="pageListPeserta(' . $value[$data->getId()] . ')">' . $value[$data->getQuota()] . '</a>';
     $detailSubject = '<a href="javascript:void(0)" onclick="pageDetails(' . $value[$data->getId()] . ')">' . subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]) . '</a>';
     $Datatable->body(array(
         $no,
         $value[$data->getSubjectName()],
 //        $value[$data->getName()],
         $detailSubject,
-        $value[$data->getQuota()],
+        $list_peserta,
         $panitia,
         $action_edit . $action_delete));
     $no += 1;
@@ -42,6 +43,10 @@ echo $Datatable->show();
     });
     function pageAssignment(activity) {
         $('#urlPage').val('<?= URL(getAdminTheme() . $this->indexUrl . '/assignment/'); ?>' + activity);
+        postAjaxPagination();
+    }
+    function pageListPeserta(activity) {
+        $('#urlPage').val('<?= URL(getAdminTheme() . $this->indexUrl . '/list-peserta/'); ?>' + activity);
         postAjaxPagination();
     }
     function pageDetails(activity) {

@@ -18,10 +18,21 @@ use app\Model\TransactionActivity;
 use app\Model\TransactionActivityDetails;
 use app\Constant\IURLConstant;
 use app\Constant\IViewConstant;
+use app\Model\MasterParticipantType;
+use app\Model\MasterWorkingUnit;
+use app\Model\MasterGovernmentAgencies;
 use app\Model\MasterUserAssignment;
 use app\Model\MasterUserMain;
 use app\Model\MasterCurriculum;
 use app\Model\MasterSubject;
+use app\Model\MasterReligion;
+use app\Model\MasterContact;
+use app\Model\MasterAddress;
+use app\Model\MasterProvince;
+use app\Model\MasterCity;
+use app\Model\MasterDistrict;
+use app\Model\MasterVillage;
+use app\Model\MasterGovernmentClassification;
 use app\Model\SecurityUserProfile;
 use app\Model\SecurityUser;
 use app\Model\SecurityGroup;
@@ -177,10 +188,102 @@ class AgendaKegiatan extends Controller {
         include_once FILE_PATH(IViewConstant::AGENDA_KEGIATAN_VIEW_INDEX . '/assignment/list.html.php');
     }
 
+    public function listPeserta($activity) {
+        $Form = new Form();
+        $Datatable = new DataTable();
+        $Button = new Button();
+        $db = new Database();
+//        $group = new SecurityGroup();
+        $data = new MasterUserAssignment();
+        $userMain = new MasterUserMain();
+        if ($_POST['per_page'] == "") {
+            $Datatable->per_page = 5;
+        } else {
+            $Datatable->per_page = $_POST['per_page'];
+        }
+
+//        }
+        $Datatable->urlDeleteCollection($this->urlDeleteCollection);
+        $Datatable->searchFilter($this->search_filter);
+        $Datatable->current_page = $_POST['current_page'];
+        if ($_POST['current_page'] == '') {
+            $Datatable->current_page = 1;
+        }
+        $search = $_POST['search_pagination'];
+        if ($_POST['search_by'] == '') {
+            $search = " AND " . $userMain->getEntity() . ".code LIKE  '%" . $search . "%'";
+        } else if ($_POST['search_by'] == 'null') {
+            $search = " AND " . $userMain->getEntity() . ".code LIKE  '%" . $search . "%'";
+        } else {
+            $search = " AND " . $userMain->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search . "%'";
+        }
+
+//        echo $Datatable->search;
+
+        $whereList = $data->getEntity() . "." . $data->getActivity_id() . EQUAL . $activity . " AND " .
+                $userMain->getEntity() . "." . $userMain->getId() . EQUAL . $data->getUser_main_id() . $search;
+
+        $list_data = $Datatable->select_pagination($data, $data->getEntity(), $whereList, $userMain->getEntity(), $userMain->getEntity(), $this->orderBy, ""
+                . $data->getEntity() . "." . $data->getId() . " as id,"
+                . $userMain->getEntity() . "." . $userMain->getId() . " as user_main_id,"
+                . $userMain->getEntity() . "." . $userMain->getCode() . " as code,"
+                . $data->getEntity() . "." . $data->getDescription() . " as description,"
+                . $userMain->getEntity() . "." . $userMain->getName() . " as name", $data->getEntity() . "." . $data->getId());
+//        print_r($list_data);
+        include_once FILE_PATH(IViewConstant::AGENDA_KEGIATAN_VIEW_INDEX . '/peserta/list.html.php');
+    }
+
+    public function viewPeserta($activity_id) {
+        $Form = new Form();
+        $id = $_POST['id'];
+        $db = new Database();
+        $m_act = new TransactionActivity();
+        $m_user_assign = new MasterUserAssignment();
+        $m_user_main = new MasterUserMain();
+        $m_participant_type = new MasterParticipantType();
+        $m_working_unit = new MasterWorkingUnit();
+        $m_gov_agencies = new MasterGovernmentAgencies();
+        $user = new SecurityUser();
+        $userProfile = new SecurityUserProfile();
+        $masterReligion = new MasterReligion();
+        $masterContact = new MasterContact();
+        $masterAddress = new MasterAddress();
+        $masterProvince = new MasterProvince();
+        $masterCity = new MasterCity();
+        $masterDistrict = new MasterDistrict();
+        $masterVillage = new MasterVillage();
+        $mGovClass = new MasterGovernmentClassification();
+
+
+
+        $dt_activity = $db->selectByID($m_act, $m_act->getId() . EQUAL . $activity_id);
+
+        $dt_user_main = $db->selectByID($m_user_main, $m_user_main->getId() . EQUAL . $id);
+
+        $dt_participant_type = $db->selectByID($m_participant_type, $m_participant_type->getId() . EQUAL . $dt_user_main[0][$m_user_main->getParticipantTypeId()]);
+
+        $dt_working_unit = $db->selectByID($m_working_unit, $m_working_unit->getId() . EQUAL . $dt_user_main[0][$m_user_main->getWorkingUnitId()]);
+
+        $dt_gov_agencies = $db->selectByID($m_gov_agencies, $m_gov_agencies->getId() . EQUAL . $dt_working_unit[0][$m_working_unit->getGovernment_agency_id()]);
+
+        $dt_user_profile = $db->selectByID($userProfile, $userProfile->getId() . EQUAL . $dt_user_main[0][$m_user_main->getUserProfileId()]);
+        $dt_religion = $db->selectByID($masterReligion, $masterReligion->getId() . EQUAL . $dt_user_profile[0][$userProfile->getReligionId()]);
+        $dt_contact = $db->selectByID($masterContact, $masterContact->getId() . EQUAL . $dt_user_profile[0][$userProfile->getContactId()]);
+        $dt_address = $db->selectByID($masterAddress, $masterAddress->getId() . EQUAL . $dt_user_profile[0][$userProfile->getAddressId()]);
+        $dt_province = $db->selectByID($masterProvince, $masterProvince->getId() . EQUAL . $dt_address[0][$masterAddress->getProvinceId()]);
+        $dt_city = $db->selectByID($masterCity, $masterCity->getId() . EQUAL . $dt_address[0][$masterAddress->getCityId()]);
+        $dt_district = $db->selectByID($masterDistrict, $masterDistrict->getId() . EQUAL . $dt_address[0][$masterAddress->getDistrictId()]);
+        $dt_village = $db->selectByID($masterVillage, $masterVillage->getId() . EQUAL . $dt_address[0][$masterAddress->getVillageId()]);
+        
+        $dt_gov_class = $db->selectByID($mGovClass, $mGovClass->getId() . EQUAL . $dt_user_main[0][$m_user_main->getGovernmentClassificationId()]);
+//        MasterGovernmentClassification
+//        print_r($dt_user_profile);
+        include_once FILE_PATH(IViewConstant::AGENDA_KEGIATAN_VIEW_INDEX . '/peserta/view.html.php');
+    }
+
     public function createPanitia($activity) {
         $Form = new Form();
         $id = 0;
-
         include_once FILE_PATH(IViewConstant::AGENDA_KEGIATAN_VIEW_INDEX . '/assignment/create.html.php');
     }
 
@@ -446,7 +549,7 @@ class AgendaKegiatan extends Controller {
         } else {
             $trainerName = $_POST['trainer_name'];
             $ar_dt_trainer = array(
-                $data->getUserMainId()=>null,
+                $data->getUserMainId() => null,
                 $data->getUserMainName() => $trainerName,
             );
         }
@@ -498,7 +601,7 @@ class AgendaKegiatan extends Controller {
 
 
         $rs_cur = $db->selectByID($curriculumModel, $curriculumModel->getId() . EQUAL . $curriculumId);
-        
+
         $ar_dt = array(
             $data->getActivityId() => $activity,
             $data->getStartTime() => $date . " " . $startActivity,
@@ -531,12 +634,12 @@ class AgendaKegiatan extends Controller {
         } else {
             $trainerName = $_POST['trainer_name'];
             $ar_dt_trainer = array(
-                $data->getUserMainId()=>null,
+                $data->getUserMainId() => null,
                 $data->getUserMainName() => $trainerName,
             );
         }
-        
-        $db->update($data->getEntity(),  array_merge($ar_dt, $ar_dt_cr, $ar_dt_trainer), $data->getId() . EQUAL . $id);
+
+        $db->update($data->getEntity(), array_merge($ar_dt, $ar_dt_cr, $ar_dt_trainer), $data->getId() . EQUAL . $id);
         $result = $db->getResult();
         if ($result[0] == 1) {
             echo toastAlert('success', 'Update Activity Details Success', 'Data Has been Update Successfully');

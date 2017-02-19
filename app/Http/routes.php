@@ -218,6 +218,9 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/details/{activity}/delete', 'app\Controller\Transaction\AgendaKegiatan@deleteDetails');
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/details/{activity}/deleteCollection', 'app\Controller\Transaction\AgendaKegiatan@deleteCollectionDetails');
             
+            Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/list-peserta/{activity}', 'app\Controller\Transaction\AgendaKegiatan@listPeserta');
+            Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/list-peserta/{activity}/view', 'app\Controller\Transaction\AgendaKegiatan@viewPeserta');
+            
             Routes::setScaffolding(IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL, 'app\Controller\Approval\ParticipantRegistration');
         });
     }
