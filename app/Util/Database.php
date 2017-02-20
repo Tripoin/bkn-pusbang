@@ -158,32 +158,7 @@ class Database {
     }
 
     public function log_masuk($msg) {
-//        $resuser = $GLOBALS['resuser'];
-//        $users = $GLOBALS['user_server'];
-        if ($this->insert_log == true) {
-            $ip_user = $_SERVER['REMOTE_ADDR'];
-//        $username[0]['user_code']
-            $browser = $_SERVER['HTTP_USER_AGENT'];
-            $date_now = date('Y-m-d');
-            $file_url = FILE_PATH("logs/log-rest-" . $date_now . ".logs");
-            $txt = 'Date : ' . date('Y-m-d h:i:s') . "\n";
-            $txt .= 'URL : ' . $_SERVER['REQUEST_URI'] . "\n";
-            $txt .= 'IP USER : ' . $ip_user . "\n";
-            $txt .= 'browser : ' . $browser . "\n";
-            $txt .= 'BODY : ' . json_encode($_POST) . "\n";
-            $txt .= 'Messages :';
-            if (!file_exists($file_url)) {
-                $myfile = fopen($file_url, "wb");
-                $txt .= $msg;
-                $txt .= "\n" . "\n";
-//                fwrite($myfile, $txt);
-//                fclose($myfile);
-            } else {
-                $txt .= $msg;
-                $txt .= "\n" . "\n";
-//                file_put_contents($file_url, $txt . PHP_EOL, FILE_APPEND | LOCK_EX);
-            }
-        }
+
     }
 
     public function selectRelation($table) {

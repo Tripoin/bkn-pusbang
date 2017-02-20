@@ -71,7 +71,8 @@ class AgendaKegiatanMember {
         $id = $_POST['id'];
         $db = new Database();
         $activityDetails = new TransactionActivityDetails();
-        
+        $activity = new TransactionActivity();
+        $data_activity = $db->selectByID($activity, $activity->getId().EQUAL.$id);
         $data_activity_details = $db->selectByID($activityDetails, $activityDetails->getActivityId().EQUAL.$id);
 //        print_r($data_activity_details);
         include_once FILE_PATH(IViewMemberConstant::ACTIVITY_VIEW_VIEW_INDEX);
