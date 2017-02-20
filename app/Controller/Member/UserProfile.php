@@ -147,6 +147,7 @@ class UserProfile {
             $placeofbirth = $_POST['place'];
             $birthdate = $_POST['birthdate'];
             $telephone = $_POST['telephone'];
+            $email = $_POST['email'];
 
             $uploadImg = $_FILES['upload_img'];
 //            print_r($uploadImg);
@@ -173,6 +174,7 @@ class UserProfile {
                 $db->update($users->getEntity(), array(
                     $users->getModifiedOn() => date('Y-m-d h:i:s'),
                     $users->getModifiedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
+                    $users->getEmail() => $email,
                         ), $users->getId() . "=" . $user[0][$users->getId()]);
                 $rs_upd_user = $db->getResult();
 //                print_r($rs_upd_user);
@@ -213,8 +215,11 @@ class UserProfile {
                     echo toastAlert("error", lang('general.title_update_error'), lang('general.message_update_error'));
                     echo "<script>$(function(){postAjaxGetValue('" . URL('/page/member/user-profile/changeProfile') . "','form-user','" . json_encode($_POST) . "'); })</script>";
                 } else {
+                    square_crop(URL($path . $exp_up[1]), FILE_PATH('uploads/member/' . $_SESSION[SESSION_USERNAME_GUEST] . '/profile.jpg'), 250);
                     echo toastAlert("success", lang('general.title_update_success'), lang('general.message_update_success'));
-                    echo '<script>$(function(){$("#img-user-profile").attr("src","' . URL($path . $exp_up[1]) . '") })</script>';
+                    if ($uploadImg["name"][0] != "") {
+                        echo '<script>$(function(){$("#img-user-profile").attr("src","' . URL('uploads/member/' . $_SESSION[SESSION_USERNAME_GUEST] . '/profile.jpg') . '") })</script>';
+                    }
                     echo "<script>$(function(){postAjaxGetValue('" . URL('/page/member/user-profile/changeProfile') . "','form-user','" . json_encode($_POST) . "'); })</script>";
                 }
             } else {

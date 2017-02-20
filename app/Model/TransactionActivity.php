@@ -29,13 +29,22 @@ class TransactionActivity extends GeneralAuditrail {
     public $quota = 'quota';
     public $generation = 'generation';
     public $location = 'location';
+    public $budgetTypeName = 'budget_type_name';
     public $startActivity = 'start_activity';
     public $endActivity = 'end_activity';
     public $yearActivity = 'year_activity';
     public $duration = 'duration';
     public $unitId = 'unit_id';
 
-    public function search($key) {
+    function getBudgetTypeName() {
+        return $this->budgetTypeName;
+    }
+
+    function setBudgetTypeName($budgetTypeName) {
+        $this->budgetTypeName = $budgetTypeName;
+    }
+
+        public function search($key) {
         return $this->$key;
     }
 

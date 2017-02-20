@@ -38,4 +38,10 @@ return [
     "working_unit"=>"Working Unit",
     "office_telephone"=>"Office Telephone",
     "office_fax"=>"Office Fax",
+    "agenda_activity"=>"Agenda Activity",
+    "alumni"=>"Alumni",
+    "budget_of_type"=>"Budget Of Type",
+    "execution_time"=>"Execution Time",
+    "participant"=>"Participant",
+    "year"=>"Year",
 ];

@@ -23,6 +23,8 @@ $db->select(
 $cek_user_profile = $db->getResult();
 //$db = new Database();
 //        $db->connect();
+square_crop(URL('uploads/member/' . $_SESSION[SESSION_USERNAME_GUEST] . '/' . $cek_user_profile[0][$sup->getPathimage()]), 
+                        FILE_PATH('uploads/member/' . $_SESSION[SESSION_USERNAME_GUEST] . '/profile.jpg'),250);
 ?>
 <style>
     .menu-member > a{
@@ -44,7 +46,7 @@ $cek_user_profile = $db->getResult();
     <div class="col-md-offset-0 col-lg-offset-0 col-lg-12 zeropad" >
         <div class="panel panel-default col-md-3" style="text-align:center;background: #F6F6F6">
             <a href="<?= URL('/page/member/user-profile'); ?>">
-                <img src="<?= URL('uploads/member/' . $_SESSION[SESSION_USERNAME_GUEST] . '/' . $cek_user_profile[0][$sup->getPathimage()]); ?>"  <?= notFoundImg('noim.jpg'); ?>
+                <img src="<?= URL('uploads/member/' . $_SESSION[SESSION_USERNAME_GUEST] . '/profile.jpg');?>"  <?= notFoundImg('noim.jpg'); ?>
                      style="box-shadow: 0px 0px 0px 2px #888888;margin-top: -100px;"
                      id="img-user-profile"
                      class="img-circle" alt="<?= $_SESSION[SESSION_FULLNAME_GUEST]; ?>" width="200" height="200"/>

@@ -63,6 +63,7 @@ return [
     "firstname" => "Firstname",
     "lastname" => "Lastname",
     "fullname" => "Fullname",
+    "parent" => "Parent",
     "email" => "Email",
     "expired_date" => "Expired Date",
     "place_of_birth" => "Place Of Birth",

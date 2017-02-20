@@ -14,8 +14,17 @@ class SecurityFunctionLanguage {
     private $code = 'code';
     private $name = 'name';
     private $languageId = 'language_id';
+    private $id = 'id';
     
-    
+    function getId() {
+        return $this->id;
+    }
+
+    function setId($id) {
+        $this->id = $id;
+    }
+
+        
     function getCode() {
         return $this->code;
     }

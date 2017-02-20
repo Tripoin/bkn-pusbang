@@ -40,6 +40,8 @@
     <link href="<?= URL('/assets/plugins/bootstrap-fileinput/bootstrap-fileinput.css'); ?>" rel="stylesheet" type="text/css">
     <link href="<?= URL('/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'); ?>" rel="stylesheet" type="text/css">
     <link href="<?= URL('/assets/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css'); ?>" rel="stylesheet" type="text/css">
+    <link href="<?= URL('/assets/plugins/datatables/datatables.min.css'); ?>" rel="stylesheet" type="text/css">
+    <link href="<?= URL('/assets/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css'); ?>" rel="stylesheet" type="text/css">
     
     <script src="<?= getTemplateURL('/assets/js/modernizr-2.8.3.min.js'); ?>"></script>
     <script src="<?= getTemplateURL('/assets/js/jquery-1.11.3.min.js'); ?>"></script>
