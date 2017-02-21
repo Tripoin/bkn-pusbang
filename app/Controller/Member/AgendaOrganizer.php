@@ -325,11 +325,11 @@ class AgendaOrganizer {
 //        echo $Datatable->search;
 
         $whereList = $masterApproval->getEntity() . "." . $masterApproval->getApprovalCategoryId() . EQUAL . "3" . " AND " .
-//                $masterApproval->getEntity() . "." . $masterApproval->getApprovalDetailId() . EQUAL . $masterWaitingList->getEntity() . DOT . $masterWaitingList->getId() . " AND " .
+                $masterWaitingList->getEntity() . DOT . $masterWaitingList->getId() . EQUAL . $masterApproval->getEntity() . "." . $masterApproval->getApprovalDetailId() . " AND " .
                 $masterApproval->getEntity() . "." . $masterApproval->getApprovalCategoryId() . EQUAL . $masterApprovalCategory->getEntity() . DOT . $masterApprovalCategory->getId() . " AND " .
                 $masterWaitingList->getActivityId() . EQUAL . $activity .
-                $search." GROUP BY ".$masterWaitingList->getEntity() . "." . $masterWaitingList->getActivityId();
-        
+                $search . " GROUP BY " . $masterWaitingList->getEntity() . "." . $masterWaitingList->getActivityId();
+
         $list_data = $Datatable->select_pagination($masterApproval, $masterApproval->getEntity(), $whereList, array($masterWaitingList->getEntity(), $masterApprovalCategory->getEntity()), $masterWaitingList->getEntity(), null, ""
                 . $masterApproval->getEntity() . "." . $masterApproval->getId() . ","
                 . $masterWaitingList->getEntity() . "." . $masterWaitingList->getId() . " as waiting_list_id,"
@@ -441,8 +441,8 @@ class AgendaOrganizer {
             echo '<script>$(function () {postAjaxEdit(\'' . URL(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/view/' . $activity_id . '/detail') . '\',\'id=' . $userMainId . '&waiting_list_id=' . $id . '\');});</script>';
         }
     }
-    
-    public function rejectDetail($activity_id){
+
+    public function rejectDetail($activity_id) {
         echo '<form role="form" id="form-message-reject" class="signup" action="#" onsubmit="return false;" method="POST" novalidate="novalidate">';
         echo Form()->id('message')->title(lang('member.rejection_notes'))->placeholder('Tulis Alasan Penolakan')->textarea();
         echo Button()->icon('fa fa-times')
@@ -450,11 +450,11 @@ class AgendaOrganizer {
                 ->alertBtnMsg(lang('member.yes'))
                 ->alertMsg(lang('member.notif_rejected_candidates'))
                 ->alertTitle(lang('general.reject'))
-                ->onClick('postAjaxByAlertFormManual(this,\''.URL(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/view/'.$activity_id.'/reject').'\',\'form-message-reject\',\'id='.$_POST['id'].'&user_main_id='.$_POST['user_main_id'].'\')')
+                ->onClick('postAjaxByAlertFormManual(this,\'' . URL(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/view/' . $activity_id . '/reject') . '\',\'form-message-reject\',\'id=' . $_POST['id'] . '&user_main_id=' . $_POST['user_main_id'] . '\')')
                 ->label(lang('general.reject'))->buttonManual();
         echo '</form>';
-        
-        echo '<script>$(function(){$(\'#modal-title-self\').html(\''.lang('member.detail_approved_reject_candidates')." | ".lang('member.rejection_notes').'\')});</script>';
+
+        echo '<script>$(function(){$(\'#modal-title-self\').html(\'' . lang('member.detail_approved_reject_candidates') . " | " . lang('member.rejection_notes') . '\')});</script>';
     }
 
     public function detailApproval($activity_id) {
