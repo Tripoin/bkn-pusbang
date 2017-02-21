@@ -244,6 +244,9 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/list-peserta/{activity}/view', 'app\Controller\Transaction\AgendaKegiatan@viewPeserta');
 
             Routes::setScaffolding(IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL, 'app\Controller\Approval\ParticipantRegistration');
+            Routes::set(IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL.'/{activity}/approve', 'app\Controller\Approval\ParticipantRegistration@approveData');
+            Routes::set(IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL.'/{activity}/reject', 'app\Controller\Approval\ParticipantRegistration@rejectData');
+            Routes::set(IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL.'/{activity}/reject-detail', 'app\Controller\Approval\ParticipantRegistration@rejectDetail');
         });
     }
 }

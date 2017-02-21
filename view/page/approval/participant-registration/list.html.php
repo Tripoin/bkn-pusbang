@@ -1,5 +1,5 @@
-
 <?php
+use app\Constant\IURLConstant;
 //    $Datatable->styleHeader(array("text-align:center;"));
 $Datatable->styleColumn(array("text-align:center;width:5%;", "", "", "text-align:center;width:100px;"));
 $Datatable->header(array(lang("general.no"), lang("general.code"),
@@ -17,14 +17,17 @@ foreach ($list_data['item'] as $value) {
     $action_delete = $Button->url($this->deleteUrl)->value($value[$data->getId()])->buttonDelete();
     $action_edit = $Button->url($this->editUrl)->value($value[$data->getId()])->buttonEdit();
 
-    $status = '<a href="javascript:void(0)"  onclick="postAjaxEdit(\'' . $this->editUrl . '\',\'id=' . $value[$data->getId()] . '\')" rel="tooltip" title="' . lang("approval.detail") . '">' . lang("approval.detail") . '</a>';
-    if ($value['excecuted'] == "N") {
-        $status = lang("approval.rejected");
-    } else if ($value['excecuted'] == "Y") {
-        $status = lang("approval.approved");
+    $status = "";
+    if (is_null($value[$data->getStatus()])) {
+        $status = '<a href="javascript:void(0)" '
+                . 'onclick="postAjaxEdit(\'' . URL(getAdminTheme().IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $value[$data->getId()] . '\')">' . lang("general.detail") . '</a>';
+    } else if ($value[$data->getStatus()] == 1) {
+        $status = '<span class="text-success">' . lang('general.approve') . '</span>';
+    } else if($value[$data->getStatus()] == 0) {
+        $status = '<span class="text-danger">' . lang('general.reject') . '</span>';
     }
-    $Datatable->body(array($no, 
-        '<a href="#">' .$value[$data->getCode()].'</a>',
+    $Datatable->body(array($no,
+        '<a href="javascript:void(0)" onclick="postAjaxEdit(\'' . URL(getAdminTheme().IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $value[$data->getId()] . '\')">' . $value[$data->getCode()] . '</a>',
         $value['approval_category_name'],
         $value['username'],
         $status,

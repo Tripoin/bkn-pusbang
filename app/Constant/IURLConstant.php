@@ -25,10 +25,8 @@ interface IURLConstant {
 //    const FUNCTION_DELETE_URL = 'page/security/function/delete';
 //    const FUNCTION_SAVE_URL = 'page/security/function/save';
 //    const FUNCTION_UPDATE_URL = 'page/security/function/update';
-    
     //FUNCTION ASSIGNMENT
     const FUNCTION_ASSIGNMENT_INDEX_URL = '/security/function-assignment';
-    
     //URL USER 
     const USER_INDEX_URL = '/security/user';
 //    const USER_CREATE_URL = 'page/security/user/create';
@@ -52,8 +50,6 @@ interface IURLConstant {
     const POST_SAVE_URL = '/posting/post/save';
     const POST_UPDATE_URL = '/posting/post/update';
     const POST_DELETE_COLLECTION_URL = '/posting/post/deleteCollection';
-    
-    
     //URL POSTING ASSIGNMENT
     const POST_ASSIGN_INDEX_URL = '/posting/post-assign';
     const POST_ASSIGN_CREATE_URL = '/posting/post-assign/create';
@@ -64,7 +60,6 @@ interface IURLConstant {
     const POST_ASSIGN_UPDATE_URL = '/posting/post-assign/update';
     const POST_ASSIGN_DELETE_COLLECTION_URL = '/posting/post-assign/deleteCollection';
     const POST_ASSIGN_LIST_POST = '/posting/post-assign/list-post';
-    
     //URL MASTER BANK ASSIGNMENT
     const MASTER_BANK_INDEX_URL = 'master/bank';
     const MASTER_BANK_ACCOUNT_INDEX_URL = 'master/bank-account';
@@ -72,8 +67,6 @@ interface IURLConstant {
     const MASTER_VIDEO_SEMINAR_INDEX_URL = 'master/video-seminar';
     const MASTER_AUTHOR_INDEX_URL = 'master/author';
     const MASTER_PRICE_INDEX_URL = 'master/price';
-    
-    
     const MASTER_ROOM_INDEX_URL = '/master/room';
     const MASTER_FACILITY_INDEX_URL = '/master/facility';
     const MASTER_SUPPORT_ROOM_INDEX_URL = '/master/support-room';
@@ -84,9 +77,9 @@ interface IURLConstant {
     const MASTER_QUESTION_CATEGORY_INDEX_URL = '/master/question-category';
     const DOCUMENTATION_INDEX_URL = '/documentation';
     const MASTER_SLIDER_INDEX_URL = '/master/slider';
-	const AGENDA_KEGIATAN_INDEX_URL = '/agenda-kegiatan';
+    const AGENDA_KEGIATAN_INDEX_URL = '/agenda-kegiatan';
     const MASTER_SUBJECT_INDEX_URL = '/master/subject';
-    
+
     /**/
     const APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL = '/approval/participant-registration';
 

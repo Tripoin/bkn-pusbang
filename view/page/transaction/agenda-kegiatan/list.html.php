@@ -1,5 +1,15 @@
-
 <?php
+
+use app\Model\MasterWaitingList;
+use app\Model\MasterUserAssignment;
+use app\Util\Database;
+
+
+$db = new Database();
+$waitingList = new MasterWaitingList();
+$userAssignment =  new MasterUserAssignment();
+$db->connect();
+
 //    $Datatable->styleHeader(array("text-align:center;"));
 $Datatable->styleColumn(array("text-align:center;width:5%;", "", "", "text-align:center;width:100px;"));
 $Datatable->header(array(lang("general.no"), lang("transaction.type"),
@@ -19,8 +29,11 @@ foreach ($list_data['item'] as $value) {
       $this->modelSubject->getName(), $this->modelSubject->getParentId(),
       $value[$this->modelSubject->getParentId()],
       $value[$this->modelSubject->getName()]); */
+    $db->sql("SELECT COUNT(".$userAssignment->getId().") as count FROM ".$userAssignment->getEntity()." WHERE ".$userAssignment->getActivity_id().EQUAL.$value[$data->getId()]);
+        $rs_assign = $db->getResult();
+    
     $panitia = '<a href="javascript:void(0)" onclick="pageAssignment(' . $value[$data->getId()] . ')">' . lang("transaction.organizer") . '</a>';
-    $list_peserta = '<a href="javascript:void(0)" onclick="pageListPeserta(' . $value[$data->getId()] . ')">' . $value[$data->getQuota()] . '</a>';
+    $list_peserta = '<a href="javascript:void(0)" onclick="pageListPeserta(' . $value[$data->getId()] . ')">' .$rs_assign[0]['count']."/". $value[$data->getQuota()] . '</a>';
     $detailSubject = '<a href="javascript:void(0)" onclick="pageDetails(' . $value[$data->getId()] . ')">' . subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]) . '</a>';
     $Datatable->body(array(
         $no,

@@ -16,8 +16,29 @@
 namespace app\Controller\Approval;
 
 use app\Controller\Base\Controller;
+use app\Model\TransactionActivity;
+use app\Model\TransactionActivityDetails;
 use app\Model\MasterApproval;
 use app\Model\MasterApprovalCategory;
+use app\Model\MasterWaitingList;
+use app\Model\MasterParticipantType;
+use app\Model\MasterWorkingUnit;
+use app\Model\MasterGovernmentAgencies;
+use app\Model\MasterUserAssignment;
+use app\Model\MasterUserMain;
+use app\Model\MasterCurriculum;
+use app\Model\MasterSubject;
+use app\Model\MasterReligion;
+use app\Model\MasterContact;
+use app\Model\MasterAddress;
+use app\Model\MasterProvince;
+use app\Model\MasterCity;
+use app\Model\MasterDistrict;
+use app\Model\MasterVillage;
+use app\Model\MasterGovernmentClassification;
+use app\Model\SecurityUserProfile;
+use app\Model\SecurityUser;
+use app\Model\SecurityGroup;
 use app\Constant\IURLConstant;
 use app\Constant\IViewConstant;
 use app\Util\Form;
@@ -94,14 +115,182 @@ class ParticipantRegistration extends Controller {
     }
 
     public function edit() {
-        parent::edit();
+        $Form = new Form();
+        $id = $_POST['id'];
+        $db = new Database();
+        $db->connect();
+        $masterApproval = new MasterApproval();
+        $masterApprovalCategory = new MasterApprovalCategory();
+        $masterWaitingList= new MasterWaitingList();
+        $m_act = new TransactionActivity();
+        $m_user_assign = new MasterUserAssignment();
+        $m_user_main = new MasterUserMain();
+        $m_participant_type = new MasterParticipantType();
+        $m_working_unit = new MasterWorkingUnit();
+        $m_gov_agencies = new MasterGovernmentAgencies();
+        $user = new SecurityUser();
+        $userProfile = new SecurityUserProfile();
+        $masterReligion = new MasterReligion();
+        $masterContact = new MasterContact();
+        $masterAddress = new MasterAddress();
+        $masterProvince = new MasterProvince();
+        $masterCity = new MasterCity();
+        $masterDistrict = new MasterDistrict();
+        $masterVillage = new MasterVillage();
+        $mGovClass = new MasterGovernmentClassification();
+
+        $dt_approval = $db->selectByID($masterApproval, $masterApproval->getId() . EQUAL . $id);
+        $dt_approval_category = $db->selectByID($masterApprovalCategory, $masterApprovalCategory->getId() . EQUAL . $dt_approval[0][$masterApproval->getApprovalCategoryId()]);
+        
+        $dt_waiting_list = $db->selectByID($masterWaitingList, $masterWaitingList->getId() . EQUAL . $dt_approval[0][$masterApproval->getApprovalDetailId()]);
+
+        $dt_activity = $db->selectByID($m_act, $m_act->getId() . EQUAL . $dt_waiting_list[0][$masterWaitingList->getActivityId()]);
+//        print_r($dt_activity);
+        $dt_user_main = $db->selectByID($m_user_main, $m_user_main->getId() . EQUAL . $dt_waiting_list[0][$masterWaitingList->getUserMainId()]);
+
+        $dt_participant_type = $db->selectByID($m_participant_type, $m_participant_type->getId() . EQUAL . $dt_user_main[0][$m_user_main->getParticipantTypeId()]);
+
+        $dt_working_unit = $db->selectByID($m_working_unit, $m_working_unit->getId() . EQUAL . $dt_user_main[0][$m_user_main->getWorkingUnitId()]);
+
+        $dt_gov_agencies = $db->selectByID($m_gov_agencies, $m_gov_agencies->getId() . EQUAL . $dt_working_unit[0][$m_working_unit->getGovernment_agency_id()]);
+
+        $dt_user_profile = $db->selectByID($userProfile, $userProfile->getId() . EQUAL . $dt_user_main[0][$m_user_main->getUserProfileId()]);
+        $dt_religion = $db->selectByID($masterReligion, $masterReligion->getId() . EQUAL . $dt_user_profile[0][$userProfile->getReligionId()]);
+        $dt_contact = $db->selectByID($masterContact, $masterContact->getId() . EQUAL . $dt_user_profile[0][$userProfile->getContactId()]);
+        $dt_address = $db->selectByID($masterAddress, $masterAddress->getId() . EQUAL . $dt_user_profile[0][$userProfile->getAddressId()]);
+        $dt_province = $db->selectByID($masterProvince, $masterProvince->getId() . EQUAL . $dt_address[0][$masterAddress->getProvinceId()]);
+        $dt_city = $db->selectByID($masterCity, $masterCity->getId() . EQUAL . $dt_address[0][$masterAddress->getCityId()]);
+        $dt_district = $db->selectByID($masterDistrict, $masterDistrict->getId() . EQUAL . $dt_address[0][$masterAddress->getDistrictId()]);
+        $dt_village = $db->selectByID($masterVillage, $masterVillage->getId() . EQUAL . $dt_address[0][$masterAddress->getVillageId()]);
+
+        $dt_gov_class = $db->selectByID($mGovClass, $mGovClass->getId() . EQUAL . $dt_user_main[0][$m_user_main->getGovernmentClassificationId()]);
+
+//        MasterGovernmentClassification
+//        print_r($dt_user_profile);
+        include_once FILE_PATH(IViewConstant::APPROVAL_PARTICIPANT_REGISTRATION_VIEW_INDEX . '/edit.html.php');
+//        parent::edit();
     }
 
     public function create() {
-        $this->setChangevalueNewEdit(array(
-            $this->modelData->getImg() => Form()->id('img')->title('Image Url')->getInputMedia(),
-        ));
         parent::create();
     }
+    
+    public function approveData($activity_id) {
+        $id = $_POST['id'];
+        $userMainId = $_POST['user_main_id'];
+        $masterWaitingList = new MasterWaitingList();
+        $masterApproval = new MasterApproval();
+        $masterUserAssignment = new MasterUserAssignment();
+        $db = new Database();
+        $db->connect();
+        
+        $rs_approve = $db->selectByID($masterApproval, $masterApproval->getApprovalDetailId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . "3");
+        
+        $db->update($masterWaitingList->getEntity(), array(
+            $masterWaitingList->getApprovedBy() => $_SESSION[SESSION_USERNAME_GUEST],
+            $masterWaitingList->getIsApproved() => 1,
+            $masterWaitingList->getApprovedOn() => date('Y-m-d h:i:s'),
+                ), $masterWaitingList->getId() . EQUAL . $id);
+        $result = $db->getResult();
+        if ($result[0] == 1) {
+            $db->update($masterApproval->getEntity(), array(
+                $masterApproval->getStatus() => 1,
+                $masterApproval->getModifiedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
+                $masterApproval->getModifiedOn() => date('Y-m-d h:i:s'),
+                    ), $masterApproval->getApprovalDetailId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . "3");
+//            echo $db->getSql();
+            $result_2 = $db->getResult();
+//            print_r($result_2);
+            if ($result_2[0] == 1) {
+                $code_user_assignment = createRandomBooking();
+                $db->insert($masterUserAssignment->getEntity(), array(
+                    $masterUserAssignment->getCode() => $code_user_assignment,
+                    $masterUserAssignment->getName() => $code_user_assignment . '-' . $_SESSION[SESSION_USERNAME_GUEST],
+                    $masterUserAssignment->getUser_main_id() => $userMainId,
+                    $masterUserAssignment->getActivity_id() => $activity_id,
+                    $masterUserAssignment->getCreatedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
+                    $masterUserAssignment->getCreatedOn() => date('Y-m-d h:i:s'),
+                ));
+                $result_3 = $db->getResult();
+                if (is_numeric($result_3[0])) {
+                    echo toastAlert('success', lang('general.title_approved_success'), lang('general.message_approved_success'));
+                    echo '<script>$(function () {postAjaxPagination();});</script>';
+                } else {
+                    $db->update($masterApproval->getEntity(), array(
+                        $masterApproval->getStatus() => null,
+                        $masterApproval->getModifiedByUsername() => null,
+                        $masterApproval->getModifiedOn() => null,
+                            ), $masterApproval->getApprovalDetailId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . "3");
+                    echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+                    echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme().IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()]. '\');});</script>';
+                }
+            } else {
+                echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+                echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme().IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()]. '\');});</script>';
+            }
+        } else {
+            echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+            echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme().IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()]. '\');});</script>';
+        }
+    }
+
+    public function rejectData($activity_id) {
+        $id = $_POST['id'];
+        $userMainId = $_POST['user_main_id'];
+        $message = $_POST['message'];
+        $masterWaitingList = new MasterWaitingList();
+        $masterApproval = new MasterApproval();
+//        $masterUserAssignment = new MasterUserAssignment();
+        
+        $db = new Database();
+        $db->connect();
+        
+        $rs_approve = $db->selectByID($masterApproval, $masterApproval->getApprovalDetailId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . "3");
+        
+        $db->update($masterWaitingList->getEntity(), array(
+            $masterWaitingList->getApprovedBy() => $_SESSION[SESSION_USERNAME_GUEST],
+            $masterWaitingList->getIsApproved() => 0,
+            $masterWaitingList->getApprovedMessage() => $message,
+            $masterWaitingList->getApprovedOn() => date('Y-m-d h:i:s'),
+                ), $masterWaitingList->getId() . EQUAL . $id);
+        $result = $db->getResult();
+        if ($result[0] == 1) {
+            $db->update($masterApproval->getEntity(), array(
+                $masterApproval->getStatus() => 0,
+                $masterApproval->getModifiedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
+                $masterApproval->getModifiedOn() => date('Y-m-d h:i:s'),
+                    ), $masterApproval->getApprovalDetailId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . "3");
+//            echo $db->getSql();
+            $result_2 = $db->getResult();
+//            print_r($result_2);
+            if ($result_2[0] == 1) {
+                echo toastAlert('success', lang('general.title_rejected_success'), lang('general.message_rejected_success'));
+                echo '<script>$(function () {$(\'#myModal_self\').modal(\'hide\');postAjaxPagination();});</script>';
+            } else {
+                echo toastAlert('error', lang('general.title_rejected_error'), lang('general.message_rejected_error'));
+                echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme().IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()]. '\');});</script>';
+            }
+        } else {
+            echo toastAlert('error', lang('general.title_rejected_error'), lang('general.message_rejected_error'));
+            echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme().IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()]. '\');});</script>';
+        }
+    }
+
+    public function rejectDetail($activity_id) {
+        echo '<form role="form" id="form-message-reject" class="signup" action="#" onsubmit="return false;" method="POST" novalidate="novalidate">';
+        echo Form()->id('message')->title(lang('member.rejection_notes'))->placeholder('Tulis Alasan Penolakan')->textarea();
+        echo Button()->icon('fa fa-times')
+                ->setClass('btn btn-warning')
+                ->alertBtnMsg(lang('member.yes'))
+                ->alertMsg(lang('member.notif_rejected_candidates'))
+                ->alertTitle(lang('general.reject'))
+                ->onClick('postAjaxByAlertFormManual(this,\'' . URL(getAdminTheme().IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/' . $activity_id . '/reject') . '\',\'form-message-reject\',\'id=' . $_POST['id'] . '&user_main_id=' . $_POST['user_main_id'] . '\')')
+                ->label(lang('general.reject'))->buttonManual();
+        echo '</form>';
+
+        echo '<script>$(function(){$(\'#modal-title-self\').html(\'' . lang('member.detail_approved_reject_candidates') . " | " . lang('member.rejection_notes') . '\')});</script>';
+    }
+    
+    
 
 }
