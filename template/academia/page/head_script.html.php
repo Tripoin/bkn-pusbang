@@ -31,9 +31,9 @@
 //    if($them_style == 'default'){
     ?>
     <link href="<?= getTemplateURL('/assets/css/themes/mobile-'.$them_style.'.css?tripoin=').  createRandomBooking(); ?>" rel="stylesheet"  type="text/css">
-    <link href="<?= getTemplateURL('/assets/css/themes/'.$them_style.'.css?tripoin=').  createRandomBooking(); ?>" rel="stylesheet"  type="text/css">
+    
     <link href="<?= getTemplateURL('/assets/css/responsive.css'); ?>" rel="stylesheet"  type="text/css">
-    <link href="<?= getTemplateURL('/assets/css/form.css?tripoin='.  createRandomBooking()); ?>" rel="stylesheet"  type="text/css">
+    
     <link href="<?= URL('/assets/plugins/select2/css/select2.css'); ?>" rel="stylesheet" type="text/css">
     <link href="<?= URL('/assets/plugins/select2/css/select2-bootstrap.min.css'); ?>" rel="stylesheet" type="text/css">
     <link href="<?= URL('/assets/plugins/bootstrap-toastr/toastr.min.css'); ?>" rel="stylesheet" type="text/css">
@@ -42,7 +42,10 @@
     <link href="<?= URL('/assets/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css'); ?>" rel="stylesheet" type="text/css">
     <link href="<?= URL('/assets/plugins/datatables/datatables.min.css'); ?>" rel="stylesheet" type="text/css">
     <link href="<?= URL('/assets/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css'); ?>" rel="stylesheet" type="text/css">
+    <link href="<?= URL('/assets/plugins/bootstrap-sweetalert/sweetalert.css'); ?>" rel="stylesheet" type="text/css">
     
+    <link href="<?= getTemplateURL('/assets/css/themes/'.$them_style.'.css?tripoin=').  createRandomBooking(); ?>" rel="stylesheet"  type="text/css">
+    <link href="<?= getTemplateURL('/assets/css/form.css?tripoin='.  createRandomBooking()); ?>" rel="stylesheet"  type="text/css">
     <script src="<?= getTemplateURL('/assets/js/modernizr-2.8.3.min.js'); ?>"></script>
     <script src="<?= getTemplateURL('/assets/js/jquery-1.11.3.min.js'); ?>"></script>
     <script src="<?= URL('/assets/plugins/galleria/galleria-1.5.1.js'); ?>"></script>

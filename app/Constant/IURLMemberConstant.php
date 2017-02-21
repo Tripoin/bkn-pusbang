@@ -15,6 +15,12 @@ namespace app\Constant;
  */
 interface IURLMemberConstant {
     //put your code here
+    /*AGENDA ACTIVITY URL*/
     const AGENDA_ACTIVITY_URL = 'member/activity-agenda';
     const ACTIVITY_URL = self::AGENDA_ACTIVITY_URL.'/activity';
+    const AGENDA_ORGANIZER_URL = self::AGENDA_ACTIVITY_URL.'/agenda-organizer';
+    
+    /*REGISTRATION URL*/
+    const REGISTRATION_URL = 'member/registration';
+    const ACTIVITY_REGISTRATION_URL = self::REGISTRATION_URL.'/activity';
 }

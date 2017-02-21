@@ -98,25 +98,9 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
 
 
     Routes::set('page/member/dashboard', 'app\Controller\Member\Dashboard@index');
-    
-    
-    Routes::set('page/member/gallery', 'app\Controller\Member\Gallery@index');
-    Routes::set('page/member/gallery/list', 'app\Controller\Member\Gallery@lists');
-    Routes::set('page/member/gallery/create', 'app\Controller\Member\Gallery@create');
-    Routes::set('page/member/gallery/edit', 'app\Controller\Member\Gallery@edit');
-    Routes::set('page/member/gallery/update', 'app\Controller\Member\Gallery@update');
-    Routes::set('page/member/gallery/view', 'app\Controller\Member\Gallery@view');
-    Routes::set('page/member/gallery/delete', 'app\Controller\Member\Gallery@delete');
-    Routes::set('page/member/gallery/save', 'app\Controller\Member\Gallery@save');
 
-    Routes::set('page/member/article', 'app\Controller\Member\Article@index');
-    Routes::set('page/member/article/list', 'app\Controller\Member\Article@lists');
-    Routes::set('page/member/article/create', 'app\Controller\Member\Article@create');
-    Routes::set('page/member/article/edit', 'app\Controller\Member\Article@edit');
-    Routes::set('page/member/article/update', 'app\Controller\Member\Article@update');
-    Routes::set('page/member/article/view', 'app\Controller\Member\Article@view');
-    Routes::set('page/member/article/delete', 'app\Controller\Member\Article@delete');
-    Routes::set('page/member/article/save', 'app\Controller\Member\Article@save');
+
+
 
     Routes::set('page/member/notification', 'app\Controller\Member\Notification@index');
     Routes::set('page/member/notification/list', 'app\Controller\Member\Notification@lists');
@@ -125,10 +109,43 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
     Routes::set('page/member/video-seminar', 'app\Controller\Member\VideoSeminar@index');
     Routes::set('page/member/video-seminar/list', 'app\Controller\Member\VideoSeminar@lists');
     Routes::set('page/member/video-seminar/view', 'app\Controller\Member\VideoSeminar@view');
-    
+
     Routes::set(IURLMemberConstant::ACTIVITY_URL, 'app\Controller\Member\AgendaKegiatanMember@index');
-    Routes::set(IURLMemberConstant::ACTIVITY_URL.'/list', 'app\Controller\Member\AgendaKegiatanMember@listData');
-    Routes::set(IURLMemberConstant::ACTIVITY_URL.'/view', 'app\Controller\Member\AgendaKegiatanMember@view');
+    Routes::set(IURLMemberConstant::ACTIVITY_URL . '/list', 'app\Controller\Member\AgendaKegiatanMember@listData');
+    Routes::set(IURLMemberConstant::ACTIVITY_URL . '/view', 'app\Controller\Member\AgendaKegiatanMember@view');
+
+    Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_URL, 'app\Controller\Member\RegistrationActivity@index');
+    Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_URL . '/list', 'app\Controller\Member\RegistrationActivity@listData');
+    Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_URL . '/approve', 'app\Controller\Member\RegistrationActivity@approved');
+
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL, 'app\Controller\Member\AgendaOrganizer@index');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/list', 'app\Controller\Member\AgendaOrganizer@listData');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/approve', 'app\Controller\Member\AgendaOrganizer@approved');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/view/{activity}', 'app\Controller\Member\AgendaOrganizer@view');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/view/{activity}/detail', 'app\Controller\Member\AgendaOrganizer@detailApproval');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/view/{activity}/approve', 'app\Controller\Member\AgendaOrganizer@approveData');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/view/{activity}/reject', 'app\Controller\Member\AgendaOrganizer@rejectData');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/view/{activity}/reject-detail', 'app\Controller\Member\AgendaOrganizer@rejectDetail');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/assignment/{activity}', 'app\Controller\Member\AgendaOrganizer@listPanitia');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/assignment/{activity}/create', 'app\Controller\Member\AgendaOrganizer@createPanitia');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/assignment/{activity}/edit', 'app\Controller\Member\AgendaOrganizer@editPanitia');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/assignment/{activity}/list-user', 'app\Controller\Member\AgendaOrganizer@listUserPanitia');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/assignment/{activity}/save', 'app\Controller\Member\AgendaOrganizer@savePanitia');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/assignment/{activity}/update', 'app\Controller\Member\AgendaOrganizer@updatePanitia');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/assignment/{activity}/delete', 'app\Controller\Member\AgendaOrganizer@deletePanitia');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/assignment/{activity}/deleteCollection', 'app\Controller\Member\AgendaOrganizer@deleteCollectionPanitia');
+
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/details/{activity}', 'app\Controller\Member\AgendaOrganizer@listDetails');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/details/{activity}/create', 'app\Controller\Member\AgendaOrganizer@createDetails');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/details/{activity}/edit', 'app\Controller\Member\AgendaOrganizer@editDetails');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/details/{activity}/list-user', 'app\Controller\Member\AgendaOrganizer@listDetails');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/details/{activity}/save', 'app\Controller\Member\AgendaOrganizer@saveDetails');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/details/{activity}/update', 'app\Controller\Member\AgendaOrganizer@updateDetails');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/details/{activity}/delete', 'app\Controller\Member\AgendaOrganizer@deleteDetails');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/details/{activity}/deleteCollection', 'app\Controller\Member\AgendaOrganizer@deleteCollectionDetails');
+
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/list-peserta/{activity}', 'app\Controller\Member\AgendaOrganizer@listPeserta');
+    Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/list-peserta/{activity}/view', 'app\Controller\Member\AgendaOrganizer@viewPeserta');
 }
 
 //ROUTES ADMIN
@@ -204,7 +221,7 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
             Routes::setScaffolding(IURLConstant::MASTER_SLIDER_INDEX_URL, 'app\Controller\Master\Slider');
             Routes::setScaffolding(IURLConstant::MASTER_SUBJECT_INDEX_URL, 'app\Controller\Master\Subject');
             Routes::setScaffolding(IURLConstant::AGENDA_KEGIATAN_INDEX_URL, 'app\Controller\Transaction\AgendaKegiatan');
-            
+
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/assignment/{activity}', 'app\Controller\Transaction\AgendaKegiatan@listPanitia');
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/assignment/{activity}/create', 'app\Controller\Transaction\AgendaKegiatan@createPanitia');
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/assignment/{activity}/edit', 'app\Controller\Transaction\AgendaKegiatan@editPanitia');
@@ -213,7 +230,7 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/assignment/{activity}/update', 'app\Controller\Transaction\AgendaKegiatan@updatePanitia');
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/assignment/{activity}/delete', 'app\Controller\Transaction\AgendaKegiatan@deletePanitia');
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/assignment/{activity}/deleteCollection', 'app\Controller\Transaction\AgendaKegiatan@deleteCollectionPanitia');
-            
+
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/details/{activity}', 'app\Controller\Transaction\AgendaKegiatan@listDetails');
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/details/{activity}/create', 'app\Controller\Transaction\AgendaKegiatan@createDetails');
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/details/{activity}/edit', 'app\Controller\Transaction\AgendaKegiatan@editDetails');
@@ -222,10 +239,10 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/details/{activity}/update', 'app\Controller\Transaction\AgendaKegiatan@updateDetails');
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/details/{activity}/delete', 'app\Controller\Transaction\AgendaKegiatan@deleteDetails');
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/details/{activity}/deleteCollection', 'app\Controller\Transaction\AgendaKegiatan@deleteCollectionDetails');
-            
+
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/list-peserta/{activity}', 'app\Controller\Transaction\AgendaKegiatan@listPeserta');
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/list-peserta/{activity}/view', 'app\Controller\Transaction\AgendaKegiatan@viewPeserta');
-            
+
             Routes::setScaffolding(IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL, 'app\Controller\Approval\ParticipantRegistration');
         });
     }

@@ -6,7 +6,7 @@ include_once getTemplatePath('page/content-page.html.php');
 </div>';
 ?>
 <?php include_once FILE_PATH(PAGE_MEMBER_PATH); ?>
-<div class="signup col-md-9"  style="box-shadow: 0px 0px 0px 1px #B7B7B7;text-align: left;margin-top: -100px;">
+<div class="signup col-md-9 member-page">
     <form id="signup_form" autocomplete="off" action="<?= URL('page/member/user-profile/change-password/proses'); ?>" method="POST" class="form" onsubmit="return false;">
         <!--<p><?= lang('general.message_register_have_account'); ?></p>-->
         <fieldset id="account">

@@ -10,6 +10,7 @@
 <script src="<?= URL('/assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js'); ?>" ></script>
 <script src="<?= URL('/assets/plugins/bootstrap-toastr/toastr.min.js'); ?>" type="text/javascript"></script>
 <script src="<?= URL('/assets/plugins/select2/js/select2.full.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= URL('/assets/plugins/bootstrap-sweetalert/sweetalert.min.js'); ?>" type="text/javascript"></script>
 <script src="<?= getTemplateURL('/assets/js/atvImg-min.js'); ?>"></script>
 <script src="<?= getTemplateURL('/assets/plugins/venobox/venobox.min.js'); ?>"></script>
 <script src="<?= getTemplateURL('/assets/js/plugins.js'); ?>"></script>

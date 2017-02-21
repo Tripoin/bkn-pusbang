@@ -1367,6 +1367,97 @@ function postAjaxByAlert(e, page, id) {
             });
 }
 
+function postAjaxByAlertManual(e, page, value) {
+    var title = $(e).attr('alert-title');
+    var message = $(e).attr('alert-message');
+    var buttonTitle = $(e).attr('alert-button-title');
+    swal({
+        title: title,
+        text: message,
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: buttonTitle,
+        closeOnConfirm: false
+    },
+            function () {
+                swal.close();
+                var content = 'bodyPage';
+                var contents = $('#' + content);
+                contents.append(highlightLoader());
+//                var ti = document.getElementById(id);
+                $.ajax({
+                    type: "POST",
+                    url: page,
+                    data: value,
+//                    data: new FormData(ti),
+//                    contentType: false,
+//                    cache: false,
+//                    processData: false,
+                    success: function (data) {
+                        try {
+                            $('#' + content).html(data);
+                        } catch (e) {
+                            $('#' + content).html(e.message);
+                        }
+                        $('.background-overlay').remove();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+//                alert(jqXHR.responseText);
+//                        contents.html(jqXHR.responseText);
+                    }
+                });
+
+            });
+}
+
+
+function postAjaxByAlertFormManual(e, page,id, value) {
+    var title = $(e).attr('alert-title');
+    var message = $(e).attr('alert-message');
+    var buttonTitle = $(e).attr('alert-button-title');
+    swal({
+        title: title,
+        text: message,
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: buttonTitle,
+        closeOnConfirm: false
+    },
+            function () {
+                swal.close();
+                var content = 'bodyPage';
+                var contents = $('#' + content);
+                var forms = $('#' + id);
+                contents.append(highlightLoader());
+                
+//                var forms = document.getElementById(id);
+                $.ajax({
+                    type: "POST",
+                    url: page,
+                    data: forms.serialize()+'&'+value,
+//                    data: new FormData(ti),
+//                    contentType: false,
+//                    cache: false,
+//                    processData: false,
+                    success: function (data) {
+                        try {
+                            $('#' + content).html(data);
+                        } catch (e) {
+                            $('#' + content).html(e.message);
+                        }
+                        $('.background-overlay').remove();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+//                alert(jqXHR.responseText);
+//                        contents.html(jqXHR.responseText);
+                    }
+                });
+
+            });
+}
+
 function postAjaxEdit(page, value) {
     var content = 'bodyPage';
     var contents = $('#' + content);

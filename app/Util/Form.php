@@ -120,8 +120,8 @@ class Form {
             if ($event != null) {
                 $str_event = $event;
             }
-            $txt .= '<button type="submit" onclick="' . $str_event . '" class="btn green">' . lang('general.save') . '</button>
-                <button type="reset" class="btn default">' . lang('general.reset') . '</button>';
+            $txt .= '<button type="submit" id="btn-save" onclick="' . $str_event . '" class="btn green">' . lang('general.save') . '</button>
+                <button type="reset" id="btn-reset" class="btn default">' . lang('general.reset') . '</button>';
         } else {
             $txt .= $manual_button;
         }

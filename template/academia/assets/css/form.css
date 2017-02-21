@@ -60,8 +60,13 @@ and open the template in the editor.
 .signup .select2-selection{
     border-radius: 0px;
     height: 27px;
-    border: 1px solid #888888;
+    border: 0px solid #888888;
     background: #ffffff;
+}
+
+.member-page{
+    text-align: left;
+    margin-top: -100px;
 }
 
 .signup .inputfiles{
@@ -75,6 +80,51 @@ and open the template in the editor.
     background: #782881;
     color: #fff;
     border-radius: 0px;
+}
+
+.signup .btn-default {
+    color: #fff;
+    background-color: #888888;
+    border-color: #888888;
+}
+
+.signup .btn-default:focus,
+.signup .btn-default.focus,
+.signup .btn-default:active,
+.signup .btn-default.active,
+.open > .signup .btn-default.dropdown-toggle {
+    color: #fff;
+    background-color: #c9302c;
+    border-color: #c12e2a;
+}
+
+.signup .btn-default:hover {
+    color: #fff;
+    background-color: #4d4949;
+    border-color: #4d4949;
+}
+
+.signup .btn-default:active,
+.signup .btn-default.active,
+.open > .signup .btn-default.dropdown-toggle {
+    background-image: none;
+}
+
+.signup .btn-default.disabled:focus,
+.signup .btn-default.disabled.focus,
+.signup .btn-default:disabled:focus,
+.signup .btn-default:disabled.focus,
+fieldset[disabled] .signup .btn-default:focus,
+fieldset[disabled] .signup .btn-default.focus {
+    background-color: #888888;
+    border-color: #888888;
+}
+
+.signup .btn-default.disabled:hover,
+.signup .btn-default:disabled:hover,
+fieldset[disabled] .signup .btn-default:hover {
+    background-color: #888888;
+    border-color: #888888;
 }
 
 
@@ -296,6 +346,44 @@ fieldset[disabled] .signup .btn-primary-outline:hover {
     border-color: #43a7fd;
 }
 
+.signup .btn-primary {
+    color: #FFFFFF;
+    background-color: #0275d8;
+    background-image: none;
+    border-color: #0275d8;
+}
+
+.signup .btn-primary:focus,
+.signup .btn-primary.focus,
+.signup .btn-primary:active,
+.signup .btn-primary.active,
+.open > .signup .btn-primary.dropdown-toggle {
+    color: #fff;
+    background-color: #0275d8;
+    border-color: #0275d8;
+}
+
+.signup .btn-primary:hover {
+    color: #fff;
+    background-color: #015dac;
+    border-color: #015dac;
+}
+
+.signup .btn-primary.disabled:focus,
+.signup .btn-primary.disabled.focus,
+.signup .btn-primary:disabled:focus,
+.signup .btn-primary:disabled.focus,
+fieldset[disabled] .signup .btn-primary:focus,
+fieldset[disabled] .signup .btn-primary.focus {
+    border-color: #015dac;
+}
+
+.signup .btn-primary.disabled:hover,
+.signup .btn-primary:disabled:hover,
+fieldset[disabled] .signup .btn-primary:hover {
+    border-color: #43a7fd;
+}
+
 
 .signup .btn-circle , .signup .btn-circle:focus,.signup .btn-circle:hover {
     /*background: #000000;*/
@@ -334,4 +422,56 @@ fieldset[disabled] .signup .btn-primary-outline:hover {
     font-size: 24px;
     line-height: 1.33;
     border-radius: 35px;
+}
+
+
+.dataTables_filter .label{
+    color:#888888;
+}
+.dataTables_info .label{
+    color:#888888 !important;
+}
+
+.dataTables_length{
+    color:#888888;
+}
+
+.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+    color: #888888;
+}
+
+.input-spinner {
+  width: 100px;
+}
+.input-spinner input {
+  text-align: right;
+}
+.input-group-btn-vertical {
+  position: relative;
+  white-space: nowrap;
+  width: 1%;
+  vertical-align: middle;
+  display: table-cell;
+}
+.input-group-btn-vertical > .btn {
+  display: block;
+  float: none;
+  width: 100%;
+  max-width: 100%;
+  padding: 8px;
+  margin-left: -1px;
+  position: relative;
+  border-radius: 0;
+}
+.input-group-btn-vertical > .btn:first-child {
+  border-top-right-radius: 4px;
+}
+.input-group-btn-vertical > .btn:last-child {
+  margin-top: -2px;
+  border-bottom-right-radius: 4px;
+}
+.input-group-btn-vertical i{
+  position: absolute;
+  top: 0;
+  left: 4px;
 }

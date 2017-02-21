@@ -30,51 +30,57 @@ class Button {
         'PLACEHOLDER' => '',
         'ICON' => '',
     );
-    
-    public function arrayButton($data=array()){
+
+    public function arrayButton($data = array()) {
         $class = 'btn btn-primary';
-        if(!empty($data['class'])){
+        if (!empty($data['class'])) {
             $class = $data['class'];
         }
-        
+
         $title = 'Submit';
-        if(!empty($data['title'])){
+        if (!empty($data['title'])) {
             $title = $data['title'];
         }
-        
+
         $onclick = '#';
-        if(!empty($data['onclick'])){
+        if (!empty($data['onclick'])) {
             $onclick = $data['onclick'];
         }
-        
+
         $attr = '';
-        if(!empty($data['attr'])){
+        if (!empty($data['attr'])) {
             $attr = $data['attr'];
         }
         $icon = '';
-        if(!empty($data['icon'])){
+        if (!empty($data['icon'])) {
             $icon = $data['icon'];
         }
-        
-        
+
+
         $txt = '<button '
-                . ' class="'.$class.'" '
-                . ' onclick="'.$onclick.'" '
-                . ' '. $attr.' '
+                . ' class="' . $class . '" '
+                . ' onclick="' . $onclick . '" '
+                . ' ' . $attr . ' '
                 . ' type="button"> '
-                . ' <i class="'.$icon.'"></i> '
-                . ' '.$title.' '
+                . ' <i class="' . $icon . '"></i> '
+                . ' ' . $title . ' '
                 . '</button>';
-        
+
         return $txt;
     }
 
     public function buttonDelete() {
         $txt = '';
         if (getActionType(ACTION_TYPE_DELETE) == true) {
-            $txt .= '<a class="btn btn-circle btn-icon-only btn-default btn-danger" id="delete' . $this->buttonOption['VALUE'] . '" onclick="postAjaxDelete(\'' . $this->buttonOption['URL'] . '\',\'' . $this->buttonOption['VALUE'] . '\')" rel="tooltip" title="' . lang('general.delete') . '" href="javascript:;">
-                    <i class="icon-trash"></i>
-                </a>
+            $txt .= '<a class="btn btn-circle btn-icon-only btn-default btn-danger" 
+                id="delete' . $this->buttonOption['VALUE'] . '" onclick="postAjaxDelete(\'' . $this->buttonOption['URL'] . '\',\'' . $this->buttonOption['VALUE'] . '\')" rel="tooltip" title="' . lang('general.delete') . '" href="javascript:;">';
+            if ($this->buttonOption['ICON'] == "") {
+                $txt .= '<i class="icon-trash"></i>';
+            } else {
+                $txt .= '<i class="' . $this->buttonOption['ICON'] . '"></i>';
+            }
+
+            $txt .= '</a>
                 <input type="checkbox" style="display:none;" value="' . $this->buttonOption['VALUE'] . '" id="checkboxdelete"/>
                 ';
         }

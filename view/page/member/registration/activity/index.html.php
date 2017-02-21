@@ -7,7 +7,7 @@ include_once getTemplatePath('page/content-page.html.php');
 <?php include_once FILE_PATH(PAGE_MEMBER_PATH); ?>
     <div class="signup col-md-9 member-page">
         <fieldset id="account">
-            <legend><?= lang('member.agenda_activity'); ?></legend>
+            <legend><?= lang('member.registration_activity'); ?></legend>
             <div id="bodyPage">
                 <div id="pageListActivity">
 
@@ -16,7 +16,7 @@ include_once getTemplatePath('page/content-page.html.php');
         </fieldset>
     </div>
 
-    <input type="hidden" id="urlPageManual-pageListActivity" name="urlPageManual" value="<?= URL(IURLMemberConstant::ACTIVITY_URL . '/list'); ?>"/>
+    <input type="hidden" id="urlPageManual-pageListActivity" name="urlPageManual" value="<?= URL(IURLMemberConstant::ACTIVITY_REGISTRATION_URL . '/list'); ?>"/>
     <input type="hidden" id="pagination_parameter-pageListActivity" value="" />
     <script>
         $(function () {

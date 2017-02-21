@@ -1367,9 +1367,9 @@ footer area css
     box-shadow: none;
 }
 .panel-body{
-    border-width:0px 1px 1px 1px;
+/*    border-width:0px 0px 0px 0px;
     border-style:solid;
-    border-color:#d0d0d0;
+    border-color:#d0d0d0;*/
 }
 .panel_heading {
     padding: 0; margin:0px;
@@ -1999,9 +1999,24 @@ textarea:focus,.i_box input:focus{
     background-color:transparent;
 }
 .pagination .disabled a {
-    background-color: #01BAFD;
-    border-color: #01BAFD;color:#fff;border-radius: 0;
+    background-color: #FFFFFF;
+    border-color: #e6e5e5;color:#888888;border-radius: 0;
 }
+.pagination .active a {
+    background-color: #D01C24;
+    border-color: #e6e5e5;color:#FFFFFF;border-radius: 0;
+}
+.pagination .active a:hover {
+    background-color: #a6161c;
+    border-color: #e6e5e5;color:#FFFFFF;border-radius: 0;
+}
+
+.pagination a:hover {
+    background-color: #a6161c;
+    border-color: #e6e5e5;color:#FFFFFF;border-radius: 0;
+}
+
+
 .mg_bottom60{
     margin-bottom:60px;
 }
