@@ -11,7 +11,7 @@ namespace app\Controller\Master;
 /**
  * Description of Room
  *
- * @author sfandrianah
+ * @author fadhilprm
  */
 use app\Controller\Base\ControllerRestUI;
 use app\Constant\IURLConstant;
@@ -24,7 +24,7 @@ class Subject extends ControllerRestUI {
 
     //put your code here
     public $budget_types= array();
-
+    public $subject_requirements= array();
     public function __construct() {
         $this->restURL = IRestURLConstant::MASTER . SLASH . IRestURLConstant::SUBJECT;
         $this->setTitle(lang('master.subject'));
@@ -34,32 +34,38 @@ class Subject extends ControllerRestUI {
         $this->viewPath = IViewConstant::MASTER_SUBJECT_VIEW_INDEX;
         $this->setAutoCrud();
         parent::__construct();
-//        print_r($this->result);
     }
     
     public function index() {
-//        $this->listWithParameter(true);
         parent::index();
     }
     public function listData() {
-        /*
-        $this->param_body = array(
-            "filter_key" => 'code',
-            "filter_value" => $_POST['code'],
-        );
-         * 
-         */
+
         parent::listData();
     }
 
     public function create() {
-        $this->budget_types = getRestLov(IRestURLConstant::MASTER . SLASH . IRestURLConstant::BUDGET_TYPE);
+        $this->getSubjectRequirements();
+        $this->getBudgetTypes();
         parent::create();
     }
 
     public function edit() {
-        $this->budget_types = getRestLov(IRestURLConstant::MASTER . SLASH . IRestURLConstant::BUDGET_TYPE);
+        $this->getSubjectRequirements();
+        $this->getBudgetTypes();
         parent::edit();
+    }
+
+    public function getSubjectRequirements(){
+        $url = URL_REST . IRestCommandConstant::API . SLASH . IRestCommandConstant::VERSI . SLASH ;
+        $tripoinRestClient = new TripoinRestClient();
+        $data_sr = $tripoinRestClient->doGET($url.IRestURLConstant::MASTER . SLASH . IRestURLConstant::SUBJECT_REQUIREMENTS.SLASH.IRestCommandConstant::COMMAND_STRING . EQUAL . IRestCommandConstant::SELECT_ALL_DATA,
+            array(),
+            array());
+        $this->subject_requirements = $data_sr->getBody;
+    }
+    public function getBudgetTypes(){
+        $this->budget_types = getRestLov(IRestURLConstant::MASTER . SLASH . IRestURLConstant::BUDGET_TYPE);
     }
 
 }

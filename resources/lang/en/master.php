@@ -33,11 +33,13 @@ return [
     "category_assess"=> "Category Assessment",
     "question_category" => "Question Category",
     "slider"=>"Slider",
-    "subject"=>"Subject",
+    "subject"=>"Manage Subject",
     "subject_name"=>"Subject Name",
+    "subject_requirements"=>"Subject Requirements",
+    "subject_description"=>"Subject Description ",
+    "assessment_points"=>"Assessment Points",
     "budget_type_id"=>"Budget Type",
     "budget_amount"=>"Buget Amount",
-
     "curriculum"=>"Curriculum",
 
 ];

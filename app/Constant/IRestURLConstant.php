@@ -31,4 +31,5 @@ class IRestURLConstant {
     const ANSWER_TYPE = '130051';
     const CATEGORY_ASSESS =  '130063';
     const QUESTION_CATEGORY = '130025';
+    const SUBJECT_REQUIREMENTS = '130066';
 }
