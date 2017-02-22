@@ -28,6 +28,7 @@ class Subject extends ControllerRestUI {
     //put your code here
     public $budget_types= array();
     public $subject_requirements= array();
+
     public function __construct() {
         $this->restURL = IRestURLConstant::MASTER . SLASH . IRestURLConstant::SUBJECT;
         $this->setTitle(lang('master.subject'));
@@ -47,10 +48,41 @@ class Subject extends ControllerRestUI {
         $masterSubject = new MasterSubject();
         $masterCurriculum = new MasterCurriculum();
         $result = $dataTable->select_pagination($masterCurriculum,$masterCurriculum->getEntity(),$masterCurriculum->getSubjectId().EQUAL.ONE);
-        echo json_encode($result);
         parent::listData();
     }
 
+    public function listCurriculum($subjectId) {
+        $Datatable = new DataTable();
+        $masterSubject = new MasterSubject();
+        $masterCurriculum = new MasterCurriculum();
+
+        if ($_POST['per_page'] == "") {
+            $Datatable->per_page = 5;
+        } else {
+            $Datatable->per_page = $_POST['per_page'];
+        }
+
+//        }
+        $Datatable->urlDeleteCollection($this->urlDeleteCollection);
+        $Datatable->searchFilter($this->search_filter);
+        $Datatable->current_page = $_POST['current_page'];
+        if ($_POST['current_page'] == '') {
+            $Datatable->current_page = 1;
+        }
+        $search = $_POST['search_pagination'];
+        if ($_POST['search_by'] == '') {
+            $search = " AND " . $masterCurriculum->getEntity() . ".code LIKE  '%" . $search . "%'";
+        } else if ($_POST['search_by'] == 'null') {
+            $search = " AND " . $masterCurriculum->getEntity() . ".code LIKE  '%" . $search . "%'";
+        } else {
+            $search = " AND " . $masterCurriculum->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search . "%'";
+        }
+        $list_data = $Datatable->select_pagination($masterCurriculum,$masterCurriculum->getEntity(),
+            $masterCurriculum->getSubjectId().EQUAL.$subjectId.$search);
+
+        include_once FILE_PATH(IViewConstant::MASTER_SUBJECT_VIEW_INDEX . '/curriculum/list.html.php');
+
+    }
     public function create() {
         $this->getSubjectRequirements();
         $this->getBudgetTypes();

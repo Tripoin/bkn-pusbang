@@ -21,7 +21,7 @@ foreach ($list_data['item'] as $value) {
         $action_delete = $Button->url($this->deleteUrl)->value($value->id)->buttonDelete();
         $action_edit = $Button->url($this->editUrl)->value($value->id)->buttonEdit();
     $panitia = '<a href="javascript:void(0)" onclick="pageAssignment(' . $value->id . ')">' . lang("transaction.organizer") . '</a>';
-    $curicullum_detail = '<a href="javascript:void(0)" onclick="pageDetails(' . $value->budget_type_id . ')">' . ' Link to Curicullum detail' . '</a>';
+    $curicullum_detail = '<a href="javascript:void(0)" onclick="pageCurriculum(' . $value->id . ')">' . ' Link to Curicullum detail' . '</a>';
         $assessment_points = '<a href="javascript:void(0)" onclick="pageDetails(' . $value->budget_type_id . ')">' . ' Link to Assessment Points detail' . '</a>';
 
 
@@ -44,11 +44,12 @@ echo $Datatable->show();
 
 <script>
     $(function () {
-        $('.portlet-title > div > span').html('<?=lang('transaction.agenda_subject');?>');
+        $('.portlet-title > div > span').html('<?=lang('master.subject');?>');
         $('#buttonBack').remove();
     });
-    function pageAssignment(activity) {
-        $('#urlPage').val('<?= URL(getAdminTheme() . $this->indexUrl . '/assignment/'); ?>' + activity);
+
+    function pageCurriculum(subjectId) {
+        $('#urlPage').val('<?= URL(getAdminTheme() . $this->indexUrl . '/curriculum/'); ?>' + subjectId);
         postAjaxPagination();
     }
     function pageListPeserta(activity) {

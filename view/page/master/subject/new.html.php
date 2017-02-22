@@ -1,5 +1,7 @@
 <?= $Form->formHeader(); ?>
+<?php
 
+?>
 <?php echo Form()->id('code')->title(lang('general.code'))->placeholder(lang('general.code') )->textbox(); ?>
 <?php echo $Form->id('name')->title(lang('general.name'))->placeholder(lang('general.name') )->textbox(); ?>
 <?php echo $Form->id('subject_name')->title(lang('master.subject_name'))->placeholder(lang('master.subject_name'))->textbox(); ?>

@@ -1,37 +1,34 @@
 
 <?php
-//echo $_SESSION[SESSION_ADMIN_AUTHORIZATION];
+$Datatable->createButton(false);
+//$Datatable->headerButton(false);
 //    $Datatable->styleHeader(array("text-align:center;"));
-
-
-$Datatable->deleteCollection(false);
-$Datatable->styleColumn(array("text-align:center;width:5%;", "", "","text-align:center","text-align:center","text-align:center", "text-align:center;width:150px;"));
-$Datatable->header(array(lang("general.no"), lang("general.code")
-    , lang("general.name")
-    , lang("master.budget_type_id"),lang("master.curriculum"),lang("master.assessment_points"), lang("general.action")));
+$Datatable->styleColumn(array("text-align:center;width:5%;", "", "", "text-align:center;width:100px;"));
+$Datatable->header(array(lang("general.no"), lang("general.code"), lang("general.name"), lang("general.action")));
 $no = $list_data['from'];
 
 
 foreach ($list_data['item'] as $value) {
 
-        $action_delete = $Button->url($this->deleteUrl)->value($value->id)->buttonDelete();
-        $action_edit = $Button->url($this->editUrl)->value($value->id)->buttonEdit();
-        $curicullum_detail = '<a href="javascript:void(0)" onclick="pageDetails(' . $value->budget_type_id . ')">' . ' Link to Curicullum detail' . '</a>';
-        $assessment_points = '<a href="javascript:void(0)" onclick="pageDetails(' . $value->budget_type_id . ')">' . ' Link to Assessment Points detail' . '</a>';
+    $action_delete = Button()->url($this->deleteUrl)->value($value[$masterCurriculum->getId()])->buttonDelete();
+    $action_edit =  Button()->url($this->editUrl)->value($value[$masterCurriculum->getId()])->buttonEdit();
 
-
-    //   $budgetName='';
-//if(isset($value->budget_type_id)){
-  //  $budgetName=$value->budget_type_id->name;
-
-//}
-    $Datatable->body(array($no, $value->code, $value->name
-            , $value->budget_type_id
-            , $curicullum_detail
-            ,$assessment_points
-            , $action_edit . $action_delete));
+    $Datatable->body(array($no, $value[$masterCurriculum->getCode()], $value[$masterCurriculum->getName()],$action_edit.$action_delete));
     $no += 1;
 }
 echo $Datatable->show();
+//$action_kirim = Button()->onClick('ajaxPostModalManual(\'' . URL($this->admin_theme_url . $this->indexUrl . '/assignment/' . $activity . '/edit') . '\',\'id=0\')')->icon('fa fa-paper-plane')->label('Kirim Surat Penugasan  Widyaiswara')->title('Kirim Surat Penugasan Widyaiswara')->buttonManual();
 ?>
+<script>
+    $(function () {
+        $('.portlet-title > div > span').html('<?= lang('master.curriculum'); ?>');
+        initDetails();
+    });
+    function initDetails() {
+        $('#actionHeader').html(comButtonCreate('<?= lang('general.create'); ?>', 'btn btn-warning', 'fa fa-plus', '') + " " + comButtonBack('<?= lang('general.back'); ?>', 'btn btn-danger', 'fa fa-back'));
+        $('#buttonBack').attr("onclick", "pageParent()");
+//        $('#buttonCreate').attr("onclick", "ajaxPostModalManual('<?//= URL(getAdminTheme() . $this->indexUrl . '/details/' . $activity . '/create'); ?>//')");
+//        $('#url_delete_collection').val('<?//= URL($this->admin_theme_url . $this->indexUrl . '/details/' . $id. '/deleteCollection'); ?>//');
+    }
+</script>
 <!--<script>location.reload(true);</script>-->
