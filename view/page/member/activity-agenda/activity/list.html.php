@@ -1,3 +1,15 @@
+<?php
+
+use app\Model\MasterWaitingList;
+use app\Model\MasterUserAssignment;
+use app\Util\Database;
+
+
+$db = new Database();
+$waitingList = new MasterWaitingList();
+$userAssignment =  new MasterUserAssignment();
+$db->connect();
+?>
 <div class="col-md-12">
     <?php
 //    $Datatable->createButton(false);
@@ -17,6 +29,8 @@
 //    print_r($list_data);
     
     foreach ($list_data['item'] as $value) {
+        $db->sql("SELECT COUNT(".$userAssignment->getId().") as count FROM ".$userAssignment->getEntity()." WHERE ".$userAssignment->getActivity_id().EQUAL.$value[$data->getId()]);
+        $rs_assign = $db->getResult();
 
         $detailSubject = '<a href="javascript:void(0)" onclick="postAjaxEdit(\'' . URL('member/activity-agenda/activity/view').'\',\'id=' . $value[$data->getId()] . '\')">' . subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]) . '</a>';
         $Datatable->body(array($no, 
@@ -24,7 +38,7 @@
             $value[$data->getGeneration()], 
             $value[$data->getBudgetTypeName()],
             $detailSubject,
-            $value[$data->getQuota()]));
+            $rs_assign[0]['count']."/".$value[$data->getQuota()]));
         $no += 1;
     }
 

@@ -41,21 +41,21 @@ class MasterGuest {
                 . $mpf->getEntity() . DOT . $mpf->getFunctionId() . EQUAL . $sf->getEntity() . DOT . $sf->getId() . " AND "
                 . $mp->getEntity() . DOT . $mp->getPostStatus() . EQUAL . "'p'" . " AND "
                 . $mpf->getEntity() . DOT . $mpf->getFunctionId() . EQUAL . $functionId);
-        $post = $db->getResult()[0];
-
+        $rs_post = $db->getResult();
+//        print_r($post);
 //        echo 'masuk';
 //        
-        if (!empty($post)) {
+        if (!empty($rs_post)) {
+            $post = $rs_post[0];
 //            print_r($rs_post);
             if (isset($_SESSION[LANGUAGE_SESSION])) {
                 $mp_lang = $db->selectByID($mpl, $mpl->getLanguageId() . "='" . $_SESSION[LANGUAGE_SESSION] . "'"
                         . " AND " . $mpl->getPostId() . "=" . $post[$mp->getId()]);
             }
-
             $breadcrumb = array(URL($post[$mpf->getFunction()->getUrl()]) => $post[$mpf->getFunction()->getName()]);
             include_once getTemplatePath('/page/global/master-guest-one-page.html.php');
         } else {
-            include_once FILE_PATH(PAGE_404);
+            include_once getTemplatePath('/page/global/master-guest-no-content.html.php');
         }
     }
 
@@ -125,7 +125,6 @@ class MasterGuest {
         $trim_parent_url = ltrim($get_menu_parent[0][$sf->getUrl()], "#");
 
         if (!empty($list_post_function)) {
-
             if (isset($_POST['month']) && isset($_POST['years'])) {
                 include_once FILE_PATH('view/page/global/list-post/list-post-search.html.php');
             } else {

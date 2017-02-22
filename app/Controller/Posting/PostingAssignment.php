@@ -177,10 +177,9 @@ class PostingAssignment extends Controller {
         $id_post = $_POST['id_post'];
         $id_function = $_POST['id_function'];
         $db->connect();
-        $db->delete($mpf->getEntity(), $mpf->getFunction()->getId() . EQUAL . $id_function . " AND "
-                . $mpf->getPost()->getId() . EQUAL . $id_post);
+        $db->delete($mpf->getEntity(), $mpf->getFunctionId() . EQUAL . $id_function . " AND "
+                . $mpf->getPostId() . EQUAL . $id_post);
         $rs_delete = $db->getResult();
-//        print_r($rs_delete);
         if ($rs_delete[0] == 1) {
             $db->update($mp->getEntity(), array(
                 $mp->getPostStatus() => 'draft',

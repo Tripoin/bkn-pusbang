@@ -55,7 +55,7 @@ abstract class Controller implements IController {
     public $get_data;
     public $list_parameter = false;
     public $param_body = array();
-    public $admin_theme_url="";
+    public $admin_theme_url = "";
 
     public function __construct() {
         if (empty($this->search_filter)) {
@@ -64,7 +64,7 @@ abstract class Controller implements IController {
                 "name" => lang('general.name')
             );
         }
-        $this->admin_theme_url  = getAdminTheme();
+        $this->admin_theme_url = getAdminTheme();
     }
 
     function listWithParameter($value = false) {
@@ -188,8 +188,14 @@ abstract class Controller implements IController {
 //        print_r($this->unsetDataModel($this->list_data['item']));
 //        echo json_encode($list_data['item']);
 //        print_r($this->modelData);
+        $db->connect();
+        $db->sql('SHOW COLUMNS FROM ' . $data->getEntity());
+        $rs_column = $db->getResult();
+//        print_r($rs_column);
         if ($this->autoData == true) {
-            $this->listAutoData = $this->unsetDataModel($list_data['item']);
+            $this->listAutoData = $this->unsetDataModel($rs_column);
+//            $this->listAutoData = $this->unsetDataModel($list_data['item']);
+//            print_r($this->listAutoData);
             include_once FILE_PATH(IViewConstant::CRUD_LIST_VIEW_INDEX);
         } else {
             include_once FILE_PATH($this->viewList);
@@ -209,17 +215,26 @@ abstract class Controller implements IController {
         $modifiedBy = $auditrail->getModifiedByUsername();
         $status = $auditrail->getStatus();
 //        print_r($data);
+        $datas = array();
         if (!empty($data)) {
-            foreach (array_keys($data) as $key) {
+            foreach ($data as $value) {
+                if(!in_array($value['Field'], array($createdOn,$createdBy,$modifiedOn,$modifiedBy,$status))){
+                    $datas[] = $value['Field'];
+                }
+                
+//            foreach (array_keys($data) as $key) {
 //            echo $data[$key]['created_on'];
-                unset($data[$key][$createdOn]);
-                unset($data[$key][$createdBy]);
-                unset($data[$key][$modifiedOn]);
-                unset($data[$key][$modifiedBy]);
-                unset($data[$key][$status]);
+//                $rs_column[0]
+//                unset($data[$key][$createdOn]);
+//                unset($data[$key][$createdBy]);
+//                unset($data[$key][$modifiedOn]);
+//                unset($data[$key][$modifiedBy]);
+//                unset($data[$key][$status]);
             }
-            $_SESSION[SESSION_ADMIN_AUTO_DATA] = array_keys((array) $data[0]);
-            return array_keys((array) $data[0]);
+//            $_SESSION[SESSION_ADMIN_AUTO_DATA] = array_keys((array) $data[0]);
+//            return array_keys((array) $data[0]);
+            $_SESSION[SESSION_ADMIN_AUTO_DATA] = $datas;
+            return $datas;
         } else {
             return array();
         }
@@ -258,7 +273,7 @@ abstract class Controller implements IController {
 //        $db->connect();
         $select_data = $db->selectByID($data, $data->getId() . EQUAL . $id);
         $this->get_data = $select_data[0];
-        
+
         $get_data = $this->get_data;
         if ($this->autoData == true) {
             include_once FILE_PATH(IViewConstant::CRUD_EDIT_VIEW_INDEX);
@@ -302,7 +317,7 @@ abstract class Controller implements IController {
     }
 
     public function autoViewURL() {
-        $this->admin_theme_url  = getAdminTheme();
+        $this->admin_theme_url = getAdminTheme();
         setCreateURL(URL($this->admin_theme_url . $this->indexUrl . '/create'));
         setDatatableURL(URL($this->admin_theme_url . $this->indexUrl . '/list'));
         $this->editUrl = URL($this->admin_theme_url . $this->indexUrl . '/edit');

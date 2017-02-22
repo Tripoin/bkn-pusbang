@@ -81,13 +81,13 @@ class Media {
     public function addFolder() {
         $path = FILE_PATH($_POST['file_path']);
         $name = $_POST['name'];
-        if (!file_exists($path.$name)) {
-            mkdir($path.$name, 0777, true);
+        if (!file_exists($path . $name)) {
+            mkdir($path . $name, 0777, true);
             $result = 1;
         } else {
             $result = 0;
         }
-        
+
         echo $result;
     }
 
@@ -98,8 +98,13 @@ class Media {
 //        $path = $_POST['file_path'];
         $result = 1;
         foreach ($exp_name as $value) {
-            if (!unlink(FILE_PATH($path . "/" . $value))) {
-                $result = 0;
+            if (is_dir(FILE_PATH($path . "/" . $value))) {
+                rmdir(FILE_PATH($path . "/" . $value));
+                $result = 1;
+            } else {
+                if (!unlink(FILE_PATH($path . "/" . $value))) {
+                    $result = 0;
+                }
             }
         }
         echo $result;

@@ -26,7 +26,7 @@ if (count($exp_folder) >= 2) {
     array_pop($exp_folder);
     $path_back = implode('/', $exp_folder);
 //    $exp_folder_1 = explode($file_name, $string);
-    echo imageManager('Back', URL('assets/img/back.png'), $path_back, 1);
+    echo imageManager('Back', URL('assets/img/back.png'), $path_back, 3);
 }
 foreach ($folders as $folder) {
     echo imageManager($folder, URL('assets/img/folders.png'), $trim_path . '/' . $folder . '/', 1);
@@ -194,9 +194,15 @@ $str_replace = str_replace('contents', '', $trim_path);
         }
     }
 
+    function getFolder2(v, e) {
+        var action = $(v).attr('action');
+        ajaxPostManual('<?= FULLURL(); ?>', 'pageMedia', 'path=' + action);
+    }
+
     function getFolder(v, e) {
         if (touchtime == 0) {
             //set first click
+            checkFile(v);
             touchtime = new Date().getTime();
         } else {
             //compare first click to this click and see if they occurred within double click threshold
@@ -204,11 +210,11 @@ $str_replace = str_replace('contents', '', $trim_path);
                 //double click occurred
 //                alert("double clicked");
 
-                var action = $(v).attr('action');
-                ajaxPostManual('<?= FULLURL(); ?>', 'pageMedia', 'path=' + action);
+                getFolder2(v, e)
                 touchtime = 0;
             } else {
                 //not a double click so set as a new first click
+                checkFile(v);
                 touchtime = new Date().getTime();
             }
         }
