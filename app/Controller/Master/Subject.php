@@ -19,6 +19,9 @@ use app\Constant\IViewConstant;
 use app\Constant\IRestURLConstant;
 use app\Constant\IRestCommandConstant;
 use app\Util\RestClient\TripoinRestClient;
+use app\Model\MasterSubject;
+use app\Model\MasterCurriculum;
+use app\Util\DataTable;
 
 class Subject extends ControllerRestUI {
 
@@ -40,7 +43,11 @@ class Subject extends ControllerRestUI {
         parent::index();
     }
     public function listData() {
-
+        $dataTable = new DataTable();
+        $masterSubject = new MasterSubject();
+        $masterCurriculum = new MasterCurriculum();
+        $result = $dataTable->select_pagination($masterCurriculum,$masterCurriculum->getEntity(),$masterCurriculum->getSubjectId().EQUAL.ONE);
+        echo json_encode($result);
         parent::listData();
     }
 
