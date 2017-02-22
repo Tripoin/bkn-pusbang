@@ -54,7 +54,6 @@ $str_replace = str_replace('contents', '', $trim_path);
         if (cekFile == "") {
             $(e).attr("style", "text-align:center;background:#95D1E6;color:white;border-color:#337ab7;");
             $('#chooseFile').show();
-//            $(e).attr("value-type", 1);
             $('#cekFile').val(value);
 
         } else {
@@ -69,6 +68,7 @@ $str_replace = str_replace('contents', '', $trim_path);
             }
         }
     }
+    
     function getFolder(v, e) {
         var action = $(v).attr('action');
         ajaxPostManual('<?= FULLURL(); ?>', 'pageMedia', 'path=' + action);

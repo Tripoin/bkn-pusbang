@@ -1043,12 +1043,12 @@ function FunctionLanguageName($value) {
     $function = new SecurityFunctionLanguage();
     $language = new MasterLanguage();
     if (isset($_SESSION[LANGUAGE_SESSION])) {
-        
+
         $db = new Database();
         $db->connect();
-        
-        $rs_language = $db->selectByID($language, $language->getCode().EQUAL."'".$_SESSION[LANGUAGE_SESSION]."'");
-        
+
+        $rs_language = $db->selectByID($language, $language->getCode() . EQUAL . "'" . $_SESSION[LANGUAGE_SESSION] . "'");
+
         $db->select(
                 $function->getEntity(), $function->getName(), array(), $function->getFunctionId() . EQUAL . "'" . $value[$function->getId()] . "'"
                 . " AND " . $function->getLanguageId() . EQUAL . "'" . $rs_language[0][$language->getId()] . "'"
@@ -1953,8 +1953,7 @@ function reArrayFiles(&$file_post) {
 }
 
 function imageManager($title, $url, $link, $type) {
-
-    if ($type == 1) {
+    if ($type == 3) {
         $stringCut = substr($title, 0, 10);
         $txt = '<div class="col-sm-2 col-md-2">
                     <a href="javascript:;" class="thumbnail"  
@@ -1965,6 +1964,30 @@ function imageManager($title, $url, $link, $type) {
                         <span>' . $stringCut . '</span>
                     </a>
                 </div>';
+    } else if ($type == 1) {
+        $stringCut = substr($title, 0, 10);
+        $userAgent = getUserAgent();
+        if ($userAgent == "web") {
+            $txt = '<div class="col-sm-2 col-md-2">
+                    <a href="javascript:;" class="thumbnail"  
+                    id="folder" action="' . $link . '"  value="' . $title . '" value-type="0" onclick="checkFile(this)" ondblclick="getFolder2(this,event)" style="text-align: center;">
+                        <img src="' . $url . '" style="padding-top: 25px;padding-bottom: 25px;"
+                             height="50" width="50"
+                             >
+                        <span>' . $stringCut . '</span>
+                    </a>
+                </div>';
+        } else {
+            $txt = '<div class="col-sm-2 col-md-2">
+                    <a href="javascript:;" class="thumbnail"  
+                    id="folder" action="' . $link . '"  value="' . $title . '" value-type="0" onclick="getFolder(this,event)" style="text-align: center;">
+                        <img src="' . $url . '" style="padding-top: 25px;padding-bottom: 25px;"
+                             height="50" width="50"
+                             >
+                        <span>' . $stringCut . '</span>
+                    </a>
+                </div>';
+        }
     } else {
         $exp_name = explode(".", $title);
         $file_name = '';
@@ -2023,7 +2046,7 @@ function imageManagerList($title, $url, $link, $type) {
         $userAgent = getUserAgent();
         if ($userAgent == "web") {
             $txt = '<div class="col-sm-2 col-md-2 hidden-xs hidden-sm">
-                    <a href="javascript:;"  onclick="checkFile(this)" value="' . $title . '" value-type="0" name="fileimage[]" class="thumbnail" id="file" style="text-align: center;">
+                    <a href="javascript:;"  onclick="checkFile(this)"  ondblclick="chooseFile()" value="' . $title . '" value-type="0" name="fileimage[]" class="thumbnail" id="file" style="text-align: center;">
                         <img src="' . $url . '" style="height: 102px; width: 100%; display: block;"
                             
                              >
