@@ -1716,3 +1716,25 @@ function ajaxGetPage(page, id) {
         }
     });
 }
+
+function addGroupSelect(idLeft, idRight) {
+        var leftSelect = $('#' + idLeft).val();
+        var lToString = leftSelect.toString();
+        var arr = lToString.split(",");
+        for (var no = 0; no < arr.length; no++) {
+            var leftSelect2 = $('#' + idLeft + ' > [value="' + arr[no] + '"]').html();
+            $('#' + idRight).append('<option value="' + arr[no] + '">' + leftSelect2 + '</option>');
+            $('#' + idLeft + ' > [value="' + arr[no] + '"]').remove();
+        }
+    }
+    
+    function addAllGroupSelect(idLeft, idRight) {
+        var leftSelect = $("#"+idLeft+">option").map(function() { return $(this).val(); }).get();
+        var lToString = leftSelect.toString();
+        var arr = lToString.split(",");
+        for (var no = 0; no < arr.length; no++) {
+            var leftSelect2 = $('#' + idLeft + ' > [value="' + arr[no] + '"]').html();
+            $('#' + idRight).append('<option value="' + arr[no] + '">' + leftSelect2 + '</option>');
+            $('#' + idLeft + ' > [value="' + arr[no] + '"]').remove();
+        }
+    }

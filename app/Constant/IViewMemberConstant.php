@@ -32,4 +32,7 @@ interface IViewMemberConstant {
     const REGISTRATION_ACTIVITY_VIEW_INDEX = 'view/page/member/registration/activity/index.html.php';
     const REGISTRATION_ACTIVITY_LIST_VIEW_INDEX = 'view/page/member/registration/activity/list.html.php';
     const REGISTRATION_ACTIVITY_VIEW_VIEW_INDEX = 'view/page/member/registration/activity/view.html.php';
+    const REGISTRATION_ACTIVITY_TEMP_VIEW_INDEX = 'view/page/member/registration/activity-temp/index.html.php';
+    const REGISTRATION_ACTIVITY_TEMP_LIST_VIEW_INDEX = 'view/page/member/registration/activity-temp/list.html.php';
+    const REGISTRATION_ACTIVITY_TEMP_VIEW_VIEW_INDEX = 'view/page/member/registration/activity-temp/view.html.php';
 }

@@ -116,6 +116,10 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
     Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_URL, 'app\Controller\Member\RegistrationActivity@index');
     Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_URL . '/list', 'app\Controller\Member\RegistrationActivity@listData');
     Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_URL . '/approve', 'app\Controller\Member\RegistrationActivity@approved');
+    
+    Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_URL, 'app\Controller\Member\Registration\RegistrationActivityTemp@index');
+    Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_URL . '/list', 'app\Controller\Member\Registration\RegistrationActivityTemp@listData');
+    Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_URL . '/approve', 'app\Controller\Member\Registration\RegistrationActivityTemp@approved');
 
     Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL, 'app\Controller\Member\AgendaOrganizer@index');
     Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/list', 'app\Controller\Member\AgendaOrganizer@listData');

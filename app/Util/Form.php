@@ -24,6 +24,7 @@ class Form {
     protected $formOption = array(
         'STYLE' => null,
         'TITLE' => null,
+        'TITLE_RIGHT' => null,
         'TOOLTIP_TITLE' => null,
         'CLASS' => null,
         'CLASS_COMP' => null,
@@ -33,9 +34,11 @@ class Form {
         'NO_LABEL' => false,
         'TYPE' => null,
         'ID' => null,
+        'ID_RIGHT' => null,
         'HREF' => '',
         'NAME' => null,
         'LABEL' => '',
+        'LABEL_RIGHT' => '',
         'ATTR_BUTTON' => '',
         'WITH_BUTTON' => array(),
         'ALIGN_LABEL' => '',
@@ -44,10 +47,12 @@ class Form {
         'ICON' => '',
         'ONLY_COMPONENT' => false,
         'VALUE' => null,
+        'VALUE_RIGHT' => null,
         'MINLENGTH' => null,
         'MAXLENGTH' => null,
         'FORM_LAYOUT' => 'vertical',
         'OPTION_LABEL_VALUE' => array(),
+        'OPTION_LABEL_VALUE_RIGHT' => array(),
         'MESSAGE_REQUIRED_ERROR' => null,
         'MANUAL_ATTRIBUT' => null,
         'AUTO_COMPLETE' => true,
@@ -58,6 +63,157 @@ class Form {
     public function __construct() {
 //        echo 'masuk';
 //        $this->ResetObject();
+    }
+
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component listBoxAssignment
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * </p>
+     * @example :<p>
+     * @data array(array("id" => 1, "label" => "Example 1"),array("id" => 2, "label" => "Example 2"),array("id" => 3, "label" => "Example 3"),array("id" => 4, "label" => "Example 4"),array("id" => 5, "label" => "Example 5"),);
+     * @Form Form()->idLeft('code')->idRight('code2')->titleLeft(lang('general.code'))->titleRight(lang('general.code'))->valueLeft(array(1,3,5))->dataLeft($data)->listBoxAssignment();
+);<br/>
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
+    public function listBoxAssignment() {
+        $idLeft = $this->formOption['ID'];
+        $idRight = $this->formOption['ID_RIGHT'];
+
+        $labelLeft = $this->formOption['LABEL'];
+        $labelRight = $this->formOption['LABEL_RIGHT'];
+        
+        $titleLeft = $this->formOption['TITLE'];
+        $titleRight = $this->formOption['TITLE_RIGHT'];
+
+        $valueLeft = $this->formOption['VALUE'];
+        $valueRight = $this->formOption['VALUE_RIGHT'];
+
+        $dataLeft = $this->formOption['OPTION_LABEL_VALUE'];
+        $dataLeftArray = (array) $dataLeft;
+
+        $dataRight = $this->formOption['OPTION_LABEL_VALUE_RIGHT'];
+        $dataRightArray = (array) $dataRight;
+
+
+        $txt = '';
+        $txt = '<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-5">
+            <div class="form-group">
+                <label class="control-label">' . $titleLeft . '</label>
+                <select size="10" multiple="multiple" ondblclick="addGroupSelect(\'' . $idLeft . '\', \'' . $idRight . '\')" id="' . $idLeft . '" class="form-control">';
+//        print_r($dataLeftArray);
+        if (!empty($dataLeftArray)) {
+            foreach ($dataLeftArray as $value) {
+                if (is_array($valueLeft)) {
+                    
+                    if (in_array($value['id'], $valueLeft)) {
+                        $txt .= '<option value="'.$value['id'].'" selected>'.$value['label'].'</option>';
+                    } else {
+                        $txt .= '<option value="'.$value['id'].'">'.$value['label'].'</option>';
+                    }
+                } else {
+//                    echo $value['id'];
+                    if ($value['id'] == $valueLeft) {
+                        $txt .= '<option value="'.$value['id'].'" selected>'.$value['label'].'</option>';
+                    } else {
+//                        echo $value['id'];
+                        $txt .= '<option value="'.$value['id'].'">'.$value['label'].'</option>';
+                    }
+                }
+            }
+        }
+        $txt .= '</select>
+            </div>
+        </div>
+        <div class="col-md-2" style="text-align: center;margin-top: 35px;">
+            <div class="col-md-12" style="margin-bottom: 10px;">
+                <button type="button" onclick="addGroupSelect(\'' . $idLeft . '\', \'' . $idRight . '\')" class="btn btn-primary btn-sm">' . lang('general.add') . ' <i class="fa fa-arrow-right"></i></button>
+            </div>
+            <div class="col-md-12" style="margin-bottom: 10px;">
+                <button type="button" onclick="addGroupSelect(\'' . $idRight . '\', \'' . $idLeft . '\')" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i> ' . lang('general.remove') . '</button>
+            </div>
+            <div class="col-md-12" style="margin-bottom: 10px;">
+                <button type="button" onclick="addAllGroupSelect(\'' . $idLeft . '\', \'' . $idRight . '\')"  class="btn btn-primary btn-sm">' . lang('general.add_all') . ' <i class="fa fa-forward"></i></button>
+            </div>
+            <div class="col-md-12" style="margin-bottom: 10px;">
+                <button type="button" onclick="addAllGroupSelect(\'' . $idRight . '\', \'' . $idLeft . '\')" class="btn btn-primary btn-sm"><i class="fa fa-backward"></i> ' . lang('general.remove_all') . '</button>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group">
+                <label class="control-label">' . $titleRight . '</label>
+                <select size="10" id="' . $idRight . '" multiple="multiple" 
+                        ondblclick="addGroupSelect(\'' . $idRight . '\', \'' . $idLeft . '\')" class="form-control">';
+        if (!empty($dataRightArray)) {
+            foreach ($dataRightArray as $value) {
+                if (is_array($valueRight)) {
+                    if (in_array($value['id'], $valueRight)) {
+                        $txt .= '<option value="'.$value['id'].'" selected>'.$value['label'].'</option>';
+                    } else {
+                        $txt .= '<option value="'.$value['id'].'">'.$value['label'].'</option>';
+                    }
+                } else {
+                    if ($value['id'] == $valueRight) {
+                        $txt .= '<option value="'.$value['id'].'" selected>'.$value['label'].'</option>';
+                    } else {
+                        $txt .= '<option value="'.$value['id'].'">'.$value['label'].'</option>';
+                    }
+                }
+            }
+        }
+        $txt .= '</select>
+            </div>
+        </div>
+    </div>
+</div>';
+        return $txt;
+    }
+    
+    public function titleLeft($titleLeft) {
+        return $this->setFormOption('TITLE', $titleLeft);
+    }
+
+    public function titleRight($titleRight) {
+        return $this->setFormOption('TITLE_RIGHT', $titleRight);
+    }
+
+    public function valueLeft($valueLeft) {
+        return $this->setFormOption('VALUE', $valueLeft);
+    }
+
+    public function valueRight($valueRight) {
+        return $this->setFormOption('VALUE_RIGHT', $valueRight);
+    }
+
+    public function labelRight($labelRight) {
+        return $this->setFormOption('LABEL_RIGHT', $labelRight);
+    }
+
+    public function labelLeft($labelLeft) {
+        return $this->setFormOption('LABEL', $labelLeft);
+    }
+
+    public function dataRight($dataRight) {
+        return $this->setFormOption('OPTION_LABEL_VALUE_RIGHT', $dataRight);
+    }
+
+    public function dataLeft($dataLeft) {
+        return $this->setFormOption('OPTION_LABEL_VALUE', $dataLeft);
+    }
+
+    public function idRight($idRight) {
+        return $this->setFormOption('ID_RIGHT', $idRight);
+    }
+
+    public function idLeft($idLeft) {
+        return $this->setFormOption('ID', $idLeft);
     }
 
     public function onlyComponent($onlyComponent) {

@@ -13,7 +13,7 @@ return [
     "password_old" => "Kata Sandi Lama",
     "password_new" => "Kata Sandi Baru",
     "password_renew" => "Konfirmasi Kata Sandi Baru",
-    "change_profile_img" => "Rubah Gambar Profil",
+    "change_profile_img" => "Ubah Gambar Profil",
     "title_change_password_failed" => "Merubah Password Gagal",
     "message_change_password_failed_old" => "Password lama anda Salah",
     "message_change_password_failed_not_same" => "Password Baru anda Tidak Sama",

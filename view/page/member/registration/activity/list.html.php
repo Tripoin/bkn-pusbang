@@ -30,36 +30,40 @@ $db->connect();
 
 //        $detailSubject = '<a href="javascript:void(0)" onclick="postAjaxEdit(\'' . URL('member/activity-agenda/activity/view') . '\',\'id=' . $value[$data->getId()] . '\')">' . subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]) . '</a>';
         $detailSubject = '' . subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]) . '';
-        $rs_waiting_list = $db->selectByID($waitingList, $waitingList->getActivityId() . "='" . $value[$data->getId()] . "' AND " . $waitingList->getUserMainId() . EQUAL . "'" . $rs_user_main[0][$userMain->getId()] . "'");
+//        echo $rs_user_main[0][$userMain->getId()];
+        if (isset($rs_user_main[0][$userMain->getId()])) {
+            $rs_waiting_list = $db->selectByID($waitingList, $waitingList->getActivityId() . "='" . $value[$data->getId()] . "' "
+                    . "AND " . $waitingList->getUserMainId() . EQUAL . "'" . $rs_user_main[0][$userMain->getId()] . "'");
 
-        $db->sql("SELECT COUNT(" . $userAssignment->getId() . ") as count FROM " . $userAssignment->getEntity() . " WHERE " . $userAssignment->getActivity_id() . EQUAL . $value[$data->getId()]);
-        $rs_assign = $db->getResult();
-        $status = "";
+            $db->sql("SELECT COUNT(" . $userAssignment->getId() . ") as count FROM " . $userAssignment->getEntity() . " WHERE " . $userAssignment->getActivity_id() . EQUAL . $value[$data->getId()]);
+            $rs_assign = $db->getResult();
+            $status = "";
 //        print_r($rs_assign);
-        $btn_status = '<a href="javascript:void(0)" alert-title="' . lang('member.register') . '" 
+            $btn_status = '<a href="javascript:void(0)" alert-title="' . lang('member.register') . '" 
                 alert-message="' . lang('member.notif_registered') . $value[$data->getSubjectName()] . '"
                 alert-button-title="' . lang('member.yes') . '"
                 onclick="postAjaxByAlertManual(this,\'' . URL('member/registration/activity/approve') . '\',\'id=' . $value[$data->getId()] . '\')">' . lang('member.register') . '</a>';
-        if (!empty($rs_waiting_list)) {
-            $status = lang('member.registered');
-        } else {
-            if (is_null($value[$data->getStatus()])) {
-                $status = $btn_status;
-            } else if ($value[$data->getStatus()] == 0) {
-                $status = $btn_status;
+            if (!empty($rs_waiting_list)) {
+                $status = lang('member.registered');
             } else {
-                if($rs_assign[0]['count'] == $value[$data->getQuota()]){
-                    $status = lang('member.full');
+                if (is_null($value[$data->getStatus()])) {
+                    $status = $btn_status;
+                } else if ($value[$data->getStatus()] == 0) {
+                    $status = $btn_status;
+                } else {
+                    if ($rs_assign[0]['count'] == $value[$data->getQuota()]) {
+                        $status = lang('member.full');
+                    }
                 }
             }
+            $Datatable->body(array($no,
+                $value[$data->getSubjectName()],
+                $value[$data->getGeneration()],
+                $value[$data->getBudgetTypeName()],
+                $detailSubject,
+                $rs_assign[0]['count'] . "/" . $value[$data->getQuota()],
+                $status));
         }
-        $Datatable->body(array($no,
-            $value[$data->getSubjectName()],
-            $value[$data->getGeneration()],
-            $value[$data->getBudgetTypeName()],
-            $detailSubject,
-            $rs_assign[0]['count'] . "/" . $value[$data->getQuota()],
-            $status));
         $no += 1;
     }
 
