@@ -14,6 +14,7 @@ use app\Util\Database;
 use app\Util\Form;
 use app\Util\DataTable;
 use app\Model\Confirm;
+use app\Model\MasterUserMain;
 use app\Model\SecurityUser;
 use app\Model\MasterContact;
 
@@ -29,38 +30,9 @@ class UserProfile {
         include_once FILE_PATH('view/page/member/user-profile/user-profile.html.php');
     }
 
-    public function detailSaldoTopup() {
-        $Form = new Form();
-        $db = new Database();
-        $Datatable = new DataTable();
-        $Datatable->pageId('detailSaldoPage');
-        $Datatable->urlPage(URL('page/member/user-profile/list-saldo'));
-        $Datatable->searchFilter(array("code" => lang('topupsaldo.invoice_number')));
-        if (isset($_POST['current_page'])) {
-            $Datatable->current_page = $_POST['current_page'];
-        }
-        if (isset($_POST['per_page'])) {
-            $Datatable->per_page = $_POST['per_page'];
-        }
-        if (isset($_POST['search_pagination'])) {
-            $Datatable->search = $_POST['search_by'] . '>' . $_POST['search_pagination'];
-        }
-        $up = new SecurityUserProfile();
-        $user = $db->selectByID($up->getUser(), $up->getUser()->getCode() . "='" . $_SESSION[SESSION_USERNAME_GUEST] . "'");
-        $cek_user_profile = $db->selectByID($up, $up->getId() . "=" . $user[0][$up->getId()] . "");
-
-        $confirm = new Confirm();
-        $list_data = $Datatable->select_pagination($confirm, $confirm->getEntity(), $confirm->getCreatedByUsername() . EQUAL . "'" . $user[0][$up->getUser()->getCode()] . "'");
-
-        $sql_saldo = $db->sql("SELECT SUM(" . $confirm->getTransferAmount() . ") as saldo FROM " . $confirm->getEntity() . " WHERE " . $confirm->getConfirmStatus() . EQUAL . "1 AND " . $confirm->getCreatedByUsername() . "='" . $_SESSION[SESSION_USERNAME_GUEST] . "'");
-        $rs_saldo = $db->getResult();
-        include_once FILE_PATH('view/page/member/user-profile/user-profile-saldo.html.php');
-    }
-
+   
     public function edit() {
-        echo '<form id="form-user" action="' . URL('/page/member/user-profile/save') . '" method="POST" class="form" onsubmit="return false;">';
         $this->changeUserProfile();
-        echo '</form>';
     }
 
     public function changeUserProfile() {
@@ -75,15 +47,16 @@ class UserProfile {
         if (!empty($cek_user_profile)) {
             $masterContact = new MasterContact();
             $cek_contact = $db->selectByID($masterContact, $masterContact->getId() . "=" . $cek_user_profile[0][$up->getContactId()] . "");
-            $contact = "";
+            $phone1 = ""; $phone2 = ""; $email1 = ""; $email2 = "";
             if (is_array($cek_contact[0])) {
-                $contact = $cek_contact[0][$masterContact->getPhoneNumber1()];
+                $phone1 = $cek_contact[0][$masterContact->getPhoneNumber1()];
+                $phone2 = $cek_contact[0][$masterContact->getPhoneNumber2()];
+                $email1 = $cek_contact[0][$masterContact->getEmail1()];
+                $email2 = $cek_contact[0][$masterContact->getEmail2()];
             }
         } else {
-            $contact = "";
+            $phone1 = ""; $phone2 = "";
         }
-//        $confirm = new Confirm();
-//        $list_data = $Datatable->select_pagination($confirm, $confirm->getEntity());
         include_once FILE_PATH('view/page/member/user-profile/user-profile-edit.html.php');
     }
 
@@ -142,12 +115,16 @@ class UserProfile {
             $db = new Database();
             $up = new SecurityUserProfile();
             $users = new SecurityUser();
-            $firstname = $_POST['firstname'];
-            $lastname = $_POST['lastname'];
+            $userMain = new MasterUserMain();
+            $name = $_POST['name'];
             $placeofbirth = $_POST['place'];
             $birthdate = $_POST['birthdate'];
             $telephone = $_POST['telephone'];
+            $telephone2 = $_POST['telephone2'];
             $email = $_POST['email'];
+            $email1 = $_POST['email1'];
+            $email2 = $_POST['email2'];
+            $gender = $_POST['gender'];
 
             $uploadImg = $_FILES['upload_img'];
 //            print_r($uploadImg);
@@ -177,6 +154,14 @@ class UserProfile {
                     $users->getEmail() => $email,
                         ), $users->getId() . "=" . $user[0][$users->getId()]);
                 $rs_upd_user = $db->getResult();
+                LOGGER($rs_upd_user);
+                /*$db->update($userMain->getEntity(),array(
+                    $userMain->getCode()=>$_POST['email']
+                ),$userMain->getUserProfileId().EQUAL.$userProfile[0][$up->getId()]);
+                $resultUpdateUserMain = $db->getResult();
+                 * 
+                 */
+                
 //                print_r($rs_upd_user);
                 $masterContact = new MasterContact();
                 $contact = $db->selectByID($masterContact, $masterContact->getId() . "='" . $userProfile[0][$up->getContactId()] . "'");
@@ -185,7 +170,10 @@ class UserProfile {
                 if (empty($contact)) {
                     $db->insert($masterContact->getEntity(), array(
                         $masterContact->getCode() => createRandomBooking(),
-                        $masterContact->getPhoneNumber1() => $telephone
+                        $masterContact->getPhoneNumber1() => $telephone,
+                        $masterContact->getPhoneNumber2() => $telephone2,
+                        $masterContact->getEmail1() => $email1,
+                        $masterContact->getEmail2() => $email2
                     ));
                     $rs_insert_contact = $db->getResult();
 //                    print_r($rs_insert_contact);
@@ -197,15 +185,19 @@ class UserProfile {
                 } else {
                     $contactId = $contact[0][$masterContact->getId()];
                     $db->update($masterContact->getEntity(), array(
-                        $masterContact->getPhoneNumber1() => $telephone
-                            ), $masterContact->getId() . EQUAL . $contactId);
+                        $masterContact->getPhoneNumber1() => $telephone,
+                        $masterContact->getPhoneNumber2() => $telephone2,
+                        $masterContact->getEmail1() => $email1,
+                        $masterContact->getEmail2() => $email2
+                    ), $masterContact->getId() . EQUAL . $contactId);
                 }
 //                print_r($contactId);
                 $up_profile = array(
-                    $up->getName() => $firstname . ' ' . $lastname,
+                    $up->getName() => $name,
                     $up->getPlace() => $placeofbirth,
                     $up->getBirthdate() => $birthdate,
                     $up->getContactId() => $contactId,
+                    $up->getGender() => $gender,
                 );
                 $merge_dt_profile = array_merge($ar_up_img, $up_profile);
                 $db->update($up->getEntity(), $merge_dt_profile, $up->getId() . "=" . $userProfile[0][$up->getId()]);
