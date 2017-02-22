@@ -41,5 +41,6 @@ return [
     "budget_type_id"=>"Tipe Anggaran",
     "budget_amount"=>"Jumlah Anggaran",
     "curriculum"=>"Kurikulum",
-
+    "material_subject" => "Materi Kegiatan",
+    "subject_requirements" => "Persyaratan Kegiatan",
 ];
