@@ -80,6 +80,7 @@ interface IURLConstant {
     const AGENDA_KEGIATAN_INDEX_URL = '/agenda-kegiatan';
     const MASTER_SUBJECT_INDEX_URL = '/master/subject';
     const MASTER_SUBJECT_REQUIREMENTS_INDEX_URL = '/master/subject-requirements';
+    const MASTER_MATERIAL_SUBJECT_INDEX_URL = '/master/material-subject';
 
     /**/
     const APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL = '/approval/participant-registration';

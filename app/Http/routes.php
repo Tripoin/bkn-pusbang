@@ -58,10 +58,7 @@ Routes::set('page/logout', 'app\Controller\Base\Auth@logout');
 
 Routes::group(['prefix' => 'member'], function() {
     Routes::set('register', 'app\Controller\Base\Auth@registerPage');
-    Routes::set('register/proses', 'app\Controller\Base\Auth@register');
-    Routes::group(['prefix' => 'register'], function() {
-        Routes::set('proses', 'app\Controller\Base\Auth@loginPage');
-    });
+    Routes::set('register/proses', 'app\Controller\Guest\Activity@register');
 });
 
 Routes::set('member/login', 'app\Controller\Base\Auth@loginPage');
@@ -79,6 +76,8 @@ Routes::set('contact-us', 'app\Controller\Guest\ContactUs@index');
 Routes::set('contact-us/submit', 'app\Controller\Guest\ContactUs@save');
 
 Routes::set('activity', 'app\Controller\Guest\Activity@index');
+Routes::set('activity/{id}/register', 'app\Controller\Guest\Activity@registerActivityPage');
+Routes::set('activity/register/save', 'app\Controller\Guest\Activity@saveNewRegister');
 Routes::set('alumni', 'app\Controller\Guest\Alumni@index');
 
 Routes::set('selected', 'app\Controller\Base\General@getArea');
@@ -222,6 +221,7 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
             Routes::setScaffolding(IURLConstant::MASTER_SUBJECT_INDEX_URL, 'app\Controller\Master\Subject');
             Routes::setScaffolding(IURLConstant::MASTER_SUBJECT_REQUIREMENTS_INDEX_URL, 'app\Controller\Master\SubjectRequirementsController');
             Routes::setScaffolding(IURLConstant::AGENDA_KEGIATAN_INDEX_URL, 'app\Controller\Transaction\AgendaKegiatan');
+            Routes::setScaffolding(IURLConstant::MASTER_MATERIAL_SUBJECT_INDEX_URL, 'app\Controller\Master\MaterialSubjectController');
 
             Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/curriculum/{subjectId}', 'app\Controller\Master\Subject@listCurriculum');
 

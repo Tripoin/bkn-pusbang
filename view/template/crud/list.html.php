@@ -74,7 +74,12 @@ foreach ($list_data['item'] as $value) {
                         }
                     } else {
 //                        echo $valueData;
-                        array_push($arrayBody, $value[$valueData]['name']);
+//                        print_r($value[$valueData]);
+                        if(empty($value[$valueData])) {
+                            
+                        } else {
+                            array_push($arrayBody, $value[$valueData]['name']);
+                        }
                     }
                 } else {
 //                    array_push($arrayBody, " ");

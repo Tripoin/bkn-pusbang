@@ -622,21 +622,41 @@ class Form {
             $classComponent = $this->formOption['CLASS_COMP'];
         }
         $textbox .= '<div class="' . $classComponent . '">';
+//        print_r($data);
+        $data = (array) $data;
         if (is_object($data)) {
             foreach ($data as $value) {
+                $dt_value = $value->id;
+                if ($value->id == $this->formOption['VALUE']) {
+                    $dt_value = $this->formOption['VALUE'];
+                }
                 $textbox .= '<label class="mt-checkbox mt-checkbox-outline">
                             <input type="checkbox" 
                             name="' . $this->formOption['NAME'] . '" 
-                            id="' . $this->formOption['ID'] . '" value="' . $value->id . '"> ' . $value->label . '
+                            id="' . $this->formOption['ID'] . '" value="' . $dt_value . '"> ' . $value->label . '
                                 <span></span>
                         </label>';
             }
         } else {
             foreach ($data as $value) {
+                $val_id = $value['id'];
+                $dt_value = $val_id;
+                $checked_value = '';
+                if (is_array($this->formOption['VALUE'])) {
+                    if (in_array($val_id, $this->formOption['VALUE'])) {
+                        $dt_value = $this->formOption['VALUE'];
+                        $checked_value = 'checked';
+                    }
+                } else {
+                    if ($val_id == $this->formOption['VALUE']) {
+                        $dt_value = $this->formOption['VALUE'];
+                        $checked_value = 'checked';
+                    }
+                }
                 $textbox .= '<label class="mt-checkbox mt-checkbox-outline">
                             <input type="checkbox" 
                             name="' . $this->formOption['NAME'] . '" 
-                            id="' . $this->formOption['ID'] . '" value="' . $value['id'] . '"> ' . $value['label'] . '
+                            id="' . $this->formOption['ID'] . '" value="' . $dt_value . '" ' . $checked_value . '> ' . $value['label'] . '
                                 <span></span>
                         </label>';
             }

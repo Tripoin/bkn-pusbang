@@ -8,7 +8,7 @@
 
 //return 'masuk';
 return [
-    'title_home' => 'Tala Indonesia',
+    'title_home' => 'Pusbang BKN',
     'title_sign_modal' => 'Welcome to Tala Indonesia',
     'sign_in_your_account' => 'Sign In To Your Account',
     'dont_have_account' => 'DON\'T HAVE AN ACCOUNT YET ?',
@@ -171,4 +171,11 @@ return [
     'message_rejected_success' => 'Data Has Been Rejected Successfull',
     'title_rejected_error' => 'Rejected Failed',
     'message_rejected_error' => 'Data Has Been Rejected Failed',
+    'is_material'=>'Tipe',
+    'author_name'=>'Author Name',
+    'copyright_date'=>'Copyright Date',
+    'duration'=>'Duration',
+    'unit'=>'Unit',
+    'material'=>'Material',
+    'non_material'=>'Non Material',
 ];

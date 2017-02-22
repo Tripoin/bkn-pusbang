@@ -19,39 +19,32 @@
                 <th>Angkatan</th>
                 <th>Tipe Anggaran</th>
                 <th>Waktu Pelaksanaan</th>
+                <th>Status</th>
                 <!--<th>Tanggal Akhir</th>-->
             </tr>
+            <?php
+            foreach($rs_activity as $data){
+            ?>
+
             <tr>
-                <th>Analisis Kepegawaian Keahlian Akt I</th>
-                <th>I</th>
-                <th>APBN</th>
-                <th>06 Februari 2017 - 18 Februari 2017</th>
+                <th><?php echo $data['name'];?></th>
+                <th><?php echo $data['generation'];?></th>
+                <th><?php echo $data['budget_type_name'];?></th>
+                <th><?php echo subMonth($data['start_activity']) ." s/d ". subMonth($data['end_activity']);?></th>
+                <th>
+                    <?php
+                        $status = $data['status'];
+                        if($status == 1){
+                            $status = "Penuh";
+                        }else{
+                            $status = "<a href='".URL('/activity/'.$data['id'].'/register')."'>Daftar</a>";
+                        }
+
+                        echo $status;
+                    ?>
+                </th>
             </tr>
-            <tr>
-                <th>Analisis Kepegawaian Keahlian Akt II</th>
-                <th>II</th>
-                <th>APBN</th>
-                <th>06 Februari 2017 - 18 Februari 2017</th>
-            </tr>
-            <tr>
-                <th>Analisis Kepegawaian Keahlian Akt III</th>
-                <th>III</th>
-                <th>APBN</th>
-                <th>20 Februari 2017 - 04 Maret 2017</th>
-            </tr>
-            <tr>
-                <th>Analisis Kepegawaian Keahlian Akt IV</th>
-                <th>IV</th>
-                <th>APBN</th>
-                <th>20 Februari 2017 - 04 Maret 2017</th>
-            </tr>
-            <tr>
-                <th>Analisis Kepegawaian Keterampilan</th>
-                <th>-</th>
-                <th>APBN</th>
-                <th>06 Maret 2017 - 18 Maret 2017</th>
-                
-            </tr>
+            <?php } ?>
         </table>
     </div>
 </div>

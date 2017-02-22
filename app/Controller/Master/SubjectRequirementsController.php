@@ -26,8 +26,8 @@ class SubjectRequirementsController extends Controller{
 
     public function __construct() {
         $this->modelData = new MasterSubjectRequirements();
-        $this->setTitle('Subject Requirements');
-        $this->setBreadCrumb(array(lang('security.security') => "", lang('security.security') => URL()));
+        $this->setTitle(lang('master.subject_requirements'));
+        $this->setBreadCrumb(array(lang('master.master') => "", lang('master.subject_requirements') => URL()));
         $this->search_filter = array("code" => lang('general.code'), "name" => lang('general.name'));
         $this->indexUrl = IURLConstant::MASTER_SUBJECT_REQUIREMENTS_INDEX_URL;
         $this->unsetAutoData = array('description');
