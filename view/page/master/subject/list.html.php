@@ -20,8 +20,7 @@ foreach ($list_data['item'] as $value) {
 
         $action_delete = $Button->url($this->deleteUrl)->value($value->id)->buttonDelete();
         $action_edit = $Button->url($this->editUrl)->value($value->id)->buttonEdit();
-    $panitia = '<a href="javascript:void(0)" onclick="pageAssignment(' . $value->id . ')">' . lang("transaction.organizer") . '</a>';
-    $curicullum_detail = '<a href="javascript:void(0)" onclick="pageCurriculum(' . $value->id . ')">' . ' Link to Curicullum detail' . '</a>';
+   $curicullum_detail = '<a href="javascript:void(0)" onclick="pageCurriculum(' . $value->id . ')">' . ' Link to Curicullum detail' . '</a>';
         $assessment_points = '<a href="javascript:void(0)" onclick="pageDetails(' . $value->budget_type_id . ')">' . ' Link to Assessment Points detail' . '</a>';
 
 
@@ -32,7 +31,7 @@ foreach ($list_data['item'] as $value) {
 //}
     $Datatable->body(array($no, $value->code, $value->name
             , $value->budget_type_id
-            ,$panitia
+
             , $curicullum_detail
             ,$assessment_points
             , $action_edit . $action_delete));

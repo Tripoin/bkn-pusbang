@@ -227,7 +227,8 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
             Routes::setScaffolding(IURLConstant::AGENDA_KEGIATAN_INDEX_URL, 'app\Controller\Transaction\AgendaKegiatan');
             Routes::setScaffolding(IURLConstant::MASTER_MATERIAL_SUBJECT_INDEX_URL, 'app\Controller\Master\MaterialSubjectController');
 
-            Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/curriculum/{subjectId}', 'app\Controller\Master\Subject@listCurriculum');
+            Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/curriculum/{subjectId}', 'app\Controller\Master\Subject@curriculums');
+            Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/assessment-point/{subjectId}', 'app\Controller\Master\Subject@assessmentPoints');
 
 
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/assignment/{activity}', 'app\Controller\Transaction\AgendaKegiatan@listPanitia');

@@ -51,7 +51,7 @@ class Subject extends ControllerRestUI {
         parent::listData();
     }
 
-    public function listCurriculum($subjectId) {
+    public function curriculums($subjectId) {
         $Datatable = new DataTable();
         $masterSubject = new MasterSubject();
         $masterCurriculum = new MasterCurriculum();
