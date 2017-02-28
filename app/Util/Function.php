@@ -2355,9 +2355,9 @@ function square_crop($src_image, $dest_image, $thumb_size = 64, $jpg_quality = 9
     }
 }
 
-function getLov($table) {
+function getLov($table,$where="") {
     $db = new Database();
-    $rs_lov = $db->selectByID($table);
+    $rs_lov = $db->selectByID($table,$where);
     $data = convertJsonCombobox($rs_lov, 'id', 'name');
     return $data;
 }
