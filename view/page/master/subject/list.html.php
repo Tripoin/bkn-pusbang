@@ -9,7 +9,6 @@ $Datatable->styleColumn(array("text-align:center;width:5%;", "", "","text-align:
 $Datatable->header(array(lang("general.no"), lang("general.code")
     ,lang("general.name")
     ,lang("master.budget_type_id")
-    ,"test"
     ,lang("master.curriculum")
     ,lang("master.assessment_points")
     , lang("general.action")));
@@ -20,7 +19,7 @@ foreach ($list_data['item'] as $value) {
 
         $action_delete = $Button->url($this->deleteUrl)->value($value->id)->buttonDelete();
         $action_edit = $Button->url($this->editUrl)->value($value->id)->buttonEdit();
-   $curicullum_detail = '<a href="javascript:void(0)" onclick="pageCurriculum(' . $value->id . ')">' . ' Link to Curicullum detail' . '</a>';
+        $curicullum_detail = '<a href="javascript:void(0)" onclick="pageCurriculum(' . $value->id . ')">' . ' Link to Curicullum detail' . '</a>';
         $assessment_points = '<a href="javascript:void(0)" onclick="pageDetails(' . $value->budget_type_id . ')">' . ' Link to Assessment Points detail' . '</a>';
 
 

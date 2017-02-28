@@ -1,6 +1,6 @@
 
 <?php
-$Datatable->createButton(false);
+//$Datatable->createButton(true);
 //$Datatable->headerButton(false);
 //    $Datatable->styleHeader(array("text-align:center;"));
 $Datatable->styleColumn(array("text-align:center;width:5%;", "", "", "text-align:center;width:100px;"));
@@ -36,7 +36,7 @@ echo $Datatable->show();
     function initDetails() {
         $('#actionHeader').html(comButtonCreate('<?= lang('general.create'); ?>', 'btn btn-warning', 'fa fa-plus', '') + " " + comButtonBack('<?= lang('general.back'); ?>', 'btn btn-danger', 'fa fa-back'));
         $('#buttonBack').attr("onclick", "pageParent()");
-//        $('#buttonCreate').attr("onclick", "ajaxPostModalManual('<?//= URL(getAdminTheme() . $this->indexUrl . '/details/' . $activity . '/create'); ?>//')");
+        $('#buttonCreate').attr("onclick", "ajaxPostModalManual('<?= URL(getAdminTheme() . $this->indexUrl . '/curriculum/'.$subjectId.'/create'); ?>','')");
 //        $('#url_delete_collection').val('<?//= URL($this->admin_theme_url . $this->indexUrl . '/details/' . $id. '/deleteCollection'); ?>//');
     }
 </script>
