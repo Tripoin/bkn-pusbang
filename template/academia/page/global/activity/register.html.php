@@ -232,7 +232,7 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
                 </div>
             </div>
             <div class="col-md-12">
-                <button type="button" class="btn btn-danger" onclick="postRegisterMember('<?= URL('activity/register/save'); ?>', 'form-newedit')"><?= lang('general.sign_up'); ?></button>
+                <button type="button" class="btn btn-danger" onclick="postRegisterMember('<?= URL('activity/register/save/'.$rs_subject[0][$transActivity->getId()]); ?>', 'form-newedit')"><?= lang('general.sign_up'); ?></button>
             </div>
         </div>
     </div>
