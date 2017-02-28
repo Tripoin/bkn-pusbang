@@ -24,7 +24,7 @@ class LinkRegistration {
     public $registrationId = 'registration_id';
     public $attachmentParticipantId = 'attachment_participant_id';
     public $attachmentLetterId = 'attachment_letter_id';
-    public $subjectId = 'subject_id';
+    public $subjectId = 'activity_id';
     public $registrationDetailsId = 'registration_details_id';
 
     function getEntity() {

@@ -34,7 +34,7 @@ class TransactionRegistration extends GeneralAuditrail {
     public $zipCode = 'zip_code';
     public $participantTypeId = 'participant_type_id';
     public $governmentAgencies = 'government_agencies_name';
-    public $workingUnitId = 'working_unit_id';
+    public $workingUnitId = 'working_unit_name';
     public $wuPhoneNumber = 'wu_phone_number';
     public $wuFax = 'wu_fax';
     public $wuAddress = 'wu_address';
