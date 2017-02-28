@@ -2362,4 +2362,8 @@ function getLov($table,$where="") {
     return $data;
 }
 
+function equalToIgnoreCase($value){
+    return "='".$value."' ";
+}
+
 ?>
