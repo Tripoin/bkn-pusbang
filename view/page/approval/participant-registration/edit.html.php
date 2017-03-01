@@ -6,9 +6,9 @@ use app\Constant\IURLConstant;
 <?php
 if (!is_null($dt_approval[0][$masterApproval->getStatus()])) {
     if ($dt_approval[0][$masterApproval->getStatus()] == 1) {
-        echo resultPageMsg('warning', 'Data Ini Sudah Di Approve', '');
+        echo resultPageMsg('warning', lang('transaction.data_have_approved'), '');
     } else {
-        echo resultPageMsg('warning', 'Data Ini Sudah Di Reject', '');
+        echo resultPageMsg('warning', lang('transaction.data_have_rejected'), $dt_waiting_list[0][$masterWaitingList->getApprovedMessage()]);
     }
 }
 ?>
@@ -18,7 +18,7 @@ if (!is_null($dt_approval[0][$masterApproval->getStatus()])) {
         echo Form()
                 ->attr('style="width:50%;"')
                 ->title(lang('transaction.subject_name'))
-                ->label($dt_activity[0][$m_act->getName()])
+                ->label($data_subject[0]['label'])
                 ->formLayout('horizontal')->labels();
 
         echo Form()
@@ -197,7 +197,7 @@ if (!is_null($dt_approval[0][$masterApproval->getStatus()])) {
 if (is_null($dt_approval[0][$masterApproval->getStatus()])) {
     ?>
     <button id="btn_signup" class="btn btn-warning" type="submit" 
-            onsubmit="return false;" onclick="ajaxPostModalManual('<?= URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/' . $dt_activity[0][$m_act->getId()] . '/reject-detail'); ?>', 'id=<?= $dt_waiting_list[0][$masterWaitingList->getId()]; ?>&user_main_id=<?= $dt_user_main[0][$m_user_main->getId()]; ?>')" 
+            onsubmit="return false;" onclick="ajaxPostModalManual('<?= URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/' . $dt_activity[0][$m_act->getId()] . '/reject-detail'); ?>', 'approval_category_id=3id=<?= $dt_waiting_list[0][$masterWaitingList->getId()]; ?>&user_main_id=<?= $dt_user_main[0][$m_user_main->getId()]; ?>')" 
             >
         <i class="fa fa-times"></i> <?= lang('general.reject'); ?>
     </button>
@@ -207,7 +207,7 @@ if (is_null($dt_approval[0][$masterApproval->getStatus()])) {
             alert-title="<?= lang('general.approve'); ?>"
             alert-message="<?= lang('member.notif_approved_candidates'); ?><?= $dt_user_main[0][$m_user_main->getFront_degree()] . " " . $dt_user_main[0][$m_user_main->getName()] . " " . $dt_user_main[0][$m_user_main->getBehind_degree()]; ?>"
             alert-button-title="<?= lang('member.yes'); ?>"
-            onclick="postAjaxByAlertManual(this, '<?= URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/' . $dt_activity[0][$m_act->getId()] . '/approve'); ?>', 'id=<?= $dt_waiting_list[0][$masterWaitingList->getId()]; ?>&user_main_id=<?= $dt_user_main[0][$m_user_main->getId()]; ?>')" 
+            onclick="postAjaxByAlertManual(this, '<?= URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/' . $dt_activity[0][$m_act->getId()] . '/approve'); ?>', 'approval_category_id=3&id=<?= $dt_waiting_list[0][$masterWaitingList->getId()]; ?>&user_main_id=<?= $dt_user_main[0][$m_user_main->getId()]; ?>')" 
             >
         <i class="fa fa-thumbs-up"></i> <?= lang('general.approve'); ?>
     </button>

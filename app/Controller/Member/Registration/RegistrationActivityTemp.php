@@ -30,12 +30,62 @@ class RegistrationActivityTemp {
 
     //put your code here
     public function index() {
+
 //        setActiveMenuMember('userprofile,changepassword');
         setTitle(' | ' . lang('member.registration_activity'));
         include_once FILE_PATH(IViewMemberConstant::REGISTRATION_ACTIVITY_TEMP_VIEW_INDEX);
     }
 
     public function listData() {
+//        echo 'tes';
+        $Form = new Form();
+        $Datatable = new DataTable();
+        $Button = new Button();
+        $db = new Database();
+//        $group = new SecurityGroup();
+        $data = new TransactionActivity();
+//        $userMain = new MasterUserMain();
+        if ($_POST['per_page'] == "") {
+            $Datatable->per_page = 5;
+        } else {
+            $Datatable->per_page = $_POST['per_page'];
+        }
+        $Datatable->urlDeleteCollection(false);
+        
+        $Datatable->searchFilter(array("start_activity" => lang("member.year")));
+        $Datatable->current_page = $_POST['current_page'];
+        if ($_POST['current_page'] == '') {
+            $Datatable->current_page = 1;
+        }
+        $search = $_POST['search_pagination'];
+        if ($_POST['search_by'] == '') {
+            $search = $data->getEntity() . ".start_activity LIKE  '%" . $search . "%'";
+        } else if ($_POST['search_by'] == 'null') {
+            $search = $data->getEntity() . ".start_activity LIKE  '%" . $search . "%'";
+        } else {
+            $search = $data->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search . "%'";
+        }
+
+        $whereList = $search;
+        $list_data = $Datatable->select_pagination($data, $data->getEntity(), $whereList, null, null, null, null
+                , null);
+
+
+        $user = new SecurityUser();
+        $userProfile = new SecurityUserProfile();
+        $userMain = new MasterUserMain();
+
+
+        $rs_user = $db->selectByID($user, $user->getCode() . "='" . $_SESSION[SESSION_USERNAME_GUEST] . "'");
+        $rs_user_profile = $db->selectByID($userProfile, $userProfile->getUserId() . "='" . $rs_user[0][$user->getId()] . "'");
+        $rs_user_main = $db->selectByID($userMain, $userMain->getUserProfileId() . "='" . $rs_user_profile[0][$userProfile->getId()] . "'");
+
+
+        include_once FILE_PATH(IViewMemberConstant::REGISTRATION_ACTIVITY_TEMP_LIST_VIEW_INDEX);
+    }
+
+    public function listUserData($activity) {
+//        echo 'tes';
         $Form = new Form();
         $Datatable = new DataTable();
         $Button = new Button();
@@ -77,8 +127,9 @@ class RegistrationActivityTemp {
         $rs_user_profile = $db->selectByID($userProfile, $userProfile->getUserId() . "='" . $rs_user[0][$user->getId()] . "'");
         $rs_user_main = $db->selectByID($userMain, $userMain->getUserProfileId() . "='" . $rs_user_profile[0][$userProfile->getId()] . "'");
 
-
-        include_once FILE_PATH(IViewMemberConstant::REGISTRATION_ACTIVITY_LIST_VIEW_INDEX);
+        $modelActivity = new TransactionActivity();
+        $data_activity = $db->selectByID($modelActivity, $modelActivity->getId() . EQUAL . $activity);
+        include_once FILE_PATH(IViewMemberConstant::REGISTRATION_ACTIVITY_TEMP_LIST_USER_VIEW_INDEX);
     }
 
     public function approved() {
@@ -115,7 +166,7 @@ class RegistrationActivityTemp {
                     $code_approval = createRandomBooking();
                     $db->insert($masterApproval->getEntity(), array(
                         $masterApproval->getCode() => $code_approval,
-                        $masterApproval->getName() => $code_approval.'-'.$_SESSION[SESSION_USERNAME_GUEST],
+                        $masterApproval->getName() => $code_approval . '-' . $_SESSION[SESSION_USERNAME_GUEST],
                         $masterApproval->getApprovalCategoryId() => 3,
                         $masterApproval->getApprovalDetailId() => $result[0],
                         $masterApproval->getStatus() => null,
@@ -126,7 +177,7 @@ class RegistrationActivityTemp {
                     if (is_numeric($result2[0])) {
                         echo toastAlert('success', lang('general.title_update_success'), lang('general.message_update_success'));
                     } else {
-                        $db->delete($waitingList->getEntity(), $waitingList->getId().EQUAL.$result[0]);
+                        $db->delete($waitingList->getEntity(), $waitingList->getId() . EQUAL . $result[0]);
                         echo toastAlert('error', lang('general.title_update_error'), lang('general.message_update_error'));
                     }
                 } else {

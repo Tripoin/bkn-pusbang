@@ -988,7 +988,11 @@ function comButtonDeleteCollection(title, classbtn, classicon) {
 function checkCollectionRow(e) {
 
     var checkbox = $(e).find('td').find('#checkboxdelete');
-
+    if ($(e).attr("style") == 'cursor:pointer;background:#FFFF96') {
+        $(e).attr("style", "cursor:pointer;");
+    } else {
+        $(e).attr("style", "cursor:pointer;background:#FFFF96");
+    }
     if (checkbox) {
         if (checkbox.prop("checked") == true) {
             $(e).attr("style", "cursor:pointer;");
@@ -996,7 +1000,7 @@ function checkCollectionRow(e) {
 
         } else {
             $(e).find('td').find('#checkboxdelete').prop("checked", true);
-            $(e).attr("style", "cursor:pointer;background:#FFFF96");
+
 //            someObj.checkcollection.push($(e).find('td').find('#checkboxdelete').attr("value"));
         }
         var getAll = getCheckedValue('checkboxdelete');
@@ -1412,7 +1416,7 @@ function postAjaxByAlertManual(e, page, value) {
 }
 
 
-function postAjaxByAlertFormManual(e, page,id, value) {
+function postAjaxByAlertFormManual(e, page, id, value) {
     var title = $(e).attr('alert-title');
     var message = $(e).attr('alert-message');
     var buttonTitle = $(e).attr('alert-button-title');
@@ -1431,12 +1435,12 @@ function postAjaxByAlertFormManual(e, page,id, value) {
                 var contents = $('#' + content);
                 var forms = $('#' + id);
                 contents.append(highlightLoader());
-                
+
 //                var forms = document.getElementById(id);
                 $.ajax({
                     type: "POST",
                     url: page,
-                    data: forms.serialize()+'&'+value,
+                    data: forms.serialize() + '&' + value,
 //                    data: new FormData(ti),
 //                    contentType: false,
 //                    cache: false,
@@ -1718,23 +1722,25 @@ function ajaxGetPage(page, id) {
 }
 
 function addGroupSelect(idLeft, idRight) {
-        var leftSelect = $('#' + idLeft).val();
-        var lToString = leftSelect.toString();
-        var arr = lToString.split(",");
-        for (var no = 0; no < arr.length; no++) {
-            var leftSelect2 = $('#' + idLeft + ' > [value="' + arr[no] + '"]').html();
-            $('#' + idRight).append('<option value="' + arr[no] + '">' + leftSelect2 + '</option>');
-            $('#' + idLeft + ' > [value="' + arr[no] + '"]').remove();
-        }
+    var leftSelect = $('#' + idLeft).val();
+    var lToString = leftSelect.toString();
+    var arr = lToString.split(",");
+    for (var no = 0; no < arr.length; no++) {
+        var leftSelect2 = $('#' + idLeft + ' > [value="' + arr[no] + '"]').html();
+        $('#' + idRight).append('<option value="' + arr[no] + '">' + leftSelect2 + '</option>');
+        $('#' + idLeft + ' > [value="' + arr[no] + '"]').remove();
     }
-    
-    function addAllGroupSelect(idLeft, idRight) {
-        var leftSelect = $("#"+idLeft+">option").map(function() { return $(this).val(); }).get();
-        var lToString = leftSelect.toString();
-        var arr = lToString.split(",");
-        for (var no = 0; no < arr.length; no++) {
-            var leftSelect2 = $('#' + idLeft + ' > [value="' + arr[no] + '"]').html();
-            $('#' + idRight).append('<option value="' + arr[no] + '">' + leftSelect2 + '</option>');
-            $('#' + idLeft + ' > [value="' + arr[no] + '"]').remove();
-        }
+}
+
+function addAllGroupSelect(idLeft, idRight) {
+    var leftSelect = $("#" + idLeft + ">option").map(function () {
+        return $(this).val();
+    }).get();
+    var lToString = leftSelect.toString();
+    var arr = lToString.split(",");
+    for (var no = 0; no < arr.length; no++) {
+        var leftSelect2 = $('#' + idLeft + ' > [value="' + arr[no] + '"]').html();
+        $('#' + idRight).append('<option value="' + arr[no] + '">' + leftSelect2 + '</option>');
+        $('#' + idLeft + ' > [value="' + arr[no] + '"]').remove();
     }
+}

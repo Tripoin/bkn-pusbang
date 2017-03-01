@@ -61,4 +61,8 @@ return [
     "notif_approved_candidates"=>"Are you sure, Approval Candidates : ",
     "notif_rejected_candidates"=>"Are you sure, Rejected Candidates : ",
     "rejection_notes"=>"Rejection Notes",
+    "participant_registration"=>"Participant Registration",
+    "choose_participant"=>"Choose Participant",
+    "add_participant"=>"Add Participant",
+    "upload"=>"Upload",
 ];

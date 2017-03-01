@@ -1,18 +1,35 @@
+<?php
+$bg_login = URL('assets/img/bg-blur.jpg');
+$sys_bg_login = getSystemParameter('SYSTEM_ADMINISTRATOR_BG_LOGIN');
+if($sys_bg_login != ""){
+    $bg_login = URL('contents/'.$sys_bg_login);
+}
+
+$logo_login = URL('/assets/img/logotripoin.png');
+$sys_logo_login = getSystemParameter('SYSTEM_ADMINISTRATOR_LOGO_LOGIN');
+if($sys_logo_login != ""){
+    $logo_login = URL('contents/'.$sys_logo_login);
+}
+?>
+
 <style>
     html{
         height: 100%
     }
     body{
-        background-repeat: no-repeat;
+        /*background-repeat: no-repeat;*/
         background-size: 100% 100%;
-        background-image:url(<?= URL('assets/img/bg-blur.jpg'); ?>);
+
+    }
+    .login {
+        background-image:url(<?= $bg_login; ?>);
     }
 </style>
 <body class="login" style="  ">
     <!-- BEGIN LOGO -->
     <div class="logo">
-        <a href="<?= URL(''); ?>">
-            <img src="<?= URL('/assets/img/logotripoin.png'); ?>" height="150" alt="BKN" /> 
+        <a href="<?= URL(getAdminTheme()); ?>">
+            <img src="<?= $logo_login; ?>" height="150" alt="LOGO" /> 
         </a>
     </div>
     <!-- END LOGO -->

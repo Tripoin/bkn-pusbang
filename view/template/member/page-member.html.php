@@ -47,7 +47,8 @@ square_crop(URL('uploads/member/' . $_SESSION[SESSION_USERNAME_GUEST] . '/' . $c
 </style>
 <div id="content" class="container-fluid">
     <div class="col-md-offset-0 col-lg-offset-0 col-lg-12 zeropad" >
-        <div class="panel panel-default panel-member col-md-3" style="text-align:center;background: #F6F6F6">
+        <div class="panel panel-default panel-member col-md-3" 
+             style="text-align:center;background: #F6F6F6">
             <a href="<?= URL('/page/member/user-profile'); ?>">
                 <img src="<?= URL('uploads/member/' . $_SESSION[SESSION_USERNAME_GUEST] . '/profile.jpg');?>"  <?= notFoundImg('noim.jpg'); ?>
                      style="box-shadow: 0px 0px 0px 0px #888888;margin-top: -100px;"

@@ -34,7 +34,8 @@ class TransactionRegistration extends GeneralAuditrail {
     public $zipCode = 'zip_code';
     public $participantTypeId = 'participant_type_id';
     public $governmentAgencies = 'government_agencies_name';
-    public $workingUnitId = 'working_unit_name';
+    public $workingUnitName = 'working_unit_name';
+    public $workingUnitId = 'working_unit_id';
     public $wuPhoneNumber = 'wu_phone_number';
     public $wuFax = 'wu_fax';
     public $wuAddress = 'wu_address';
@@ -47,6 +48,8 @@ class TransactionRegistration extends GeneralAuditrail {
     public $messageContent = 'message_content';
     public $userId = 'user_id';
     public $isApproved = 'is_approved';
+    public $approvedBy = 'approved_by';
+    public $approvedOn = 'approved_on';
     public $approvedMessage = 'approved_message';
     
     public function search($key) {
@@ -60,8 +63,23 @@ class TransactionRegistration extends GeneralAuditrail {
         }
         return $array_data;
     }
+    function getApprovedBy() {
+        return $this->approvedBy;
+    }
 
-    function getDelegationName() {
+    function getApprovedOn() {
+        return $this->approvedOn;
+    }
+
+    function setApprovedBy($approvedBy) {
+        $this->approvedBy = $approvedBy;
+    }
+
+    function setApprovedOn($approvedOn) {
+        $this->approvedOn = $approvedOn;
+    }
+
+        function getDelegationName() {
         return $this->delegationName;
     }
 
@@ -80,8 +98,15 @@ class TransactionRegistration extends GeneralAuditrail {
     function getDelegationAddress() {
         return $this->delegationAddress;
     }
+    function getWorkingUnitName() {
+        return $this->workingUnitName;
+    }
 
-    function getVillageId() {
+    function setWorkingUnitName($workingUnitName) {
+        $this->workingUnitName = $workingUnitName;
+    }
+
+        function getVillageId() {
         return $this->villageId;
     }
 

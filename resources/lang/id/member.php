@@ -61,5 +61,9 @@ return [
     "notif_approved_candidates"=>"Apakah Anda Yakin Ingin Menyetujui Calon Peserta : ",
     "notif_rejected_candidates"=>"Apakah Anda Yakin Ingin Menolak Calon Peserta : ",
     "rejection_notes"=>"Catatan Penolakan",
+    "participant_registration"=>"Registrasi Peserta",
+    "choose_participant"=>"Pilih Peserta",
+    "add_participant"=>"Tambah Peserta",
+    "upload"=>"Upload",
 ];
 

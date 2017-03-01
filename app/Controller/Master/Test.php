@@ -148,10 +148,87 @@ class Test {
 //        echo password_hash('trijep3t3', PASSWORD_BCRYPT);
         $tripoinCrypt = new TripoinCrypt();
         $user = array("code" => "12345", "password" => "admin123");
-        print_r($tripoinCrypt->encrypt('tripoin:trijep3t3'));
+//        print_r($tripoinCrypt->encrypt('admin:admin'));
+        for ($i = 1; $i <= 10; $i++) {
+            $j = $i * 2;
+//            echo $j . ' ';
+        }
+
+        /*
+         * Input deret yang akan di eksekusi
+         * $input : adalah variabel input dengan type aray untuk membuat deret, dan mempunyai key parent array nya yaitu
+         * length : panjang untuk deret nya,
+         * Pada Array Key Data mempunyai 3 key yang harus di isi untuk membuat deret aritmatika atau deret geometri
+         * 1. (Integer) firstValue : Nilai Pertama pada Deret
+         * 2. (String) type : type deret , jika (+)=>Penambahan/Deret Aritmatika,(*)=>Perkalian/Deret Geometri
+         * 3. (Integer) calculate : Penjumlahan untuk nilai selanjut nya
+         * Result Example 
+         * Jika kita membuat data input seperti ini :
+         * $input = array(
+         *    "length" => 4,
+         *    "data" => [
+         *        array("firstValue" => 4, "type" => "+", "calculate" => 3),
+         *        array("firstValue" => 2, "type" => "*", "calculate" => 3)
+         *    ],
+         * );
+         * maka resultnya
+         * [0]=>4 7 10 13,
+         * [1]=>2 6 18 54,
+         */
+        /*
+        $input = array(
+            "length" => 4,
+            "data" => [
+                array("firstValue" => 4, "type" => "+", "calculate" => 3),
+                array("firstValue" => 2, "type" => "*", "calculate" => 3)
+            ],
+        );
+
+        $hitungValue = 0;
+        $result = array();
+        $result_deret = array();
+        foreach ($input['data'] as $value) {
+            for ($no = 0; $no < $input['length']; $no++) {
+                if ($no == 0) {
+                    $hitungValue = $value['firstValue'];
+                } else {
+                    if ($value['type'] == "*") {
+                        $hitungValue = $hitungValue * $value['calculate'];
+                    } else if ($value['type'] == "+") {
+                        $hitungValue = $hitungValue + $value['calculate'];
+                    } else if ($value['type'] == "-") {
+                        $hitungValue = $hitungValue - $value['calculate'];
+                    } else if ($value['type'] == "/") {
+                        $hitungValue = $hitungValue / $value['calculate'];
+                    }
+                }
+                $result_deret[] = $hitungValue;
+            }
+            $result[] = $result_deret;
+            $result_deret = array();
+        }
+        echo 'Mencetak semua Deret<br/>';
+        foreach ($result as $value) {
+            echo implode(' ',$value)."<br/>";
+        }
+        
+        echo '<br/>Output<br/>';
+        echo "AP " . end($result[0]).'<br/>';
+        echo "GP " . end($result[1]);
+
+        $data = array(
+            array(4, 7, 10),
+            array(2, 6, 18),
+        );
+        $no = 0;
+        foreach ($data as $value) {
+            $no++;
+        }
+         * 
+         */
     }
-    
-    public function testMail(){
+
+    public function testMail() {
         $pic_name = "Syahrial Fandrianah";
         $pic_email = "sfandrianah2@gmail.com";
         $mail = new PHPMailer(true);
@@ -180,7 +257,7 @@ class Test {
 
             $mail->Username = MAIL_USERNAME;
             $mail->Password = MAIL_PASSWORD;
-            
+
 
             $mail->isHTML(true);
 
@@ -220,9 +297,9 @@ class Test {
             echo $e->getMessage(); //Boring error messages from anything else!
         }
     }
-    
-    public function testParam($param){
-        echo 'masuk-s'.$param;
+
+    public function testParam($param) {
+        echo 'masuk-s' . $param;
     }
 
 }

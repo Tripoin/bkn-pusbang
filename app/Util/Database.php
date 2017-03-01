@@ -150,6 +150,7 @@ class Database {
                 }
                 return true; // Query was successful
             } else {
+                LOGGER($this->mysql->error);
                 array_push($this->result, $this->mysql->error);
                 $this->log_masuk("GAGAL WRITE SQL : " . $this->mysql->error);
                 return false; // No rows where returned
