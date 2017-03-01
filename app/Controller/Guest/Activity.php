@@ -63,6 +63,7 @@ class Activity {
         $picParticipant = $_POST['participant_category'];
         $picGovAgencies = $_POST['government_agencies'];
         $picWorkingUnit = $_POST['working_unit'];
+        $picOfficeName = $_POST['working_name'];
         $ofcAddress = $_POST['address_instansi'];
         $ofcOfficePhone = $_POST['office_telephone'];
         $ofcProvince = $_POST['province_instansi'];
@@ -82,24 +83,7 @@ class Activity {
 
         $trxRegdata = new TransactionRegistration();
 
-        $dataIndividu = array(
-            $trxRegdata->getCode() => $code,
-            $trxRegdata->getName() => $picName,
-            $trxRegdata->getDelegationName() => $picName,
-            $trxRegdata->getDelegationEmail() => $picEmail,
-            $trxRegdata->getDelegationPhoneNumber() => $picPhone,
-            $trxRegdata->getDelegationFax() => $picFax,
-            $trxRegdata->getDelegationAddress() => $picAddress,
-            $trxRegdata->getProvinceId() => $picProvince,
-            $trxRegdata->getCityId() => $picCity,
-            $trxRegdata->getDistrictId() => $picDistrict,
-            $trxRegdata->getVillageId() => $picVillage,
-            $trxRegdata->getZipCode() =>$picZipCode,
-            $trxRegdata->getMessageTitle() => $subjectTitle,
-            $trxRegdata->getMessageContent() => $msgSubject,
-        );
-
-        $dataInstansi = array(
+        $dataInstSwasta = array(
             $trxRegdata->getCode() => $code,
             $trxRegdata->getName() => $picName,
             $trxRegdata->getDelegationName() => $picName,
@@ -113,7 +97,34 @@ class Activity {
             $trxRegdata->getVillageId() => $picVillage,
             $trxRegdata->getZipCode() =>$picZipCode,
             $trxRegdata->getParticipantTypeId() => $picParticipant,
-            $trxRegdata->getWorkingUnitId() => $picWorkingUnit,
+            $trxRegdata->getWorkingUnitName() => $picOfficeName,
+            $trxRegdata->getWuPhoneNumber() => $ofcOfficePhone,
+            $trxRegdata->getWuFax() =>$ofcFax,
+            $trxRegdata->getWuAddress() => $ofcAddress,
+            $trxRegdata->getWuProvinceId() => $ofcProvince,
+            $trxRegdata->getWuCityId() => $ofcCity,
+            $trxRegdata->getWuDistrictId() => $ofcDistrict,
+            $trxRegdata->getWuVillageId() => $ofcVillage,
+            $trxRegdata->getWuZipCode() => $ofcZipCode,
+            $trxRegdata->getMessageTitle() => $subjectTitle,
+            $trxRegdata->getMessageContent() => $msgSubject,
+        );
+
+        $dataInstNgr = array(
+            $trxRegdata->getCode() => $code,
+            $trxRegdata->getName() => $picName,
+            $trxRegdata->getDelegationName() => $picName,
+            $trxRegdata->getDelegationEmail() => $picEmail,
+            $trxRegdata->getDelegationPhoneNumber() => $picPhone,
+            $trxRegdata->getDelegationFax() => $picFax,
+            $trxRegdata->getDelegationAddress() => $picAddress,
+            $trxRegdata->getProvinceId() => $picProvince,
+            $trxRegdata->getCityId() => $picCity,
+            $trxRegdata->getDistrictId() => $picDistrict,
+            $trxRegdata->getVillageId() => $picVillage,
+            $trxRegdata->getZipCode() =>$picZipCode,
+            $trxRegdata->getParticipantTypeId() => $picParticipant,
+            $trxRegdata->getWorkingUnitName() => $picWorkingUnit,
             $trxRegdata->getGovernmentAgencies() => $picGovAgencies,
             $trxRegdata->getWuPhoneNumber() => $ofcOfficePhone,
             $trxRegdata->getWuFax() =>$ofcFax,
@@ -129,25 +140,34 @@ class Activity {
 
         $db = new Database();
         $db->connect();
-        if($picParticipant == 1){
-            $db->insert($trxRegdata->getEntity(), $dataIndividu);
+
+        $getValidEmail = $db->selectByID($trxRegdata, $trxRegdata->getDelegationEmail().equalToIgnoreCase($picEmail));
+
+        if(!empty($getValidEmail)){
+            echo toastAlert('error',lang('general.message_register_failed_email'),lang('general.message_register_failed_email'));
+            echo resultPageMsg('danger',lang('general.message_register_failed_email'),lang('general.message_register_failed_email'));
         }else{
-            $db->insert($trxRegdata->getEntity(), $dataInstansi);
+            if($picParticipant == 1){
+                $db->insert($trxRegdata->getEntity(), $dataInstSwasta);
+            }else{
+                $db->insert($trxRegdata->getEntity(), $dataInstNgr);
+            }
+            $result = $db->getResult();
+            $idReg = $result[0];
+
+            if(is_numeric($result[0])){
+                $this->saveAttachFile($db, $fileName, $idReg, $idActivity, null);
+
+                echo toastAlert('success',lang('general.title_register_success'),lang('general.message_register_success'));
+                echo resultPageMsg('success',lang('general.title_register_success'),lang('general.message_register_success'));
+
+                redirectURL(URL('activity'));
+            } else {
+                echo toastAlert('error',lang('general.title_register_failed'),lang('general.message_register_failed'));
+                echo resultPageMsg('danger',lang('general.title_register_failed'),lang('general.message_register_failed'));
+            }
         }
-        $result = $db->getResult();
-        $idReg = $result[0];
-
-
-        if(is_numeric($result[0])){
-            $this->saveAttachFile($db, $fileName, $idReg, $idActivity, null);
-
-            echo toastAlert('success',lang('general.title_register_success'),lang('general.message_register_success'));
-            echo resultPageMsg('success',lang('general.title_register_success'),lang('general.message_register_success'));
-        } else {
-            echo toastAlert('error',lang('general.title_register_failed'),lang('general.message_register_failed'));
-            echo resultPageMsg('danger',lang('general.title_register_failed'),lang('general.message_register_failed'));
-        }
-        //echo toastAlert();
+        
     }
 
     public function saveAttachFile($dB, $fileName, $idReg, $idActivity, $idRegDetail){
