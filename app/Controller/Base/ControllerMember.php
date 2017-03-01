@@ -242,7 +242,7 @@ class ControllerMember {
                         $memberPost->getStatus() => 1,
                         $memberPost->getCreatedById() => $select_user[0][$user->getId()],
                         $memberPost->getCreatedByUsername() => $_SESSION[SESSION_USERNAME],
-                        $memberPost->getCreatedOn() => date('Y-m-d h:i:s'),
+                        $memberPost->getCreatedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                         $memberPost->getCreatedByIp() => getClientIp(),
                     ));
                     $rs_post = $db->getResult();
@@ -321,7 +321,7 @@ class ControllerMember {
                         $memberPost->getStatus() => 1,
                         $memberPost->getModifiedById() => $select_user[0][$user->getId()],
                         $memberPost->getModifiedByUsername() => $_SESSION[SESSION_USERNAME],
-                        $memberPost->getModifiedOn() => date('Y-m-d h:i:s'),
+                        $memberPost->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                         $memberPost->getModifiedByIp() => getClientIp(),
                             ), $memberPost->getId() . "=" . $id);
                     $rs_post = $db->getResult();

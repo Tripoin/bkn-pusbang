@@ -359,14 +359,14 @@ class AgendaOrganizer {
         $db->update($masterWaitingList->getEntity(), array(
             $masterWaitingList->getApprovedBy() => $_SESSION[SESSION_USERNAME_GUEST],
             $masterWaitingList->getIsApproved() => 1,
-            $masterWaitingList->getApprovedOn() => date('Y-m-d h:i:s'),
+            $masterWaitingList->getApprovedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                 ), $masterWaitingList->getId() . EQUAL . $id);
         $result = $db->getResult();
         if ($result[0] == 1) {
             $db->update($masterApproval->getEntity(), array(
                 $masterApproval->getStatus() => 1,
                 $masterApproval->getModifiedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
-                $masterApproval->getModifiedOn() => date('Y-m-d h:i:s'),
+                $masterApproval->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                     ), $masterApproval->getApprovalDetailId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . "3");
 //            echo $db->getSql();
             $result_2 = $db->getResult();
@@ -379,7 +379,7 @@ class AgendaOrganizer {
                     $masterUserAssignment->getUser_main_id() => $userMainId,
                     $masterUserAssignment->getActivity_id() => $activity_id,
                     $masterUserAssignment->getCreatedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
-                    $masterUserAssignment->getCreatedOn() => date('Y-m-d h:i:s'),
+                    $masterUserAssignment->getCreatedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                 ));
                 $result_3 = $db->getResult();
                 if (is_numeric($result_3[0])) {
@@ -417,14 +417,14 @@ class AgendaOrganizer {
             $masterWaitingList->getApprovedBy() => $_SESSION[SESSION_USERNAME_GUEST],
             $masterWaitingList->getIsApproved() => 0,
             $masterWaitingList->getApprovedMessage() => $message,
-            $masterWaitingList->getApprovedOn() => date('Y-m-d h:i:s'),
+            $masterWaitingList->getApprovedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                 ), $masterWaitingList->getId() . EQUAL . $id);
         $result = $db->getResult();
         if ($result[0] == 1) {
             $db->update($masterApproval->getEntity(), array(
                 $masterApproval->getStatus() => 0,
                 $masterApproval->getModifiedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
-                $masterApproval->getModifiedOn() => date('Y-m-d h:i:s'),
+                $masterApproval->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                     ), $masterApproval->getApprovalDetailId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . "3");
 //            echo $db->getSql();
             $result_2 = $db->getResult();

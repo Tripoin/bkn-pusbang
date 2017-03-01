@@ -83,7 +83,7 @@ class AuthAdmin {
                     $user->getStatus() => 1,
                     $user->getApproved() => 1,
                     $user->getGroup()->getId() => 2,
-                    $user->getCreatedOn() => date('Y-m-d h:i:s'),
+                    $user->getCreatedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                     $user->getCreatedByUsername() => $code[0],
                     $user->getCreatedByIp() => getClientIp(),
                 ));

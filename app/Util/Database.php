@@ -345,18 +345,18 @@ class Database {
                 $sql_insert = '';
                 foreach ($params as $key => $value) {
                     if ($value !== NULL) {
-                        LOGGER($key.'='.$value);
+//                        LOGGER($key.'='.$value);
                         if ($value == NULL) {
-                            LOGGER('DATA NULL');
+//                            LOGGER('DATA NULL');
                             $sql_insert .= $key . " = null,";
                         } else {
                             $sql_insert .= $key . " = '" . $this->mysql->real_escape_string($value) . "',";
                         }
                     } else if ($value === NULL) {
-                        LOGGER('DATA NULL');
+//                        LOGGER('DATA NULL');
                         $sql_insert .= $key . " = null,";
                     } else if ($value == NULL) {
-                        LOGGER('DATA NULL');
+//                        LOGGER('DATA NULL');
                         $sql_insert .= $key . " = null,";
                     } else {
                         LOGGER($key . ":" . $value);
@@ -373,7 +373,7 @@ class Database {
                     $this->log_masuk('SUKSES INSERT DENGAN ID = ' . $this->mysql->insert_id . ' dan Table = ' . $table);
                     return true; // The data has been inserted
                 } else {
-
+                    LOGGER($this->mysql->error);
                     array_push($this->result, $this->mysql->error);
                     $this->log_masuk("GAGAL INSERT : " . $this->mysql->error);
                     return false; // The data has not been inserted
@@ -465,6 +465,7 @@ class Database {
                     $this->log_masuk("UPDATE BERHASIL Table : " . $table);
                     return true; // Update has been successful
                 } else {
+                    LOGGER(mysql_error());
                     array_push($this->result, mysql_error());
                     $this->log_masuk("GAGAL UPDATE : " . mysql_error());
 //                array_push($this->result, 0);
@@ -577,7 +578,7 @@ class Database {
         $result = array(
             $audit->getStatus() => 1,
             $audit->getCreatedByUsername() => $_SESSION[SESSION_USERNAME],
-            $audit->getCreatedOn() => date('Y-m-d h:i:s'),
+            $audit->getCreatedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
         );
         $this->createAuditrail = $result;
 //        return $result;
@@ -588,7 +589,7 @@ class Database {
         $result = array(
             $audit->getStatus() => 1,
             $audit->getModifiedByUsername() => $_SESSION[SESSION_USERNAME],
-            $audit->getModifiedOn() => date('Y-m-d h:i:s'),
+            $audit->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
         );
         $this->updateAuditrail = $result;
 //        return $result;

@@ -83,7 +83,7 @@ class User extends Controller {
             $su->getPassword() => $password_e,
             $su->getGroupId() => $group,
             $su->getCreatedByUsername() => $_SESSION[SESSION_USERNAME],
-            $su->getCreatedOn() => date('Y-m-d h:i:s'),
+            $su->getCreatedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
 //            $su->getCreatedByIp() => getClientIp(),
 //            $su->getApproved() => 1,
         ));
@@ -141,7 +141,7 @@ class User extends Controller {
             $su->getEmail() => $email,
             $su->getGroupId() => $group,
             $su->getModifiedByUsername() => $_SESSION[SESSION_USERNAME],
-            $su->getModifiedOn() => date('Y-m-d h:i:s'),
+            $su->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
 //            $su->getModifiedOn() => getClientIp(),
 //            $su->getApproved() => 1,
                 ), $su->getId() . EQUAL . $id);

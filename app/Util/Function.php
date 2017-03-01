@@ -570,7 +570,7 @@ function errorHandler() {
  */
 function LOGGER($message = '') {
     $file_url = "logs/log.logs";
-    $txt = '[' . date('Y-m-d h:i:s') . '] : ';
+    $txt = '[' .  date(DATE_FORMAT_PHP_DEFAULT) . '] : ';
     if (is_array($message)) {
 //        $txt .= "Array(" . implode(",", $message) . ")";
         $txt .= json_encode($message);
@@ -587,7 +587,7 @@ function log_to_file($response) {
     $file_url = "logs/log.logs";
     $str = str_replace("index.php", "", $_SERVER['SCRIPT_FILENAME']);
 
-    $txt = 'Date : ' . date('Y-m-d h:i:s') . "\n";
+    $txt = 'Date : ' .  date(DATE_FORMAT_PHP_DEFAULT) . "\n";
     $txt .= 'URL : ' . $_SERVER['REQUEST_URI'] . "\n";
     $txt .= 'METHOD : ' . $_SERVER['REQUEST_METHOD'] . "\n";
     $txt .= 'BODY : ' . json_encode($_POST) . "\n";

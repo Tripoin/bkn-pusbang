@@ -154,7 +154,7 @@ class Functions extends Controller {
             $sf->getUrl() => $url,
             $sf->getStyle() => $style,
             $sf->getCreatedByUsername() => $_SESSION[SESSION_USERNAME],
-            $sf->getCreatedOn() => date('Y-m-d h:i:s'),
+            $sf->getCreatedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
         ));
         $rs_save = $db->getResult();
         if (is_numeric($rs_save[0])) {
@@ -225,7 +225,7 @@ class Functions extends Controller {
             $sf->getUrl() => $url,
             $sf->getStyle() => $style,
             $sf->getCreatedByUsername() => $_SESSION[SESSION_USERNAME],
-            $sf->getCreatedOn() => date('Y-m-d h:i:s'),
+            $sf->getCreatedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                 ), $sf->getId() . EQUAL . $id);
         $rs_save = $db->getResult();
         if ($rs_save[0] == 1) {

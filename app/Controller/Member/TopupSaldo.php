@@ -74,7 +74,7 @@ class TopupSaldo {
             $confirm->getUploadImg() => $file_name,
             $confirm->getNotes() => $notes,
             $confirm->getCreatedByUsername() => $_SESSION[SESSION_USERNAME],
-            $confirm->getCreatedOn() => date('Y-m-d h:i:s'),
+            $confirm->getCreatedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
             $confirm->getCreatedByIp() => getClientIp(),
             $confirm->getStatus() => 1,
             $confirm->getConfirmStatus() => 0,

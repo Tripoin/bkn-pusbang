@@ -216,14 +216,14 @@ class ParticipantRegistration extends Controller {
             $db->update($masterWaitingList->getEntity(), array(
                 $masterWaitingList->getApprovedBy() => $_SESSION[SESSION_USERNAME_GUEST],
                 $masterWaitingList->getIsApproved() => 1,
-                $masterWaitingList->getApprovedOn() => date('Y-m-d h:i:s'),
+                $masterWaitingList->getApprovedOn() => date(DATE_FORMAT_PHP_DEFAULT),
                     ), $masterWaitingList->getId() . EQUAL . $id);
             $result = $db->getResult();
             if ($result[0] == 1) {
                 $db->update($masterApproval->getEntity(), array(
                     $masterApproval->getStatus() => 1,
                     $masterApproval->getModifiedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
-                    $masterApproval->getModifiedOn() => date('Y-m-d h:i:s'),
+                    $masterApproval->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                         ), $masterApproval->getApprovalDetailId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . "3");
 //            echo $db->getSql();
                 $result_2 = $db->getResult();
@@ -236,7 +236,7 @@ class ParticipantRegistration extends Controller {
                         $masterUserAssignment->getUser_main_id() => $userMainId,
                         $masterUserAssignment->getActivity_id() => $activity_id,
                         $masterUserAssignment->getCreatedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
-                        $masterUserAssignment->getCreatedOn() => date('Y-m-d h:i:s'),
+                        $masterUserAssignment->getCreatedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                     ));
                     $result_3 = $db->getResult();
                     if (is_numeric($result_3[0])) {
@@ -264,7 +264,7 @@ class ParticipantRegistration extends Controller {
             $db->update($transactionRegistration->getEntity(), array(
                 $transactionRegistration->getIsApproved() => 1,
                 $transactionRegistration->getApprovedBy() => $_SESSION[SESSION_ADMIN_USERNAME],
-                $transactionRegistration->getApprovedOn() => date('Y-m-d h:i:s'),
+                $transactionRegistration->getApprovedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                     ), $transactionRegistration->getId() . equalToIgnoreCase($registrationId));
             $rs_update_reg = $db->getResult();
             if (is_numeric($rs_update_reg[0]) == 1) {
@@ -272,7 +272,7 @@ class ParticipantRegistration extends Controller {
                 $db->update($masterApproval->getEntity(), array(
                     $masterApproval->getStatus() => 1,
                     $masterApproval->getModifiedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
-                    $masterApproval->getModifiedOn() => date('Y-m-d h:i:s'),
+                    $masterApproval->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                         ), $masterApproval->getId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . $approvalCategoryId);
                 $result_2 = $db->getResult();
                 if (is_numeric($result_2[0]) == 1) {
@@ -308,7 +308,7 @@ class ParticipantRegistration extends Controller {
             $securityUser->getName() => $code[0],
             $securityUser->getEmail() => $rs_reg[0][$transactionRegistration->getDelegationEmail()],
             $securityUser->getPassword() => $password,
-            $securityUser->getCreatedOn() => date('Y-m-d h:i:s'),
+            $securityUser->getCreatedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
             $securityUser->getCreatedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
             $securityUser->getStatus() => null,
             $securityUser->getGroupId() => 5,
@@ -424,7 +424,7 @@ class ParticipantRegistration extends Controller {
         $db->update($masterApproval->getEntity(), array(
             $masterApproval->getStatus() => null,
             $masterApproval->getModifiedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
-            $masterApproval->getModifiedOn() => date('Y-m-d h:i:s'),
+            $masterApproval->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                 ), $masterApproval->getApprovalDetailId() . EQUAL . $registrationId . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . $approvalCategoryId);
         return $db->getResult();
     }
@@ -448,14 +448,14 @@ class ParticipantRegistration extends Controller {
                 $masterWaitingList->getApprovedBy() => $_SESSION[SESSION_ADMIN_USERNAME],
                 $masterWaitingList->getIsApproved() => 0,
                 $masterWaitingList->getApprovedMessage() => $message,
-                $masterWaitingList->getApprovedOn() => date('Y-m-d h:i:s'),
+                $masterWaitingList->getApprovedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                     ), $masterWaitingList->getId() . EQUAL . $id);
             $result = $db->getResult();
             if ($result[0] == 1) {
                 $db->update($masterApproval->getEntity(), array(
                     $masterApproval->getStatus() => 0,
                     $masterApproval->getModifiedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
-                    $masterApproval->getModifiedOn() => date('Y-m-d h:i:s'),
+                    $masterApproval->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                         ), $masterApproval->getApprovalDetailId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . "3");
 //            echo $db->getSql();
                 $result_2 = $db->getResult();
@@ -476,7 +476,7 @@ class ParticipantRegistration extends Controller {
             $db->update($transactionRegistration->getEntity(), array(
                 $transactionRegistration->getIsApproved() => 0,
                 $transactionRegistration->getApprovedBy() => $_SESSION[SESSION_ADMIN_USERNAME],
-                $transactionRegistration->getApprovedOn() => date('Y-m-d h:i:s'),
+                $transactionRegistration->getApprovedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                 $transactionRegistration->getApprovedMessage() => $message,
                     ), $transactionRegistration->getId() . equalToIgnoreCase($registrationId));
             $rs_update_reg = $db->getResult();
@@ -485,7 +485,7 @@ class ParticipantRegistration extends Controller {
                 $db->update($masterApproval->getEntity(), array(
                     $masterApproval->getStatus() => 0,
                     $masterApproval->getModifiedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
-                    $masterApproval->getModifiedOn() => date('Y-m-d h:i:s'),
+                    $masterApproval->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                         ), $masterApproval->getId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . $approvalCategoryId);
 //            echo $db->getSql();
                 $result_2 = $db->getResult();

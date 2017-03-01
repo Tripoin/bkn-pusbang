@@ -115,7 +115,7 @@ class AgendaKegiatan extends Controller {
             $data->getDescription() => $description,
             $data->getStatus() => NULL,
             $data->getCreatedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
-            $data->getCreatedOn() => date('Y-m-d h:i:s'),
+            $data->getCreatedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
         );
 //        $datas = $data->setData($data);
         $db->insert($data->getEntity(), $data_insert);
@@ -161,7 +161,7 @@ class AgendaKegiatan extends Controller {
             $data->getDescription() => $description,
             $data->getYearActivity() => $year,
             $data->getModifiedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
-            $data->getModifiedOn() => date('Y-m-d h:i:s'),
+            $data->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
         );
 //        $datas = $data->setData($data);
         $db->update($data->getEntity(), $data_insert, $data->getId() . EQUAL . $id);
@@ -239,7 +239,10 @@ class AgendaKegiatan extends Controller {
 
 //        }
         $Datatable->urlDeleteCollection($this->urlDeleteCollection);
-        $Datatable->searchFilter(array("name" => lang('general.name')));
+        $Datatable->searchFilter(array(
+            "code" => lang('transaction.no_id'),
+            "name" => lang('general.name'))
+        );
         $Datatable->current_page = $_POST['current_page'];
         if ($_POST['current_page'] == '') {
             $Datatable->current_page = 1;

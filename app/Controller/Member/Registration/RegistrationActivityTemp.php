@@ -156,7 +156,7 @@ class RegistrationActivityTemp {
                     $waitingList->getCode() => createRandomBooking(),
                     $waitingList->getActivityId() => $id,
                     $waitingList->getUserMainId() => $rs_user_main[0][$userMain->getId()],
-                    $waitingList->getCreatedOn() => date('Y-m-d h:i:s'),
+                    $waitingList->getCreatedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                     $waitingList->getCreatedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
                 ));
                 $result = $db->getResult();
@@ -171,7 +171,7 @@ class RegistrationActivityTemp {
                         $masterApproval->getApprovalDetailId() => $result[0],
                         $masterApproval->getStatus() => null,
                         $masterApproval->getCreatedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
-                        $masterApproval->getCreatedOn() => date('Y-m-d h:i:s'),
+                        $masterApproval->getCreatedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                     ));
                     $result2 = $db->getResult();
                     if (is_numeric($result2[0])) {

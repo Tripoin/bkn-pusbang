@@ -165,7 +165,7 @@ class Chat {
                     if ($val_user[4] == 0) {
                         $total_all += 1;
                     }
-                    $data_user .= $val_user[0] . ';' . $val_user[1] . ";" . $val_user[2] . ";" . $message . ";" . $last_totals . ";" . date('Y-m-d h:i:s') . PHP_EOL;
+                    $data_user .= $val_user[0] . ';' . $val_user[1] . ";" . $val_user[2] . ";" . $message . ";" . $last_totals . ";" .  date(DATE_FORMAT_PHP_DEFAULT) . PHP_EOL;
                 } else {
                     $data_user .= $val_user[0] . ';' . $val_user[1] . ";" . $val_user[2] . ";" . $val_user[3] . ";" . $val_user[4] . ";" . $val_user[5] . PHP_EOL;
                 }
@@ -219,13 +219,13 @@ class Chat {
                         $value = explode(';', $values);
                         $last_total = intval($value[4]);
 //                        $datas .= $value[0] . ';' . $value[1] . ';' . $value[2] . ";" . $value[3] . ";"
-//                                . $last_total . ";" . date('Y-m-d h:i:s') . PHP_EOL;
+//                                . $last_total . ";" .  date(DATE_FORMAT_PHP_DEFAULT) . PHP_EOL;
                         $data .= '{"username":"' . $value[0] . '",'
                                 . '"fullname":"' . $value[1] . '",'
                                 . '"path_img":"' . $value[2] . '",'
                                 . '"last_chat":"' . $value[3] . '",'
                                 . '"last_total":"' . $last_total . '",'
-                                . '"last_date":"' . date('Y-m-d h:i:s') . '"'
+                                . '"last_date":"' .  date(DATE_FORMAT_PHP_DEFAULT) . '"'
                                 . '},';
                     }
                 }
@@ -465,13 +465,13 @@ class Chat {
             $datas = '';
             foreach ($select_admin as $value) {
 
-                $datas .= $value['username'] . ';' . $value[$userProfile->getFullname()] . ';' . $value[$userProfile->getPathimage()] . ";;0;" . date('Y-m-d h:i:s') . PHP_EOL;
+                $datas .= $value['username'] . ';' . $value[$userProfile->getFullname()] . ';' . $value[$userProfile->getPathimage()] . ";;0;" .  date(DATE_FORMAT_PHP_DEFAULT) . PHP_EOL;
                 $data .= '{"username":"' . $value['username'] . '",'
                         . '"fullname":"' . $value[$userProfile->getFullname()] . '",'
                         . '"path_img":"' . $value[$userProfile->getPathimage()] . '",'
                         . '"last_chat":"",'
                         . '"last_total":"0",'
-                        . '"last_date":"' . date('Y-m-d h:i:s') . '"'
+                        . '"last_date":"' .  date(DATE_FORMAT_PHP_DEFAULT) . '"'
                         . '},';
 
 //                $data[] = array($value['username'], $value[$userProfile->getFullname()], $value[$userProfile->getPathimage()], "|", "|", 0);
@@ -570,7 +570,7 @@ class Chat {
 //                if ($value['last_total'] != 0) {
 //                    $last_total = $value['last_total'];
 //                }
-                $datas2 .= $val_admin2['username'] . ';' . $val_admin2[$userProfile->getFullname()] . ';' . $val_admin2[$userProfile->getPathimage()] . ";;0;" . date('Y-m-d h:i:s') . PHP_EOL;
+                $datas2 .= $val_admin2['username'] . ';' . $val_admin2[$userProfile->getFullname()] . ';' . $val_admin2[$userProfile->getPathimage()] . ";;0;" .  date(DATE_FORMAT_PHP_DEFAULT) . PHP_EOL;
                 /* $data2 = '{"username":"' . $val_admin2['username'] . '",
                   "fullname":"' . $val_admin2[$userProfile->getFullname()] . '",
                   "path_img":"' . $val_admin2[$userProfile->getPathimage()] . '",
@@ -584,7 +584,7 @@ class Chat {
                         . '"path_img":"' . $val_admin2[$userProfile->getPathimage()] . '",'
                         . '"last_chat":"",'
                         . '"last_total":"0",'
-                        . '"last_date":"' . date('Y-m-d h:i:s') . '"'
+                        . '"last_date":"' .  date(DATE_FORMAT_PHP_DEFAULT) . '"'
                         . '},';
             }
             $datas = rtrim($datas, ',');
@@ -616,7 +616,7 @@ class Chat {
 //            print_r($datas2);
 //            $jsonData = json_encode($tempArray);
 //            foreach ($expl as $val_chats) {
-//                $datas2 .= $val_chats . ';' . $val_admin2[$userProfile->getFullname()] . ';' . $val_admin2[$userProfile->getPathimage()] . ";;0;" . date('Y-m-d h:i:s') . PHP_EOL;
+//                $datas2 .= $val_chats . ';' . $val_admin2[$userProfile->getFullname()] . ';' . $val_admin2[$userProfile->getPathimage()] . ";;0;" .  date(DATE_FORMAT_PHP_DEFAULT) . PHP_EOL;
 //            }
 //            if (!empty($datas2)) {
             file_put_contents($path, $datas2);

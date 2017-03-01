@@ -51,7 +51,7 @@ class Test {
           "status" => 1,
           "created_by" => "admin",
           "created_ip" => "0.0.0.0",
-          "created_time" => date('Y-m-d h:i:s'),
+          "created_time" =>  date(DATE_FORMAT_PHP_DEFAULT),
           "group_id" => 1,
           "function_id" => $no,
           "assignment_order" => 0,
