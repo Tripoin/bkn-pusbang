@@ -30,7 +30,6 @@ class MasterSubject extends GeneralAuditrail {
     public $isChild = 'is_child';
     public $yearSubject = 'year_subject';
 
-    
     function getIsChild() {
         return $this->isChild;
     }
@@ -47,7 +46,7 @@ class MasterSubject extends GeneralAuditrail {
         $this->yearSubject = $yearSubject;
     }
 
-        function getBudgetTypeId() {
+    function getBudgetTypeId() {
         return $this->budgetTypeId;
     }
 
@@ -88,7 +87,12 @@ class MasterSubject extends GeneralAuditrail {
     }
 
     public function search($key) {
-        return $this->$key;
+        if(isset($this->$key)){
+            return $this->$key;
+        } else {
+            return "";
+        }
+        
     }
 
     function setData($data) {
