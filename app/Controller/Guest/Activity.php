@@ -17,6 +17,7 @@ use app\Model\LinkRegistration;
 use app\Model\MasterApproval;
 use app\Model\MasterApprovalCategory;
 use app\Model\MasterAttachment;
+use app\Model\MasterSubject;
 use app\Util\Database;
 use app\Model\TransactionActivity;
 use app\Model\TransactionRegistration;
@@ -28,7 +29,7 @@ class Activity {
 
     public function index() {
 //        $url_template = getTemplateURL($url);
-
+        $masterSubject = new MasterSubject();
         $transActivity = new TransactionActivity();
         $db = new Database();
 

@@ -24,10 +24,14 @@
             </tr>
             <?php
             foreach($rs_activity as $data){
+                $data_subject = valueComboBoxParent($masterSubject->getEntity(), 
+                        $masterSubject->getId(), 
+                        $masterSubject->getName(), 
+                        $masterSubject->getParentId(), $masterSubject->getId() . equalToIgnoreCase($data[$transActivity->getSubjectId()]));
             ?>
 
             <tr>
-                <th><?php echo $data['name'];?></th>
+                <th><?php echo $data_subject[0]['label'];?></th>
                 <th><?php echo $data['generation'];?></th>
                 <th><?php echo $data['budget_type_name'];?></th>
                 <th><?php echo subMonth($data['start_activity']) ." s/d ". subMonth($data['end_activity']);?></th>
