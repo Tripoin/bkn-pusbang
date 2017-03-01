@@ -9,6 +9,7 @@
 
 define('LANGUAGE_DEFAULT', 'id');
 define('DATE_FORMAT', 'yyyy-mm-dd');
+define('DATE_FORMAT_PHP_DEFAULT', 'Y-m-d H:i:s');
 define('TIME_ZONE','Asia/Bangkok');
 define('URL_API_ECCOMERCE', '');
 define('HORIZONTAL', 'horizontal');
