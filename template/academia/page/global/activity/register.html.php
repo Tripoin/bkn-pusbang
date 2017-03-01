@@ -258,7 +258,7 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
             $('#headingTitle').html('Instansi Pemerintah');
         } else {
             $('#rowFieldInstansi').hide();
-            $('#headingTitle').html('Individu');
+            $('#headingTitle').html('Instansi Swasta');
         }
     }
 

@@ -14,6 +14,8 @@ namespace app\Controller\Guest;
  * @author sfandrianah
  */
 use app\Model\LinkRegistration;
+use app\Model\MasterApproval;
+use app\Model\MasterApprovalCategory;
 use app\Model\MasterAttachment;
 use app\Util\Database;
 use app\Model\TransactionActivity;
@@ -133,9 +135,11 @@ class Activity {
         }
         $result = $db->getResult();
         $idReg = $result[0];
-        $this->saveAttachFile($db, $fileName, $idReg, $idActivity);
+
 
         if(is_numeric($result[0])){
+            $this->saveAttachFile($db, $fileName, $idReg, $idActivity, null);
+
             echo toastAlert('success',lang('general.title_register_success'),lang('general.message_register_success'));
             echo resultPageMsg('success',lang('general.title_register_success'),lang('general.message_register_success'));
         } else {
@@ -145,9 +149,11 @@ class Activity {
         //echo toastAlert();
     }
 
-    public function saveAttachFile($dB, $fileName, $idReg, $idActivity){
+    public function saveAttachFile($dB, $fileName, $idReg, $idActivity, $idRegDetail){
         $attachmentFile = new MasterAttachment();
         $linkReg = new LinkRegistration();
+        $dB = new Database();
+        $dB->connect();
 
         $codeAttach = createRandomBooking().$fileName;
 
@@ -158,12 +164,32 @@ class Activity {
 
         $resultAtt = $dB->getResult();
         $idAtt = $resultAtt[0];
+        $idRegDetail = !empty($idRegDetail) ? "'$idRegDetail'" : null;
 
         $dB->insert($linkReg->getEntity(), array(
             $linkReg->getRegistrationId() => $idReg,
             $linkReg->getAttachmentParticipantId() => $idAtt,
             $linkReg->getAttachmentLetterId() => $idAtt,
             $linkReg->getSubjectId() => $idActivity,
+            $linkReg->getRegistrationDetailsId() => $idRegDetail
+        ));
+        $resultReg = $dB->getResult();
+
+        $mstApproval = new MasterApproval();
+        $apprvCtgr = new MasterApprovalCategory();
+
+        $ctgrId = $dB->selectByID($apprvCtgr, $apprvCtgr->getCode()."='REGISTRATION';");
+
+        $ctgrIds = $ctgrId[0][$apprvCtgr->getId()];
+
+
+        $dB->insert($mstApproval->getEntity(), array(
+            $mstApproval->getCode() => createRandomBooking(),
+            $mstApproval->getApprovalDetailId() => $idReg,
+            $mstApproval->getApprovalCategoryId() => $ctgrIds,
+            $mstApproval->getIsExecuted() => 'N',
+            $mstApproval->getStatus() => null,
         ));
     }
+
 }
