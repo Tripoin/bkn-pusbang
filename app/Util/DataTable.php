@@ -160,7 +160,8 @@ class DataTable {
 
         $opr = $this->tableOption['OPTION_PAGINATION_RECORD'];
         if (empty($opr)) {
-            $opr = array(5, 10, 15, 20);
+//            $opr = array(5, 10, 15, 20);
+            $opr = array(10, 25, 50, 100);
         }
 
         if ($this->tableOption['PAGINATION_MANUAL'] == true) {

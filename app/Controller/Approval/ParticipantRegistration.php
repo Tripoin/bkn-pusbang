@@ -80,7 +80,7 @@ class ParticipantRegistration extends Controller {
         $masterApproval = new MasterApproval();
         $masterApprovalCategory = new MasterApprovalCategory();
         if ($_POST['per_page'] == "") {
-            $Datatable->per_page = 5;
+            $Datatable->per_page = 10;
         } else {
             $Datatable->per_page = $_POST['per_page'];
         }
@@ -143,8 +143,9 @@ class ParticipantRegistration extends Controller {
         $masterVillage = new MasterVillage();
         $mGovClass = new MasterGovernmentClassification();
         $masterSubject = new MasterSubject();
-
+//        print_r($id);
         $dt_approval = $db->selectByID($masterApproval, $masterApproval->getId() . EQUAL . $id);
+//        print_r($dt_approval);
         $dt_approval_category = $db->selectByID($masterApprovalCategory, $masterApprovalCategory->getId() . EQUAL . $dt_approval[0][$masterApproval->getApprovalCategoryId()]);
         if ($dt_approval_category[0][$masterApprovalCategory->getCode()] == 'WAITING-LIST') {
             $dt_waiting_list = $db->selectByID($masterWaitingList, $masterWaitingList->getId() . EQUAL . $dt_approval[0][$masterApproval->getApprovalDetailId()]);
@@ -181,9 +182,11 @@ class ParticipantRegistration extends Controller {
 
             $masterAttachment = new MasterAttachment();
             $rs_link_registration = $db->selectByID($linkRegistration, $linkRegistration->getRegistrationId() . equalToIgnoreCase($dt_approval[0][$masterApproval->getApprovalDetailId()]));
+//            print_r($rs_link_registration);
             $dt_activity = $db->selectByID($m_act, $m_act->getId() . EQUAL . $rs_link_registration[0][$linkRegistration->getSubjectId()]);
             $rs_registration = $db->selectByID($transactionRegistration, $transactionRegistration->getId() . equalToIgnoreCase($dt_approval[0][$masterApproval->getApprovalDetailId()]));
             $rs_attachment = $db->selectByID($masterAttachment, $masterAttachment->getId() . equalToIgnoreCase($rs_link_registration[0][$linkRegistration->getAttachmentLetterId()]));
+            $dt_participant_type = $db->selectByID($m_participant_type, $m_participant_type->getId() . equalToIgnoreCase($rs_registration[0][$transactionRegistration->getParticipantTypeId()]));
 //            print_r($rs_attachment);
             $data_subject = valueComboBoxParent($masterSubject->getEntity(), $masterSubject->getId(), $masterSubject->getName(), $masterSubject->getParentId(), $masterSubject->getId() . equalToIgnoreCase($dt_activity[0][$m_act->getSubjectId()]));
 
@@ -223,7 +226,7 @@ class ParticipantRegistration extends Controller {
                 $db->update($masterApproval->getEntity(), array(
                     $masterApproval->getStatus() => 1,
                     $masterApproval->getModifiedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
-                    $masterApproval->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
+                    $masterApproval->getModifiedOn() => date(DATE_FORMAT_PHP_DEFAULT),
                         ), $masterApproval->getApprovalDetailId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . "3");
 //            echo $db->getSql();
                 $result_2 = $db->getResult();
@@ -236,7 +239,7 @@ class ParticipantRegistration extends Controller {
                         $masterUserAssignment->getUser_main_id() => $userMainId,
                         $masterUserAssignment->getActivity_id() => $activity_id,
                         $masterUserAssignment->getCreatedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
-                        $masterUserAssignment->getCreatedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
+                        $masterUserAssignment->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
                     ));
                     $result_3 = $db->getResult();
                     if (is_numeric($result_3[0])) {
@@ -264,7 +267,7 @@ class ParticipantRegistration extends Controller {
             $db->update($transactionRegistration->getEntity(), array(
                 $transactionRegistration->getIsApproved() => 1,
                 $transactionRegistration->getApprovedBy() => $_SESSION[SESSION_ADMIN_USERNAME],
-                $transactionRegistration->getApprovedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
+                $transactionRegistration->getApprovedOn() => date(DATE_FORMAT_PHP_DEFAULT),
                     ), $transactionRegistration->getId() . equalToIgnoreCase($registrationId));
             $rs_update_reg = $db->getResult();
             if (is_numeric($rs_update_reg[0]) == 1) {
@@ -272,7 +275,7 @@ class ParticipantRegistration extends Controller {
                 $db->update($masterApproval->getEntity(), array(
                     $masterApproval->getStatus() => 1,
                     $masterApproval->getModifiedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
-                    $masterApproval->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
+                    $masterApproval->getModifiedOn() => date(DATE_FORMAT_PHP_DEFAULT),
                         ), $masterApproval->getId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . $approvalCategoryId);
                 $result_2 = $db->getResult();
                 if (is_numeric($result_2[0]) == 1) {
@@ -294,6 +297,10 @@ class ParticipantRegistration extends Controller {
         $transactionRegistration = new TransactionRegistration();
         $masterApproval = new MasterApproval();
         $securityUser = new SecurityUser();
+        $securityUserProfile = new SecurityUserProfile();
+        $securityGroup = new SecurityGroup();
+        $masterContact = new MasterContact();
+        $masterAddress = new MasterAddress();
 
         $db = new Database();
         $db->connect();
@@ -302,21 +309,93 @@ class ParticipantRegistration extends Controller {
         $rs_approve = $db->selectByID($masterApproval, $masterApproval->getApprovalDetailId() . EQUAL . $registrationId . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . $approvalCategoryId);
         $code = explode('@', $rs_reg[0][$transactionRegistration->getDelegationEmail()]);
 
+        $rs_group = $db->selectByID($securityGroup, $securityGroup->getCode() . equalToIgnoreCase('DELEGATION'));
+
         $password = password_hash($code[0], PASSWORD_BCRYPT);
         $db->insert($securityUser->getEntity(), array(
             $securityUser->getCode() => $code[0],
             $securityUser->getName() => $code[0],
             $securityUser->getEmail() => $rs_reg[0][$transactionRegistration->getDelegationEmail()],
             $securityUser->getPassword() => $password,
-            $securityUser->getCreatedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
+            $securityUser->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
             $securityUser->getCreatedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
-            $securityUser->getStatus() => null,
-            $securityUser->getGroupId() => 5,
+            $securityUser->getStatus() => 1,
+            $securityUser->getGroupId() => $rs_group[0][$securityGroup->getId()],
             $securityUser->getDescription() => $code[0] . ' - From Registration PIC'
         ));
         $rs_user = $db->getResult();
+//        LOGGER("insert user:".$rs_user);
         if (is_numeric($rs_user[0])) {
-            $this->sendMailUserFromRegistration();
+            $db->insert($masterContact->getEntity(), array(
+                $masterContact->getCode() => createRandomBooking() . "-" . $code[0],
+                $masterContact->getName() => $code[0],
+                $masterContact->getEmail1() => $rs_reg[0][$transactionRegistration->getDelegationEmail()],
+                $masterContact->getFax() => $rs_reg[0][$transactionRegistration->getDelegationFax()],
+                $masterContact->getPhoneNumber1() => $rs_reg[0][$transactionRegistration->getDelegationPhoneNumber()],
+                $masterContact->getStatus() => 1,
+                $masterContact->getCreatedOn() => $_SESSION[SESSION_ADMIN_USERNAME],
+                $masterContact->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+            ));
+            $rs_contact = $db->getResult();
+
+            $db->insert($masterAddress->getEntity(), array(
+                $masterAddress->getCode() => createRandomBooking() . "-" . $code[0],
+                $masterAddress->getName() => $rs_reg[0][$transactionRegistration->getDelegationAddress()],
+                $masterAddress->getDescription() => $rs_reg[0][$transactionRegistration->getDelegationAddress()],
+                $masterAddress->getProvinceId() => $rs_reg[0][$transactionRegistration->getProvinceId()],
+                $masterAddress->getCityId() => $rs_reg[0][$transactionRegistration->getCityId()],
+                $masterAddress->getVillageId() => $rs_reg[0][$transactionRegistration->getVillageId()],
+                $masterAddress->getDistrictId() => $rs_reg[0][$transactionRegistration->getDistrictId()],
+                $masterAddress->getZipCode() => $rs_reg[0][$transactionRegistration->getZipCode()],
+                $masterAddress->getStatus() => 1,
+                $masterAddress->getCreatedOn() => $_SESSION[SESSION_ADMIN_USERNAME],
+                $masterAddress->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+            ));
+            $rs_address = $db->getResult();
+            $db->insert($securityUserProfile->getEntity(), array(
+                $securityUserProfile->getCode() => $code[0],
+                $securityUserProfile->getName() => $rs_reg[0][$transactionRegistration->getDelegationName()],
+                $securityUserProfile->getContactId() => $rs_contact[0],
+                $securityUserProfile->getAddressId() => $rs_address[0],
+                $securityUserProfile->getUserId() => $rs_user[0],
+                $securityUserProfile->getStatus() => 1,
+                $securityUserProfile->getCreatedOn() => $_SESSION[SESSION_ADMIN_USERNAME],
+                $securityUserProfile->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+            ));
+            $rs_user_profile = $db->getResult();
+            if (is_numeric($rs_user_profile[0])) {
+                $sendMail = $this->sendMailUserFromRegistration();
+                if ($sendMail == true) {
+                    echo toastAlert('success', lang('general.title_approved_success'), lang('general.message_approved_success'));
+                    echo '<script>$(function () {$(\'#myModal_self\').modal(\'hide\');postAjaxPagination();});</script>';
+                } else {
+                    if (is_numeric($rs_contact[0])) {
+                        $db->delete($masterContact->getEntity(), $masterContact->getId() . equalToIgnoreCase($rs_contact[0]));
+                        $rs_delete = $db->getResult();
+                    }
+                    if (is_numeric($rs_address[0])) {
+                        $db->delete($masterAddress->getEntity(), $masterAddress->getId() . equalToIgnoreCase($rs_address[0]));
+                        $rs_delete = $db->getResult();
+                    }
+                    $db->delete($securityUserProfile->getEntity(), $securityUserProfile->getId() . equalToIgnoreCase($rs_user_profile[0]));
+                    $rs_delete = $db->getResult();
+                    $this->rollBackApproval();
+                    echo toastAlert('error', lang('general.title_approved_error'), "Gagal Mengirim Email");
+                    echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+                }
+            } else {
+                if (is_numeric($rs_contact[0])) {
+                    $db->delete($masterContact->getEntity(), $masterContact->getId() . equalToIgnoreCase($rs_contact[0]));
+                    $rs_delete = $db->getResult();
+                }
+                if (is_numeric($rs_address[0])) {
+                    $db->delete($masterAddress->getEntity(), $masterAddress->getId() . equalToIgnoreCase($rs_address[0]));
+                    $rs_delete = $db->getResult();
+                }
+                $this->rollBackApproval();
+                echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+                echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+            }
         } else {
             $this->rollBackApproval();
             echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
@@ -334,13 +413,14 @@ class ParticipantRegistration extends Controller {
         $rs_reg = $db->selectByID($transactionRegistration, $transactionRegistration->getId() . equalToIgnoreCase($registrationId));
         $rs_approve = $db->selectByID($masterApproval, $masterApproval->getApprovalDetailId() . EQUAL . $registrationId . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . $approvalCategoryId);
         $code = explode('@', $rs_reg[0][$transactionRegistration->getDelegationEmail()]);
-        $pic_name = $code[0];
+        $pic_code = $code[0];
+        $pic_name = $rs_reg[0][$transactionRegistration->getDelegationName()];
         $pic_email = $rs_reg[0][$transactionRegistration->getDelegationEmail()];
 
         $mail = new PHPMailer;
         try {
             $mail->isSMTP();
-            echo MAIL_USERNAME.'-'.MAIL_PASSWORD;
+//            echo MAIL_USERNAME . '-' . MAIL_PASSWORD;
             $mail->Debugoutput = 'html';
             $mail->SMTPDebug = 2;
             $mail->Host = MAIL_HOST;
@@ -352,6 +432,7 @@ class ParticipantRegistration extends Controller {
 
             $mail->Username = MAIL_USERNAME;
             $mail->Password = MAIL_PASSWORD;
+            
 
 
             $mail->isHTML(true);
@@ -365,15 +446,24 @@ class ParticipantRegistration extends Controller {
 //Set who the message is to be sent to
             $mail->addAddress($pic_email, $pic_name);
             $img_logo_tala = 'http://54.251.168.102/e-portal/contents/logo-kecil.png';
-            $mail->Subject = 'Registrasi Peserta Pusbang BKN';
+            $mail->Subject = 'Approval Peserta Pusbang BKN';
             $mail->Body = '<div style="border-style: solid;border-width: thin;font-family: \'Roboto\';">
                       <div align="center" style="margin:15px;"><img src="' . $img_logo_tala . '" width="120" height="40"/></div>
                         <div align="left" style="margin:15px;">
                             Halo ' . $pic_name . ',
                         <br/><br/>
-                       ' . lang('general.message_register_member') . '
-                        
+                       <p>
+                            User anda berhasil di approve oleh administrator, Anda bisa melakukan pendaftaran peserta, Silahkan login user anda menggunakan username dan password dibawah ini:
+                            <br/><br/>Username : <b>' . $pic_code . '</b>
+                            <br/>Password : <b>' . $pic_code . '</b>
+                            <br/><br/>
+                            Silahkan klik link dibawah ini untuk menuju kehalaman Portal Pusbang ASN,
+                            <br/>
+                            <a href="' . URL('') . '" target="_blank">' . URL('') . '</a>
+                       </p>
                         <br/>
+                        <br/>
+                        Terima Kasih telah mendaftar di Pusbang ASN
                         <a href="' . URL('') . '" target="_blank">' . URL('') . '</a>
                         </div>
                         </div>
@@ -381,30 +471,34 @@ class ParticipantRegistration extends Controller {
             if ($mail->smtpConnect()) {
                 $mail->smtpClose();
                 if (!$mail->send()) {
-                    $this->rollBackApproval();
+                    return false;
+//                    $this->rollBackApproval();
 //                    echo $mail->ErrorInfo;
 //                    LOGGER('GAgAL kirim Email');
                     LOGGER($mail->ErrorInfo);
-                    echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
-                    echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+//                    echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+//                    echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
                 } else {
-                    echo toastAlert('success', lang('general.title_approved_success'), lang('general.message_approved_success'));
-                    echo '<script>$(function () {$(\'#myModal_self\').modal(\'hide\');postAjaxPagination();});</script>';
+                    return true;
+//                    echo toastAlert('success', lang('general.title_approved_success'), lang('general.message_approved_success'));
+//                    echo '<script>$(function () {$(\'#myModal_self\').modal(\'hide\');postAjaxPagination();});</script>';
 //                    return 1;
                 }
             } else {
+                return false;
                 LOGGER("Error Connect SMTP");
-                $this->rollBackApproval();
-                echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+//                $this->rollBackApproval();
+//                echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
 //                echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
 //                return 0;
             }
         } catch (\Exception $e) {
+            return false;
 //            LOGGER('GAgAL kirim Email');
             LOGGER($e->getMessage());
-            $this->rollBackApproval();
-            echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
-            echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+//            $this->rollBackApproval();
+//            echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+//            echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
 //            echo $e->getMessage(); //Boring error messages from anything else!
         }
     }
@@ -419,12 +513,12 @@ class ParticipantRegistration extends Controller {
         $db->connect();
         $rs_reg = $db->selectByID($transactionRegistration, $transactionRegistration->getId() . equalToIgnoreCase($registrationId));
         $code = explode('@', $rs_reg[0][$transactionRegistration->getDelegationEmail()]);
-        $db->delete($securityUser->getEntity(),$securityUser->getCode().  equalToIgnoreCase($code[0]));
+        $db->delete($securityUser->getEntity(), $securityUser->getCode() . equalToIgnoreCase($code[0]));
         $rs_del = $db->getResult();
         $db->update($masterApproval->getEntity(), array(
             $masterApproval->getStatus() => null,
             $masterApproval->getModifiedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
-            $masterApproval->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
+            $masterApproval->getModifiedOn() => date(DATE_FORMAT_PHP_DEFAULT),
                 ), $masterApproval->getApprovalDetailId() . EQUAL . $registrationId . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . $approvalCategoryId);
         return $db->getResult();
     }
@@ -448,14 +542,14 @@ class ParticipantRegistration extends Controller {
                 $masterWaitingList->getApprovedBy() => $_SESSION[SESSION_ADMIN_USERNAME],
                 $masterWaitingList->getIsApproved() => 0,
                 $masterWaitingList->getApprovedMessage() => $message,
-                $masterWaitingList->getApprovedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
+                $masterWaitingList->getApprovedOn() => date(DATE_FORMAT_PHP_DEFAULT),
                     ), $masterWaitingList->getId() . EQUAL . $id);
             $result = $db->getResult();
             if ($result[0] == 1) {
                 $db->update($masterApproval->getEntity(), array(
                     $masterApproval->getStatus() => 0,
                     $masterApproval->getModifiedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
-                    $masterApproval->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
+                    $masterApproval->getModifiedOn() => date(DATE_FORMAT_PHP_DEFAULT),
                         ), $masterApproval->getApprovalDetailId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . "3");
 //            echo $db->getSql();
                 $result_2 = $db->getResult();
@@ -476,7 +570,7 @@ class ParticipantRegistration extends Controller {
             $db->update($transactionRegistration->getEntity(), array(
                 $transactionRegistration->getIsApproved() => 0,
                 $transactionRegistration->getApprovedBy() => $_SESSION[SESSION_ADMIN_USERNAME],
-                $transactionRegistration->getApprovedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
+                $transactionRegistration->getApprovedOn() => date(DATE_FORMAT_PHP_DEFAULT),
                 $transactionRegistration->getApprovedMessage() => $message,
                     ), $transactionRegistration->getId() . equalToIgnoreCase($registrationId));
             $rs_update_reg = $db->getResult();
@@ -485,7 +579,7 @@ class ParticipantRegistration extends Controller {
                 $db->update($masterApproval->getEntity(), array(
                     $masterApproval->getStatus() => 0,
                     $masterApproval->getModifiedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
-                    $masterApproval->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
+                    $masterApproval->getModifiedOn() => date(DATE_FORMAT_PHP_DEFAULT),
                         ), $masterApproval->getId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . $approvalCategoryId);
 //            echo $db->getSql();
                 $result_2 = $db->getResult();

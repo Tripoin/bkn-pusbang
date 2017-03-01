@@ -76,6 +76,7 @@ Routes::set('contact-us', 'app\Controller\Guest\ContactUs@index');
 Routes::set('contact-us/submit', 'app\Controller\Guest\ContactUs@save');
 
 Routes::set('activity', 'app\Controller\Guest\Activity@index');
+Routes::set('activity/search', 'app\Controller\Guest\Activity@search');
 Routes::set('activity/{id}/register', 'app\Controller\Guest\Activity@registerActivityPage');
 Routes::set('activity/register/save/{idActivity}', 'app\Controller\Guest\Activity@saveNewRegister');
 Routes::set('alumni', 'app\Controller\Guest\Alumni@index');

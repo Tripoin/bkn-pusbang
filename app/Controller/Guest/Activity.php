@@ -29,13 +29,27 @@ class Activity {
 
     public function index() {
 //        $url_template = getTemplateURL($url);
+//        $masterSubject = new MasterSubject();
+//        $transActivity = new TransactionActivity();
+        $db = new Database();
+
+//        $rs_activity = $db->selectByID($transActivity);
+        $Form = new Form();
+        include getTemplatePath('page/global/activity.html.php');
+    }
+    
+    public function search(){
+        $years = $_POST['years'];
+        $Form = new Form();
         $masterSubject = new MasterSubject();
         $transActivity = new TransactionActivity();
         $db = new Database();
 
-        $rs_activity = $db->selectByID($transActivity);
-        $Form = new Form();
-        include getTemplatePath('page/global/activity.html.php');
+//        $rs_activity = $db->selectByID($transActivity);
+        $db->connect();
+        $db->select($transActivity->getEntity(), "*", null, $transActivity->getYearActivity().  equalToIgnoreCase($years), $transActivity->getId()." DESC");
+        $rs_activity = $db->getResult();
+        include getTemplatePath('/page/global/activity/activity-search.html.php');
     }
 
     public function registerActivityPage($id) {

@@ -35,5 +35,20 @@
         $('.myModal_self-title').attr('class', 'modal-dialog modal-sm');
         $('.modal-dialog').attr('class', 'modal-dialog modal-sm');
         $('[rel="tooltip"]').tooltip();
+        $("#username").on('keyup', function (e) {
+            if (e.keyCode == 13) {
+                postAjax('login_form', 'form-message-login');
+            }
+        });
+        $("#password").on('keyup', function (e) {
+            if (e.keyCode == 13) {
+                postAjax('login_form', 'form-message-login');
+            }
+        });
+        $("#security_code").on('keyup', function (e) {
+            if (e.keyCode == 13) {
+                postAjax('login_form', 'form-message-login');
+            }
+        });
     })
 </script>

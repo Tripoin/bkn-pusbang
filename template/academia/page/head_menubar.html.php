@@ -51,7 +51,7 @@ $sfLanguage = new SecurityFunctionLanguage();
                              * 
                              */
                             $db->select(
-                                    $secFuncAssg->getEntity(), $secFuncAssg->getFunction()->getEntity() . ".*", array($secFuncAssg->getFunction()->getEntity(), $secFuncAssg->getGroup()->getEntity()), $secFuncAssg->getFunction()->getEntity() . DOT . $secFuncAssg->getFunction()->getId() . EQUAL . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getFunction()->getId()
+                                    $secFuncAssg->getEntity(), $secFuncAssg->getFunction()->getEntity() . ".*", array($secFuncAssg->getFunction()->getEntity(), $secFuncAssg->getGroup()->getEntity()), $secFuncAssg->getFunction()->getEntity() . DOT . $secFuncAssg->getFunction()->getId() . EQUAL . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getFunctionId()
                                     . " AND " . $secFuncAssg->getGroup()->getEntity() . DOT . $secFuncAssg->getGroup()->getId() . EQUAL . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getGroupId()
                                     . " AND " . $secFuncAssg->getEntity() . DOT . $secFuncAssg->getStatus() . EQUAL . ONE
                                     . " AND " . $secFuncAssg->getFunction()->getEntity() . DOT . $secFuncAssg->getStatus() . EQUAL . ONE

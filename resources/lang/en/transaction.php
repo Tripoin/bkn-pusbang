@@ -3,6 +3,7 @@
 return [
     "agenda_subject" => "Agenda Subject",
     "excecution_time" => "Excecution Time",
+    "excecution_years" => "Execution Years",
     "number_of_participants" => "Number Of Participant",
     "assignment" => "Assignment",
     "organizer" => "Organizer",
@@ -26,7 +27,8 @@ return [
     "participant_category" => "Category Participant",
     "working_unit" => "Working Unit",
     "instansi" => "Instansi",
-    
+    "budget_type"=>"Budget Type",
+    "batch"=>"Batch",
     "place_of_birth" => "Place Of Birth",
     "birthdate" => "Birthdate",
     "religion" => "Religion",
@@ -69,4 +71,6 @@ return [
     "message" => "Message",
     "data_have_approved" => "Data ini Sudah di Approved",
     "data_have_rejected" => "Data ini Sudah di Rejected",
+    "tentative"=>"Tentative",
+    "location"=>"Location",
 ];

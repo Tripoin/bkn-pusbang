@@ -3,7 +3,7 @@
 $Datatable->createButton(false);
 //$Datatable->headerButton(false);
 //    $Datatable->styleHeader(array("text-align:center;"));
-$Datatable->styleColumn(array("text-align:center;width:5%;", "", "", "text-align:center;width:100px;"));
+$Datatable->styleColumn(array("text-align:center;width:5%;", "","text-align:center;width:100px;","", "","text-align:center;width:100px;","text-align:center;width:100px;", "text-align:center;width:100px;"));
 $Datatable->header(array(lang("general.no"), 
     lang("transaction.day/date"),
     lang("transaction.time"),
@@ -23,7 +23,7 @@ foreach ($list_data['item'] as $value) {
 //    $panitia = '<a href="javascript:void(0)" onclick="postAjaxEdit(\'' . $this->editUrl . '\',\'id=\')">' . lang("transaction.organizer") . '</a>';
         $startTime = date('h:i', strtotime($value[$activityDetails->getStartTime()]));
         $endTime = date('h:i', strtotime($value[$activityDetails->getEndTime()]));
-        
+   
         $Datatable->body(array(
             $no,
             fullDateString($value[$activityDetails->getStartTime()]),

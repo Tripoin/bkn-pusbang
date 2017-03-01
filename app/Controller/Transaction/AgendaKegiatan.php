@@ -49,6 +49,7 @@ class AgendaKegiatan extends Controller {
     public $data_subject;
     public $data_curriculum;
     public $data_user;
+    public $data_years;
 
     public function __construct() {
         $this->admin_theme_url = getAdminTheme();
@@ -60,7 +61,7 @@ class AgendaKegiatan extends Controller {
             "startActivity" => lang('transaction.excecution_time'),
             "quota" => lang('transaction.number_of_participants')
         );
-        $this->orderBy = $this->modelData->getCreatedOn() . " DESC ";
+        $this->orderBy = $this->modelData->getId() . " DESC ";
         $this->indexUrl = IURLConstant::AGENDA_KEGIATAN_INDEX_URL;
         $this->viewPath = IViewConstant::AGENDA_KEGIATAN_VIEW_INDEX;
         $this->unsetAutoData = array('description');
@@ -69,14 +70,27 @@ class AgendaKegiatan extends Controller {
         parent::__construct();
     }
 
+    public function dataYears($plus) {
+        $array = array();
+        $StaringDate = date('Y-m-d');
+        for ($no = 0; $no <= $plus; $no++) {
+            $oneYearOn = date("Y", strtotime(date("Y-m-d", strtotime($StaringDate)) . " +".$no." year"));
+//            echo $oneYearOn;
+            $array[] = array("id" => $oneYearOn,"label" => $oneYearOn);
+        }
+        return $array;
+    }
+
     public function create() {
         $masterSubject = new MasterSubject();
+        $this->data_years = $this->dataYears(10);
         $this->data_subject = valueComboBoxParent($masterSubject->getEntity(), $masterSubject->getId(), $masterSubject->getName(), $masterSubject->getParentId(), $masterSubject->getIsChild() . equalToIgnoreCase(1));
         parent::create();
     }
 
     public function edit() {
         $masterSubject = new MasterSubject();
+        $this->data_years = $this->dataYears(10);
         $this->data_subject = valueComboBoxParent($masterSubject->getEntity(), $masterSubject->getId(), $masterSubject->getName(), $masterSubject->getParentId());
         parent::edit();
     }
@@ -87,10 +101,11 @@ class AgendaKegiatan extends Controller {
         $startActivity = $_POST['startActivity'];
         $endActivity = $_POST['endActivity'];
         $generation = $_POST['generation'];
+        $location = $_POST['location'];
         $quota = $_POST['quota'];
-        $description = $_POST['description'];
-
-
+        $executionYears = $_POST['execution_years'];
+        
+//        $description = $_POST['description'];
 //        $group = new SecurityGroup();
         $data = new TransactionActivity();
         $db->connect();
@@ -109,13 +124,14 @@ class AgendaKegiatan extends Controller {
             $data->getStartActivity() => $startActivity,
             $data->getEndActivity() => $endActivity,
             $data->getGeneration() => $generation,
+            $data->getLocation() => $location,
             $data->getQuota() => $quota,
-            $data->getYearActivity() => $year,
+            $data->getYearActivity() => $executionYears,
             $data->getBudgetTypeName() => $data_budget_type[0][$masterBudgetType->getName()],
-            $data->getDescription() => $description,
+//            $data->getDescription() => $description,
             $data->getStatus() => NULL,
             $data->getCreatedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
-            $data->getCreatedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
+            $data->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
         );
 //        $datas = $data->setData($data);
         $db->insert($data->getEntity(), $data_insert);
@@ -137,8 +153,9 @@ class AgendaKegiatan extends Controller {
         $endActivity = $_POST['endActivity'];
         $quota = $_POST['quota'];
         $generation = $_POST['generation'];
-        $description = $_POST['description'];
-
+        $location = $_POST['location'];
+        $executionYears = $_POST['execution_years'];
+//        $description = $_POST['description'];
 //        $group = new SecurityGroup();
         $data = new TransactionActivity();
         $db->connect();
@@ -158,10 +175,11 @@ class AgendaKegiatan extends Controller {
             $data->getGeneration() => $generation,
             $data->getBudgetTypeName() => $data_budget_type[0][$masterBudgetType->getName()],
             $data->getQuota() => $quota,
-            $data->getDescription() => $description,
-            $data->getYearActivity() => $year,
+            $data->getLocation() => $location,
+//            $data->getDescription() => $description,
+            $data->getYearActivity() => $executionYears,
             $data->getModifiedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
-            $data->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
+            $data->getModifiedOn() => date(DATE_FORMAT_PHP_DEFAULT),
         );
 //        $datas = $data->setData($data);
         $db->update($data->getEntity(), $data_insert, $data->getId() . EQUAL . $id);

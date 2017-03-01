@@ -7,4 +7,5 @@
         <?php include_once getTemplatePath(HEAD_PATH); ?>
 
         <?php include_once getTemplatePath(HEAD_MENUBAR_PATH); ?>
-        <?php include_once getTemplatePath(HEAD_MENUBAR_MOBILE_PATH); ?>
+        <?php include_once getTemplatePath(HEAD_MENUBAR_MOBILE_PATH);
+        ?>

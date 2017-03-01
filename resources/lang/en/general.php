@@ -9,7 +9,7 @@
 //return 'masuk';
 return [
     'title_home' => 'Pusbang BKN',
-    'title_sign_modal' => 'Welcome to Tala Indonesia',
+    'title_sign_modal' => 'Welcome to Pusbang BKN',
     'sign_in_your_account' => 'Sign In To Your Account',
     'dont_have_account' => 'DON\'T HAVE AN ACCOUNT YET ?',
     'register_now' => 'Register Now',

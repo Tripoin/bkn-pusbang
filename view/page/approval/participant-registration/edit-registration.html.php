@@ -20,14 +20,14 @@ echo Form()->attr('style="width:50%;"')
         ->label($dt_activity[0][$m_act->getStartActivity()] . " - " . $dt_activity[0][$m_act->getEndActivity()])
         ->formLayout('horizontal')->labels();
 
-if($rs_registration[0][$transactionRegistration->getParticipantTypeId()]==1){
-    $potret_title = lang('transaction.government_agencies');
+if($dt_participant_type[0][$m_participant_type->getCode()]=='GOVERNMENT_AGENCY'){
+    $potret_title = $dt_participant_type[0][$m_participant_type->getName()];
     $label_working_unit = lang('transaction.work_unit');
     $label_telephone_working_unit = lang('transaction.telephone_work_unit');
     $label_fax_working_unit = lang('transaction.fax_work_unit');
     $label_address_working_unit = lang('transaction.address_work_unit');
-} else {
-    $potret_title = lang('transaction.private_agencies');
+} else if($dt_participant_type[0][$m_participant_type->getCode()]=='PRIVATE_AGENCY'){
+    $potret_title = $dt_participant_type[0][$m_participant_type->getName()];
     $label_working_unit = lang('transaction.office_name');
     $label_telephone_working_unit = lang('transaction.office_telephone');
     $label_fax_working_unit = lang('transaction.office_fax');

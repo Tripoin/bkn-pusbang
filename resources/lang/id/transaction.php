@@ -1,8 +1,9 @@
 <?php
 
 return [
-    "agenda_subject" => "Agenda Subject",
+    "agenda_subject" => "Agenda Kegiatan",
     "excecution_time" => "Waktu Pelaksanaan",
+    "excecution_years" => "Tahun Pelaksanaan",
     "number_of_participants" => "Jumlah Peserta",
     "assignment" => "Penugasan",
     "organizer" => "Panitia",
@@ -26,7 +27,8 @@ return [
     "participant_category" => "Kategori Peserta",
     "working_unit" => "Unit Kerja",
     "instansi" => "Instansi",
-    
+    "budget_type"=>"Tipe Anggaran",
+    "batch"=>"Angkatan",
     "place_of_birth" => "Tempat Lahir",
     "birthdate" => "Tanggal Lahir",
     "religion" => "Agama",
@@ -69,4 +71,6 @@ return [
     "message" => "Pesan",
     "data_have_approved" => "Data ini Sudah di Approved",
     "data_have_rejected" => "Data ini Sudah di Rejected",
+    "tentative"=>"Tentatif",
+    "location"=>"Lokasi",
 ];
