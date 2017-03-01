@@ -35,8 +35,17 @@ class TransactionActivity extends GeneralAuditrail {
     public $yearActivity = 'year_activity';
     public $duration = 'duration';
     public $unitId = 'unit_id';
+    public $expiredSurvey = 'expired_survey';
 
-    function getBudgetTypeName() {
+    function getExpiredSurvey() {
+        return $this->expiredSurvey;
+    }
+
+    function setExpiredSurvey($expiredSurvey) {
+        $this->expiredSurvey = $expiredSurvey;
+    }
+
+        function getBudgetTypeName() {
         return $this->budgetTypeName;
     }
 

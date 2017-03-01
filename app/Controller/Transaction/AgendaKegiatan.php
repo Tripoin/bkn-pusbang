@@ -32,6 +32,7 @@ use app\Model\MasterProvince;
 use app\Model\MasterCity;
 use app\Model\MasterDistrict;
 use app\Model\MasterVillage;
+use app\Model\MasterBudgetType;
 use app\Model\MasterGovernmentClassification;
 use app\Model\SecurityUserProfile;
 use app\Model\SecurityUser;
@@ -65,7 +66,7 @@ class AgendaKegiatan extends Controller {
 
     public function create() {
         $masterSubject = new MasterSubject();
-        $this->data_subject = valueComboBoxParent($masterSubject->getEntity(), $masterSubject->getId(), $masterSubject->getName(), $masterSubject->getParentId());
+        $this->data_subject = valueComboBoxParent($masterSubject->getEntity(), $masterSubject->getId(), $masterSubject->getName(), $masterSubject->getParentId(), $masterSubject->getIsChild() . equalToIgnoreCase(1));
         parent::create();
     }
 
@@ -80,23 +81,36 @@ class AgendaKegiatan extends Controller {
         $subjectId = $_POST['subjectId'];
         $startActivity = $_POST['startActivity'];
         $endActivity = $_POST['endActivity'];
+        $generation = $_POST['generation'];
         $quota = $_POST['quota'];
+        $description = $_POST['description'];
+
 
 //        $group = new SecurityGroup();
         $data = new TransactionActivity();
         $db->connect();
-        $db->createAuditrail();
 
         $subject = new MasterSubject();
+        $masterBudgetType = new MasterBudgetType();
         $data_subject = $db->selectByID($subject, $subject->getId() . EQUAL . $subjectId);
-
+        $data_subject_cbx = valueComboBoxParent($subject->getEntity(), $subject->getId(), $subject->getName(), $subject->getParentId(), $subject->getId() . equalToIgnoreCase($subjectId));
+        $data_budget_type = $db->selectByID($masterBudgetType, $masterBudgetType->getId() . EQUAL . $data_subject[0][$subject->getBudgetTypeId()]);
+        $year = date('Y', strtotime($startActivity));
         $data_insert = array(
             $data->getCode() => createRandomBooking(),
-            $data->getSubjectName() => $data_subject[0][$subject->getName()],
-            $data->getSubjectId() => $data_subject[0][$subject->getId()],
+            $data->getName() => $data_subject_cbx[0]['label'],
+            $data->getSubjectName() => $data_subject_cbx[0]['label'],
+            $data->getSubjectId() => $data_subject_cbx[0]['id'],
             $data->getStartActivity() => $startActivity,
             $data->getEndActivity() => $endActivity,
+            $data->getGeneration() => $generation,
             $data->getQuota() => $quota,
+            $data->getYearActivity() => $year,
+            $data->getBudgetTypeName() => $data_budget_type[0][$masterBudgetType->getName()],
+            $data->getDescription() => $description,
+            $data->getStatus() => NULL,
+            $data->getCreatedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
+            $data->getCreatedOn() => date('Y-m-d h:i:s'),
         );
 //        $datas = $data->setData($data);
         $db->insert($data->getEntity(), $data_insert);
@@ -117,21 +131,32 @@ class AgendaKegiatan extends Controller {
         $startActivity = $_POST['startActivity'];
         $endActivity = $_POST['endActivity'];
         $quota = $_POST['quota'];
+        $generation = $_POST['generation'];
+        $description = $_POST['description'];
 
 //        $group = new SecurityGroup();
         $data = new TransactionActivity();
         $db->connect();
-        $db->updateAuditrail();
 
         $subject = new MasterSubject();
+        $masterBudgetType = new MasterBudgetType();
         $data_subject = $db->selectByID($subject, $subject->getId() . EQUAL . $subjectId);
-
+        $data_subject_cbx = valueComboBoxParent($subject->getEntity(), $subject->getId(), $subject->getName(), $subject->getParentId(), $subject->getId() . equalToIgnoreCase($subjectId));
+        $data_budget_type = $db->selectByID($masterBudgetType, $masterBudgetType->getId() . EQUAL . $data_subject[0][$subject->getBudgetTypeId()]);
+        $year = date('Y', strtotime($startActivity));
         $data_insert = array(
-            $data->getSubjectName() => $data_subject[0][$subject->getName()],
-            $data->getSubjectId() => $data_subject[0][$subject->getId()],
+            $data->getName() => $data_subject_cbx[0]['label'],
+            $data->getSubjectName() => $data_subject_cbx[0]['label'],
+            $data->getSubjectId() => $data_subject_cbx[0]['id'],
             $data->getStartActivity() => $startActivity,
             $data->getEndActivity() => $endActivity,
+            $data->getGeneration() => $generation,
+            $data->getBudgetTypeName() => $data_budget_type[0][$masterBudgetType->getName()],
             $data->getQuota() => $quota,
+            $data->getDescription() => $description,
+            $data->getYearActivity() => $year,
+            $data->getModifiedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
+            $data->getModifiedOn() => date('Y-m-d h:i:s'),
         );
 //        $datas = $data->setData($data);
         $db->update($data->getEntity(), $data_insert, $data->getId() . EQUAL . $id);
@@ -274,7 +299,7 @@ class AgendaKegiatan extends Controller {
         $dt_city = $db->selectByID($masterCity, $masterCity->getId() . EQUAL . $dt_address[0][$masterAddress->getCityId()]);
         $dt_district = $db->selectByID($masterDistrict, $masterDistrict->getId() . EQUAL . $dt_address[0][$masterAddress->getDistrictId()]);
         $dt_village = $db->selectByID($masterVillage, $masterVillage->getId() . EQUAL . $dt_address[0][$masterAddress->getVillageId()]);
-        
+
         $dt_gov_class = $db->selectByID($mGovClass, $mGovClass->getId() . EQUAL . $dt_user_main[0][$m_user_main->getGovernmentClassificationId()]);
 //        MasterGovernmentClassification
 //        print_r($dt_user_profile);

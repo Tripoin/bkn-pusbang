@@ -159,7 +159,7 @@ class Database {
     }
 
     public function log_masuk($msg) {
-
+        
     }
 
     public function selectRelation($table) {
@@ -169,7 +169,7 @@ class Database {
                 'REFERENCED_COLUMN_NAME from INFORMATION_SCHEMA.KEY_COLUMN_USAGE' .
                 ' where TABLE_SCHEMA = "' . $this->db_name . '" and TABLE_NAME = "' . $table . '"' .
                 ' and referenced_column_name is not NULL;');
-        
+
         $result = $this->getResult();
 //        echo $this->getSql();
         return $result;
@@ -179,7 +179,7 @@ class Database {
         $this->connect();
         $this->select($table->getEntity(), "*", array(), $where, null);
         $result = $this->getResult();
-        
+
         return $result;
     }
 
@@ -345,8 +345,18 @@ class Database {
                 $sql_insert = '';
                 foreach ($params as $key => $value) {
                     if ($value !== NULL) {
-                        $sql_insert .= $key . " = '" . $this->mysql->real_escape_string($value) . "',";
+                        LOGGER($key.'='.$value);
+                        if ($value == NULL) {
+                            LOGGER('DATA NULL');
+                            $sql_insert .= $key . " = null,";
+                        } else {
+                            $sql_insert .= $key . " = '" . $this->mysql->real_escape_string($value) . "',";
+                        }
                     } else if ($value === NULL) {
+                        LOGGER('DATA NULL');
+                        $sql_insert .= $key . " = null,";
+                    } else if ($value == NULL) {
+                        LOGGER('DATA NULL');
                         $sql_insert .= $key . " = null,";
                     } else {
                         LOGGER($key . ":" . $value);

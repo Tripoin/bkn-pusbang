@@ -65,5 +65,6 @@ return [
     "choose_participant"=>"Pilih Peserta",
     "add_participant"=>"Tambah Peserta",
     "upload"=>"Upload",
+    "generation"=>"Angkatan"
 ];
 

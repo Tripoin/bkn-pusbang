@@ -65,4 +65,5 @@ return [
     "choose_participant"=>"Choose Participant",
     "add_participant"=>"Add Participant",
     "upload"=>"Upload",
+    "generation"=>"Angkatan"
 ];
