@@ -161,9 +161,9 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
 
                                 <div id="rowInstansiSwasta">
                                     <?php
-                                    echo $Form->id('working_name')->placeholder(lang('member.office_name') . ' ....')
+                                    echo $Form->id('working_name')->placeholder(lang('transaction.office_name') . ' ....')
                                         ->required(false)
-                                        ->title(lang('member.office_name'))
+                                        ->title(lang('transaction.office_name'))
                                         ->textbox();
                                     ?>
                                 </div>

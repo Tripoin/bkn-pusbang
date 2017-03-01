@@ -58,12 +58,13 @@ class ParticipantRegistration extends Controller {
 
     public function __construct() {
         $this->modelData = new MasterApproval();
-        $this->setTitle(lang('approval.approval_participant_registration'));
-        $this->setBreadCrumb(array(lang('approval.approval') => "", lang('approval.approval_participant_registration') => URL()));
+        $this->setTitle(lang('approval.approval'));
+        $this->setBreadCrumb(array(lang('approval.approval') => "", lang('approval.approval') => URL()));
         $this->search_filter = array(
             "code" => lang('general.code'),
             "created_by" => lang('approval.user')
         );
+        $this->orderBy = $this->modelData->getId() . " DESC";
         $this->indexUrl = IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL;
         $this->viewPath = IViewConstant::APPROVAL_PARTICIPANT_REGISTRATION_VIEW_INDEX;
         $this->setAutoCrud();
@@ -403,6 +404,86 @@ class ParticipantRegistration extends Controller {
         }
     }
 
+    public function sendMailRejectData() {
+        $approvalCategoryId = $_POST['approval_category_id'];
+        $registrationId = $_POST['registration_id'];
+        $transactionRegistration = new TransactionRegistration();
+        $masterApproval = new MasterApproval();
+        $db = new Database();
+        $db->connect();
+        $rs_reg = $db->selectByID($transactionRegistration, $transactionRegistration->getId() . equalToIgnoreCase($registrationId));
+        $rs_approve = $db->selectByID($masterApproval, $masterApproval->getApprovalDetailId() . EQUAL . $registrationId . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . $approvalCategoryId);
+        $code = explode('@', $rs_reg[0][$transactionRegistration->getDelegationEmail()]);
+        $pic_code = $code[0];
+        $pic_name = $rs_reg[0][$transactionRegistration->getDelegationName()];
+        $pic_email = $rs_reg[0][$transactionRegistration->getDelegationEmail()];
+
+        $mail = new PHPMailer;
+        try {
+            $mail->isSMTP();
+//            echo MAIL_USERNAME . '-' . MAIL_PASSWORD;
+//            $mail->Debugoutput = 'html';
+//            $mail->SMTPDebug = 2;
+            $mail->Host = MAIL_HOST;
+
+            $mail->Port = MAIL_SMTP_PORT;
+            $mail->SMTPSecure = MAIL_SMTPSECURE;
+            $mail->SMTPAuth = MAIL_SMTPAUTH;
+//        $mail->SMTPAutoTLS = ['ssl'=> ['allow_self_signed' => true]];
+
+            $mail->Username = MAIL_USERNAME;
+            $mail->Password = MAIL_PASSWORD;
+
+
+
+            $mail->isHTML(true);
+
+//Set who the message is to be sent from
+            $mail->setFrom(MAIL_USERNAME, MAIL_FULLNAME);
+
+//Set an alternative reply-to address
+            $mail->addReplyTo($pic_email, $pic_name);
+
+//Set who the message is to be sent to
+            $mail->addAddress($pic_email, $pic_name);
+            $img_logo_tala = 'http://54.251.168.102/e-portal/contents/logo-kecil.png';
+            $mail->Subject = 'Approval Registrasi Pusbang BKN';
+            $mail->Body = '<div style="border-style: solid;border-width: thin;font-family: \'Roboto\';">
+                      <div align="center" style="margin:15px;"><img src="' . $img_logo_tala . '" width="120" height="40"/></div>
+                        <div align="left" style="margin:15px;">
+                            Kepada Yang Terhormat ' . $pic_name . ',
+                        <br/><br/>
+                       <p>
+                            Pendaftaran Kegiatan anda <b>Tidak Disetujui</b> dengan Catatan:
+                            <br/><br/>
+                            ' . $_POST['message'] . '
+                            <br/>
+                       </p>
+                        <br/>
+                        <br/>
+                        Terima Kasih telah mendaftar di Pusbang ASN
+                        <br/><a href="' . URL('') . '" target="_blank">' . URL('') . '</a>
+                        </div>
+                        </div>
+                            ';
+            if ($mail->smtpConnect()) {
+                $mail->smtpClose();
+                if (!$mail->send()) {
+                    LOGGER($mail->ErrorInfo);
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                LOGGER("Error Connect SMTP");
+                return false;
+            }
+        } catch (\Exception $e) {
+            LOGGER($e->getMessage());
+            return false;
+        }
+    }
+
     public function sendMailUserFromRegistration() {
         $approvalCategoryId = $_POST['approval_category_id'];
         $registrationId = $_POST['registration_id'];
@@ -421,8 +502,8 @@ class ParticipantRegistration extends Controller {
         try {
             $mail->isSMTP();
 //            echo MAIL_USERNAME . '-' . MAIL_PASSWORD;
-            $mail->Debugoutput = 'html';
-            $mail->SMTPDebug = 2;
+//            $mail->Debugoutput = 'html';
+//            $mail->SMTPDebug = 2;
             $mail->Host = MAIL_HOST;
 
             $mail->Port = MAIL_SMTP_PORT;
@@ -432,7 +513,7 @@ class ParticipantRegistration extends Controller {
 
             $mail->Username = MAIL_USERNAME;
             $mail->Password = MAIL_PASSWORD;
-            
+
 
 
             $mail->isHTML(true);
@@ -446,14 +527,15 @@ class ParticipantRegistration extends Controller {
 //Set who the message is to be sent to
             $mail->addAddress($pic_email, $pic_name);
             $img_logo_tala = 'http://54.251.168.102/e-portal/contents/logo-kecil.png';
-            $mail->Subject = 'Approval Peserta Pusbang BKN';
+            $mail->Subject = 'Approval Registrasi Pusbang BKN';
             $mail->Body = '<div style="border-style: solid;border-width: thin;font-family: \'Roboto\';">
                       <div align="center" style="margin:15px;"><img src="' . $img_logo_tala . '" width="120" height="40"/></div>
                         <div align="left" style="margin:15px;">
-                            Halo ' . $pic_name . ',
+                            Kepada Yang Terhormat ' . $pic_name . ',
                         <br/><br/>
                        <p>
-                            User anda berhasil di approve oleh administrator, Anda bisa melakukan pendaftaran peserta, Silahkan login user anda menggunakan username dan password dibawah ini:
+                            Pendaftaran Kegiatan anda telah disetujui, 
+                            Anda bisa melakukan pendaftaran peserta menggunakan username dan password dibawah ini:
                             <br/><br/>Username : <b>' . $pic_code . '</b>
                             <br/>Password : <b>' . $pic_code . '</b>
                             <br/><br/>
@@ -464,7 +546,7 @@ class ParticipantRegistration extends Controller {
                         <br/>
                         <br/>
                         Terima Kasih telah mendaftar di Pusbang ASN
-                        <a href="' . URL('') . '" target="_blank">' . URL('') . '</a>
+                        <br/><a href="' . URL('') . '" target="_blank">' . URL('') . '</a>
                         </div>
                         </div>
                             ';
@@ -503,7 +585,7 @@ class ParticipantRegistration extends Controller {
         }
     }
 
-    public function rollBackApproval() {
+    public function rollBackApproval($type = 1) {
         $approvalCategoryId = $_POST['approval_category_id'];
         $registrationId = $_POST['registration_id'];
         $transactionRegistration = new TransactionRegistration();
@@ -513,8 +595,10 @@ class ParticipantRegistration extends Controller {
         $db->connect();
         $rs_reg = $db->selectByID($transactionRegistration, $transactionRegistration->getId() . equalToIgnoreCase($registrationId));
         $code = explode('@', $rs_reg[0][$transactionRegistration->getDelegationEmail()]);
-        $db->delete($securityUser->getEntity(), $securityUser->getCode() . equalToIgnoreCase($code[0]));
-        $rs_del = $db->getResult();
+        if ($type == 1) {
+            $db->delete($securityUser->getEntity(), $securityUser->getCode() . equalToIgnoreCase($code[0]));
+            $rs_del = $db->getResult();
+        }
         $db->update($masterApproval->getEntity(), array(
             $masterApproval->getStatus() => null,
             $masterApproval->getModifiedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
@@ -551,17 +635,19 @@ class ParticipantRegistration extends Controller {
                     $masterApproval->getModifiedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
                     $masterApproval->getModifiedOn() => date(DATE_FORMAT_PHP_DEFAULT),
                         ), $masterApproval->getApprovalDetailId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . "3");
-//            echo $db->getSql();
                 $result_2 = $db->getResult();
-//            print_r($result_2);
                 if ($result_2[0] == 1) {
+//                    $send_mail = $this->sendMailRejectData();
+//                    if ($send_mail == true) {
                     echo toastAlert('success', lang('general.title_rejected_success'), lang('general.message_rejected_success'));
                     echo '<script>$(function () {$(\'#myModal_self\').modal(\'hide\');postAjaxPagination();});</script>';
                 } else {
+                    $this->rollBackApproval(0);
                     echo toastAlert('error', lang('general.title_rejected_error'), lang('general.message_rejected_error'));
                     echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
                 }
             } else {
+                $this->rollBackApproval(0);
                 echo toastAlert('error', lang('general.title_rejected_error'), lang('general.message_rejected_error'));
                 echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
             }
@@ -585,13 +671,22 @@ class ParticipantRegistration extends Controller {
                 $result_2 = $db->getResult();
 //            print_r($result_2);
                 if ($result_2[0] == 1) {
-                    echo toastAlert('success', lang('general.title_rejected_success'), lang('general.message_rejected_success'));
-                    echo '<script>$(function () {$(\'#myModal_self\').modal(\'hide\');postAjaxPagination();});</script>';
+                    $send_mail = $this->sendMailRejectData();
+                    if ($send_mail == true) {
+                        echo toastAlert('success', lang('general.title_rejected_success'), lang('general.message_rejected_success'));
+                        echo '<script>$(function () {$(\'#myModal_self\').modal(\'hide\');postAjaxPagination();});</script>';
+                    } else {
+                        $this->rollBackApproval(0);
+                        echo toastAlert('error', lang('general.title_rejected_error'), lang('general.message_rejected_error'));
+                        echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+                    }
                 } else {
+                    $this->rollBackApproval(0);
                     echo toastAlert('error', lang('general.title_rejected_error'), lang('general.message_rejected_error'));
                     echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
                 }
             } else {
+                $this->rollBackApproval(0);
                 echo toastAlert('error', lang('general.title_rejected_error'), lang('general.message_rejected_error'));
                 echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
             }
