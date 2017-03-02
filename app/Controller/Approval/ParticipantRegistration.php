@@ -365,6 +365,10 @@ class ParticipantRegistration extends Controller {
             ));
             $rs_user_profile = $db->getResult();
             if (is_numeric($rs_user_profile[0])) {
+                $db->update($transactionRegistration->getEntity(), array(
+                    $transactionRegistration->getUserId() => $rs_user[0],
+                        ), $transactionRegistration->getId() . equalToIgnoreCase($registrationId));
+                $rs_update_reg = $db->getResult();
                 $sendMail = $this->sendMailUserFromRegistration();
                 if ($sendMail == true) {
                     echo toastAlert('success', lang('general.title_approved_success'), lang('general.message_approved_success'));

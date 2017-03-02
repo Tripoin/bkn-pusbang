@@ -1,9 +1,14 @@
 <?php
+
 use app\Constant\IURLMemberConstant;
 use app\Model\MasterWaitingList;
 use app\Model\MasterUserAssignment;
+use app\Model\TransactionRegistration;
+use app\Model\LinkRegistration;
 use app\Util\Database;
 
+$transactionRegistration = new TransactionRegistration();
+$linkRegistration = new LinkRegistration();
 $db = new Database();
 $waitingList = new MasterWaitingList();
 $userAssignment = new MasterUserAssignment();
@@ -22,27 +27,36 @@ $db->connect();
         lang("member.execution_time"),
         lang("member.participant"),
         lang("general.status"),
+        lang("member.registration"),
     ));
     $no = $list_data['from'];
-    foreach ($list_data['item'] as $value) {
 
+    $cek_regis = $db->selectByID($transactionRegistration, $transactionRegistration->getDelegationEmail() . " LIKE '" . $_SESSION[SESSION_USERNAME_GUEST] . "%'");
+//    print_r($cek_regis);
+    foreach ($list_data['item'] as $value) {
+//        echo $_SESSION[SESSION_USERNAME_GUEST];
 //        $detailSubject = '<a href="javascript:void(0)" onclick="postAjaxEdit(\'' . URL('member/activity-agenda/activity/view') . '\',\'id=' . $value[$data->getId()] . '\')">' . subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]) . '</a>';
         $detailSubject = '' . subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]) . '';
 //        echo $rs_user_main[0][$userMain->getId()];
-
+        $dt_link_reg = $db->selectByID($linkRegistration, $linkRegistration->getRegistrationId() . equalToIgnoreCase($cek_regis[0][$transactionRegistration->getId()])
+                . " AND " . $linkRegistration->getActivityId() . equalToIgnoreCase($value[$data->getId()]));
+//        print_r($dt_link_reg);
         $db->sql("SELECT COUNT(" . $userAssignment->getId() . ") as count FROM " . $userAssignment->getEntity() . " WHERE " . $userAssignment->getActivity_id() . EQUAL . $value[$data->getId()]);
         $rs_assign = $db->getResult();
 //        print_r($rs_assign);
 
-        $btn_status = '<a href="javascript:void(0)" onclick="pageUser(' . $value[$data->getId()] . ')">' . lang("member.register") . '</a>';
+        $btn_status = '<a href="javascript:void(0)" onclick="pageUser(' . $value[$data->getId()] . ','.$cek_regis[0][$transactionRegistration->getId()].')">' . lang("member.register") . '</a>';
+        $btn_str_reg = '<a href="javascript:void(0)" onclick="pageUser(' . $value[$data->getId()] . ','.$cek_regis[0][$transactionRegistration->getId()].')">' . lang("member.participant") . '</a>';
         $status = lang('member.registered');
-        if (is_null($value[$data->getStatus()])) {
-            $status = $btn_status;
-        } else if ($value[$data->getStatus()] == 0) {
+        $str_reg = "";
+        if (empty($dt_link_reg)) {
             $status = $btn_status;
         } else {
+            $str_reg = $btn_str_reg;
             if ($rs_assign[0]['count'] == $value[$data->getQuota()]) {
                 $status = lang('member.full');
+            } else {
+                $status = lang('member.available');
             }
         }
         $Datatable->body(array($no,
@@ -51,7 +65,8 @@ $db->connect();
             $value[$data->getBudgetTypeName()],
             $detailSubject,
             $rs_assign[0]['count'] . "/" . $value[$data->getQuota()],
-            $status));
+            $status,
+            $str_reg));
         $no += 1;
     }
 
@@ -64,16 +79,6 @@ $db->connect();
         $('.member-page > span').html('<?= lang('member.registration_activity'); ?>');
         initPage();
     });
-    
-    function pageParent() {
-        $('#urlPage').val('<?= URL(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_URL . '/list'); ?>');
-        postAjaxPagination();
-    }
-
-    function pageUser(activity) {
-        $('#urlPage').val('<?= URL(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_URL . '/list-user/'); ?>' + activity);
-        postAjaxPagination();
-    }
 
     function initPage() {
         $('#list_search_by').attr("class", "input-sm input-xsmall input-inline");

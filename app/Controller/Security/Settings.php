@@ -27,6 +27,10 @@ class Settings {
         setTitleBody(lang('security.setting'));
         setBreadCrumb(array(lang('security.setting') => FULLURL()));
     }
+    
+    public function eLearning() {
+        include 'view/page/security/settings/e-learning.html.php';
+    }
 
     public function index() {
 //        echo 'masuk';

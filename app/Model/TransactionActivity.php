@@ -45,7 +45,7 @@ class TransactionActivity extends GeneralAuditrail {
         $this->expiredSurvey = $expiredSurvey;
     }
 
-        function getBudgetTypeName() {
+    function getBudgetTypeName() {
         return $this->budgetTypeName;
     }
 
@@ -53,8 +53,12 @@ class TransactionActivity extends GeneralAuditrail {
         $this->budgetTypeName = $budgetTypeName;
     }
 
-        public function search($key) {
-        return $this->$key;
+    public function search($key) {
+        if (isset($this->$key)) {
+            return $this->$key;
+        } else {
+            return "";
+        }
     }
 
     function getQuota() {
@@ -72,6 +76,7 @@ class TransactionActivity extends GeneralAuditrail {
         }
         return $array_data;
     }
+
     function getSubjectId() {
         return $this->subjectId;
     }
@@ -80,7 +85,6 @@ class TransactionActivity extends GeneralAuditrail {
         $this->subjectId = $subjectId;
     }
 
-    
     function getSubjectName() {
         return $this->subjectName;
     }

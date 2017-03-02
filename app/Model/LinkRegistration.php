@@ -25,12 +25,22 @@ class LinkRegistration {
     public $attachmentParticipantId = 'attachment_participant_id';
     public $attachmentLetterId = 'attachment_letter_id';
     public $subjectId = 'activity_id';
+    public $activityId = 'activity_id';
     public $registrationDetailsId = 'registration_details_id';
 
     function getEntity() {
         return $this->entity;
     }
+    
+    function getActivityId() {
+        return $this->activityId;
+    }
 
+    function setActivityId($activityId) {
+        $this->activityId = $activityId;
+    }
+
+    
     function getRegistrationId() {
         return $this->registrationId;
     }

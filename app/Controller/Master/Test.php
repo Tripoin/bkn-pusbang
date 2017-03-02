@@ -145,6 +145,7 @@ class Test {
     }
 
     public function hashing() {
+        echo '<iframe src="http://54.251.168.102/e-learning"  height="1200" width="1200"></iframe>';
 //        echo password_hash('trijep3t3', PASSWORD_BCRYPT);
         $tripoinCrypt = new TripoinCrypt();
         $user = array("code" => "12345", "password" => "admin123");
