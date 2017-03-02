@@ -44,16 +44,29 @@ class Subject extends ControllerRestUI {
         parent::index();
     }
     public function listData() {
-        $dataTable = new DataTable();
-        $masterSubject = new MasterSubject();
-        $masterCurriculum = new MasterCurriculum();
-        $result = $dataTable->select_pagination($masterCurriculum,$masterCurriculum->getEntity(),$masterCurriculum->getSubjectId().EQUAL.ONE);
+
         parent::listData();
+    }
+
+    public function createCurriculums($subjectId){
+        $masterCurriculum = new MasterCurriculum();
+        $Datatable = new DataTable();
+        if ($_POST['current_page'] == '') {
+            $Datatable->current_page = 1;
+        }
+        $search = $_POST['search_pagination'];
+        if ($_POST['search_by'] == 'null') {
+            $search = " AND " . $masterCurriculum->getEntity() . ".code LIKE  '%" . $search . "%'";
+        } else {
+            $search = " AND " . $masterCurriculum->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search . "%'";
+        }
+        $list_data = $Datatable->select_pagination($masterCurriculum,$masterCurriculum->getEntity(),
+            $masterCurriculum->getSubjectId().EQUAL.$subjectId.$search);
+        include_once FILE_PATH(IViewConstant::MASTER_SUBJECT_VIEW_INDEX . '/curriculum/new.html.php');
     }
 
     public function curriculums($subjectId) {
         $Datatable = new DataTable();
-        $masterSubject = new MasterSubject();
         $masterCurriculum = new MasterCurriculum();
 
         if ($_POST['per_page'] == "") {
@@ -61,8 +74,6 @@ class Subject extends ControllerRestUI {
         } else {
             $Datatable->per_page = $_POST['per_page'];
         }
-
-//        }
         $Datatable->urlDeleteCollection($this->urlDeleteCollection);
         $Datatable->searchFilter($this->search_filter);
         $Datatable->current_page = $_POST['current_page'];

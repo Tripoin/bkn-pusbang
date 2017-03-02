@@ -5,7 +5,7 @@
 //    $Datatable->styleHeader(array("text-align:center;"));
 $Datatable->styleColumn(array("text-align:center;width:5%;", "", "", "text-align:center;width:100px;"));
 $Datatable->header(array( lang("master.curriculum_code"),
-    lang("master.curriculum_code"),
+    lang("master.curriculum_name"),
     lang('master.curriculum_duration'),
     lang('master.participant_assessment_point'),
     lang('master.widyaswara_assessment_point'),

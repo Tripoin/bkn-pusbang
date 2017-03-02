@@ -41,6 +41,11 @@ return [
     "budget_type_id"=>"Tipe Anggaran",
     "budget_amount"=>"Jumlah Anggaran",
     "curriculum"=>"Kurikulum",
+    "curriculum_code"=>"Kode Materi",
+    "curriculum_name"=>"Materi Kegiatan",
+    "curriculum_duration"=>"Jam Pembelajaran",
+    "participant_assessment_point"=>"Aspek Peniliaian Peserta",
+    "widyaswara_assessment_point"=>"Aspek Penilaian Widyaswara",
     "material_subject" => "Materi Kegiatan",
     "subject_requirements" => "Persyaratan Kegiatan",
 ];

@@ -228,6 +228,7 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
             Routes::setScaffolding(IURLConstant::MASTER_MATERIAL_SUBJECT_INDEX_URL, 'app\Controller\Master\MaterialSubjectController');
 
             Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/curriculum/{subjectId}', 'app\Controller\Master\Subject@curriculums');
+            Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/curriculum/{subjectId}/create', 'app\Controller\Master\Subject@createCurriculums');
             Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/assessment-point/{subjectId}', 'app\Controller\Master\Subject@assessmentPoints');
 
 
