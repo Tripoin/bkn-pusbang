@@ -88,7 +88,7 @@ class UserProfile {
                     $passwordHashNew = password_hash($passwordRenew, PASSWORD_BCRYPT);
                     $dbNew->update($user->getEntity(), array(
                         $user->getPassword() => $passwordHashNew,
-                        $user->getModifiedOn() => date('Y-m-d h:i:s'),
+                        $user->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                         $user->getModifiedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
                             ), $user->getId() . EQUAL . $res_user[0][$user->getId()]);
                     $result_change = $dbNew->getResult();
@@ -149,7 +149,7 @@ class UserProfile {
 //        print_r($user);
                 $db->connect();
                 $db->update($users->getEntity(), array(
-                    $users->getModifiedOn() => date('Y-m-d h:i:s'),
+                    $users->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                     $users->getModifiedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
                     $users->getEmail() => $email,
                         ), $users->getId() . "=" . $user[0][$users->getId()]);

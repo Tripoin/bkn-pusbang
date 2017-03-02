@@ -183,7 +183,7 @@ class PostingAssignment extends Controller {
         if ($rs_delete[0] == 1) {
             $db->update($mp->getEntity(), array(
                 $mp->getPostStatus() => 'draft',
-                $mp->getModifiedByUsername() => date('Y-m-d h:i:s'),
+                $mp->getModifiedByUsername() =>  date(DATE_FORMAT_PHP_DEFAULT),
                     ), $mp->getId() . EQUAL . $id_post);
             $up_post = $db->getResult();
             if ($up_post[0] == 1) {
@@ -214,8 +214,8 @@ class PostingAssignment extends Controller {
         if (is_numeric($rs_insert[0])) {
             $db->update($mp->getEntity(), array(
                 $mp->getPostStatus() => 'published',
-                $mp->getPublishOn() => date('Y-m-d h:i:s'),
-                $mp->getModifiedByUsername() => date('Y-m-d h:i:s')
+                $mp->getPublishOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
+                $mp->getModifiedByUsername() =>  date(DATE_FORMAT_PHP_DEFAULT)
                     ), $mp->getId() . EQUAL . $id_post);
             $up_post = $db->getResult();
             if ($up_post[0] == 1) {

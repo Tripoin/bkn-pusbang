@@ -142,26 +142,31 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
                                 ?>
                             </div>
                         </div>
-                        <div class="row" id="rowFieldInstansi">
+                        <div class="row">
                             <div class="col-md-10">
-                                <?php
-                                echo Form()->id('government_agencies')->placeholder(lang('member.government_agencies') . ' ....')
-                                    ->required(false)
-                                    ->title(lang('member.government_agencies'))
-                                    ->data($data_gov)
+                                <div id="rowFieldInstansi">
+                                    <?php
+                                    echo Form()->id('government_agencies')->placeholder(lang('member.government_agencies') . ' ....')
+                                        ->required(false)
+                                        ->title(lang('member.government_agencies'))
+                                        ->textbox();
+                                    ?>
+                                    <?php
+                                    echo Form()->id('working_unit')->placeholder(lang('member.working_unit') . ' ....')
+                                        ->required(false)
+                                        ->title(lang('member.working_unit'))
+                                        ->textbox();
+                                    ?>
+                                </div>
 
-                                    ->attr('onchange="openBlankField(this,\'government_agencies\')"')
-                                    ->combobox();
-                                ?>
-                                <?php
-                                echo Form()->id('working_unit')->placeholder(lang('member.working_unit') . ' ....')
-                                    ->required(false)
-                                    ->title(lang('member.working_unit'))
-                                    ->data($data_working_unit)
-                                    ->attr('onchange="openBlankField(this,\'working_unit\')"')
-
-                                    ->combobox();
-                                ?>
+                                <div id="rowInstansiSwasta">
+                                    <?php
+                                    echo $Form->id('working_name')->placeholder(lang('transaction.office_name') . ' ....')
+                                        ->required(false)
+                                        ->title(lang('transaction.office_name'))
+                                        ->textbox();
+                                    ?>
+                                </div>
 
                                 <?php
                                 echo Form()->id('address_instansi')->placeholder(lang('member.address_instansi') . ' ....')
@@ -247,18 +252,20 @@ $data_participant_type = convertJsonCombobox($participant_type, $masterParticipa
 //        $('#city').select2();
 //        jQuery(document).on("keyup",".select2-input", function (event) { alert(jQuery(this).val()); });
         $('#rowFieldInstansi').hide();
-        $('#headingTitle').html('Individu');
-        $('#compgovernment_agencies').append('<input type="text" placeholder="Kosongkan jika ada pada pilihan ..." class="form-control"  name="government_agencies_2" id="government_agencies_2">');
-        $('#compworking_unit').append('<input type="text" placeholder="Kosongkan jika ada pada pilihan ..." class="form-control"  name="working_unit_2" id="working_unit_2">');
+        $('#headingTitle').html('Instansi Swasta');
+        //$('#compgovernment_agencies').append('<input type="text" placeholder="Kosongkan jika ada pada pilihan ..." class="form-control"  name="government_agencies_2" id="government_agencies_2">');
+        //$('#compworking_unit').append('<input type="text" placeholder="Kosongkan jika ada pada pilihan ..." class="form-control"  name="working_unit_2" id="working_unit_2">');
     });
 
     function changeCategoryParticipant(e) {
         if (e.value == 2) {
             $('#rowFieldInstansi').show();
+            $('#rowInstansiSwasta').hide();
             $('#headingTitle').html('Instansi Pemerintah');
         } else {
             $('#rowFieldInstansi').hide();
-            $('#headingTitle').html('Individu');
+            $('#rowInstansiSwasta').show();
+            $('#headingTitle').html('Instansi Swasta');
         }
     }
 

@@ -570,7 +570,7 @@ function errorHandler() {
  */
 function LOGGER($message = '') {
     $file_url = "logs/log.logs";
-    $txt = '[' . date('Y-m-d h:i:s') . '] : ';
+    $txt = '[' . date(DATE_FORMAT_PHP_DEFAULT) . '] : ';
     if (is_array($message)) {
 //        $txt .= "Array(" . implode(",", $message) . ")";
         $txt .= json_encode($message);
@@ -587,7 +587,7 @@ function log_to_file($response) {
     $file_url = "logs/log.logs";
     $str = str_replace("index.php", "", $_SERVER['SCRIPT_FILENAME']);
 
-    $txt = 'Date : ' . date('Y-m-d h:i:s') . "\n";
+    $txt = 'Date : ' . date(DATE_FORMAT_PHP_DEFAULT) . "\n";
     $txt .= 'URL : ' . $_SERVER['REQUEST_URI'] . "\n";
     $txt .= 'METHOD : ' . $_SERVER['REQUEST_METHOD'] . "\n";
     $txt .= 'BODY : ' . json_encode($_POST) . "\n";
@@ -1210,6 +1210,14 @@ function getTemplateURL($url) {
 
 
 //    return $path;
+}
+
+function checkStatusLogin() {
+    if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GUEST])) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function getTemplatePath($path) {
@@ -1893,24 +1901,49 @@ function getSubMenu($countitem, $count_function_parent, $value_function_parent, 
     }
 }
 
-function uploadFileImg($img, $filenames, $path) {
+/**
+ * (PHP 4, PHP 5+)<br/>
+ * Function UploadFileImg($img, $filenames, $path, $addExtension = array(), $addFileType = array());
+ * <br/>
+ * Licensed by Tripoin Team
+ * @link http://www.tripoin.co.id/
+ * @param Files $img [optional] <p>
+ * param from $_FILES['{your-inputfile-id}']
+ * </p>
+ * @param string $filenames [optional] <p>
+ * Filenames to be saved - example => example.jpg
+ * </p>
+ * @param string $path [optional] <p>
+ * Your Path for File to be saved  - example => var/www/html/example/uploads
+ * </p>
+ * @param Array() $addExtension [optional] <p>
+ * array typeExtension : example=> array('pdf','txt');
+ * </p>
+ * @param Array() $addFileType [optional] <p>
+ * array typeFileMIMEContent : example=> array('application/pdf','application/vnd.ms-powerpoint','application/text');
+ * you can see mime content-type in https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
+ * </p>
+ * @return json_decode A formatted version of <i>$data</i>.
+ */
+function uploadFileImg($img, $filenames, $path, $addExtension = array(), $addFileType = array()) {
     if (!file_exists($path)) {
         mkdir($path, 0777, true);
     }
 //    print_r($img);
     if ($img['error'] == 0) {
-        $validextensions = array("jpeg", "jpg", "png", "JPEG", "JPG", "PNG");
+        $validextension1 = array("jpeg", "jpg", "png", "JPEG", "JPG", "PNG");
+        $validextensions = array_merge($validextension1, $addExtension);
+
+        $file_type = array("image/png", "image/jpg", "image/jpeg");
+        $ex_file_type = array_merge($file_type, $addFileType);
         $temporary = explode(".", $img["name"]);
         $file_extension = end($temporary);
         $file_name = $filenames . "." . $file_extension;
         $file_path_name = $path . $file_name;
         if ($img["size"] > 2097152) {
             return array("result" => 0, "message" => lang('message.051'));
-        } else if ((($img["type"] == "image/png") || ($img["type"] == "image/jpg") || ($img["type"] == "image/jpeg")
-                ) && in_array($file_extension, $validextensions)) {
-
+        } else if (in_array($img["type"], $ex_file_type) && in_array($file_extension, $validextensions)) {
             if (file_exists($file_name)) {
-
                 $sourcePath = $img['tmp_name'];
                 move_uploaded_file($sourcePath, $file_path_name);
             } else {
@@ -2233,12 +2266,16 @@ function Button() {
     return $Button;
 }
 
-function valueComboBoxParent($entity, $id, $name, $parent) {
+function valueComboBoxParent($entity, $id, $name, $parent, $where = null) {
+    $str_where = "";
+    if ($where != null) {
+        $str_where = " AND " . $where;
+    }
     $db = new Database();
     $db->connect();
     $db->sql("SELECT " . $id . ", " . $name . ", " . $parent . " 
                     FROM " . $entity . " WHERE " . $id . " NOT IN 
-                    (SELECT " . $id . " FROM " . $entity . " WHERE " . $id . " IN (SELECT " . $parent . " FROM " . $entity . "))");
+                    (SELECT " . $id . " FROM " . $entity . " WHERE " . $id . " IN (SELECT " . $parent . " FROM " . $entity . ")) " . $str_where);
     $res_subject = $db->getResult();
 //echo json_encode($res_subject);
     $data = array();
@@ -2355,15 +2392,19 @@ function square_crop($src_image, $dest_image, $thumb_size = 64, $jpg_quality = 9
     }
 }
 
-function getLov($table,$where="") {
+function getLov($table, $where = "") {
     $db = new Database();
-    $rs_lov = $db->selectByID($table,$where);
+    $rs_lov = $db->selectByID($table, $where);
     $data = convertJsonCombobox($rs_lov, 'id', 'name');
     return $data;
 }
 
-function equalToIgnoreCase($value){
-    return "='".$value."' ";
+function equalToIgnoreCase($value) {
+    return "='" . $value . "' ";
+}
+
+function redirectURL($url) {
+    echo '<script>window.location.href = "' . $url . '";</script>';
 }
 
 ?>

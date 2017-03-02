@@ -40,7 +40,7 @@ class Contact {
                 $cm->getGuestMail() => $email,
                 $cm->getSubject() => $subject,
                 $cm->getContent() => $message,
-                $cm->getCreatedOn() => date('Y-m-d h:i:s'),
+                $cm->getCreatedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
                 $cm->getCreatedByIp() => getClientIp()
             ));
             $result = $db->getResult();

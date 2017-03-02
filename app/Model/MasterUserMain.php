@@ -53,11 +53,9 @@ class MasterUserMain extends GeneralAuditrail {
         $this->faculty = $faculty;
     }
 
-    
     function getStudyProgram() {
         return $this->studyProgram;
     }
-
 
     function setStudyProgram($studyProgram) {
         $this->studyProgram = $studyProgram;
@@ -152,7 +150,11 @@ class MasterUserMain extends GeneralAuditrail {
     }
 
     public function search($key) {
-        return $this->$key;
+        if (isset($this->$key)) {
+            return $this->$key;
+        } else {
+            return "";
+        }
     }
 
     function setData($data) {

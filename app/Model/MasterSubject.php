@@ -27,6 +27,24 @@ class MasterSubject extends GeneralAuditrail {
     public $location = 'location';
     public $necessaryDescription = 'necessary_description';
     public $parentId = 'parent_id';
+    public $isChild = 'is_child';
+    public $yearSubject = 'year_subject';
+
+    function getIsChild() {
+        return $this->isChild;
+    }
+
+    function getYearSubject() {
+        return $this->yearSubject;
+    }
+
+    function setIsChild($isChild) {
+        $this->isChild = $isChild;
+    }
+
+    function setYearSubject($yearSubject) {
+        $this->yearSubject = $yearSubject;
+    }
 
     function getBudgetTypeId() {
         return $this->budgetTypeId;
@@ -69,7 +87,12 @@ class MasterSubject extends GeneralAuditrail {
     }
 
     public function search($key) {
-        return $this->$key;
+        if(isset($this->$key)){
+            return $this->$key;
+        } else {
+            return "";
+        }
+        
     }
 
     function setData($data) {

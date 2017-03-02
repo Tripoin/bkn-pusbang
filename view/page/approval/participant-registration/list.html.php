@@ -1,13 +1,13 @@
 <?php
 use app\Constant\IURLConstant;
 //    $Datatable->styleHeader(array("text-align:center;"));
-$Datatable->styleColumn(array("text-align:center;width:5%;", "", "", "text-align:center;width:100px;"));
+$Datatable->styleColumn(array("text-align:center;width:5%;", "", "","","","", "text-align:center;width:100px;"));
 $Datatable->header(array(lang("general.no"), lang("general.code"),
     lang("approval.approval_category"),
     lang("approval.user"),
     lang("approval.status"),
     lang("approval.time"),
-//    lang("general.action")
+    lang("general.action")
 ));
 $no = $list_data['from'];
 
@@ -32,7 +32,7 @@ foreach ($list_data['item'] as $value) {
         $value['username'],
         $status,
         $value['created_on'],
-//        $action_edit . $action_delete
+       $action_delete
     ));
     $no += 1;
 }

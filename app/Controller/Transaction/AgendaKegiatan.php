@@ -32,6 +32,7 @@ use app\Model\MasterProvince;
 use app\Model\MasterCity;
 use app\Model\MasterDistrict;
 use app\Model\MasterVillage;
+use app\Model\MasterBudgetType;
 use app\Model\MasterGovernmentClassification;
 use app\Model\SecurityUserProfile;
 use app\Model\SecurityUser;
@@ -48,13 +49,19 @@ class AgendaKegiatan extends Controller {
     public $data_subject;
     public $data_curriculum;
     public $data_user;
+    public $data_years;
 
     public function __construct() {
         $this->admin_theme_url = getAdminTheme();
         $this->modelData = new TransactionActivity();
         $this->setTitle(lang('transaction.agenda_subject'));
         $this->setBreadCrumb(array(lang('transaction.agenda_subject') => "", lang('transaction.agenda_subject') => FULLURL()));
-        $this->search_filter = array("code" => lang('general.code'), "name" => lang('general.name'));
+        $this->search_filter = array(
+            "subjectName" => lang('transaction.type'),
+            "startActivity" => lang('transaction.excecution_time'),
+            "quota" => lang('transaction.number_of_participants')
+        );
+        $this->orderBy = $this->modelData->getId() . " DESC ";
         $this->indexUrl = IURLConstant::AGENDA_KEGIATAN_INDEX_URL;
         $this->viewPath = IViewConstant::AGENDA_KEGIATAN_VIEW_INDEX;
         $this->unsetAutoData = array('description');
@@ -63,14 +70,27 @@ class AgendaKegiatan extends Controller {
         parent::__construct();
     }
 
+    public function dataYears($plus) {
+        $array = array();
+        $StaringDate = date('Y-m-d');
+        for ($no = 0; $no <= $plus; $no++) {
+            $oneYearOn = date("Y", strtotime(date("Y-m-d", strtotime($StaringDate)) . " +".$no." year"));
+//            echo $oneYearOn;
+            $array[] = array("id" => $oneYearOn,"label" => $oneYearOn);
+        }
+        return $array;
+    }
+
     public function create() {
         $masterSubject = new MasterSubject();
-        $this->data_subject = valueComboBoxParent($masterSubject->getEntity(), $masterSubject->getId(), $masterSubject->getName(), $masterSubject->getParentId());
+        $this->data_years = $this->dataYears(10);
+        $this->data_subject = valueComboBoxParent($masterSubject->getEntity(), $masterSubject->getId(), $masterSubject->getName(), $masterSubject->getParentId(), $masterSubject->getIsChild() . equalToIgnoreCase(1));
         parent::create();
     }
 
     public function edit() {
         $masterSubject = new MasterSubject();
+        $this->data_years = $this->dataYears(10);
         $this->data_subject = valueComboBoxParent($masterSubject->getEntity(), $masterSubject->getId(), $masterSubject->getName(), $masterSubject->getParentId());
         parent::edit();
     }
@@ -80,23 +100,38 @@ class AgendaKegiatan extends Controller {
         $subjectId = $_POST['subjectId'];
         $startActivity = $_POST['startActivity'];
         $endActivity = $_POST['endActivity'];
+        $generation = $_POST['generation'];
+        $location = $_POST['location'];
         $quota = $_POST['quota'];
-
+        $executionYears = $_POST['execution_years'];
+        
+//        $description = $_POST['description'];
 //        $group = new SecurityGroup();
         $data = new TransactionActivity();
         $db->connect();
-        $db->createAuditrail();
 
         $subject = new MasterSubject();
+        $masterBudgetType = new MasterBudgetType();
         $data_subject = $db->selectByID($subject, $subject->getId() . EQUAL . $subjectId);
-
+        $data_subject_cbx = valueComboBoxParent($subject->getEntity(), $subject->getId(), $subject->getName(), $subject->getParentId(), $subject->getId() . equalToIgnoreCase($subjectId));
+        $data_budget_type = $db->selectByID($masterBudgetType, $masterBudgetType->getId() . EQUAL . $data_subject[0][$subject->getBudgetTypeId()]);
+        $year = date('Y', strtotime($startActivity));
         $data_insert = array(
             $data->getCode() => createRandomBooking(),
-            $data->getSubjectName() => $data_subject[0][$subject->getName()],
-            $data->getSubjectId() => $data_subject[0][$subject->getId()],
+            $data->getName() => $data_subject_cbx[0]['label'],
+            $data->getSubjectName() => $data_subject_cbx[0]['label'],
+            $data->getSubjectId() => $data_subject_cbx[0]['id'],
             $data->getStartActivity() => $startActivity,
             $data->getEndActivity() => $endActivity,
+            $data->getGeneration() => $generation,
+            $data->getLocation() => $location,
             $data->getQuota() => $quota,
+            $data->getYearActivity() => $executionYears,
+            $data->getBudgetTypeName() => $data_budget_type[0][$masterBudgetType->getName()],
+//            $data->getDescription() => $description,
+            $data->getStatus() => NULL,
+            $data->getCreatedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
+            $data->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
         );
 //        $datas = $data->setData($data);
         $db->insert($data->getEntity(), $data_insert);
@@ -117,21 +152,34 @@ class AgendaKegiatan extends Controller {
         $startActivity = $_POST['startActivity'];
         $endActivity = $_POST['endActivity'];
         $quota = $_POST['quota'];
-
+        $generation = $_POST['generation'];
+        $location = $_POST['location'];
+        $executionYears = $_POST['execution_years'];
+//        $description = $_POST['description'];
 //        $group = new SecurityGroup();
         $data = new TransactionActivity();
         $db->connect();
-        $db->updateAuditrail();
 
         $subject = new MasterSubject();
+        $masterBudgetType = new MasterBudgetType();
         $data_subject = $db->selectByID($subject, $subject->getId() . EQUAL . $subjectId);
-
+        $data_subject_cbx = valueComboBoxParent($subject->getEntity(), $subject->getId(), $subject->getName(), $subject->getParentId(), $subject->getId() . equalToIgnoreCase($subjectId));
+        $data_budget_type = $db->selectByID($masterBudgetType, $masterBudgetType->getId() . EQUAL . $data_subject[0][$subject->getBudgetTypeId()]);
+        $year = date('Y', strtotime($startActivity));
         $data_insert = array(
-            $data->getSubjectName() => $data_subject[0][$subject->getName()],
-            $data->getSubjectId() => $data_subject[0][$subject->getId()],
+            $data->getName() => $data_subject_cbx[0]['label'],
+            $data->getSubjectName() => $data_subject_cbx[0]['label'],
+            $data->getSubjectId() => $data_subject_cbx[0]['id'],
             $data->getStartActivity() => $startActivity,
             $data->getEndActivity() => $endActivity,
+            $data->getGeneration() => $generation,
+            $data->getBudgetTypeName() => $data_budget_type[0][$masterBudgetType->getName()],
             $data->getQuota() => $quota,
+            $data->getLocation() => $location,
+//            $data->getDescription() => $description,
+            $data->getYearActivity() => $executionYears,
+            $data->getModifiedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
+            $data->getModifiedOn() => date(DATE_FORMAT_PHP_DEFAULT),
         );
 //        $datas = $data->setData($data);
         $db->update($data->getEntity(), $data_insert, $data->getId() . EQUAL . $id);
@@ -160,18 +208,23 @@ class AgendaKegiatan extends Controller {
 
 //        }
         $Datatable->urlDeleteCollection($this->urlDeleteCollection);
-        $Datatable->searchFilter($this->search_filter);
+        $Datatable->searchFilter(array("name" => lang('general.name')));
+//        $Datatable->se
         $Datatable->current_page = $_POST['current_page'];
         if ($_POST['current_page'] == '') {
             $Datatable->current_page = 1;
         }
+//        echo $_POST['search_by'];
         $search = $_POST['search_pagination'];
         if ($_POST['search_by'] == '') {
-            $search = " AND " . $userMain->getEntity() . ".code LIKE  '%" . $search . "%'";
+            
         } else if ($_POST['search_by'] == 'null') {
-            $search = " AND " . $userMain->getEntity() . ".code LIKE  '%" . $search . "%'";
+            
         } else {
-            $search = " AND " . $userMain->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search . "%'";
+            $sr = $userMain->search($_POST['search_by']);
+            if (!empty($sr)) {
+                $search = " AND " . $userMain->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search . "%'";
+            }
         }
 
 //        echo $Datatable->search;
@@ -179,12 +232,12 @@ class AgendaKegiatan extends Controller {
         $whereList = $data->getEntity() . "." . $data->getActivity_id() . EQUAL . $activity . " AND " .
                 $userMain->getEntity() . "." . $userMain->getId() . EQUAL . $data->getUser_main_id() . $search;
 
-        $list_data = $Datatable->select_pagination($data, $data->getEntity(), $whereList, $userMain->getEntity(), $userMain->getEntity(), $this->orderBy, ""
+        $list_data = $Datatable->select_pagination($data, $data->getEntity(), $whereList, $userMain->getEntity(), $userMain->getEntity(), null, ""
                 . $data->getEntity() . "." . $data->getId() . " as id,"
                 . $userMain->getEntity() . "." . $userMain->getCode() . " as code,"
                 . $data->getEntity() . "." . $data->getDescription() . " as description,"
                 . $userMain->getEntity() . "." . $userMain->getName() . " as name", $data->getEntity() . "." . $data->getId());
-
+//        print_r($list_data);
         include_once FILE_PATH(IViewConstant::AGENDA_KEGIATAN_VIEW_INDEX . '/assignment/list.html.php');
     }
 
@@ -204,18 +257,25 @@ class AgendaKegiatan extends Controller {
 
 //        }
         $Datatable->urlDeleteCollection($this->urlDeleteCollection);
-        $Datatable->searchFilter($this->search_filter);
+        $Datatable->searchFilter(array(
+            "code" => lang('transaction.no_id'),
+            "name" => lang('general.name'))
+        );
         $Datatable->current_page = $_POST['current_page'];
         if ($_POST['current_page'] == '') {
             $Datatable->current_page = 1;
         }
-        $search = $_POST['search_pagination'];
+        $search_pagination = $_POST['search_pagination'];
+        $search = '';
         if ($_POST['search_by'] == '') {
-            $search = " AND " . $userMain->getEntity() . ".code LIKE  '%" . $search . "%'";
+            
         } else if ($_POST['search_by'] == 'null') {
-            $search = " AND " . $userMain->getEntity() . ".code LIKE  '%" . $search . "%'";
+            
         } else {
-            $search = " AND " . $userMain->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search . "%'";
+            $sr = $userMain->search($_POST['search_by']);
+            if (!empty($sr)) {
+                $search = " AND " . $userMain->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search_pagination . "%'";
+            }
         }
 
 //        echo $Datatable->search;
@@ -223,7 +283,7 @@ class AgendaKegiatan extends Controller {
         $whereList = $data->getEntity() . "." . $data->getActivity_id() . EQUAL . $activity . " AND " .
                 $userMain->getEntity() . "." . $userMain->getId() . EQUAL . $data->getUser_main_id() . $search;
 
-        $list_data = $Datatable->select_pagination($data, $data->getEntity(), $whereList, $userMain->getEntity(), $userMain->getEntity(), $this->orderBy, ""
+        $list_data = $Datatable->select_pagination($data, $data->getEntity(), $whereList, $userMain->getEntity(), $userMain->getEntity(), null, ""
                 . $data->getEntity() . "." . $data->getId() . " as id,"
                 . $userMain->getEntity() . "." . $userMain->getId() . " as user_main_id,"
                 . $userMain->getEntity() . "." . $userMain->getCode() . " as code,"
@@ -274,7 +334,7 @@ class AgendaKegiatan extends Controller {
         $dt_city = $db->selectByID($masterCity, $masterCity->getId() . EQUAL . $dt_address[0][$masterAddress->getCityId()]);
         $dt_district = $db->selectByID($masterDistrict, $masterDistrict->getId() . EQUAL . $dt_address[0][$masterAddress->getDistrictId()]);
         $dt_village = $db->selectByID($masterVillage, $masterVillage->getId() . EQUAL . $dt_address[0][$masterAddress->getVillageId()]);
-        
+
         $dt_gov_class = $db->selectByID($mGovClass, $mGovClass->getId() . EQUAL . $dt_user_main[0][$m_user_main->getGovernmentClassificationId()]);
 //        MasterGovernmentClassification
 //        print_r($dt_user_profile);
@@ -369,27 +429,38 @@ class AgendaKegiatan extends Controller {
             $Datatable->per_page = $_POST['per_page'];
         }
 
-//        }
-        $Datatable->urlDeleteCollection($this->urlDeleteCollection);
-        $Datatable->searchFilter($this->search_filter);
         $Datatable->current_page = $_POST['current_page'];
         if ($_POST['current_page'] == '') {
             $Datatable->current_page = 1;
         }
-        $search = $_POST['search_pagination'];
+
+        $Datatable->urlDeleteCollection($this->urlDeleteCollection);
+        $Datatable->searchFilter(array(
+            "startTime" => lang('transaction.day/date'),
+            "materialName" => lang('transaction.material')
+        ));
+        $Datatable->current_page = $_POST['current_page'];
+        if ($_POST['current_page'] == '') {
+            $Datatable->current_page = 1;
+        }
+        $search_pagination = $_POST['search_pagination'];
+        $search = '';
         if ($_POST['search_by'] == '') {
-            $search = " AND " . $activityDetails->getEntity() . ".code LIKE  '%" . $search . "%'";
+            
         } else if ($_POST['search_by'] == 'null') {
-            $search = " AND " . $activityDetails->getEntity() . ".code LIKE  '%" . $search . "%'";
+            
         } else {
-            $search = " AND " . $activityDetails->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search . "%'";
+            $sr = $activityDetails->search($_POST['search_by']);
+            if (!empty($sr)) {
+                $search = " AND " . $activityDetails->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search_pagination . "%'";
+            }
         }
 
 //        echo $Datatable->search;
         $whereList = $activityDetails->getEntity() . "." . $activityDetails->getActivityId() . EQUAL . $activity . " AND " .
                 $activityModel->getEntity() . "." . $activityModel->getId() . EQUAL . $activityDetails->getEntity() . "." . $activityDetails->getActivityId() . $search;
 
-        $list_data = $Datatable->select_pagination($activityDetails, $activityDetails->getEntity(), $whereList, $activityModel->getEntity(), $activityModel->getEntity(), $this->orderBy, ""
+        $list_data = $Datatable->select_pagination($activityDetails, $activityDetails->getEntity(), $whereList, $activityModel->getEntity(), $activityModel->getEntity(), null, ""
                 . $activityDetails->getEntity() . "." . $activityDetails->getId() . " as id,"
                 . $activityDetails->getEntity() . "." . $activityDetails->getCode() . " as code,"
                 . $activityDetails->getEntity() . "." . $activityDetails->getStartTime() . ","
@@ -433,13 +504,17 @@ class AgendaKegiatan extends Controller {
         if ($_POST['current_page'] == '') {
             $Datatable->current_page = 1;
         }
-        $search = $_POST['search_pagination'];
+        $search_pagination = $_POST['search_pagination'];
+        $search = '';
         if ($_POST['search_by'] == '') {
-            $search = " AND " . $userMain->getEntity() . ".name LIKE  '%" . $search . "%'";
+            
         } else if ($_POST['search_by'] == 'null') {
-            $search = " AND " . $userMain->getEntity() . ".name LIKE  '%" . $search . "%'";
+            
         } else {
-            $search = " AND " . $userMain->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search . "%'";
+            $sr = $userMain->search($_POST['search_by']);
+            if (!empty($sr)) {
+                $search = " AND " . $userMain->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search_pagination . "%'";
+            }
         }
 
 //        echo $Datatable->search;
@@ -464,7 +539,7 @@ class AgendaKegiatan extends Controller {
                 . "" . $where_by_user
                 . "" . $search;
 //        $Datatable->debug(true);
-        $list_data = $Datatable->select_pagination($userMain, $userMain->getEntity(), $whereList, array($user->getEntity(), $userProfile->getEntity(), $group->getEntity()), "", $this->orderBy, ""
+        $list_data = $Datatable->select_pagination($userMain, $userMain->getEntity(), $whereList, array($user->getEntity(), $userProfile->getEntity(), $group->getEntity()), "", null, ""
                 . $userMain->getEntity() . "." . $userMain->getId() . " as id,"
                 . $userProfile->getEntity() . "." . $userProfile->getName() . " as name,"
                 . $userMain->getEntity() . "." . $userMain->getFront_degree() . " as front_degree,"

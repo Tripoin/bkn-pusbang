@@ -71,8 +71,11 @@ class GeneralAuditrail extends Auditrail {
     }
 
      public function search($key) {
-         
-        return $this->$key;
+        if(isset($this->$key)){
+            return $this->$key;
+        } else {
+            return "";
+        }
     }
     
     function setData($data) {

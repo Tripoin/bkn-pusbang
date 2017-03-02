@@ -55,6 +55,8 @@ return [
     "SYSTEM_ADMINISTRATOR_THEME_STYLE" => "Admin Theme Style",
     "SYSTEM_ADMINISTRATOR_COMPANY_NAME" => "Admin Company Name",
     "SYSTEM_ADMINISTRATOR_COMPANY_URL" => "Admin Company URL",
+    "SYSTEM_ADMINISTRATOR_BG_LOGIN" => "Background Login",
+    "SYSTEM_ADMINISTRATOR_LOGO_LOGIN" => "Logo Login",
     "title_user" => "User",
     "title_user_profile" => "User Profile",
     "title_change_password" => "Merubah Kata Sandi",

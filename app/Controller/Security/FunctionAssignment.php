@@ -324,7 +324,7 @@ class FunctionAssignment extends Controller {
             $sfa->getFunctionAssignmentOrder() => 0,
             $sfa->getStatus() => 1,
             $sfa->getCreatedByUsername() => $_SESSION[SESSION_USERNAME],
-            $sfa->getCreatedOn() => date('Y-m-d h:i:s')
+            $sfa->getCreatedOn() =>  date(DATE_FORMAT_PHP_DEFAULT)
         ));
         $result_save = $db->getResult();
         if (is_numeric($result_save[0])) {
@@ -392,7 +392,7 @@ class FunctionAssignment extends Controller {
             $sfa->getFunctionAssignmentOrder() => 0,
             $sfa->getStatus() => 1,
             $sfa->getModifiedByUsername() => $_SESSION[SESSION_USERNAME],
-            $sfa->getModifiedOn() => date('Y-m-d h:i:s')
+            $sfa->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT)
                 ), $sfa->getId() . EQUAL . $id_function_assignment);
         $rs_update = $db->getResult();
         if ($rs_update[0] == 1) {

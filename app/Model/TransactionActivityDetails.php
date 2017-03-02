@@ -33,8 +33,7 @@ class TransactionActivityDetails extends GeneralAuditrail {
     public $endTime = 'end_time';
     public $duration = 'duration';
     public $unitId = 'unit_id';
-    
-    
+
     function getUserMainName() {
         return $this->userMainName;
     }
@@ -43,7 +42,7 @@ class TransactionActivityDetails extends GeneralAuditrail {
         $this->userMainName = $userMainName;
     }
 
-        function getActivityId() {
+    function getActivityId() {
         return $this->activityId;
     }
 
@@ -123,12 +122,14 @@ class TransactionActivityDetails extends GeneralAuditrail {
         $this->unitId = $unitId;
     }
 
-    
     public function search($key) {
-        return $this->$key;
+        if (isset($this->$key)) {
+            return $this->$key;
+        } else {
+            return "";
+        }
     }
 
-    
     function setData($data) {
         $array_data = array();
         foreach ($data as $key => $value) {
@@ -136,5 +137,5 @@ class TransactionActivityDetails extends GeneralAuditrail {
         }
         return $array_data;
     }
-    
+
 }

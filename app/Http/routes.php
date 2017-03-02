@@ -76,6 +76,7 @@ Routes::set('contact-us', 'app\Controller\Guest\ContactUs@index');
 Routes::set('contact-us/submit', 'app\Controller\Guest\ContactUs@save');
 
 Routes::set('activity', 'app\Controller\Guest\Activity@index');
+Routes::set('activity/search', 'app\Controller\Guest\Activity@search');
 Routes::set('activity/{id}/register', 'app\Controller\Guest\Activity@registerActivityPage');
 Routes::set('activity/register/save/{idActivity}', 'app\Controller\Guest\Activity@saveNewRegister');
 Routes::set('alumni', 'app\Controller\Guest\Alumni@index');
@@ -116,10 +117,12 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
     Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_URL, 'app\Controller\Member\RegistrationActivity@index');
     Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_URL . '/list', 'app\Controller\Member\RegistrationActivity@listData');
     Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_URL . '/approve', 'app\Controller\Member\RegistrationActivity@approved');
-    
+
     Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_URL, 'app\Controller\Member\Registration\RegistrationActivityTemp@index');
     Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_URL . '/list', 'app\Controller\Member\Registration\RegistrationActivityTemp@listData');
     Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_URL . '/approve', 'app\Controller\Member\Registration\RegistrationActivityTemp@approved');
+    Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_URL . '/list-user/{activity}', 'app\Controller\Member\Registration\RegistrationActivityTemp@listUserData');
+    Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_URL . '/list-user/{activity}/create', 'app\Controller\Member\Registration\RegistrationActivityTemp@createUserData');
 
     Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL, 'app\Controller\Member\AgendaOrganizer@index');
     Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/list', 'app\Controller\Member\AgendaOrganizer@listData');
@@ -196,7 +199,7 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
         Routes::set($sys_url_admin . IURLConstant::FUNCTION_ASSIGNMENT_INDEX_URL . '/update-function', 'app\Controller\Security\FunctionAssignment@updateFunction');
         Routes::set($sys_url_admin . IURLConstant::FUNCTION_ASSIGNMENT_INDEX_URL . '/sorting-function', 'app\Controller\Security\FunctionAssignment@updateSortFunction');
 
-
+        Routes::set($sys_url_admin . '/e-learning', 'app\Controller\Security\Settings@eLearning');
         Routes::set($sys_url_admin . '/settings', 'app\Controller\Security\Settings@index');
         Routes::set($sys_url_admin . '/settings/update', 'app\Controller\Security\Settings@update');
         Routes::set($sys_url_admin . '/profile', 'app\Controller\Base\General@profile');
@@ -254,9 +257,9 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/list-peserta/{activity}/view', 'app\Controller\Transaction\AgendaKegiatan@viewPeserta');
 
             Routes::setScaffolding(IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL, 'app\Controller\Approval\ParticipantRegistration');
-            Routes::set(IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL.'/{activity}/approve', 'app\Controller\Approval\ParticipantRegistration@approveData');
-            Routes::set(IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL.'/{activity}/reject', 'app\Controller\Approval\ParticipantRegistration@rejectData');
-            Routes::set(IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL.'/{activity}/reject-detail', 'app\Controller\Approval\ParticipantRegistration@rejectDetail');
+            Routes::set(IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/{activity}/approve', 'app\Controller\Approval\ParticipantRegistration@approveData');
+            Routes::set(IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/{activity}/reject', 'app\Controller\Approval\ParticipantRegistration@rejectData');
+            Routes::set(IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/{activity}/reject-detail', 'app\Controller\Approval\ParticipantRegistration@rejectDetail');
         });
     }
 }

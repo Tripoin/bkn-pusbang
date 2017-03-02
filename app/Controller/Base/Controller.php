@@ -151,7 +151,7 @@ abstract class Controller implements IController {
         $data = $this->modelData;
 //        if ($_POST['per_page'] == "") {
         if ($_POST['per_page'] == "") {
-            $Datatable->per_page = 5;
+            $Datatable->per_page = 10;
         } else {
             $Datatable->per_page = $_POST['per_page'];
         }

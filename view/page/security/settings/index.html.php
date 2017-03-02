@@ -78,10 +78,15 @@
                             echo $Form->attr('disabled')->id($val_option[$mo->getCode()])->title(lang('security.' . $val_option[$mo->getCode()]))->value($val_option[$mo->getName()])->textbox();
                         } else if ($val_option[$mo->getCode()] == 'GENERAL_LANGUAGE_DEFAULT') {
                             echo $Form->id($val_option[$mo->getCode()])->title(lang('security.' . $val_option[$mo->getCode()]))->value($val_option[$mo->getName()])->data($data_ml)->combobox();
+                        }  else if ($val_option[$mo->getCode()] == 'SYSTEM_ADMINISTRATOR_BG_LOGIN') {
+                            echo Form()->value($val_option[$mo->getName()])->id($val_option[$mo->getCode()])->title(lang('security.' . $val_option[$mo->getCode()]))->getInputMedia();
+                        }   else if ($val_option[$mo->getCode()] == 'SYSTEM_ADMINISTRATOR_LOGO_LOGIN') {
+                            echo Form()->value($val_option[$mo->getName()])->id($val_option[$mo->getCode()])->title(lang('security.' . $val_option[$mo->getCode()]))->getInputMedia();
                         } else {
                             echo $Form->id($val_option[$mo->getCode()])->title(lang('security.' . $val_option[$mo->getCode()]))->value($val_option[$mo->getName()])->textbox();
                         }
                     }
+                    
                     ?>
                 </div>
             <?php } ?>
