@@ -17,7 +17,7 @@ foreach ($list_data['item'] as $value) {
 
     $action_delete = Button()->url($this->deleteUrl)->value($value[$masterCurriculum->getId()])->buttonDelete();
     $action_edit =  Button()->url($this->editUrl)->value($value[$masterCurriculum->getId()])->buttonEdit();
-
+print_r($value);
     $Datatable->body(array('a',
         'a',
         'a',
@@ -27,6 +27,7 @@ foreach ($list_data['item'] as $value) {
 
 }
 echo $Datatable->show();
+//
 //$action_kirim = Button()->onClick('ajaxPostModalManual(\'' . URL($this->admin_theme_url . $this->indexUrl . '/assignment/' . $activity . '/edit') . '\',\'id=0\')')->icon('fa fa-paper-plane')->label('Kirim Surat Penugasan  Widyaiswara')->title('Kirim Surat Penugasan Widyaiswara')->buttonManual();
 ?>
 
