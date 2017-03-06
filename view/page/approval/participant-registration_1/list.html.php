@@ -3,7 +3,6 @@ use app\Constant\IURLConstant;
 //    $Datatable->styleHeader(array("text-align:center;"));
 $Datatable->styleColumn(array("text-align:center;width:5%;", "", "","","","", "text-align:center;width:100px;"));
 $Datatable->header(array(lang("general.no"), lang("general.code"),
-    lang("approval.pic_name"),
     lang("approval.approval_category"),
     lang("approval.user"),
     lang("approval.status"),
@@ -29,10 +28,8 @@ foreach ($list_data['item'] as $value) {
     }
     $Datatable->body(array($no,
         '<a href="javascript:void(0)" onclick="postAjaxEdit(\'' . URL(getAdminTheme().IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $value[$data->getId()] . '\')">' . $value[$data->getCode()] . '</a>',
-        $value['pic_name'],
         $value['approval_category_name'],
         $value['username'],
-        
         $status,
         $value['created_on'],
        $action_delete

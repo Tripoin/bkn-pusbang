@@ -8,9 +8,13 @@
 
 return [
     "approval"=>"Approval",
+    "pic_registration"=>"Registrasi PIC",
+    "activity_registration"=>"Registrasi Kegiatan",
     "approval_participant_registration"=>"Approval Pendaftaran Peserta",
     "participant_registration"=>"Pendaftaran Peserta",
     "approval_category"=>"Kategori Approval",
+    "pic_name"=>"Nama PIC",
+    "registration_code"=>"Kode Registrasi",
     "user"=>"User",
     "status"=>"Status",
     "time"=>"Waktu",

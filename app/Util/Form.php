@@ -24,12 +24,15 @@ class Form {
     protected $formOption = array(
         'STYLE' => null,
         'TITLE' => null,
+        'VALUE_NAME' => '',
         'TITLE_RIGHT' => null,
         'TOOLTIP_TITLE' => null,
         'CLASS' => null,
         'CLASS_COMP' => null,
         'NOTIF' => null,
         'PLACEHOLDER' => '',
+        'ATTR_GROUP' => '',
+        'SEARCH' => '',
         'REQUIRED' => true,
         'NO_LABEL' => false,
         'TYPE' => null,
@@ -39,6 +42,7 @@ class Form {
         'NAME' => null,
         'LABEL' => '',
         'LABEL_RIGHT' => '',
+        'TOOLTIP_TITLE_BUTTON' => '',
         'ATTR_BUTTON' => '',
         'WITH_BUTTON' => array(),
         'ALIGN_LABEL' => '',
@@ -65,6 +69,13 @@ class Form {
 //        $this->ResetObject();
     }
 
+    public function tooltipTitleButton($tooltipTitleButton) {
+        return $this->setFormOption('TOOLTIP_TITLE_BUTTON', $tooltipTitleButton);
+    }
+    public function search($search) {
+        return $this->setFormOption('SEARCH', $search);
+    }
+
     /**
      * (PHP 4, PHP 5+)<br/>
      * Create Component listBoxAssignment
@@ -76,7 +87,7 @@ class Form {
      * @example :<p>
      * @data array(array("id" => 1, "label" => "Example 1"),array("id" => 2, "label" => "Example 2"),array("id" => 3, "label" => "Example 3"),array("id" => 4, "label" => "Example 4"),array("id" => 5, "label" => "Example 5"),);
      * @Form Form()->idLeft('code')->idRight('code2')->titleLeft(lang('general.code'))->titleRight(lang('general.code'))->valueLeft(array(1,3,5))->dataLeft($data)->listBoxAssignment();
-);<br/>
+      );<br/>
      * @return string setFormOption <i>$formOption</i>.
      * @version 1.0
      * @desc Sorry cuk masih belajar
@@ -87,7 +98,7 @@ class Form {
 
         $labelLeft = $this->formOption['LABEL'];
         $labelRight = $this->formOption['LABEL_RIGHT'];
-        
+
         $titleLeft = $this->formOption['TITLE'];
         $titleRight = $this->formOption['TITLE_RIGHT'];
 
@@ -112,19 +123,19 @@ class Form {
         if (!empty($dataLeftArray)) {
             foreach ($dataLeftArray as $value) {
                 if (is_array($valueLeft)) {
-                    
+
                     if (in_array($value['id'], $valueLeft)) {
-                        $txt .= '<option value="'.$value['id'].'" selected>'.$value['label'].'</option>';
+                        $txt .= '<option value="' . $value['id'] . '" selected>' . $value['label'] . '</option>';
                     } else {
-                        $txt .= '<option value="'.$value['id'].'">'.$value['label'].'</option>';
+                        $txt .= '<option value="' . $value['id'] . '">' . $value['label'] . '</option>';
                     }
                 } else {
 //                    echo $value['id'];
                     if ($value['id'] == $valueLeft) {
-                        $txt .= '<option value="'.$value['id'].'" selected>'.$value['label'].'</option>';
+                        $txt .= '<option value="' . $value['id'] . '" selected>' . $value['label'] . '</option>';
                     } else {
 //                        echo $value['id'];
-                        $txt .= '<option value="'.$value['id'].'">'.$value['label'].'</option>';
+                        $txt .= '<option value="' . $value['id'] . '">' . $value['label'] . '</option>';
                     }
                 }
             }
@@ -155,15 +166,15 @@ class Form {
             foreach ($dataRightArray as $value) {
                 if (is_array($valueRight)) {
                     if (in_array($value['id'], $valueRight)) {
-                        $txt .= '<option value="'.$value['id'].'" selected>'.$value['label'].'</option>';
+                        $txt .= '<option value="' . $value['id'] . '" selected>' . $value['label'] . '</option>';
                     } else {
-                        $txt .= '<option value="'.$value['id'].'">'.$value['label'].'</option>';
+                        $txt .= '<option value="' . $value['id'] . '">' . $value['label'] . '</option>';
                     }
                 } else {
                     if ($value['id'] == $valueRight) {
-                        $txt .= '<option value="'.$value['id'].'" selected>'.$value['label'].'</option>';
+                        $txt .= '<option value="' . $value['id'] . '" selected>' . $value['label'] . '</option>';
                     } else {
-                        $txt .= '<option value="'.$value['id'].'">'.$value['label'].'</option>';
+                        $txt .= '<option value="' . $value['id'] . '">' . $value['label'] . '</option>';
                     }
                 }
             }
@@ -176,8 +187,16 @@ class Form {
         return $txt;
     }
     
+    public function valueName($valueName) {
+        return $this->setFormOption('VALUE_NAME', $valueName);
+    }
+
     public function titleLeft($titleLeft) {
         return $this->setFormOption('TITLE', $titleLeft);
+    }
+
+    public function attrGroup($attrGroup) {
+        return $this->setFormOption('ATTR_GROUP', $attrGroup);
     }
 
     public function titleRight($titleRight) {
@@ -1038,13 +1057,23 @@ class Form {
         if ($this->formOption['MAXLENGTH'] != null) {
             $maxlength = ' maxlength="' . $this->formOption['MAXLENGTH'] . '"';
         }
-        $textbox = '<div class="input-group">
-                            <input ' . $this->formOption['REQUIRED'] . '  type="' . $type . '" ' . $minlength . $maxlength . ' id="' . $this->formOption['ID'] . '" name="' . $this->formOption['NAME'] . '"
-                                   class="form-control" value="' . $this->formOption['VALUE'] . '" placeholder="' . $this->formOption['PLACEHOLDER'] . '"> 
-                                       
-                                       <div
-                                   class="input-group-btn" > 
-                                   <button type="button" ' . $this->formOption['ATTR_BUTTON'] . ' id="btn-' . $this->formOption['ID'] . '" class="btn btn-danger">
+        $tooltip = "";
+        if ($this->formOption['TOOLTIP_TITLE_BUTTON'] != "") {
+            $tooltip = 'rel="tooltip" title="' . $this->formOption['TOOLTIP_TITLE_BUTTON'] . '"';
+        }
+        $textbox = '<div class="input-group" ' . $this->formOption['ATTR_GROUP'] . '> 
+                            <input ' . $this->formOption['REQUIRED'] . ' 
+                                ' . $this->formOption['MANUAL_ATTRIBUT'] . ''
+                . ' type="' . $type . '" ' . $minlength . $maxlength . ' '
+                . ' id="' . $this->formOption['ID'] . '" '
+                . ' name="' . $this->formOption['NAME'] . '"'
+                . ' class="form-control" '
+                . ' value="' . $this->formOption['VALUE'] . '" '
+                . ' placeholder="' . $this->formOption['PLACEHOLDER'] . '"> 
+                                     <div class="input-group-btn" > 
+                                   <button type="button" ' . $this->formOption['ATTR_BUTTON'] . ' '
+                . $tooltip
+                . 'id="btn-' . $this->formOption['ID'] . '" data-placement="right" class="btn btn-danger">
                                    <i class="' . $this->formOption['CLASS'] . '"></i>
                                        ' . $this->formOption['TITLE_BUTTON'] . '
                                        </button>
@@ -1052,6 +1081,73 @@ class Form {
                             </div>
                         </div>
                     ';
+        if ($this->formOption['TOOLTIP_TITLE_BUTTON'] != "") {
+            $textbox .= '<script>$(function(){$("[rel=\'tooltip\']").tooltip();});</script>';
+        }
+        $textbox .= '';
+        $rs = $this->formGroup($textbox);
+        $this->ResetObject();
+        return $rs;
+    }
+    
+    /**
+     * (PHP 4, PHP 5+)<br/>
+     * Create Component Textbox with Icon <First Icon then textbox>
+     * <br/>
+     * Licensed by Tripoin Team
+     * @link http://www.tripoin.co.id/
+     * @param noparam<p>
+     * </p>
+     * @example $Form->id('textboxicongroup')->title('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->value('EXAMPLE')->placeholder('EXAMPLE')<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;->textboxicongroup();<br/>
+     * @return string setFormOption <i>$formOption</i>.
+     * @version 1.0
+     * @desc Sorry cuk masih belajar
+     */
+    public function openLOV() {
+        $this->defaultOption();
+        $type = 'text';
+        if ($this->formOption['TYPE'] != null) {
+            $type = $this->formOption['TYPE'];
+        }
+        
+        $minlength = "";
+        $maxlength = "";
+        if ($this->formOption['MINLENGTH'] != null) {
+            $minlength = ' minlength="' . $this->formOption['MINLENGTH'] . '"';
+        }
+
+        if ($this->formOption['MAXLENGTH'] != null) {
+            $maxlength = ' maxlength="' . $this->formOption['MAXLENGTH'] . '"';
+        }
+        $tooltip = "";
+        if ($this->formOption['TOOLTIP_TITLE_BUTTON'] != "") {
+            $tooltip = 'rel="tooltip" title="' . $this->formOption['TOOLTIP_TITLE_BUTTON'] . '"';
+        }
+        $textbox = '<div class="input-group" ' . $this->formOption['ATTR_GROUP'] . '> 
+                            <input ' . $this->formOption['REQUIRED'] . ' 
+                                ' . $this->formOption['MANUAL_ATTRIBUT'] . ''
+                .' readonly="readonly" '
+                . ' type="' . $type . '" ' . $minlength . $maxlength . ' '
+                . ' id="' . $this->formOption['ID'] . '-name" '
+                . ' name="' . $this->formOption['NAME'] . '-name"'
+                . ' class="form-control" '
+                . ' value="' . $this->formOption['VALUE_NAME'] . '" '
+                . ' placeholder="' . $this->formOption['PLACEHOLDER'] . '"> 
+                                     <div class="input-group-btn" > 
+                                   <button type="button" ' . $this->formOption['ATTR_BUTTON'] . ' '
+                . $tooltip
+                . 'id="btn-' . $this->formOption['ID'] . '" data-placement="right" 
+                    onclick="ajaxPostModalByValue(\''.URL('search/lov').'\',\''.lang('general.list').' '.$this->formOption['TITLE'].'\',\'name=' . $this->formOption['NAME'] . '\');" class="btn btn-danger">
+                                   <i class="' . $this->formOption['CLASS'] . '"></i>
+                                       ' . $this->formOption['TITLE_BUTTON'] . '
+                                       </button>
+                            </div>
+                        </div>
+                    ';
+        $textbox .= '<input type="hidden" value="' . $this->formOption['VALUE'] . '" id="' . $this->formOption['ID'] . '" name="' . $this->formOption['NAME'] . '"/>';
+        if ($this->formOption['TOOLTIP_TITLE_BUTTON'] != "") {
+            $textbox .= '<script>$(function(){$("[rel=\'tooltip\']").tooltip();});</script>';
+        }
         $textbox .= '';
         $rs = $this->formGroup($textbox);
         $this->ResetObject();

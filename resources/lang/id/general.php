@@ -108,6 +108,7 @@ return [
     'remove_all'=>'Hapus Semua',
     'edit'=>'Ubah',
     'view' => 'Lihat',
+    'list' => 'Daftar',
     'create'=>'Buat Baru',
     'delete'=>'Hapus',
     'back'=>'Kembali',
@@ -189,4 +190,5 @@ return [
     'unit'=>'Unit',
     'material'=>'Materi',
     'non_material'=>'Bukan Materi',
+    'waiting'=>'Menunggu',
 ];

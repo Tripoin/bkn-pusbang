@@ -24,6 +24,7 @@ use app\Model\SecurityUserProfile;
 use app\Model\MasterUserMain;
 use app\Model\MasterReligion;
 use app\Model\MasterApproval;
+use app\Model\MasterApprovalCategory;
 use app\Model\MasterWaitingList;
 use app\Model\MasterGovernmentClassification;
 use app\Model\MasterCollege;
@@ -94,31 +95,299 @@ class RegistrationActivityTemp {
         include_once FILE_PATH(IViewMemberConstant::REGISTRATION_ACTIVITY_TEMP_LIST_VIEW_INDEX);
     }
 
+    public function indexChooseUser($activity) {
+        include_once FILE_PATH(IViewMemberConstant::REGISTRATION_ACTIVITY_TEMP_LIST_USER_ADD_VIEW_INDEX);
+    }
+
+    public function addChooseUser($activity) {
+        $registrationId = $_POST['registration_id'];
+        $registrationDetailId = $_POST['registration_detail_id'];
+        $linkRegistration = new LinkRegistration();
+        $masterApproval = new MasterApproval();
+        $transactionRegistrationDetails = new TransactionRegistrationDetails();
+        $db = new Database();
+        $db->connect();
+
+        $db->insert($linkRegistration->getEntity(), array(
+            $linkRegistration->getActivityId() => $activity,
+            $linkRegistration->getRegistrationId() => $registrationId,
+            $linkRegistration->getRegistrationDetailsId() => $registrationDetailId,
+            $linkRegistration->getStatus() => null,
+            $linkRegistration->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+            $linkRegistration->getCreatedBy() => $_SESSION[SESSION_USERNAME_GUEST],
+        ));
+
+        $rs_insert_link_reg = $db->getResult();
+        if (is_numeric($rs_insert_link_reg[0])) {
+            $masterApprovalCategory = new MasterApprovalCategory();
+            $dataApprovalCategory = $db->selectByID($masterApprovalCategory, $masterApprovalCategory->getCode() . equalToIgnoreCase('REGISTRATION-DETAILS'));
+            $dataRegistrationDetail = $db->selectByID($transactionRegistrationDetails, $transactionRegistrationDetails->getId() . equalToIgnoreCase($registrationDetailId));
+            $codeApproval = createRandomBooking();
+            $db->insert($masterApproval->getEntity(), array(
+                $masterApproval->getCode() => $dataRegistrationDetail[0][$transactionRegistrationDetails->getIdNumber()] . "-" . $codeApproval,
+                $masterApproval->getName() => $dataRegistrationDetail[0][$transactionRegistrationDetails->getIdNumber()],
+                $masterApproval->getDescription() => "Registration Details dengan Nomor ID : " . $dataRegistrationDetail[0][$transactionRegistrationDetails->getIdNumber()],
+                $masterApproval->getApprovalCategoryId() => $dataApprovalCategory[0][$masterApprovalCategory->getId()],
+                $masterApproval->getApprovalDetailId() => $rs_insert_link_reg[0],
+                $masterApproval->getStatus() => null,
+                $masterApproval->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+                $masterApproval->getCreatedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
+            ));
+            $rs_insert_approval = $db->getResult();
+            if (is_numeric($rs_insert_approval[0])) {
+                echo toastAlert('success', lang('general.title_insert_success'), lang('general.message_insert_success'));
+                echo modalHide();
+                echo postAjaxPagination();
+            } else {
+                echo toastAlert('error', lang('general.title_insert_error'), lang('general.message_insert_error'));
+                $db->delete($linkRegistration->getEntity(), $linkRegistration->getId() . equalToIgnoreCase($rs_insert_link_reg[0]));
+            }
+        } else {
+            echo toastAlert('error', lang('general.title_insert_error'), lang('general.message_insert_error'));
+        }
+    }
+
+    public function listChooseUser($activity) {
+        $registrationId = $_POST['registration_id'];
+//        $registrationId = $_POST['registration_id'];
+        $Form = new Form();
+        $Datatable = new DataTable();
+        $Button = new Button();
+        $db = new Database();
+        $db->connect();
+        $data = new TransactionRegistrationDetails;
+//        $data->getIdNumber();
+//        $data->getName();
+        $linkRegistration = new LinkRegistration();
+
+        $db->select($linkRegistration->getEntity(), $linkRegistration->getRegistrationDetailsId(), null, $linkRegistration->getRegistrationId() . equalToIgnoreCase($registrationId)
+                . " AND " . $linkRegistration->getActivityId() . equalToIgnoreCase($activity)
+        );
+        $dt_link_reg = $db->getResult();
+        $list_reg_id_detail = '';
+        foreach ($dt_link_reg as $value) {
+            $list_reg_id_detail .= $value[$linkRegistration->getRegistrationDetailsId()] . ",";
+        }
+        $list_reg_id_detail = rtrim($list_reg_id_detail, ',');
+//        $implode_reg_id_detail = implode(',', $dt_link_reg[0][$linkRegistration]);
+//                print_r($dt_link_reg);
+
+        if ($_POST['per_page'] == "") {
+            $Datatable->per_page = 10;
+        } else {
+            $Datatable->per_page = $_POST['per_page'];
+        }
+        $Datatable->urlDeleteCollection(false);
+        $Datatable->searchFilter(array("code" => lang("general.code"), "name" => lang("general.name")));
+        $Datatable->current_page = $_POST['current_page'];
+        if ($_POST['current_page'] == '') {
+            $Datatable->current_page = 1;
+        }
+        $search = $_POST['search_pagination'];
+        if (isset($_POST['search_by'])) {
+            if ($_POST['search_by'] == '') {
+                $search = " AND " . $data->getEntity() . ".code LIKE  '%" . $search . "%'";
+            } else if ($_POST['search_by'] == 'null') {
+                $search = " AND " . $data->getEntity() . ".code LIKE  '%" . $search . "%'";
+            } else {
+                if (!empty($data->search($_POST['search_by']))) {
+                    $search = " AND " . $data->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search . "%'";
+                }
+            }
+        }
+        $whereList = $data->getEntity() . DOT . $data->getId() . " NOT IN (" . $list_reg_id_detail . ") " . $search;
+//        echo $whereList;
+        $list_data = $Datatable->select_pagination($data, $data->getEntity(), $whereList, null, null, null, null
+                , null);
+        include_once FILE_PATH(IViewMemberConstant::REGISTRATION_ACTIVITY_TEMP_LIST_USER_ADD_LIST_VIEW_INDEX);
+    }
+
     public function createUserData($activity) {
+        $registrationId = $_POST['registration_id'];
         $db = new Database();
         $modelActivity = new TransactionActivity();
         $masterNoidType = new MasterNoIdType();
         $masterReligion = new MasterReligion();
         $masterCollege = new MasterCollege();
         $masterStudyProgram = new MasterStudyProgram();
-        
+
         $masterGovernmentClassification = new MasterGovernmentClassification();
 
         $data_gender = [
-            array("id" => "L", "label" => lang("general.male")),
+            array("id" => "M", "label" => lang("general.male")),
             array("id" => "F", "label" => lang("general.female")),
         ];
         $data_marital_status = [
-            array("id" => "Belum Menikah", "label" => "Belum Menikah"),
-            array("id" => "Menikah", "label" => "Menikah"),
+            array("id" => "N", "label" => "Belum Menikah"),
+            array("id" => "Y", "label" => "Menikah"),
         ];
+        $data_reg_detail = array();
+        if (isset($_POST['registration_detail_id'])) {
+            $regDetail = new TransactionRegistrationDetails();
+            $data_reg_detail = $db->selectByID($regDetail, $regDetail->getId() . equalToIgnoreCase($_POST['registration_detail_id']));
+        }
         $data_noid_type = getLov($masterNoidType);
-        $data_study_program = getLov($masterStudyProgram);
+//        $data_study_program = getLov($masterStudyProgram);
         $data_religion = getLov($masterReligion);
-        $data_college = getLov($masterCollege);
+//        $data_college = getLov($masterCollege);
         $data_government_class = getLov($masterGovernmentClassification);
         $data_activity = $db->selectByID($modelActivity, $modelActivity->getId() . EQUAL . $activity);
         include_once FILE_PATH(IViewMemberConstant::REGISTRATION_ACTIVITY_TEMP_LIST_USER_CREATE_VIEW_INDEX);
+    }
+
+    public function saveUserData($activity) {
+        $participant_name = $_POST['participant_name'];
+        $noidType = $_POST['noidType'];
+        $idNumber = $_POST['idNumber'];
+        $front_degree = $_POST['front_degree'];
+        $behind_degree = $_POST['behind_degree'];
+        $place_of_birth = $_POST['place_of_birth'];
+        $date_of_birth = $_POST['date_of_birth'];
+        $religion = $_POST['religion'];
+        $gender = $_POST['gender'];
+        $marital_status = $_POST['marital_status'];
+        $email = $_POST['email'];
+        $telephone = $_POST['telephone'];
+        $fax = $_POST['fax'];
+        $address = $_POST['address'];
+        $zip_code = $_POST['zip_code'];
+        $government_classification = $_POST['government_classification'];
+        $json_occupation = $_POST['json_occupation'];
+        $degree = $_POST['degree'];
+        $college_name = $_POST['college-name'];
+        $college = $_POST['college'];
+        $faculity = $_POST['faculity'];
+        $study_program_name = $_POST['study_program-name'];
+        $study_program = $_POST['study_program'];
+        $graduation_year = $_POST['graduation_year'];
+        $registration_id = $_POST['registration_id'];
+        /* foreach ($_POST as $key => $value) {
+          echo "&#36;" . $key . " = &#36;_POST['" . $key . "'];<br/>";
+          }
+         * 
+         */
+        $transactionRegistrationDetails = new TransactionRegistrationDetails();
+        $db = new Database();
+        $db->connect();
+        if (isset($_POST['registration_detail_id'])) {
+            $registrationDetailId = $_POST['registration_detail_id'];
+            $db->update($transactionRegistrationDetails->getEntity(), array(
+                $transactionRegistrationDetails->getName() => $participant_name,
+                $transactionRegistrationDetails->getIdNumber() => $idNumber,
+                $transactionRegistrationDetails->getNoidTypeId() => $noidType,
+                $transactionRegistrationDetails->getFrontDegree() => $front_degree,
+                $transactionRegistrationDetails->getBehindDegree() => $behind_degree,
+                $transactionRegistrationDetails->getPob() => $place_of_birth,
+                $transactionRegistrationDetails->getDob() => $date_of_birth,
+                $transactionRegistrationDetails->getReligionId() => $religion,
+                $transactionRegistrationDetails->getGender() => $gender,
+                $transactionRegistrationDetails->getMaritalStatus() => $marital_status,
+                $transactionRegistrationDetails->getEmail() => $email,
+                $transactionRegistrationDetails->getPhoneNumber() => $telephone,
+                $transactionRegistrationDetails->getFax() => $fax,
+                $transactionRegistrationDetails->getAddress() => $address,
+                $transactionRegistrationDetails->getZipCode() => $zip_code,
+                $transactionRegistrationDetails->getGovernmentClassificationId() => $government_classification,
+                $transactionRegistrationDetails->getJsonOccupation() => $json_occupation,
+                $transactionRegistrationDetails->getDegree() => $degree,
+                $transactionRegistrationDetails->getCollege() => $college_name,
+                $transactionRegistrationDetails->getCollegeId() => $college,
+                $transactionRegistrationDetails->getFaculity() => $faculity,
+                $transactionRegistrationDetails->getStudyProgram() => $study_program_name,
+                $transactionRegistrationDetails->getStudyProgramId() => $study_program,
+                $transactionRegistrationDetails->getGraduationYear() => $graduation_year,
+                $transactionRegistrationDetails->getModifiedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+                $transactionRegistrationDetails->getModifiedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
+                $transactionRegistrationDetails->getStatus() => null,
+                    ), $transactionRegistrationDetails->getId() . equalToIgnoreCase($registrationDetailId));
+            $rs_update_reg_detail = $db->getResult();
+            if (is_numeric($rs_update_reg_detail[0]) == 1) {
+                echo resultPageMsg('success', lang('general.title_update_success'), lang('general.message_update_success'));
+                echo toastAlert('success', lang('general.title_update_success'), lang('general.message_update_success'));
+            } else {
+                echo resultPageMsg('danger', lang('general.title_update_error'), lang('general.message_update_error'));
+                echo toastAlert('error', lang('general.title_update_error'), lang('general.message_update_error'));
+            }
+        } else {
+
+            $db->insert($transactionRegistrationDetails->getEntity(), array(
+                $transactionRegistrationDetails->getCode() => $idNumber,
+                $transactionRegistrationDetails->getName() => $participant_name,
+                $transactionRegistrationDetails->getIdNumber() => $idNumber,
+                $transactionRegistrationDetails->getNoidTypeId() => $noidType,
+                $transactionRegistrationDetails->getFrontDegree() => $front_degree,
+                $transactionRegistrationDetails->getBehindDegree() => $behind_degree,
+                $transactionRegistrationDetails->getPob() => $place_of_birth,
+                $transactionRegistrationDetails->getDob() => $date_of_birth,
+                $transactionRegistrationDetails->getReligionId() => $religion,
+                $transactionRegistrationDetails->getGender() => $gender,
+                $transactionRegistrationDetails->getMaritalStatus() => $marital_status,
+                $transactionRegistrationDetails->getEmail() => $email,
+                $transactionRegistrationDetails->getPhoneNumber() => $telephone,
+                $transactionRegistrationDetails->getFax() => $fax,
+                $transactionRegistrationDetails->getAddress() => $address,
+                $transactionRegistrationDetails->getZipCode() => $zip_code,
+                $transactionRegistrationDetails->getGovernmentClassificationId() => $government_classification,
+                $transactionRegistrationDetails->getJsonOccupation() => $json_occupation,
+                $transactionRegistrationDetails->getDegree() => $degree,
+                $transactionRegistrationDetails->getCollege() => $college_name,
+                $transactionRegistrationDetails->getCollegeId() => $college,
+                $transactionRegistrationDetails->getFaculity() => $faculity,
+                $transactionRegistrationDetails->getStudyProgram() => $study_program_name,
+                $transactionRegistrationDetails->getStudyProgramId() => $study_program,
+                $transactionRegistrationDetails->getGraduationYear() => $graduation_year,
+                $transactionRegistrationDetails->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+                $transactionRegistrationDetails->getCreatedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
+                $transactionRegistrationDetails->getStatus() => null,
+            ));
+            $rs_insert_reg_detail = $db->getResult();
+            if (is_numeric($rs_insert_reg_detail[0])) {
+                $linkRegistration = new LinkRegistration();
+                $db->insert($linkRegistration->getEntity(), array(
+                    $linkRegistration->getActivityId() => $activity,
+                    $linkRegistration->getRegistrationDetailsId() => $rs_insert_reg_detail[0],
+                    $linkRegistration->getRegistrationId() => $registration_id,
+                    $linkRegistration->getStatus() => null,
+                    $linkRegistration->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+                    $linkRegistration->getCreatedBy() => $_SESSION[SESSION_USERNAME_GUEST],
+                ));
+                $rs_insert_link_reg = $db->getResult();
+                if (is_numeric($rs_insert_link_reg[0])) {
+                    $masterApproval = new MasterApproval();
+                    $masterApprovalCategory = new MasterApprovalCategory();
+                    $dataApprovalCategory = $db->selectByID($masterApprovalCategory, $masterApprovalCategory->getCode() . equalToIgnoreCase('REGISTRATION-DETAILS'));
+                    $codeApproval = createRandomBooking();
+                    $db->insert($masterApproval->getEntity(), array(
+                        $masterApproval->getCode() => $idNumber . "-" . $codeApproval,
+                        $masterApproval->getName() => $idNumber,
+                        $masterApproval->getDescription() => "Registration Details dengan Nomor ID : " . $idNumber,
+                        $masterApproval->getApprovalCategoryId() => $dataApprovalCategory[0][$masterApprovalCategory->getId()],
+                        $masterApproval->getApprovalDetailId() => $rs_insert_link_reg[0],
+                        $masterApproval->getStatus() => null,
+                        $masterApproval->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+                        $masterApproval->getCreatedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
+                    ));
+                    $rs_insert_approval = $db->getResult();
+                    if (is_numeric($rs_insert_approval[0])) {
+                        echo postAjaxPagination();
+                        echo resultPageMsg('success', lang('general.title_insert_success'), lang('general.message_insert_success'));
+                        echo toastAlert('success', lang('general.title_insert_success'), lang('general.message_insert_success'));
+                    } else {
+                        echo resultPageMsg('danger', lang('general.title_insert_error'), lang('general.message_insert_error'));
+                        echo toastAlert('error', lang('general.title_insert_error'), lang('general.message_insert_error'));
+                        $db->delete($transactionRegistrationDetails->getEntity(), $transactionRegistrationDetails->getId() . equalToIgnoreCase($rs_insert_reg_detail[0]));
+                        $db->delete($linkRegistration->getEntity(), $linkRegistration->getId() . equalToIgnoreCase($rs_insert_link_reg[0]));
+                    }
+                } else {
+                    echo resultPageMsg('danger', lang('general.title_insert_error'), lang('general.message_insert_error'));
+                    echo toastAlert('error', lang('general.title_insert_error'), lang('general.message_insert_error'));
+                    $db->delete($transactionRegistrationDetails->getEntity(), $transactionRegistrationDetails->getId() . equalToIgnoreCase($rs_insert_reg_detail[0]));
+                }
+            } else {
+                echo resultPageMsg('danger', lang('general.title_insert_error'), lang('general.message_insert_error'));
+                echo toastAlert('error', lang('general.title_insert_error'), lang('general.message_insert_error'));
+            }
+        }
     }
 
     public function listUserData($activity) {
@@ -167,7 +436,8 @@ class RegistrationActivityTemp {
                 . "" . $search;
 //        $Datatable->debug(true);
         $list_data = $Datatable->select_pagination($linkRegistration, $linkRegistration->getEntity(), $whereList, array($transactionRegistrationDetails->getEntity()), null, null, ""
-                . $data->getEntity() . DOT . "*"
+                . $data->getEntity() . DOT . "*,"
+                . $linkRegistration->getEntity() . DOT .$linkRegistration->getStatus(). " as status_user"
                 , null);
 //        print_r($list_data);
 

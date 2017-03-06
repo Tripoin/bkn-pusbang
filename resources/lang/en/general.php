@@ -80,6 +80,7 @@ return [
     'login_success' => 'Login Success',
     'login_failed_message' => 'Please check your Username and Password',
     'input' => 'Input',
+    'list' => 'List',
     'example' => 'Example',
     'choose' => 'Choose',
     'back' => 'Back',
@@ -188,4 +189,5 @@ return [
     'unit'=>'Unit',
     'material'=>'Material',
     'non_material'=>'Non Material',
+    'waiting'=>'Waiting',
 ];

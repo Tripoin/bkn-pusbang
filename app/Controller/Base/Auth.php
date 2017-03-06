@@ -387,7 +387,7 @@ class Auth {
                 AND " . $user->getStatus() . EQUAL . ONE);
                 $rsPostNew = $dbNew->getResult();
             }
-
+            
             if (empty($rsPostNew)) {
                 echo resultPageMsg("danger", lang('general.login_failed'), lang('general.login_failed_username'));
                 echo '<script>ajaxPostManual(\'' . URL('captcha/reload') . '\',\'captcha_image_security_code\');</script>';

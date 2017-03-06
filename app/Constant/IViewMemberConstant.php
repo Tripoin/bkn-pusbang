@@ -37,4 +37,6 @@ interface IViewMemberConstant {
     const REGISTRATION_ACTIVITY_TEMP_VIEW_VIEW_INDEX = 'view/page/member/registration/activity-temp/view.html.php';
     const REGISTRATION_ACTIVITY_TEMP_LIST_USER_VIEW_INDEX = 'view/page/member/registration/activity-temp/list-user/list.html.php';
     const REGISTRATION_ACTIVITY_TEMP_LIST_USER_CREATE_VIEW_INDEX = 'view/page/member/registration/activity-temp/list-user/create.html.php';
+    const REGISTRATION_ACTIVITY_TEMP_LIST_USER_ADD_VIEW_INDEX = 'view/page/member/registration/activity-temp/list-user/add/index.html.php';
+    const REGISTRATION_ACTIVITY_TEMP_LIST_USER_ADD_LIST_VIEW_INDEX = 'view/page/member/registration/activity-temp/list-user/add/list.html.php';
 }

@@ -89,7 +89,7 @@ return [
     "college"=>"Sekolah/Universitas",
     "faculity"=>"Fakultas",
     "study_program"=>"Program Studi",
-    "graduation_year"=>"Graduation Year",
+    "graduation_year"=>"Tahun Lulus",
     
 ];
 

@@ -21,14 +21,14 @@ foreach ($list_data['item'] as $value) {
     $status = "";
     if (is_null($value[$data->getStatus()])) {
         $status = '<a href="javascript:void(0)" '
-                . 'onclick="postAjaxEdit(\'' . URL(getAdminTheme().IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $value[$data->getId()] . '\')">' . lang("general.detail") . '</a>';
+                . 'onclick="postAjaxEdit(\'' . URL(getAdminTheme().IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $value[$data->getId()] . '\')">' . lang("general.detail") . '</a>';
     } else if ($value[$data->getStatus()] == 1) {
         $status = '<span class="text-success">' . lang('general.approve') . '</span>';
     } else if($value[$data->getStatus()] == 0) {
         $status = '<span class="text-danger">' . lang('general.reject') . '</span>';
     }
     $Datatable->body(array($no,
-        '<a href="javascript:void(0)" onclick="postAjaxEdit(\'' . URL(getAdminTheme().IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $value[$data->getId()] . '\')">' . $value[$data->getCode()] . '</a>',
+        '<a href="javascript:void(0)" onclick="postAjaxEdit(\'' . URL(getAdminTheme().IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $value[$data->getId()] . '\')">' . $value[$data->getCode()] . '</a>',
         $value['pic_name'],
         $value['approval_category_name'],
         $value['username'],
