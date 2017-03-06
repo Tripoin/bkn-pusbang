@@ -97,7 +97,7 @@ class RestClient {
         if (curl_error($ch)) {
             echo 'error:' . curl_error($ch);
         }
-        print_r($response);
+//        print_r($response);
 //        echo 'oke';
 
         $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
