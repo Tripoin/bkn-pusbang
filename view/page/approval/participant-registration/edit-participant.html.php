@@ -28,13 +28,21 @@ if ($dt_participant_type[0][$m_participant_type->getCode()] == 'GOVERNMENT_AGENC
 <div class="row">
     <div class="col-md-6">
         <?php
+        $detailSubject = lang('transaction.tentative');
+        $due = strtotime($dt_activity[0][$m_act->getStartActivity()]);
+        if ($due != strtotime('0000-00-00')) {
+            $detailSubject = '' . subMonth($dt_activity[0][$m_act->getStartActivity()]) . ' - ' . subMonth($dt_activity[0][$m_act->getEndActivity()]) . '';
+        } else if ($dt_activity[0][$m_act->getStartActivity()] == null) {
+            $detailSubject = lang('transaction.tentative');
+        }
+
         echo Form()
                 ->title(lang('transaction.subject_name'))
                 ->label($data_subject[0]['label'])
                 ->formLayout('horizontal')->labels();
         echo Form()
                 ->title(lang('transaction.execution_time'))
-                ->label($dt_activity[0][$m_act->getStartActivity()] . " - " . $dt_activity[0][$m_act->getEndActivity()])
+                ->label($detailSubject)
                 ->formLayout('horizontal')->labels();
         echo Form()
                 ->title(lang('transaction.participant_category'))
@@ -95,12 +103,11 @@ if ($dt_participant_type[0][$m_participant_type->getCode()] == 'GOVERNMENT_AGENC
                 ->title(lang('transaction.email'))
                 ->label($email)
                 ->formLayout('horizontal')->labels();
-       
         ?>
     </div>
     <div class="col-md-6">
         <?php
-         $fax = "";
+        $fax = "";
         if (isset($rs_registration_detail[0][$regDetail->getFax()])) {
             $fax = $rs_registration_detail[0][$regDetail->getFax()];
         }
@@ -125,7 +132,7 @@ if ($dt_participant_type[0][$m_participant_type->getCode()] == 'GOVERNMENT_AGENC
                 ->label($address)
                 ->formLayout('horizontal')->labels();
 
-        
+
 
         echo Form()
                 ->title(lang('transaction.postal_code'))
@@ -179,15 +186,16 @@ echo Form()
         ->formLayout('horizontal')->labels();
 $button_reject = "";
 $button_approve = "";
-if (is_null($dt_approval[0][$masterApproval->getStatus()])) {
+
+if (is_null($rs_registration_detail[0][$regDetail->getIsApproved()])) {
     $button_reject = Button()->id('btn-reject')
-            ->onClick('ajaxPostModalManual(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit-participant/reject-detail') . '\', \'link_registration_id='.$linkRegistrationId.'&approval_id='.$approvalId.'\')')
+            ->onClick('ajaxPostModalManual(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit-participant/reject-detail') . '\', \'link_registration_id=' . $linkRegistrationId . '&approval_id=' . $approvalId . '\')')
             ->label(lang('general.reject'))
             ->setClass('btn btn-warning')
             ->icon('fa fa-times')
             ->buttonManual();
     $button_approve = Button()->id('btn-approve')
-            ->onClick('postAjaxByAlertManual(this,\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit-participant/approve') . '\', \'link_registration_id='.$linkRegistrationId.'&approval_id='.$approvalId.'\')')
+            ->onClick('postAjaxByAlertManual(this,\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit-participant/approve') . '\', \'link_registration_id=' . $linkRegistrationId . '&approval_id=' . $approvalId . '\')')
             ->label(lang('general.approve'))
             ->alertTitle(lang('general.approve'))
             ->alertMsg(lang('member.notif_approved_candidates'))

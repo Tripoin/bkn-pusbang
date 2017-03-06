@@ -17,6 +17,7 @@ use app\Constant\IViewMemberConstant;
 use app\Model\TransactionActivity;
 use app\Model\TransactionActivityDetails;
 use app\Model\TransactionRegistration;
+use app\Model\MasterAttachment;
 use app\Model\TransactionRegistrationDetails;
 use app\Model\LinkRegistration;
 use app\Model\SecurityUser;
@@ -97,6 +98,74 @@ class RegistrationActivityTemp {
 
     public function indexChooseUser($activity) {
         include_once FILE_PATH(IViewMemberConstant::REGISTRATION_ACTIVITY_TEMP_LIST_USER_ADD_VIEW_INDEX);
+    }
+
+    public function registerActivityPage($activity) {
+        $db = new Database();
+        $modelActivity = new TransactionActivity();
+        $data_activity = $db->selectByID($modelActivity, $modelActivity->getId() . EQUAL . $activity);
+        include_once FILE_PATH(IViewMemberConstant::REGISTRATION_ACTIVITY_TEMP_REGISTER_VIEW_INDEX);
+    }
+
+    public function saveRegisterActivity($activity) {
+        $db = new Database();
+        $db->connect();
+        $linkRegistration = new LinkRegistration();
+        $masterAttachment = new MasterAttachment();
+        $masterApproval = new MasterApproval();
+        $masterApprovalCategory = new MasterApprovalCategory();
+
+        $registrationId = $_POST['registration_id'];
+//        print_r($_FILES['recommend_letter']);
+        $recommendLetter = $_FILES['recommend_letter'];
+        $reArray = reArrayFiles($recommendLetter);
+        $upload = uploadFileImg($reArray[0], $reArray[0]['name'], FILE_PATH('uploads/' . $_SESSION[SESSION_USERNAME_GUEST] . '/'));
+        if ($upload['result'] == true) {
+            $code = createRandomBooking();
+            $db->insert($masterAttachment->getEntity(), array(
+                $masterAttachment->getCode() => $code . "-" . $upload['file_name'],
+                $masterAttachment->getName() => $upload['file_name'],
+            ));
+            $rs_insert_attach = $db->getResult();
+            if (is_numeric($rs_insert_attach[0])) {
+                $db->insert($linkRegistration->getEntity(), array(
+                    $linkRegistration->getActivityId() => $activity,
+                    $linkRegistration->getRegistrationId() => $registrationId,
+                    $linkRegistration->getAttachmentLetterId() => $rs_insert_attach[0],
+                    $linkRegistration->getStatus() => null
+                ));
+                $rs_insert_link_registration = $db->getResult();
+                if (is_numeric($rs_insert_link_registration[0])) {
+                    $rs_app_cat = $db->selectByID($masterApprovalCategory, $masterApprovalCategory->getCode() . equalToIgnoreCase('RE-REGISTRATION'));
+                    $db->insert($masterApproval->getEntity(), array(
+                        $masterApproval->getCode() => $code . "-" . $registrationId . "",
+                        $masterApproval->getName() => $code . "-" . $registrationId . "",
+                        $masterApproval->getApprovalCategoryId() => $rs_app_cat[0][$masterApproval->getId()],
+                        $masterApproval->getApprovalDetailId() => $rs_insert_link_registration[0],
+                        $masterApproval->getStatus() => null
+                    ));
+                    $rs_insert_approval = $db->getResult();
+                    if (is_numeric($rs_insert_link_registration[0])) {
+                        echo toastAlert('success', lang('general.title_register_success'), lang('general.messsage_register_success'));
+                        echo resultPageMsg('success', lang('general.title_register_success'), lang('general.messsage_register_success'));
+                        echo postAjaxPagination();
+                    } else {
+                        echo toastAlert('error', lang('general.title_register_failed'), lang('general.messsage_register_failed'));
+                        echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.messsage_register_failed'));
+                    }
+                } else {
+                    echo toastAlert('error', lang('general.title_register_failed'), lang('general.messsage_register_failed'));
+                    echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.messsage_register_failed'));
+                }
+            } else {
+                echo toastAlert('error', lang('general.title_register_failed'), lang('general.messsage_register_failed'));
+                echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.messsage_register_failed'));
+            }
+        } else {
+            echo toastAlert('error', lang('general.title_upload_failed'), $upload['message']);
+            echo resultPageMsg('danger', lang('general.title_upload_failed'), $upload['message']);
+        }
+//        include_once FILE_PATH(IViewMemberConstant::REGISTRATION_ACTIVITY_TEMP_REGISTER_VIEW_INDEX);
     }
 
     public function addChooseUser($activity) {
@@ -437,7 +506,7 @@ class RegistrationActivityTemp {
 //        $Datatable->debug(true);
         $list_data = $Datatable->select_pagination($linkRegistration, $linkRegistration->getEntity(), $whereList, array($transactionRegistrationDetails->getEntity()), null, null, ""
                 . $data->getEntity() . DOT . "*,"
-                . $linkRegistration->getEntity() . DOT .$linkRegistration->getStatus(). " as status_user"
+                . $linkRegistration->getEntity() . DOT . $linkRegistration->getStatus() . " as status_user"
                 , null);
 //        print_r($list_data);
 

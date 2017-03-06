@@ -63,9 +63,18 @@ if (!empty($data_reg_detail)) {
 <?= Form()->formHeader(); ?>
 <div class="row">
     <div class="col-md-7">
+        <?php
+        $detailSubject = lang('transaction.tentative');
+        $due = strtotime($data_activity[0][$modelActivity->getStartActivity()]);
+        if ($due != strtotime('0000-00-00')) {
+            $detailSubject = '' . subMonth($data_activity[0][$modelActivity->getStartActivity()]) . ' - ' . subMonth($data_activity[0][$modelActivity->getEndActivity()]) . '';
+        } else if ($data_activity[0][$modelActivity->getStartActivity()] == null) {
+            $detailSubject = lang('transaction.tentative');
+        }
+        ?>
         <?= $data_activity[0][$modelActivity->getSubjectName()]; ?>
         :
-        <?= subMonth($data_activity[0][$modelActivity->getStartActivity()]) . ' - ' . subMonth($data_activity[0][$modelActivity->getEndActivity()]); ?>
+        <?= $detailSubject; ?>
     </div>
     <div class="col-md-5" style="margin-bottom: 20px;" id="pageBtnHeader">
         <button id="buttonBack" title="<?= lang('general.back'); ?>" 
@@ -223,7 +232,7 @@ if (!empty($data_reg_detail)) {
                 ->placeholder(lang('member.graduation_year') . " ... ")
                 ->textbox();
         if (!empty($data_reg_detail)) {
-            echo '<input type="hidden" id="registration_detail_id" name="registration_detail_id" value="'.$registration_detail_id.'"/>';
+            echo '<input type="hidden" id="registration_detail_id" name="registration_detail_id" value="' . $registration_detail_id . '"/>';
         }
         ?>
         <input type="hidden" id="registration_id" name="registration_id" value="<?= $registrationId; ?>"/>
@@ -231,13 +240,13 @@ if (!empty($data_reg_detail)) {
 </div>
 <?= Form()->formFooter(''); ?>
 <script>
-        $(function () {
+    $(function () {
         $('.alert').remove();
 //        postFormAjaxPostSetContent()
         //        postAjaxByAlertFormManual();
         $('#btn-save').attr("class", "btn btn-info");
         $('#btn-save').prepend('<i class="fa fa-save"></i> ');
         $('#btn-reset').attr("class", "btn btn-default");
-    $('#btn-save').attr("onclick", "postFormAjaxPostSetContent('<?= URL(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_LIST_USER_URL . '/' . $activity . '/save'); ?>','form-newedit')");
+        $('#btn-save').attr("onclick", "postFormAjaxPostSetContent('<?= URL(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_LIST_USER_URL . '/' . $activity . '/save'); ?>','form-newedit')");
     });
 </script>

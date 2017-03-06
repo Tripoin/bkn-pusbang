@@ -36,7 +36,14 @@ $db->connect();
     foreach ($list_data['item'] as $value) {
 //        echo $_SESSION[SESSION_USERNAME_GUEST];
 //        $detailSubject = '<a href="javascript:void(0)" onclick="postAjaxEdit(\'' . URL('member/activity-agenda/activity/view') . '\',\'id=' . $value[$data->getId()] . '\')">' . subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]) . '</a>';
-        $detailSubject = '' . subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]) . '';
+        $detailSubject = lang('transaction.tentative');
+        $due = strtotime($value[$data->getStartActivity()]);
+        if ($due != strtotime('0000-00-00')) {
+            $detailSubject = '' . subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]) . '';
+        } else if ($value[$data->getStartActivity()] == null) {
+            $detailSubject = lang('transaction.tentative');
+        }
+
 //        echo $rs_user_main[0][$userMain->getId()];
         $dt_link_reg = $db->selectByID($linkRegistration, $linkRegistration->getRegistrationId() . equalToIgnoreCase($cek_regis[0][$transactionRegistration->getId()])
                 . " AND " . $linkRegistration->getActivityId() . equalToIgnoreCase($value[$data->getId()]));
@@ -45,8 +52,8 @@ $db->connect();
         $rs_assign = $db->getResult();
 //        print_r($rs_assign);
 
-        $btn_status = '<a href="javascript:void(0)" onclick="pageUser(' . $value[$data->getId()] . ','.$cek_regis[0][$transactionRegistration->getId()].')">' . lang("member.register") . '</a>';
-        $btn_str_reg = '<a href="javascript:void(0)" onclick="pageUser(' . $value[$data->getId()] . ','.$cek_regis[0][$transactionRegistration->getId()].')">' . lang("member.participant") . '</a>';
+        $btn_status = '<a href="javascript:void(0)" onclick="postAjaxEdit(\'' . URL(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_URL . '/' . $value[$data->getId()] . '/register') . '\',\'registration_id=' . $cek_regis[0][$transactionRegistration->getId()] . '\')">' . lang("member.register") . '</a>';
+        $btn_str_reg = '<a href="javascript:void(0)" onclick="pageUser(' . $value[$data->getId()] . ',' . $cek_regis[0][$transactionRegistration->getId()] . ')">' . lang("member.participant") . '</a>';
         $status = lang('member.registered');
         $str_reg = "";
         if (empty($dt_link_reg)) {
@@ -72,6 +79,7 @@ $db->connect();
 
 
     echo $Datatable->show();
+//    echo lang('general.message_register_success');
     ?>
 </div>
 <script>

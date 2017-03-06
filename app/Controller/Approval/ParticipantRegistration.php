@@ -59,7 +59,8 @@ class ParticipantRegistration extends Controller {
 
     public function __construct() {
         $this->modelData = new MasterApproval();
-        $this->setTitle(lang('approval.participant_registration'));
+        $this->setTitle(lang('approval.approval'));
+        $this->setSubTitle(lang('approval.participant_registration'));
         $this->setBreadCrumb(array(lang('approval.approval') => "", lang('approval.participant_registration') => FULLURL()));
         $this->search_filter = array(
             "code" => lang('general.code'),

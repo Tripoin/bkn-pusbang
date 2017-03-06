@@ -2424,6 +2424,16 @@ function equalToIgnoreCase($value) {
     return "='" . $value . "' ";
 }
 
+function in($array = array()) {
+    $txt = '';
+    foreach ($array as $value) {
+        $txt .= "'" . $value . "',";
+    }
+    $txt = rtrim($txt, ',');
+
+    return " IN (" . $txt . ") ";
+}
+
 function redirectURL($url) {
     echo '<script>window.location.href = "' . $url . '";</script>';
 }
@@ -2446,7 +2456,7 @@ function redirectURL($url) {
  * </p>
  * @return Boolean True or False.
  */
-function sendMail($mailTo = array(),$subject,$message) {
+function sendMail($mailTo = array(), $subject, $message) {
     $mail = new PHPMailer;
     try {
         $mail->isSMTP();
@@ -2471,7 +2481,6 @@ function sendMail($mailTo = array(),$subject,$message) {
         }
 //        $mail->addReplyTo($pic_email, $pic_name);
 //        $mail->addAddress($pic_email, $pic_name);
-
 //        $img_logo_tala = 'http://54.251.168.102/e-portal/contents/logo-kecil.png';
         $mail->Subject = $subject;
         $mail->Body = $message;

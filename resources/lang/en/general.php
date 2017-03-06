@@ -128,6 +128,7 @@ return [
     'title_alert_delete' => 'Are you sure?',
     'message_alert_delete' => 'You won\'t be able to revert this!',
     'button_alert_delete' => 'Yes, delete it!',
+    'title_upload_failed' => 'Upload Failed',
     'title_register_failed' => 'Register Failed',
     'message_register_failed' => 'Register Failed',
     'title_register_success' => 'Register Success',

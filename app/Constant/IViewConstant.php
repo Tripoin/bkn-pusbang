@@ -68,6 +68,7 @@ interface IViewConstant {
     const AGENDA_KEGIATAN_VIEW_INDEX = 'view/page/transaction/agenda-kegiatan';
     
     const APPROVAL_PARTICIPANT_REGISTRATION_VIEW_INDEX = 'view/page/approval/participant-registration';
+    const APPROVAL_ACTIVITY_REGISTRATION_VIEW_INDEX = 'view/page/approval/activity-registration';
     const APPROVAL_PIC_REGISTRATION_VIEW_INDEX = 'view/page/approval/pic-registration';
 
 

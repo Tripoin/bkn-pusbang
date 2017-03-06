@@ -53,23 +53,22 @@ use app\Util\PHPMail\PHPMailer;
 
 //use app\Util\Form;
 
-class PICRegistration extends Controller {
+class ActivityRegistration extends Controller {
 
     //put your code here
 
     public function __construct() {
         $this->modelData = new MasterApproval();
-//        $this->setTitle(lang('approval.pic_registration'));
         $this->setTitle(lang('approval.approval'));
-        $this->setSubTitle(lang('approval.pic_registration'));
-        $this->setBreadCrumb(array(lang('approval.approval') => "", lang('approval.pic_registration') => URL()));
+        $this->setSubTitle(lang('approval.activity_registration'));
+        $this->setBreadCrumb(array(lang('approval.approval') => "", lang('approval.activity_registration') => FULLURL()));
         $this->search_filter = array(
             "code" => lang('general.code'),
             "created_by" => lang('approval.user')
         );
         $this->orderBy = $this->modelData->getId() . " DESC";
-        $this->indexUrl = IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL;
-        $this->viewPath = IViewConstant::APPROVAL_PIC_REGISTRATION_VIEW_INDEX;
+        $this->indexUrl = IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL;
+        $this->viewPath = IViewConstant::APPROVAL_ACTIVITY_REGISTRATION_VIEW_INDEX;
         $this->setAutoCrud();
         parent::__construct();
     }
@@ -83,8 +82,9 @@ class PICRegistration extends Controller {
         $data = $this->modelData;
         $masterApproval = new MasterApproval();
         $masterApprovalCategory = new MasterApprovalCategory();
-        $transactionRegistration = new TransactionRegistration();
-        $linkRegistration = new LinkRegistration();
+        $masterWaitingList = new MasterWaitingList();
+        $masterUserMain = new MasterUserMain();
+
         if ($_POST['per_page'] == "") {
             $Datatable->per_page = 10;
         } else {
@@ -111,15 +111,14 @@ class PICRegistration extends Controller {
 //        echo $Datatable->search;
 
         $whereList = $masterApprovalCategory->getEntity() . DOT . $masterApprovalCategory->getId() . EQUAL . $masterApproval->getEntity() . DOT . $masterApproval->getApprovalCategoryId() . ""
-                . " AND ".$masterApproval->getEntity().DOT.$masterApproval->getApprovalDetailId().EQUAL.$linkRegistration->getEntity().DOT.$linkRegistration->getId().""
-                . " AND ".$linkRegistration->getEntity().DOT.$linkRegistration->getRegistrationId().EQUAL.$transactionRegistration->getEntity().DOT.$transactionRegistration->getId().""
-                . " AND " . $masterApprovalCategory->getEntity() . DOT . $masterApproval->getCode() . in(array('REGISTRATION','RE-REGISTRATION')) .""
-                . ""  . $search;
+                . " AND " . $masterApproval->getEntity() . DOT . $masterApproval->getApprovalDetailId() . EQUAL . $masterWaitingList->getEntity() . DOT . $masterWaitingList->getId() . ""
+                . " AND " . $masterWaitingList->getEntity() . DOT . $masterWaitingList->getUserMainId() . EQUAL . $masterUserMain->getEntity() . DOT . $masterUserMain->getId() . ""
+                . " AND " . $masterApprovalCategory->getEntity() . DOT . $masterApproval->getCode() . equalToIgnoreCase('WAITING-LIST') . ""
+                . "" . $search;
 //        $Datatable->debug(true);
-        $list_data = $Datatable->select_pagination($masterApproval, $masterApproval->getEntity(), $whereList, array($masterApprovalCategory->getEntity(),$transactionRegistration->getEntity(),$linkRegistration->getEntity()), $masterApprovalCategory->getEntity(), $this->orderBy, ""
+        $list_data = $Datatable->select_pagination($masterApproval, $masterApproval->getEntity(), $whereList, array($masterApprovalCategory->getEntity(), $masterWaitingList->getEntity(), $masterUserMain->getEntity()), $masterApprovalCategory->getEntity(), $this->orderBy, ""
                 . $masterApproval->getEntity() . DOT . $masterApproval->getId() . " as id,"
                 . $masterApproval->getEntity() . DOT . $masterApproval->getCode() . " as code,"
-                . $transactionRegistration->getEntity() . DOT . $transactionRegistration->getName() . " as pic_name,"
                 . $masterApproval->getEntity() . DOT . $masterApproval->getCreatedByUsername() . " as username,"
                 . $masterApproval->getEntity() . DOT . $masterApproval->getCreatedOn() . " as created_on,"
                 . $masterApproval->getEntity() . DOT . $masterApproval->getIsExecuted() . " as excecuted,"
@@ -157,25 +156,35 @@ class PICRegistration extends Controller {
 //        print_r($id);
         $dt_approval = $db->selectByID($masterApproval, $masterApproval->getId() . EQUAL . $id);
         $dt_approval_category = $db->selectByID($masterApprovalCategory, $masterApprovalCategory->getId() . EQUAL . $dt_approval[0][$masterApproval->getApprovalCategoryId()]);
-        $linkRegistration = new LinkRegistration();
-        $transactionRegistration = new TransactionRegistration();
 
-        $masterAttachment = new MasterAttachment();
-        
-        $rs_link_registration = $db->selectByID($linkRegistration, $linkRegistration->getId() . equalToIgnoreCase($dt_approval[0][$masterApproval->getApprovalDetailId()]));
-//            print_r($rs_link_registration);
-        $dt_activity = $db->selectByID($m_act, $m_act->getId() . EQUAL . $rs_link_registration[0][$linkRegistration->getActivityId()]);
-        $rs_registration = $db->selectByID($transactionRegistration, $transactionRegistration->getId() . equalToIgnoreCase($rs_link_registration[0][$linkRegistration->getRegistrationId()]));
-//        print_r($rs_registration);
-        $rs_attachment = $db->selectByID($masterAttachment, $masterAttachment->getId() . equalToIgnoreCase($rs_link_registration[0][$linkRegistration->getAttachmentLetterId()]));
-        $dt_participant_type = $db->selectByID($m_participant_type, $m_participant_type->getId() . equalToIgnoreCase($rs_registration[0][$transactionRegistration->getParticipantTypeId()]));
-//            print_r($rs_attachment);
+        $dt_waiting_list = $db->selectByID($masterWaitingList, $masterWaitingList->getId() . EQUAL . $dt_approval[0][$masterApproval->getApprovalDetailId()]);
+
+        $dt_activity = $db->selectByID($m_act, $m_act->getId() . EQUAL . $dt_waiting_list[0][$masterWaitingList->getActivityId()]);
+//        print_r($dt_activity);
+        $dt_user_main = $db->selectByID($m_user_main, $m_user_main->getId() . EQUAL . $dt_waiting_list[0][$masterWaitingList->getUserMainId()]);
+
+        $dt_participant_type = $db->selectByID($m_participant_type, $m_participant_type->getId() . EQUAL . $dt_user_main[0][$m_user_main->getParticipantTypeId()]);
+
+        $dt_working_unit = $db->selectByID($m_working_unit, $m_working_unit->getId() . EQUAL . $dt_user_main[0][$m_user_main->getWorkingUnitId()]);
+
+        $dt_gov_agencies = $db->selectByID($m_gov_agencies, $m_gov_agencies->getId() . EQUAL . $dt_working_unit[0][$m_working_unit->getGovernment_agency_id()]);
+
+        $dt_user_profile = $db->selectByID($userProfile, $userProfile->getId() . EQUAL . $dt_user_main[0][$m_user_main->getUserProfileId()]);
+        $dt_religion = $db->selectByID($masterReligion, $masterReligion->getId() . EQUAL . $dt_user_profile[0][$userProfile->getReligionId()]);
+        $dt_contact = $db->selectByID($masterContact, $masterContact->getId() . EQUAL . $dt_user_profile[0][$userProfile->getContactId()]);
+        $dt_address = $db->selectByID($masterAddress, $masterAddress->getId() . EQUAL . $dt_user_profile[0][$userProfile->getAddressId()]);
+        $dt_province = $db->selectByID($masterProvince, $masterProvince->getId() . EQUAL . $dt_address[0][$masterAddress->getProvinceId()]);
+        $dt_city = $db->selectByID($masterCity, $masterCity->getId() . EQUAL . $dt_address[0][$masterAddress->getCityId()]);
+        $dt_district = $db->selectByID($masterDistrict, $masterDistrict->getId() . EQUAL . $dt_address[0][$masterAddress->getDistrictId()]);
+        $dt_village = $db->selectByID($masterVillage, $masterVillage->getId() . EQUAL . $dt_address[0][$masterAddress->getVillageId()]);
+
+        $dt_gov_class = $db->selectByID($mGovClass, $mGovClass->getId() . EQUAL . $dt_user_main[0][$m_user_main->getGovernmentClassificationId()]);
+
         $data_subject = valueComboBoxParent($masterSubject->getEntity(), $masterSubject->getId(), $masterSubject->getName(), $masterSubject->getParentId(), $masterSubject->getId() . equalToIgnoreCase($dt_activity[0][$m_act->getSubjectId()]));
 
-
-//            print_r($data_subject);
-//            echo $id;
-        include_once FILE_PATH(IViewConstant::APPROVAL_PIC_REGISTRATION_VIEW_INDEX . '/edit.html.php');
+//        MasterGovernmentClassification
+//        print_r($dt_user_profile);
+        include_once FILE_PATH(IViewConstant::APPROVAL_ACTIVITY_REGISTRATION_VIEW_INDEX . '/edit.html.php');
     }
 
     public function create() {
@@ -232,15 +241,15 @@ class PICRegistration extends Controller {
                             $masterApproval->getModifiedOn() => null,
                                 ), $masterApproval->getApprovalDetailId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . "3");
                         echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
-                        echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+                        echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
                     }
                 } else {
                     echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
-                    echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+                    echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
                 }
             } else {
                 echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
-                echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+                echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
             }
         } else if ($approvalCategoryId == 1) {
             $registrationId = $_POST['registration_id'];
@@ -262,11 +271,11 @@ class PICRegistration extends Controller {
                     $this->createUserFromRegistration();
                 } else {
                     echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
-                    echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+                    echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
                 }
             } else {
                 echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_rapproved_error'));
-                echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+                echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
             }
         }
     }
@@ -365,7 +374,7 @@ class PICRegistration extends Controller {
                     $rs_delete = $db->getResult();
                     $this->rollBackApproval();
                     echo toastAlert('error', lang('general.title_approved_error'), "Gagal Mengirim Email");
-                    echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+                    echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
                 }
             } else {
                 if (is_numeric($rs_contact[0])) {
@@ -378,12 +387,12 @@ class PICRegistration extends Controller {
                 }
                 $this->rollBackApproval();
                 echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
-                echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+                echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
             }
         } else {
             $this->rollBackApproval();
             echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
-            echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+            echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
         }
     }
 
@@ -537,17 +546,34 @@ class PICRegistration extends Controller {
                 $mail->smtpClose();
                 if (!$mail->send()) {
                     return false;
+//                    $this->rollBackApproval();
+//                    echo $mail->ErrorInfo;
+//                    LOGGER('GAgAL kirim Email');
                     LOGGER($mail->ErrorInfo);
+//                    echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+//                    echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
                 } else {
                     return true;
+//                    echo toastAlert('success', lang('general.title_approved_success'), lang('general.message_approved_success'));
+//                    echo '<script>$(function () {$(\'#myModal_self\').modal(\'hide\');postAjaxPagination();});</script>';
+//                    return 1;
                 }
             } else {
-                LOGGER("Error Connect SMTP");
                 return false;
+                LOGGER("Error Connect SMTP");
+//                $this->rollBackApproval();
+//                echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+//                echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+//                return 0;
             }
         } catch (\Exception $e) {
             return false;
+//            LOGGER('GAgAL kirim Email');
             LOGGER($e->getMessage());
+//            $this->rollBackApproval();
+//            echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+//            echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+//            echo $e->getMessage(); //Boring error messages from anything else!
         }
     }
 
@@ -610,12 +636,12 @@ class PICRegistration extends Controller {
                 } else {
                     $this->rollBackApproval(0);
                     echo toastAlert('error', lang('general.title_rejected_error'), lang('general.message_rejected_error'));
-                    echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+                    echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
                 }
             } else {
                 $this->rollBackApproval(0);
                 echo toastAlert('error', lang('general.title_rejected_error'), lang('general.message_rejected_error'));
-                echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+                echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
             }
         } else if ($approvalCategoryId == 1) {
             $registrationId = $_POST['registration_id'];
@@ -644,17 +670,17 @@ class PICRegistration extends Controller {
                     } else {
                         $this->rollBackApproval(0);
                         echo toastAlert('error', lang('general.title_rejected_error'), lang('general.message_rejected_error'));
-                        echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+                        echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
                     }
                 } else {
                     $this->rollBackApproval(0);
                     echo toastAlert('error', lang('general.title_rejected_error'), lang('general.message_rejected_error'));
-                    echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+                    echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
                 }
             } else {
                 $this->rollBackApproval(0);
                 echo toastAlert('error', lang('general.title_rejected_error'), lang('general.message_rejected_error'));
-                echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+                echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/edit-registration') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
             }
         }
     }
@@ -670,7 +696,7 @@ class PICRegistration extends Controller {
                     ->alertBtnMsg(lang('member.yes'))
                     ->alertMsg(lang('member.notif_rejected_candidates'))
                     ->alertTitle(lang('general.reject'))
-                    ->onClick('postAjaxByAlertFormManual(this,\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/' . $activity_id . '/reject') . '\',\'form-message-reject\',\'approval_category_id=' . $approvalCategoryId . '&id=' . $_POST['id'] . '&user_main_id=' . $_POST['user_main_id'] . '\')')
+                    ->onClick('postAjaxByAlertFormManual(this,\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/' . $activity_id . '/reject') . '\',\'form-message-reject\',\'approval_category_id=' . $approvalCategoryId . '&id=' . $_POST['id'] . '&user_main_id=' . $_POST['user_main_id'] . '\')')
                     ->label(lang('general.reject'))->buttonManual();
             echo '</form>';
         } else if ($approvalCategoryId == 1) {
@@ -681,7 +707,7 @@ class PICRegistration extends Controller {
                     ->alertBtnMsg(lang('member.yes'))
                     ->alertMsg(lang('member.notif_rejected_candidates'))
                     ->alertTitle(lang('general.reject'))
-                    ->onClick('postAjaxByAlertFormManual(this,\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/' . $activity_id . '/reject') . '\',\'form-message-reject\',\'approval_category_id=' . $approvalCategoryId . '&id=' . $_POST['id'] . '&registration_id=' . $registration_id . '\')')
+                    ->onClick('postAjaxByAlertFormManual(this,\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/' . $activity_id . '/reject') . '\',\'form-message-reject\',\'approval_category_id=' . $approvalCategoryId . '&id=' . $_POST['id'] . '&registration_id=' . $registration_id . '\')')
                     ->label(lang('general.reject'))->buttonManual();
 //            echo $activity_id;
         }

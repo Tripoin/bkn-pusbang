@@ -11,29 +11,36 @@ if (!is_null($dt_approval[0][$masterApproval->getStatus()])) {
         echo resultPageMsg('warning', lang('transaction.data_have_rejected'), $rs_registration[0][$transactionRegistration->getApprovedMessage()]);
     }
 }
+
+$detailSubject = lang('transaction.tentative');
+$due = strtotime($dt_activity[0][$m_act->getStartActivity()]);
+if ($due != strtotime('0000-00-00')) {
+    $detailSubject = '' . subMonth($dt_activity[0][$m_act->getStartActivity()]) . ' - ' . subMonth($dt_activity[0][$m_act->getEndActivity()]) . '';
+} else if ($dt_activity[0][$m_act->getStartActivity()] == null) {
+    $detailSubject = lang('transaction.tentative');
+}
 echo Form()->attr('style="width:50%;"')
         ->title(lang('transaction.subject_name'))
         ->label($data_subject[0]['label'])
         ->formLayout('horizontal')->labels();
 echo Form()->attr('style="width:50%;"')
         ->title(lang('transaction.execution_time'))
-        ->label($dt_activity[0][$m_act->getStartActivity()] . " - " . $dt_activity[0][$m_act->getEndActivity()])
+        ->label($detailSubject)
         ->formLayout('horizontal')->labels();
 
-if($dt_participant_type[0][$m_participant_type->getCode()]=='GOVERNMENT_AGENCY'){
+if ($dt_participant_type[0][$m_participant_type->getCode()] == 'GOVERNMENT_AGENCY') {
     $potret_title = $dt_participant_type[0][$m_participant_type->getName()];
     $label_working_unit = lang('transaction.work_unit');
     $label_telephone_working_unit = lang('transaction.telephone_work_unit');
     $label_fax_working_unit = lang('transaction.fax_work_unit');
     $label_address_working_unit = lang('transaction.address_work_unit');
-} else if($dt_participant_type[0][$m_participant_type->getCode()]=='PRIVATE_AGENCY'){
+} else if ($dt_participant_type[0][$m_participant_type->getCode()] == 'PRIVATE_AGENCY') {
     $potret_title = $dt_participant_type[0][$m_participant_type->getName()];
     $label_working_unit = lang('transaction.office_name');
     $label_telephone_working_unit = lang('transaction.office_telephone');
     $label_fax_working_unit = lang('transaction.office_fax');
     $label_address_working_unit = lang('transaction.office_address');
 }
-
 ?>
 <div class="portlet light bordered">
     <div class="portlet-title">

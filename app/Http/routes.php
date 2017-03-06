@@ -123,6 +123,8 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
     Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_URL, 'app\Controller\Member\Registration\RegistrationActivityTemp@index');
     Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_URL . '/list', 'app\Controller\Member\Registration\RegistrationActivityTemp@listData');
     Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_URL . '/approve', 'app\Controller\Member\Registration\RegistrationActivityTemp@approved');
+    Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_URL . '/{activity}/register', 'app\Controller\Member\Registration\RegistrationActivityTemp@registerActivityPage');
+    Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_URL . '/{activity}/save-register', 'app\Controller\Member\Registration\RegistrationActivityTemp@saveRegisterActivity');
     Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_LIST_USER_URL . '/{activity}', 'app\Controller\Member\Registration\RegistrationActivityTemp@listUserData');
     Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_LIST_USER_URL . '/{activity}/create', 'app\Controller\Member\Registration\RegistrationActivityTemp@createUserData');
     Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_LIST_USER_URL . '/{activity}/save', 'app\Controller\Member\Registration\RegistrationActivityTemp@saveUserData');
@@ -272,6 +274,11 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
             Routes::set(IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/{activity}/approve', 'app\Controller\Approval\PICRegistration@approveData');
             Routes::set(IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/{activity}/reject', 'app\Controller\Approval\PICRegistration@rejectData');
             Routes::set(IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/{activity}/reject-detail', 'app\Controller\Approval\PICRegistration@rejectDetail');
+            
+            Routes::setScaffolding(IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL, 'app\Controller\Approval\ActivityRegistration');
+            Routes::set(IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/{activity}/approve', 'app\Controller\Approval\ActivityRegistration@approveData');
+            Routes::set(IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/{activity}/reject', 'app\Controller\Approval\ActivityRegistration@rejectData');
+            Routes::set(IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/{activity}/reject-detail', 'app\Controller\Approval\ActivityRegistration@rejectDetail');
         });
     }
 }
