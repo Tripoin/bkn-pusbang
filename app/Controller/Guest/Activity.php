@@ -220,7 +220,7 @@ class Activity {
 
         $dB->insert($mstApproval->getEntity(), array(
             $mstApproval->getCode() => createRandomBooking(),
-            $mstApproval->getApprovalDetailId() => $idReg,
+            $mstApproval->getApprovalDetailId() => $resultReg[0],
             $mstApproval->getApprovalCategoryId() => $ctgrIds,
             $mstApproval->getIsExecuted() => 'N',
             $mstApproval->getStatus() => null,

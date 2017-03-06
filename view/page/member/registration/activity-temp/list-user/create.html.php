@@ -1,8 +1,80 @@
+<?php
+
+use app\Constant\IURLMemberConstant;
+use app\Model\TransactionRegistrationDetails;
+
+$regDetail = new TransactionRegistrationDetails();
+
+//print_r($data_reg_detail);
+$participant_name = "";
+$noidType = "";
+$idNumber = "";
+$front_degree = "";
+$behind_degree = "";
+$place_of_birth = "";
+$date_of_birth = "";
+$religion = "";
+$gender = "";
+$marital_status = "";
+$email = "";
+$telephone = "";
+$fax = "";
+$address = "";
+$zip_code = "";
+$government_classification = "";
+$json_occupation = "";
+$degree = "";
+$college_name = "";
+$college = "";
+$faculity = "";
+$study_program_name = "";
+$study_program = "";
+$graduation_year = "";
+$registration_detail_id = "";
+if (!empty($data_reg_detail)) {
+    $participant_name = $data_reg_detail[0][$regDetail->getName()];
+    $noidType = $data_reg_detail[0][$regDetail->getNoidTypeId()];
+    $idNumber = $data_reg_detail[0][$regDetail->getIdNumber()];
+    $front_degree = $data_reg_detail[0][$regDetail->getFrontDegree()];
+    $behind_degree = $data_reg_detail[0][$regDetail->getBehindDegree()];
+    $place_of_birth = $data_reg_detail[0][$regDetail->getPob()];
+    $date_of_birth = $data_reg_detail[0][$regDetail->getDob()];
+    $religion = $data_reg_detail[0][$regDetail->getReligionId()];
+    $gender = $data_reg_detail[0][$regDetail->getGender()];
+    $marital_status = $data_reg_detail[0][$regDetail->getMaritalStatus()];
+    $email = $data_reg_detail[0][$regDetail->getEmail()];
+    $telephone = $data_reg_detail[0][$regDetail->getPhoneNumber()];
+    $fax = $data_reg_detail[0][$regDetail->getFax()];
+    $address = $data_reg_detail[0][$regDetail->getAddress()];
+    $zip_code = $data_reg_detail[0][$regDetail->getZipCode()];
+    $government_classification = $data_reg_detail[0][$regDetail->getGovernmentClassificationId()];
+    $json_occupation = $data_reg_detail[0][$regDetail->getJsonOccupation()];
+    $degree = $data_reg_detail[0][$regDetail->getDegree()];
+    $college_name = $data_reg_detail[0][$regDetail->getCollege()];
+    $college = $data_reg_detail[0][$regDetail->getCollegeId()];
+    $faculity = $data_reg_detail[0][$regDetail->getFaculity()];
+    $study_program_name = $data_reg_detail[0][$regDetail->getStudyProgram()];
+    $study_program = $data_reg_detail[0][$regDetail->getStudyProgramId()];
+    $graduation_year = $data_reg_detail[0][$regDetail->getGraduationYear()];
+    $registration_detail_id = $data_reg_detail[0][$regDetail->getId()];
+}
+?>
+
+<?= Form()->formHeader(); ?>
 <div class="row">
     <div class="col-md-7">
+        <?php
+        $detailSubject = lang('transaction.tentative');
+        $due = strtotime($data_activity[0][$modelActivity->getStartActivity()]);
+        if ($due != strtotime('0000-00-00')) {
+            $detailSubject = '' . subMonth($data_activity[0][$modelActivity->getStartActivity()]) . ' - ' . subMonth($data_activity[0][$modelActivity->getEndActivity()]) . '';
+        } else if ($data_activity[0][$modelActivity->getStartActivity()] == null) {
+            $detailSubject = lang('transaction.tentative');
+        }
+        ?>
         <?= $data_activity[0][$modelActivity->getSubjectName()]; ?>
         :
-        <?= subMonth($data_activity[0][$modelActivity->getStartActivity()]) . ' - ' . subMonth($data_activity[0][$modelActivity->getEndActivity()]); ?>
+        <?= $detailSubject; ?>
     </div>
     <div class="col-md-5" style="margin-bottom: 20px;" id="pageBtnHeader">
         <button id="buttonBack" title="<?= lang('general.back'); ?>" 
@@ -16,157 +88,165 @@
     </div>
     <div class="col-md-12">
         <?php
-        echo Form()->attr('style="width:50%;"')
+        echo Form()
                 ->title(lang('member.participant_name'))
                 ->id('participant_name')
                 ->formLayout('form-horizontal')
+                ->value($participant_name)
                 ->placeholder(lang('member.participant_name') . " ... ")
                 ->textbox();
         $idNumber = '<div class="row">'
-                . '<div class="col-md-4">' . Form()
+                . '<div class="col-md-9">' . Form()
                         ->title(lang('member.no_id'))
-                        ->id('participant_name')
+                        ->id('idNumber')
                         ->onlyComponent(true)
+                        ->value($idNumber)
                         ->placeholder(lang('member.no_id') . " ... ")
                         ->textbox() . '</div>';
-        $noType = '<div class="col-md-2">' . Form()->id('noidType')
-                        ->required(false)
+        $noType = '<div class="col-md-3">' . Form()->id('noidType')
                         ->onlyComponent(true)
                         ->autocomplete(false)
+                        ->value($noidType)
                         ->data($data_noid_type)
                         ->combobox() . '</div></div>';
-        echo Form()->required(false)
+        echo Form()->required(true)
                 ->label(lang('member.no_id'))
                 ->formLayout('form-horizontal')
                 ->title(lang('member.no_id'))
                 ->formGroup($idNumber . $noType);
-        echo Form()->attr('style="width:50%;"')
+        echo Form()
                 ->title(lang('member.front_degree'))
+                ->required(false)
+                ->value($front_degree)
                 ->id('front_degree')
                 ->formLayout('form-horizontal')
                 ->placeholder(lang('member.front_degree') . " ... ")
                 ->textbox();
-        echo Form()->attr('style="width:50%;"')
+        echo Form()
                 ->title(lang('member.behind_degree'))
                 ->id('behind_degree')
+                ->value($behind_degree)
                 ->formLayout('form-horizontal')
                 ->placeholder(lang('member.behind_degree') . " ... ")
                 ->textbox();
-        echo Form()->attr('style="width:50%;"')
-                ->title(lang('member.behind_degree'))
-                ->id('behind_degree')
-                ->formLayout('form-horizontal')
-                ->placeholder(lang('member.behind_degree') . " ... ")
-                ->textbox();
-        echo Form()->attr('style="width:50%;"')
+        echo Form()
                 ->title(lang('member.place_of_birth'))
+                ->value($place_of_birth)
                 ->id('place_of_birth')
                 ->formLayout('form-horizontal')
                 ->placeholder(lang('member.place_of_birth') . " ... ")
                 ->textbox();
-        echo Form()->attr('style="width:50%;"')
+        echo Form()->value($date_of_birth)
                 ->title(lang('member.date_of_birth'))
                 ->id('date_of_birth')
                 ->formLayout('form-horizontal')
                 ->placeholder(lang('member.date_of_birth') . " ... ")
                 ->datepicker();
-        echo Form()->id('religion')->attr('style="width:50%;"')->title(lang('member.religion'))
-                ->autocomplete(false)
+        echo Form()->id('religion')->title(lang('member.religion'))
+                ->autocomplete(false)->value($religion)
                 ->formLayout('form-horizontal')
                 ->data($data_religion)
                 ->combobox();
         echo Form()->id('gender')->title(lang('member.gender'))
-                ->autocomplete(false)
+                ->autocomplete(false)->value($gender)
                 ->formLayout('form-horizontal')
                 ->data($data_gender)
                 ->radiobox();
         echo Form()->id('marital_status')->title(lang('member.marital_status'))
-                ->autocomplete(false)
+                ->autocomplete(false)->value($marital_status)
                 ->formLayout('form-horizontal')
                 ->data($data_marital_status)
                 ->radiobox();
-        echo Form()->attr('style="width:50%;"')
+        echo Form()->value($email)
                 ->title(lang('member.email'))
                 ->id('email')
                 ->formLayout('form-horizontal')
                 ->placeholder(lang('member.email') . " ... ")
                 ->textbox();
-        echo Form()->attr('style="width:50%;"')
+        echo Form()->value($telephone)
                 ->title(lang('member.telephone'))
                 ->id('telephone')
                 ->formLayout('form-horizontal')
                 ->placeholder(lang('member.telephone') . " ... ")
                 ->textbox();
-        echo Form()->attr('style="width:50%;"')
+        echo Form()->value($faculity)
                 ->title(lang('member.fax'))
                 ->id('fax')
                 ->formLayout('form-horizontal')
                 ->placeholder(lang('member.fax') . " ... ")
                 ->textbox();
-        echo Form()->attr('style="width:50%;"')
+        echo Form()->value($address)
                 ->title(lang('member.address'))
                 ->id('address')
                 ->formLayout('form-horizontal')
                 ->placeholder(lang('member.address') . " ... ")
                 ->textarea();
 
-        echo Form()->attr('style="width:50%;"')
+        echo Form()->value($zip_code)
                 ->title(lang('member.zip_code'))
                 ->id('zip_code')
                 ->formLayout('form-horizontal')
                 ->placeholder(lang('member.zip_code') . " ... ")
                 ->textbox();
-        echo Form()->id('government_classification')->attr('style="width:50%;"')->title(lang('member.government_classification'))
-                ->autocomplete(false)
+        echo Form()->id('government_classification')->title(lang('member.government_classification'))
+                ->autocomplete(false)->value($government_classification)
                 ->formLayout('form-horizontal')
                 ->data($data_government_class)
                 ->combobox();
-        echo Form()->attr('style="width:50%;"')
+        echo Form()->value($json_occupation)
                 ->title(lang('member.json_occupation'))
                 ->id('json_occupation')
                 ->formLayout('form-horizontal')
                 ->placeholder(lang('member.json_occupation') . " ... ")
                 ->textbox();
-        echo Form()->attr('style="width:50%;"')
+        echo Form()->value($degree)
                 ->title(lang('member.degree'))
                 ->id('degree')
                 ->formLayout('form-horizontal')
                 ->placeholder(lang('member.degree') . " ... ")
                 ->textbox();
-        echo Form()->id('college')->attr('style="width:50%;"')->title(lang('member.college'))
+        echo Form()->id('college')->title(lang('member.college'))
                 ->formLayout('form-horizontal')
-                ->autocomplete(false)
-//                ->data($data_college)
-                ->data($data_government_class)
-                ->combobox();
-        echo Form()->attr('style="width:50%;"')
+                ->setclass('fa fa-eye')
+                ->value($college)->valueName($college_name)
+                ->tooltipTitleButton(lang('general.view'))
+                ->openLOV();
+        echo Form()->value($faculity)
                 ->title(lang('member.faculity'))
                 ->id('faculity')
                 ->formLayout('form-horizontal')
                 ->placeholder(lang('member.faculity') . " ... ")
                 ->textbox();
-        echo Form()->id('study_program')->attr('style="width:50%;"')->title(lang('member.study_program'))
+        echo Form()->id('study_program')
+                ->title(lang('member.study_program'))
                 ->formLayout('form-horizontal')
-                ->data($data_study_program)
-                ->combobox();
-        echo Form()->attr('style="width:50%;"')
+                ->setclass('fa fa-eye')
+                ->value($study_program)->valueName($study_program_name)
+                ->tooltipTitleButton(lang('general.view'))
+//                ->data($data_study_program)
+                ->openLOV();
+        echo Form()->value($graduation_year)
                 ->title(lang('member.graduation_year'))
                 ->id('graduation_year')
                 ->formLayout('form-horizontal')
                 ->placeholder(lang('member.graduation_year') . " ... ")
                 ->textbox();
-//        $data_government_class
+        if (!empty($data_reg_detail)) {
+            echo '<input type="hidden" id="registration_detail_id" name="registration_detail_id" value="' . $registration_detail_id . '"/>';
+        }
         ?>
+        <input type="hidden" id="registration_id" name="registration_id" value="<?= $registrationId; ?>"/>
     </div>
 </div>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<?= Form()->formFooter(''); ?>
 <script>
     $(function () {
-
-
-        
-        $("#college").combobox();
+        $('.alert').remove();
+//        postFormAjaxPostSetContent()
+        //        postAjaxByAlertFormManual();
+        $('#btn-save').attr("class", "btn btn-info");
+        $('#btn-save').prepend('<i class="fa fa-save"></i> ');
+        $('#btn-reset').attr("class", "btn btn-default");
+        $('#btn-save').attr("onclick", "postFormAjaxPostSetContent('<?= URL(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_LIST_USER_URL . '/' . $activity . '/save'); ?>','form-newedit')");
     });
 </script>

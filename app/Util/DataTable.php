@@ -810,7 +810,7 @@ class DataTable {
         if ($group_by != null) {
             $group_by_str .= " GROUP BY " . $group_by;
         }
-        $sql = $sql_select . $sql_all . $sql_from . $sql_search . $order_str . $limit;
+        $sql = $sql_select . $sql_all . $sql_from . $sql_search . $group_by_str . $order_str . $limit;
         if ($this->tableOption['DEBUG'] == true) {
             echo $sql;
         }

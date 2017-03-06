@@ -55,6 +55,22 @@ class RestClient {
 
     public function post() {
         $array_http_header = array('Content-Type: application/json', 'Accept: application/json');
+        $exp_ct = explode(':', $array_http_header[0]);
+        $exp_ac = explode(':', $array_http_header[1]);
+//        echo $exp_ac[0];
+//        echo $exp_ct[0];
+//        print_r($this->curlOptions['HTTPHEADER']);
+        foreach ($this->curlOptions['HTTPHEADER'] as $value) {
+            $exp_ac2 = explode(':', $value);
+            if($exp_ac2[0]=="Content-Type"){
+                
+//                echo 'mask';
+                $array_http_header = array();
+            }
+//            echo $exp_ac2[0];
+//            if($value)
+        }
+        
 //        $array_http_header = array('Content-Type: application/json', 'Accept: application/json');
         $data_json = json_encode($this->curlOptions['POST_BODY']);
         $ch = curl_init();
@@ -81,9 +97,9 @@ class RestClient {
         if (curl_error($ch)) {
             echo 'error:' . curl_error($ch);
         }
-        
+        print_r($response);
 //        echo 'oke';
-        
+
         $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $this->getHeaderSize = $header_size;
         $header = substr($response, 0, $header_size);

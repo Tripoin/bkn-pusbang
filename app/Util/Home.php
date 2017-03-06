@@ -22,15 +22,8 @@ abstract class Home {
         setSessionLang();
 
         include 'app/Http/routes.php';
-//        echo Routes::getTest();
         $result = Routes::get();
 //        print_r($result);
-//        print_r($result);
-//        $dec;
-//        $page_include = $this->routes($dec);
-//        $page_decode = json_decode($page_include);
-//        echo $page_include;
-//        print_r($page_decode);
         if (!empty($result)) {
             $rpl = str_replace('/', '\\', $result['class']);
             $str = explode('@', $rpl);

@@ -29,7 +29,14 @@ $db->connect();
     foreach ($list_data['item'] as $value) {
 
 //        $detailSubject = '<a href="javascript:void(0)" onclick="postAjaxEdit(\'' . URL('member/activity-agenda/activity/view') . '\',\'id=' . $value[$data->getId()] . '\')">' . subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]) . '</a>';
-        $detailSubject = '' . subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]) . '';
+        $detailSubject = lang('transaction.tentative');
+        $due = strtotime($value[$data->getStartActivity()]);
+        if ($due != strtotime('0000-00-00')) {
+            $detailSubject = '' . subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]) . '';
+        } else if ($value[$data->getStartActivity()] == null) {
+            $detailSubject = lang('transaction.tentative');
+        }
+//        $detailSubject = '' . subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]) . '';
 //        echo $rs_user_main[0][$userMain->getId()];
         if (isset($rs_user_main[0][$userMain->getId()])) {
             $rs_waiting_list = $db->selectByID($waitingList, $waitingList->getActivityId() . "='" . $value[$data->getId()] . "' "

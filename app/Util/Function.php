@@ -14,6 +14,7 @@ use app\Model\SecurityFunctionLanguage;
 use app\Model\SecurityFunctionAssignment;
 use app\Model\SecurityUser;
 use app\Model\SecurityUserProfile;
+use app\Util\PHPMail\PHPMailer;
 use app\Model\SecurityGroup;
 use app\Model\MasterSystemParameter;
 use app\Model\MasterLanguage;
@@ -345,6 +346,14 @@ function contentPage() {
 
 function insertAuditrail($data) {
     
+}
+
+function modalHide() {
+    return '<script>$(function(){$(\'.modal\').modal(\'hide\')});</script>';
+}
+
+function postAjaxPagination() {
+    return '<script>$(function(){postAjaxPagination();});</script>';
 }
 
 function toastAlert($type, $title, $message) {
@@ -2309,10 +2318,22 @@ function getParentManual($entity, $id_field, $name_field, $parent_field, $parent
 
 function convertGender($type) {
     $result = "";
-    if ($type == "M") {
+    if ($type == "L") {
+        $result = lang('general.male');
+    } else if ($type == "M") {
         $result = lang('general.male');
     } else if ($type == "F") {
         $result = lang('general.female');
+    }
+    return $result;
+}
+
+function convertMaritalStatus($type) {
+    $result = "";
+    if ($type == "N") {
+        $result = "Belum Menikah";
+    } else if ($type == "Y") {
+        $result = "Menikah";
     }
     return $result;
 }
@@ -2403,8 +2424,82 @@ function equalToIgnoreCase($value) {
     return "='" . $value . "' ";
 }
 
+function in($array = array()) {
+    $txt = '';
+    foreach ($array as $value) {
+        $txt .= "'" . $value . "',";
+    }
+    $txt = rtrim($txt, ',');
+
+    return " IN (" . $txt . ") ";
+}
+
 function redirectURL($url) {
     echo '<script>window.location.href = "' . $url . '";</script>';
+}
+
+/**
+ * (PHP 4, PHP 5+)<br/>
+ * Convert Combobox From Array to set ID and Label in Jquery
+ * <br/>
+ * Licensed by Tripoin Team
+ * @link http://www.tripoin.co.id/
+ * @param Array() $mailTo <p>
+ * Data Array Multidimensional and Have key "email","name"
+ * @param string $subject [optional] <p>
+ * String subject in mail
+ * </p>
+ * @param string $message [optional] <p>
+ * String message in mail
+ * example =>
+ * $mailTo = [array("email"=>"sfandrianah2@gmail.com","name","Syahrial Fandrianah"),array("email"=>"tripoinstudio@gmail.com","name","Tripoin Studio")];
+ * </p>
+ * @return Boolean True or False.
+ */
+function sendMail($mailTo = array(), $subject, $message) {
+    $mail = new PHPMailer;
+    try {
+        $mail->isSMTP();
+        $mail->Host = MAIL_HOST;
+
+        $mail->Port = MAIL_SMTP_PORT;
+        $mail->SMTPSecure = MAIL_SMTPSECURE;
+        $mail->SMTPAuth = MAIL_SMTPAUTH;
+
+        $mail->Username = MAIL_USERNAME;
+        $mail->Password = MAIL_PASSWORD;
+
+        $mail->isHTML(true);
+
+//Set who the message is to be sent from
+        $mail->setFrom(MAIL_USERNAME, MAIL_FULLNAME);
+
+//Set an alternative reply-to address
+        foreach ($mailTo as $value) {
+            $mail->addReplyTo($value['email'], $value['name']);
+            $mail->addAddress($value['email'], $value['name']);
+        }
+//        $mail->addReplyTo($pic_email, $pic_name);
+//        $mail->addAddress($pic_email, $pic_name);
+//        $img_logo_tala = 'http://54.251.168.102/e-portal/contents/logo-kecil.png';
+        $mail->Subject = $subject;
+        $mail->Body = $message;
+        if ($mail->smtpConnect()) {
+            $mail->smtpClose();
+            if (!$mail->send()) {
+                return false;
+                LOGGER($mail->ErrorInfo);
+            } else {
+                return true;
+            }
+        } else {
+            LOGGER("Error Connect SMTP");
+            return false;
+        }
+    } catch (\Exception $e) {
+        return false;
+        LOGGER($e->getMessage());
+    }
 }
 
 ?>

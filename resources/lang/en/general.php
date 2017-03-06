@@ -80,6 +80,7 @@ return [
     'login_success' => 'Login Success',
     'login_failed_message' => 'Please check your Username and Password',
     'input' => 'Input',
+    'list' => 'List',
     'example' => 'Example',
     'choose' => 'Choose',
     'back' => 'Back',
@@ -127,6 +128,7 @@ return [
     'title_alert_delete' => 'Are you sure?',
     'message_alert_delete' => 'You won\'t be able to revert this!',
     'button_alert_delete' => 'Yes, delete it!',
+    'title_upload_failed' => 'Upload Failed',
     'title_register_failed' => 'Register Failed',
     'message_register_failed' => 'Register Failed',
     'title_register_success' => 'Register Success',
@@ -188,4 +190,5 @@ return [
     'unit'=>'Unit',
     'material'=>'Material',
     'non_material'=>'Non Material',
+    'waiting'=>'Waiting',
 ];

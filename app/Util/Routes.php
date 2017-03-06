@@ -79,7 +79,10 @@ class Routes {
         return Routes::$urlClass;
     }
 
+    public $urlFromRoutes = "";
+
     public static function checkURL($url, $class) {
+
 //        $str = str_replace("index.php", "", $_SERVER['PHP_SELF']);
 //        echo $url."<br/>";
         $page_url = ltrim(str_replace(URL(), "", FULLURL()), "/");
@@ -89,10 +92,17 @@ class Routes {
         $ex_url = explode('/', $url);
         $url_1 = '';
         $param = array();
+//        echo '<br/>';
+        $urls = '';
+        $newClass = '';
         if (count($ex_url) == count($ex_page_url2)) {
+
             for ($nok = 0; $nok < count($ex_page_url2); $nok++) {
 
                 if (!empty($ex_url[$nok])) {
+//                    echo "ex_page_url2:".$ex_page_url2[$nok]."<br/>";
+//                    echo "ex_page_url:".$ex_url[$nok]."=";
+//                    echo "url:".$url."<br/>";
 
                     $check_param = get_string_between($ex_url[$nok], '{', '}');
                     $url_str = "";
@@ -100,18 +110,23 @@ class Routes {
 
                         $url_str = $ex_url[$nok];
 //                    echo $ex_url[$nok];
+//                        echo $url_str."/";
+                        $urls .= '/' . $url_str;
                     } else {
 //                    echo $ex_page_url[0];
-                       $url_str = $ex_page_url2[$nok];
+                        $url_str = $ex_page_url2[$nok];
 //                       $url_str = $check_param;
-//                    echo $url_str;
+//                    echo $url_str."/";
+                        $urls .= '/' . $url_str;
+//                       echo $class;
                         $param[] = $ex_page_url2[$nok];
 //                    echo $url;
                     }
                     if (!empty($url)) {
                         if (!empty($url_str)) {
-//                        echo $url."<br/>";
+//                        echo "url_str:".$url_str."<br/>";
                             if (!empty($param)) {
+                                
                             }
                             if (strpos($ex_page_url[0], $url_str) !== false) {
                                 $url_1 .= '/' . $ex_page_url2[$nok];
@@ -123,34 +138,44 @@ class Routes {
                 }
             }
         }
+
+
+//        echo $urls;
+//        echo URL();
+//        echo '<br/>';
+        $str_class = "";
         $url_3 = ltrim($url_1, '/');
-//        echo $url_1.'<br/>';
-//        echo $ex_page_url[0] . "<br/>";
         $url_2 = '';
-//        echo $url;
         if (empty($url)) {
-//            echo 'masuk';
-//            echo $ex_page_url[0];
             if (empty($ex_page_url[0])) {
                 $url_2 = '/';
-                $class = $class;
+                $str_class = $newClass;
             }
         } else {
 
-
             if (!empty($ex_page_url[0])) {
                 if (strpos($url_3, $ex_page_url[0]) !== false) {
+//                    echo 'url_3:'.$url_3."<br/>";
                     $url_2 = $ex_page_url[0];
+//                    echo $class;
                 }
             }
         }
-//        echo $url_2;
-        if ($url_2 != "") {
-
+//        echo $ex_page_url[0];
+        if ($ex_page_url[0] == "") {
+            if ($url == "") {
+                return array(
+                    "url" => $url_2,
+                    "param" => $param,
+                    "class" => $class
+                );
+            }
+        } else if (URL($ex_page_url[0]) == URL($urls)) {
+            $newClass = $class;
             return array(
                 "url" => $url_2,
                 "param" => $param,
-                "class" => $class
+                "class" => $newClass
             );
         } else {
             return array();
@@ -170,7 +195,7 @@ class Routes {
 
     public static $urlgr = '';
 
-    public static function group($path = array(), $function,$no=1) {
+    public static function group($path = array(), $function, $no = 1) {
 //        echo json_encode(Routes::getUrlClass());
         if (isset($path['prefix'])) {
             $no+=1;

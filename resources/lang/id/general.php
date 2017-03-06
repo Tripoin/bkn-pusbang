@@ -91,6 +91,7 @@ return [
     'article' => 'Artikel',
     'user-profile' => 'Profile Pengguna',
     'save' => 'Simpan',
+    'title_upload_failed' => 'Upload Gagal',
     'title_update_success' => 'Update Success',
     'message_update_success' => 'Data Has Been Updated Successfull',
     'title_update_error' => 'Updated Failed',
@@ -108,6 +109,7 @@ return [
     'remove_all'=>'Hapus Semua',
     'edit'=>'Ubah',
     'view' => 'Lihat',
+    'list' => 'Daftar',
     'create'=>'Buat Baru',
     'delete'=>'Hapus',
     'back'=>'Kembali',
@@ -189,4 +191,5 @@ return [
     'unit'=>'Unit',
     'material'=>'Materi',
     'non_material'=>'Bukan Materi',
+    'waiting'=>'Menunggu',
 ];

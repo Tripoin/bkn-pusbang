@@ -42,7 +42,8 @@ class RegistrationActivity {
         $db = new Database();
 //        $group = new SecurityGroup();
         $data = new TransactionActivity();
-//        $userMain = new MasterUserMain();
+//        $masterU
+        $userMain = new MasterUserMain();
         if ($_POST['per_page'] == "") {
             $Datatable->per_page = 5;
         } else {

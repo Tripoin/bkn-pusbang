@@ -28,6 +28,7 @@ class Home {
     }
 
     public function index() {
+//        echo 'masuk';
         if (!isset($_POST['urut'])) {
             if (isset($_GET[LANGUAGE_SESSION])) {
                 $_SESSION[LANGUAGE_SESSION] = $_GET[LANGUAGE_SESSION];
