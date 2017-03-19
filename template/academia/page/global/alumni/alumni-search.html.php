@@ -3,7 +3,7 @@
     $datatable->deleteCollection(false);
     $datatable->enableSearch(false);
     $datatable->enableRecord(false);
-    $datatable->setPageTable('pageListAlumnus');
+//    $datatable->setPageTable('pageListAlumnus');
     $datatable->styleHeader(array("background: #D01C24;color: #FFF;border-bottom:0","background: #D01C24;color: #FFF;border-bottom:0"));
     $datatable->styleBody(array("background: #FFF","background: #FFF"));
     $datatable->header(array(
@@ -38,9 +38,9 @@
 </div>
 <script>
     $(function () {
-        $('#list_search_by-pageListAlumnus').attr("class", "input-sm input-xsmall input-inline");
-        $('#search_pagination-pageListAlumnus').attr("class", "form-control");
-        $('#search_pagination-pageListAlumnus').attr("style", "height:18px;");
-        $('.pagination').attr("style", "margin-top:0");
+//        $('#list_search_by-pageListAlumnus').attr("class", "input-sm input-xsmall input-inline");
+//        $('#search_pagination-pageListAlumnus').attr("class", "form-control");
+//        $('#search_pagination-pageListAlumnus').attr("style", "height:18px;");
+//        $('.pagination').attr("style", "margin-top:0");
     });
 </script>

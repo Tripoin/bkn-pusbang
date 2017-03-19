@@ -658,6 +658,10 @@ class DataTable {
         $this->query = $query;
         return $this->select_pagination(null);
     }
+    
+    public function perPage($perPage=10){
+        $this->per_page = $perPage;
+    }
 
     public function select_pagination($dto = null, $entity = null, $where = null, $join = null, $search_pagination = null, $order = null, $select_entity = null, $group_by = null) {
 //        $this->current_page = $_POST['current_page'];
@@ -672,8 +676,13 @@ class DataTable {
 //            echo $this->query;
 //            $sql = $this->query . " " . $limit;
             $rpl_btw = replace_between($this->query, "SELECT", "FROM", " COUNT(*) as total ");
+//            $rpl_btws =replace_between($rpl_btw, "group by", " ", "");
+             $new_str = strstr($rpl_btw, 'group by');
+             $fix_replace = str_replace($new_str, "", $rpl_btw);
+//            $new_str = preg_replace('/group$/', '', $rpl_btw);
 //            echo $rpl_btw;
-            $db->sql($rpl_btw);
+//            echo $fix_replace;
+            $db->sql($fix_replace);
         } else {
             $sql_select = " SELECT ";
             if ($select_entity == null) {
@@ -738,11 +747,18 @@ class DataTable {
             $sql_search = rtrim($sql_search, "OR");
             $db->sql($sql_select . " COUNT(*) as total " . $sql_from . $sql_search);  // Table name, column names and respective values
         }
+        
+//        echo $this->sql;
         $count_row = $db->getResult();
+        
 //        echo json_encode($count_row);
 //        print_r($count_row);
         $this->total = $count_row[0]['total'];
 //echo $this->per_page;
+        if(isset($_POST['current_page'])){
+            $this->current_page = $_POST['current_page'];
+        }
+        
         if ($this->current_page == NULL)
             $this->current_page = 1;
 //        echo $this->per_page;
