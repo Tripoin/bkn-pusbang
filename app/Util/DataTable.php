@@ -639,7 +639,7 @@ class DataTable {
     public $sql;
     public $query = "";
 
-    public function sql($query) {
+    public function select_pagination_sql($query) {
         $this->query = $query;
         return $this->select_pagination(null);
     }
@@ -658,6 +658,7 @@ class DataTable {
 //            echo $this->query;
 //            $sql = $this->query . " " . $limit;
             $rpl_btw = replace_between($this->query, "SELECT", "FROM", " COUNT(*) as total ");
+            echo $rpl_btw;
             $db->sql($rpl_btw);
         } else {
             $sql_select = " SELECT ";
