@@ -43,6 +43,8 @@ class DataTable {
         'STYLE_FIRST_COLUMN' => '',
         'STYLE_LAST_COLUMN' => '',
         'DELETE_COLLECTION' => true,
+        'ENABLE_RECORD' => true,
+        'ENABLE_SEARCH' => true,
         'SEARCH_FILTER' => array(),
         'DEBUG' => false,
         'URL' => null,
@@ -51,6 +53,14 @@ class DataTable {
 
     public function debug($debug = false) {
         return $this->setTableOption('DEBUG', $debug);
+    }
+
+    public function enableSearch($enableSearch = true) {
+        return $this->setTableOption('ENABLE_SEARCH', $enableSearch);
+    }
+
+    public function enableRecord($enableRecord = true) {
+        return $this->setTableOption('ENABLE_RECORD', $enableRecord);
     }
 
     public function headerButton($headerButton) {
@@ -189,44 +199,49 @@ class DataTable {
                 $searchPagination = 'search_pagination-' . $pageTable;
                 $searchPaginationEvent = 'searchPaginationManual(event,\'' . $pageTable . '\')';
             }
-
+            $enableSearch = $this->tableOption['ENABLE_SEARCH'];
+            $enableRecord = $this->tableOption['ENABLE_RECORD'];
             $result .= '<div id="' . $id . '-content" class="dataTables_wrapper no-footer">
-        <div class="row">
-            <div class="col-md-6 col-sm-6">
+        <div class="row">';
+            if ($enableRecord == true) {
+                $result .= '<div class="col-md-6 col-sm-6">
                 <div class="dataTables_length" id="sample_5_length">
                     <label>' . lang("general.show") . '
                         <select name="sample_5_length" onchange="' . $paginationPerPage . '" id="' . $idPaginationPerPage . '" aria-controls="sample_5" class="form-control input-sm input-xsmall input-inline">';
-            foreach ($opr as $val_opr) {
-                if ($this->per_page == $val_opr) {
-                    $result .= '<option value="' . $val_opr . '" selected="selected">' . $val_opr . '</option>';
-                } else {
-                    $result .= '<option value="' . $val_opr . '">' . $val_opr . '</option>';
+                foreach ($opr as $val_opr) {
+                    if ($this->per_page == $val_opr) {
+                        $result .= '<option value="' . $val_opr . '" selected="selected">' . $val_opr . '</option>';
+                    } else {
+                        $result .= '<option value="' . $val_opr . '">' . $val_opr . '</option>';
+                    }
                 }
-            }
-            $this->tableOption['ID'];
-            $result .= '</select>
+                $this->tableOption['ID'];
+                $result .= '</select>
                     </label>
                 </div>
-            </div>
-            <div class="col-md-6 col-sm-6">
+            </div>';
+            }
+            if ($enableSearch == true) {
+                $result .= '<div class="col-md-6 col-sm-6">
                 <div id="sample_5_filter" class="dataTables_filter pull-right">
                         <label>' . lang('general.search') . ': </label>
                         <select name="' . $listSearchBy . '" id="' . $listSearchBy . '" class="form-control input-sm input-xsmall input-inline">';
-            $search_filter = $this->tableOption['SEARCH_FILTER'];
-            if (empty($search_filter)) {
-                $result .= '<option value="code">Code</option>';
-            } else {
-                foreach ($search_filter as $key_filter => $value_filter) {
-                    $result .= '<option value="' . $key_filter . '">' . $value_filter . '</option>';
+                $search_filter = $this->tableOption['SEARCH_FILTER'];
+                if (empty($search_filter)) {
+                    $result .= '<option value="code">Code</option>';
+                } else {
+                    foreach ($search_filter as $key_filter => $value_filter) {
+                        $result .= '<option value="' . $key_filter . '">' . $value_filter . '</option>';
+                    }
                 }
-            }
 
-            $result .= '</select>
+                $result .= '</select>
                         <input type="search" onkeyup="' . $searchPaginationEvent . '" id="' . $searchPagination . '" class="form-control input-sm input-small input-inline" placeholder="" aria-controls="sample_5">
                         <input type="hidden" value="' . $this->tableOption['URL_DELETE_COLLECTION'] . '" id="' . $urlDeleteCollection . '">
                 </div>
-            </div>
-        </div>
+            </div>';
+            }
+            $result .= '</div>
         <div class="table-scrollable">';
         }
 
@@ -644,8 +659,7 @@ class DataTable {
         return $this->select_pagination(null);
     }
 
-  
-    public function select_pagination($dto=null, $entity=null, $where = null, $join = null, $search_pagination = null, $order = null, $select_entity = null, $group_by = null) {
+    public function select_pagination($dto = null, $entity = null, $where = null, $join = null, $search_pagination = null, $order = null, $select_entity = null, $group_by = null) {
 //        $this->current_page = $_POST['current_page'];
 //        $this->per_page = $_POST['per_page'];
 //        echo $this->per_page;
@@ -725,6 +739,7 @@ class DataTable {
             $db->sql($sql_select . " COUNT(*) as total " . $sql_from . $sql_search);  // Table name, column names and respective values
         }
         $count_row = $db->getResult();
+//        echo json_encode($count_row);
 //        print_r($count_row);
         $this->total = $count_row[0]['total'];
 //echo $this->per_page;
