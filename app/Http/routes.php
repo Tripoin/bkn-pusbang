@@ -82,6 +82,7 @@ Routes::set('activity/search', 'app\Controller\Guest\Activity@search');
 Routes::set('activity/{id}/register', 'app\Controller\Guest\Activity@registerActivityPage');
 Routes::set('activity/register/save/{idActivity}', 'app\Controller\Guest\Activity@saveNewRegister');
 Routes::set('alumni', 'app\Controller\Guest\Alumni@index');
+Routes::set('alumni/search', 'app\Controller\Guest\Alumni@search');
 
 Routes::set('selected', 'app\Controller\Base\General@getArea');
 if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GUEST])) {

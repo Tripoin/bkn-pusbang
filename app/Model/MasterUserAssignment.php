@@ -24,6 +24,42 @@ class MasterUserAssignment extends GeneralAuditrail {
 
     public $user_main_id = 'user_main_id';
     public $activity_id = 'activity_id';
+    public $role_id = 'role_id';
+    public $is_passed_activity = 'is_passed_activity';
+    public $assignment_letter_id = 'assignment_letter_id';
+    public $certificate_id = 'certificate_id';
+
+    public function getAssignmentLetterId() {
+        return $this->assignment_letter_id;
+    }
+
+    public function setAssignmentLetterId($assignment_letter_id) {
+        $this->assignment_letter_id = $assignment_letter_id;
+    }
+
+    public function getCertificateId() {
+        return $this->certificate_id;
+    }
+
+    public function setCertificateId($certificate_id) {
+        $this->certificate_id = $certificate_id;
+    }
+
+    public function getIsPassedActivity() {
+        return $this->is_passed_activity;
+    }
+
+    public function setIsPassedActivity($is_passed_activity) {
+        $this->is_passed_activity = $is_passed_activity;
+    }
+
+    public function getRoleId() {
+        return $this->role_id;
+    }
+
+    public function setRoleId($role_id) {
+        $this->role_id = $role_id;
+    }
 
     function getActivity_id() {
         return $this->activity_id;
