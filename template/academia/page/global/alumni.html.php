@@ -33,7 +33,7 @@
 
         </div>
 
-        <input type="hidden" id="urlPage" value="<?= URL('alumni/search'); ?>"
+        <input type="hidden" id="urlPage" value="<?= URL('alumni/search'); ?>">
     </div>
 </div>
 <script>
