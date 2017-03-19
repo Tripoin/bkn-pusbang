@@ -2424,6 +2424,10 @@ function equalToIgnoreCase($value) {
     return "='" . $value . "' ";
 }
 
+function notEqualToIgnoreCase($value) {
+    return "!='" . $value . "' ";
+}
+
 function in($array = array()) {
     $txt = '';
     foreach ($array as $value) {
@@ -2502,4 +2506,16 @@ function sendMail($mailTo = array(), $subject, $message) {
     }
 }
 
+  function replace_between($str, $needle_start, $needle_end, $replacement) {
+        $pos = strpos($str, $needle_start);
+        $start = $pos === false ? 0 : $pos + strlen($needle_start);
+
+        $pos = strpos($str, $needle_end, $start);
+        $end = $start === false ? strlen($str) : $pos;
+
+        return substr_replace($str, $replacement, $start, $end - $start);
+    }
+
+
 ?>
+

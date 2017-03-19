@@ -637,77 +637,92 @@ class DataTable {
     public $search = null;
     public $total = null;
     public $sql;
+    public $query = "";
 
-    public function select_pagination($dto, $entity, $where = null, $join = null, $search_pagination = null, $order = null, $select_entity = null, $group_by = null) {
+    public function sql($query) {
+        $this->query = $query;
+        return $this->select_pagination(null);
+    }
+
+  
+    public function select_pagination($dto=null, $entity=null, $where = null, $join = null, $search_pagination = null, $order = null, $select_entity = null, $group_by = null) {
 //        $this->current_page = $_POST['current_page'];
 //        $this->per_page = $_POST['per_page'];
 //        echo $this->per_page;
 //        $this->search = $_POST['search'];
         $db = new Database();
         $db->connect();
-        $sql_select = " SELECT ";
-        if ($select_entity == null) {
-            $sql_all = " * ";
-        } else {
-            $sql_all = $select_entity;
-        }
-        $join_str = '';
-        if ($join != null) {
-            if (is_array($join)) {
-                foreach ($join as $value_join) {
-                    $join_str .= " JOIN " . $value_join;
-                }
-            } else {
-                $join_str .= " JOIN " . $join;
-            }
-        }
 
-        $search_pagination_str = '';
-        if ($search_pagination != null) {
-            $search_pagination_str .= $search_pagination . '.';
-        }
-        if ($where == null) {
-            $sql_from = " FROM " . $entity . " " . $join_str . " ";
-            if ($this->search == NULL) {
-                $sql_search = "";
-            } else {
-                $ex_search = explode(",", $this->search);
-                $sql_search = " WHERE ";
-                foreach ($ex_search as $value) {
-                    $ex_search2 = explode(">", $value);
-                    $s_1 = $ex_search2[0];
-                    if ($ex_search2[1] == "") {
-                        $sql_search .= " " . $search_pagination_str . $dto->search($s_1) . " is null OR " . $search_pagination_str . $dto->search($s_1) . " LIKE '%" . $ex_search2[1] . "%' OR";
-                    } else {
-                        $sql_search .= " " . $search_pagination_str . $dto->search($s_1) . " LIKE '%" . $ex_search2[1] . "%' OR";
-                    }
-                }
-            }
+//        echo $sql_select . " COUNT(".$entity.".*) as total " . $sql_from. $sql_search;
+        if (!empty($this->query)) {
+//            echo $this->query;
+//            $sql = $this->query . " " . $limit;
+            $rpl_btw = replace_between($this->query, "SELECT", "FROM", " COUNT(*) as total ");
+            $db->sql($rpl_btw);
         } else {
-            $sql_from = " FROM " . $entity . " " . $join_str . " " . " WHERE " . $where . " ";
-            if ($this->search == NULL) {
-                $sql_search = "";
+            $sql_select = " SELECT ";
+            if ($select_entity == null) {
+                $sql_all = " * ";
             } else {
-                $ex_search = explode(",", $this->search);
-                $sql_search = " AND ";
-                foreach ($ex_search as $value) {
-                    $ex_search2 = explode(">", $value);
-                    $s_1 = $ex_search2[0];
-                    if ($ex_search2[1] == "") {
-                        $sql_search .= " " . "(" . $search_pagination_str . $dto->search($s_1) . " is null OR " . $search_pagination_str . $dto->search($s_1) . " LIKE '%" . $ex_search2[1] . "%') OR";
-                    } else {
-                        $sql_search .= " " . "(" . $search_pagination_str . $dto->search($s_1) . " LIKE '%" . $ex_search2[1] . "%') OR";
+                $sql_all = $select_entity;
+            }
+            $join_str = '';
+            if ($join != null) {
+                if (is_array($join)) {
+                    foreach ($join as $value_join) {
+                        $join_str .= " JOIN " . $value_join;
+                    }
+                } else {
+                    $join_str .= " JOIN " . $join;
+                }
+            }
+
+            $search_pagination_str = '';
+            if ($search_pagination != null) {
+                $search_pagination_str .= $search_pagination . '.';
+            }
+            if ($where == null) {
+                $sql_from = " FROM " . $entity . " " . $join_str . " ";
+                if ($this->search == NULL) {
+                    $sql_search = "";
+                } else {
+                    $ex_search = explode(",", $this->search);
+                    $sql_search = " WHERE ";
+                    foreach ($ex_search as $value) {
+                        $ex_search2 = explode(">", $value);
+                        $s_1 = $ex_search2[0];
+                        if ($ex_search2[1] == "") {
+                            $sql_search .= " " . $search_pagination_str . $dto->search($s_1) . " is null OR " . $search_pagination_str . $dto->search($s_1) . " LIKE '%" . $ex_search2[1] . "%' OR";
+                        } else {
+                            $sql_search .= " " . $search_pagination_str . $dto->search($s_1) . " LIKE '%" . $ex_search2[1] . "%' OR";
+                        }
+                    }
+                }
+            } else {
+                $sql_from = " FROM " . $entity . " " . $join_str . " " . " WHERE " . $where . " ";
+                if ($this->search == NULL) {
+                    $sql_search = "";
+                } else {
+                    $ex_search = explode(",", $this->search);
+                    $sql_search = " AND ";
+                    foreach ($ex_search as $value) {
+                        $ex_search2 = explode(">", $value);
+                        $s_1 = $ex_search2[0];
+                        if ($ex_search2[1] == "") {
+                            $sql_search .= " " . "(" . $search_pagination_str . $dto->search($s_1) . " is null OR " . $search_pagination_str . $dto->search($s_1) . " LIKE '%" . $ex_search2[1] . "%') OR";
+                        } else {
+                            $sql_search .= " " . "(" . $search_pagination_str . $dto->search($s_1) . " LIKE '%" . $ex_search2[1] . "%') OR";
+                        }
                     }
                 }
             }
-        }
 
 //        echo $sql_from;
-        if ($dto == "")
-            $sql_search = "";
-        $sql_search = rtrim($sql_search, "OR");
-//        echo $sql_select . " COUNT(".$entity.".*) as total " . $sql_from. $sql_search;
-        $db->sql($sql_select . " COUNT(*) as total " . $sql_from . $sql_search);  // Table name, column names and respective values
+            if ($dto == "")
+                $sql_search = "";
+            $sql_search = rtrim($sql_search, "OR");
+            $db->sql($sql_select . " COUNT(*) as total " . $sql_from . $sql_search);  // Table name, column names and respective values
+        }
         $count_row = $db->getResult();
 //        print_r($count_row);
         $this->total = $count_row[0]['total'];
@@ -801,22 +816,26 @@ class DataTable {
         $this->from = $from;
         $this->to = $to;
 //        echo $this->per_page;
-        $order_str = '';
-        if ($order != null) {
-            $order_str .= " ORDER BY " . $order;
-        }
+//        LOGGER($sql);
 
-        $group_by_str = '';
-        if ($group_by != null) {
-            $group_by_str .= " GROUP BY " . $group_by;
+        if (!empty($this->query)) {
+            $sql = $this->query . " " . $limit;
+        } else {
+            $order_str = '';
+            if ($order != null) {
+                $order_str .= " ORDER BY " . $order;
+            }
+
+            $group_by_str = '';
+            if ($group_by != null) {
+                $group_by_str .= " GROUP BY " . $group_by;
+            }
+            $sql = $sql_select . $sql_all . $sql_from . $sql_search . $group_by_str . $order_str . $limit;
         }
-        $sql = $sql_select . $sql_all . $sql_from . $sql_search . $group_by_str . $order_str . $limit;
         if ($this->tableOption['DEBUG'] == true) {
             echo $sql;
         }
-//        LOGGER($sql);
         $this->sql = $sql;
-
         $db->sql($this->sql);  // Table name, column names and respective values
         $res = $db->getResult();
         if ($this->tableOption['DEBUG'] == true) {
@@ -835,29 +854,30 @@ class DataTable {
 //            $res = array();
 //        }
 //        echo json_encode($db->selectRelation($entity));
-
-            $relation = $db->selectRelation($entity);
-            if (!empty($relation)) {
-                $key_parent = array_keys($res[0]);
-                foreach ($relation as $val_relation) {
-                    if (in_array($val_relation['COLUMN_NAME'], $key_parent)) {
-                        $ex_val2 = explode('_', $val_relation['COLUMN_NAME']);
-                        $count_ex_val2 = count($ex_val2);
-                        $min_ex_val2 = $count_ex_val2 - 1;
-                        $parent_class_data = '';
-                        for ($no = 0; $no < $count_ex_val2; $no++) {
-                            $parent_class_data .= $ex_val2[$no] . '_';
-                        }
-                        $parent_class_data = rtrim($parent_class_data, '_');
-                        foreach ($res as $key => $val2) {
-                            $db->select($val_relation['REFERENCED_TABLE_NAME'], "*", null, $val_relation['REFERENCED_COLUMN_NAME'] . "='" . $val2[$val_relation['COLUMN_NAME']] . "'");
-                            $res_rel = $db->getResult();
+            if (empty($this->query)) {
+                $relation = $db->selectRelation($entity);
+                if (!empty($relation)) {
+                    $key_parent = array_keys($res[0]);
+                    foreach ($relation as $val_relation) {
+                        if (in_array($val_relation['COLUMN_NAME'], $key_parent)) {
+                            $ex_val2 = explode('_', $val_relation['COLUMN_NAME']);
+                            $count_ex_val2 = count($ex_val2);
+                            $min_ex_val2 = $count_ex_val2 - 1;
+                            $parent_class_data = '';
+                            for ($no = 0; $no < $count_ex_val2; $no++) {
+                                $parent_class_data .= $ex_val2[$no] . '_';
+                            }
+                            $parent_class_data = rtrim($parent_class_data, '_');
+                            foreach ($res as $key => $val2) {
+                                $db->select($val_relation['REFERENCED_TABLE_NAME'], "*", null, $val_relation['REFERENCED_COLUMN_NAME'] . "='" . $val2[$val_relation['COLUMN_NAME']] . "'");
+                                $res_rel = $db->getResult();
 //                            print_r($res_rel);
-                            if (!empty($res_rel)) {
+                                if (!empty($res_rel)) {
 //                                $res[$key][$val_relation['COLUMN_NAME']] = $res_rel[0];
-                                $res[$key][$parent_class_data] = $res_rel[0];
-                            } else {
-                                $res[$key][$parent_class_data] = array();
+                                    $res[$key][$parent_class_data] = $res_rel[0];
+                                } else {
+                                    $res[$key][$parent_class_data] = array();
+                                }
                             }
                         }
                     }
