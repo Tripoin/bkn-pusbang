@@ -74,9 +74,9 @@ class AgendaKegiatan extends Controller {
         $array = array();
         $StaringDate = date('Y-m-d');
         for ($no = 0; $no <= $plus; $no++) {
-            $oneYearOn = date("Y", strtotime(date("Y-m-d", strtotime($StaringDate)) . " +".$no." year"));
+            $oneYearOn = date("Y", strtotime(date("Y-m-d", strtotime($StaringDate)) . " +" . $no . " year"));
 //            echo $oneYearOn;
-            $array[] = array("id" => $oneYearOn,"label" => $oneYearOn);
+            $array[] = array("id" => $oneYearOn, "label" => $oneYearOn);
         }
         return $array;
     }
@@ -104,7 +104,7 @@ class AgendaKegiatan extends Controller {
         $location = $_POST['location'];
         $quota = $_POST['quota'];
         $executionYears = $_POST['execution_years'];
-        
+
 //        $description = $_POST['description'];
 //        $group = new SecurityGroup();
         $data = new TransactionActivity();
@@ -458,7 +458,8 @@ class AgendaKegiatan extends Controller {
 
 //        echo $Datatable->search;
         $whereList = $activityDetails->getEntity() . "." . $activityDetails->getActivityId() . EQUAL . $activity . " AND " .
-                $activityModel->getEntity() . "." . $activityModel->getId() . EQUAL . $activityDetails->getEntity() . "." . $activityDetails->getActivityId() . $search;
+                $activityModel->getEntity() . "." . $activityModel->getId() . EQUAL . $activityDetails->getEntity() . "." . $activityDetails->getActivityId() . " AND "
+                . "(" . $activityDetails->getDuration() . " is not null AND " . $activityDetails->getDuration() . notEqualToIgnoreCase(0) . ")" . $search;
 
         $list_data = $Datatable->select_pagination($activityDetails, $activityDetails->getEntity(), $whereList, $activityModel->getEntity(), $activityModel->getEntity(), null, ""
                 . $activityDetails->getEntity() . "." . $activityDetails->getId() . " as id,"
@@ -810,6 +811,11 @@ class AgendaKegiatan extends Controller {
 
     public function listData() {
         $this->modelSubject = new MasterSubject();
+        $sr = $this->modelSubject->search($_POST['search_by']);
+        if (empty($sr)) {
+            $_POST['search_by'] = "";
+            $_POST['search_pagination'] = "";
+        }
         parent::listData();
     }
 

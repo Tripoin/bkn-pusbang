@@ -72,6 +72,7 @@ class Form {
     public function tooltipTitleButton($tooltipTitleButton) {
         return $this->setFormOption('TOOLTIP_TITLE_BUTTON', $tooltipTitleButton);
     }
+
     public function search($search) {
         return $this->setFormOption('SEARCH', $search);
     }
@@ -186,7 +187,7 @@ class Form {
 </div>';
         return $txt;
     }
-    
+
     public function valueName($valueName) {
         return $this->setFormOption('VALUE_NAME', $valueName);
     }
@@ -1089,7 +1090,7 @@ class Form {
         $this->ResetObject();
         return $rs;
     }
-    
+
     /**
      * (PHP 4, PHP 5+)<br/>
      * Create Component Textbox with Icon <First Icon then textbox>
@@ -1109,7 +1110,7 @@ class Form {
         if ($this->formOption['TYPE'] != null) {
             $type = $this->formOption['TYPE'];
         }
-        
+
         $minlength = "";
         $maxlength = "";
         if ($this->formOption['MINLENGTH'] != null) {
@@ -1126,7 +1127,7 @@ class Form {
         $textbox = '<div class="input-group" ' . $this->formOption['ATTR_GROUP'] . '> 
                             <input ' . $this->formOption['REQUIRED'] . ' 
                                 ' . $this->formOption['MANUAL_ATTRIBUT'] . ''
-                .' readonly="readonly" '
+                . ' readonly="readonly" '
                 . ' type="' . $type . '" ' . $minlength . $maxlength . ' '
                 . ' id="' . $this->formOption['ID'] . '-name" '
                 . ' name="' . $this->formOption['NAME'] . '-name"'
@@ -1137,7 +1138,7 @@ class Form {
                                    <button type="button" ' . $this->formOption['ATTR_BUTTON'] . ' '
                 . $tooltip
                 . 'id="btn-' . $this->formOption['ID'] . '" data-placement="right" 
-                    onclick="ajaxPostModalByValue(\''.URL('search/lov').'\',\''.lang('general.list').' '.$this->formOption['TITLE'].'\',\'name=' . $this->formOption['NAME'] . '\');" class="btn btn-danger">
+                    onclick="ajaxPostModalByValue(\'' . URL('search/lov') . '\',\'' . lang('general.list') . ' ' . $this->formOption['TITLE'] . '\',\'name=' . $this->formOption['NAME'] . '\');" class="btn btn-danger">
                                    <i class="' . $this->formOption['CLASS'] . '"></i>
                                        ' . $this->formOption['TITLE_BUTTON'] . '
                                        </button>
@@ -1919,5 +1920,7 @@ class Form {
         $this->ResetObject();
         return $rs;
     }
+
+    
 
 }

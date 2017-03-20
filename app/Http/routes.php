@@ -38,6 +38,7 @@ Routes::set($sys_url_admin . '/login/proses', 'app\Controller\Base\AuthAdmin@log
 Routes::set($sys_url_admin . '/logout', 'app\Controller\Base\AuthAdmin@logout');
 //Routes::set('page/about-tala', 'app\Controller\Master\About@page');
 Routes::set('page/contact', 'app\Controller\Master\Contact@page');
+Routes::set('test-test', 'app\Controller\Master\Test@index');
 Routes::set('test-hashing', 'app\Controller\Master\Test@hashing');
 Routes::set('test-mail', 'app\Controller\Master\Test@testMail');
 Routes::set('test-parameter/{param}', 'app\Controller\Master\Test@testParam');

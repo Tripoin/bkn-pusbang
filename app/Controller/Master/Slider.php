@@ -19,6 +19,7 @@ use app\Controller\Base\Controller;
 use app\Model\MasterSlider;
 use app\Constant\IURLConstant;
 use app\Constant\IViewConstant;
+use app\Util\DatabaseReport;
 
 //use app\Util\Form;
 
@@ -38,6 +39,22 @@ class Slider extends Controller {
 
 
         parent::__construct();
+    }
+    public function listData() {
+        /*
+         $dbReport = new DatabaseReport();
+         
+        $dbReport->connect();
+        $dbReport->insert($this->modelData->getEntity(), array(
+            $this->modelData->getCode()=>  createRandomBooking(),
+        ));
+        $rs = $dbReport->getResult();
+         * 
+         */
+//        print_r($dbReport->getResult());
+//        $report = $dbReport->selectByID($this->modelData);
+//        print_r($report);
+        parent::listData();
     }
 
     public function edit() {
