@@ -924,7 +924,7 @@ class Form {
      */
     public function captcha() {
         $TCaptcha = new TCaptcha();
-        $_SESSION[SESSION_CAPTCHA] = $TCaptcha->simple_php_captcha();
+//        $_SESSION[SESSION_CAPTCHA] = $TCaptcha->simple_php_captcha();
         $this->defaultOption();
         $captcha = '';
 //        $textbox = '<div class="col-xs-3">';
@@ -947,7 +947,8 @@ class Form {
         } else {
             $captcha .= '<div style="" id="captcha_image_' . $this->formOption['ID'] . '">';
         }
-        $captcha .= '<img src="' . $_SESSION[SESSION_CAPTCHA]['image_src'] . '" alt="CAPTCHA code">';
+//        $captcha .= '<img src="' . $_SESSION[SESSION_CAPTCHA]['image_src'] . '" alt="CAPTCHA code">';
+        $captcha .= $TCaptcha->getCaptcha();
         $captcha .= '</div>';
         if ($this->formOption['FORM_LAYOUT'] == 'horizontal') {
             $captcha .= '<div class="col-md-8" style="background:#fffdcd;height:73px;">';

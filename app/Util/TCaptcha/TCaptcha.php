@@ -193,106 +193,76 @@ class TCaptcha {
         imagettftext($captcha, $font_size, $angle, $text_pos_x, $text_pos_y, $color, $font, $captcha_config['code']);
 //echo 'asuuu';
         // Output image
-        header("Content-type: image/png");
-        
-        imagepng($captcha);
+//        header("Content-type: image/png");
+//        imagepng($captcha, dirname(__FILE__) . $_SESSION[SESSION_CAPTCHA] . '.png');
 //        header("Content-type: image/png");
 //        imagepng($captcha);
+//        ob_start();
+//        imagepng($captcha);
+//        $image_data = ob_get_contents();
+//        ob_end_clean();
+//        $image_data_base64 = base64_encode($image_data);
+//        $captcha = 
+        $image_data_base64 = $this->gdImgToHTML($captcha, 'png');
+        return $image_data_base64;
 //        echo 'fu';
 //        echo imagepng($captcha);
 //        return $data_captcha;
     }
 
+    function gdImgToHTML($gdImg, $format = 'jpg') {
+
+        // Validate Format
+        if (in_array($format, ['jpg', 'jpeg', 'png', 'gif'])) {
+
+            ob_start();
+
+            if ($format == 'jpg' || $format == 'jpeg') {
+
+                imagejpeg($gdImg);
+            } elseif ($format == 'png') {
+
+                imagepng($gdImg);
+            } elseif ($format == 'gif') {
+
+                imagegif($gdImg);
+            }
+
+            $data = ob_get_contents();
+            ob_end_clean();
+
+            // Check for gd errors / buffer errors
+            if (!empty($data)) {
+
+                $data = base64_encode($data);
+
+                // Check for base64 errors
+                if ($data !== false) {
+
+                    // Success
+                    return "<img src='data:image/$format;base64,$data'>";
+                }
+            }
+        }
+
+        // Failure
+        return '<img>';
+    }
+
     public function reloadCaptcha() {
 //        $this->getCaptcha();
-        $test = $this->simple_php_captcha();
-        $_SESSION[SESSION_CAPTCHA] = $test;
-
+//        $test = $this->simple_php_captcha();
+//        $_SESSION[SESSION_CAPTCHA] = $test;
+//        $path_image = dirname(__FILE__) . $_SESSION[SESSION_CAPTCHA] . '.png';
+//        $type = pathinfo($path_image, PATHINFO_EXTENSION);
+//        $data = file_get_contents($path_image);
+//        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
 //        print_r($test);
-        $captcha = '<img src="' . $_SESSION[SESSION_CAPTCHA]['image_src'] . '" alt="CAPTCHA code"></div>';
-        echo $captcha;
-    }
-
-    public function phpcaptcha($textColor, $backgroundColor, $imgWidth, $imgHeight, $noiceLines = 0, $noiceDots = 0, $noiceColor = '#162453') {
-        /* Settings */
-        $text = $this->random();
-//        $font = './font/monofont.ttf'; /* font */
-         $font = dirname(__FILE__) .'/fonts/times_new_yorker.ttf';
-        
-        $textColor = $this->hexToRGB($textColor);
-        $fontSize = $imgHeight * 0.75;
-
-        $im = imagecreatetruecolor($imgWidth, $imgHeight);
-        $textColor = imagecolorallocate($im, $textColor['r'], $textColor['g'], $textColor['b']);
-
-        $backgroundColor = $this->hexToRGB($backgroundColor);
-        $backgroundColor = imagecolorallocate($im, $backgroundColor['r'], $backgroundColor['g'], $backgroundColor['b']);
-
-        /* generating lines randomly in background of image */
-        if ($noiceLines > 0) {
-            $noiceColor = $this->hexToRGB($noiceColor);
-            $noiceColor = imagecolorallocate($im, $noiceColor['r'], $noiceColor['g'], $noiceColor['b']);
-            for ($i = 0; $i < $noiceLines; $i++) {
-                imageline($im, mt_rand(0, $imgWidth), mt_rand(0, $imgHeight), mt_rand(0, $imgWidth), mt_rand(0, $imgHeight), $noiceColor);
-            }
-        }
-
-        if ($noiceDots > 0) {/* generating the dots randomly in background */
-            for ($i = 0; $i < $noiceDots; $i++) {
-                imagefilledellipse($im, mt_rand(0, $imgWidth), mt_rand(0, $imgHeight), 3, 3, $textColor);
-            }
-        }
-
-        imagefill($im, 0, 0, $backgroundColor);
-        list($x, $y) = $this->ImageTTFCenter($im, $text, $font, $fontSize);
-        imagettftext($im, $fontSize, 0, $x, $y, $textColor, $font, $text);
-//print_r(error_get_last());
-        imagejpeg($im, NULL, 90); /* Showing image */
-//        header('Content-Type: image/jpeg'); /* defining the image type to be shown in browser widow */
-        imagedestroy($im); /* Destroying image instance */
-        if (isset($_SESSION)) {
-            $_SESSION['captcha_code'] = $text; /* set random text in session for captcha validation */
-        }
-    }
-
-    /* function to convert hex value to rgb array */
-
-    protected function hexToRGB($colour) {
-        if ($colour[0] == '#') {
-            $colour = substr($colour, 1);
-        }
-        if (strlen($colour) == 6) {
-            list( $r, $g, $b ) = array($colour[0] . $colour[1], $colour[2] . $colour[3], $colour[4] . $colour[5]);
-        } elseif (strlen($colour) == 3) {
-            list( $r, $g, $b ) = array($colour[0] . $colour[0], $colour[1] . $colour[1], $colour[2] . $colour[2]);
-        } else {
-            return false;
-        }
-        $r = hexdec($r);
-        $g = hexdec($g);
-        $b = hexdec($b);
-        return array('r' => $r, 'g' => $g, 'b' => $b);
-    }
-
-    protected function random($characters = 6, $letters = '23456789bcdfghjkmnpqrstvwxyz') {
-        $str = '';
-        for ($i = 0; $i < $characters; $i++) {
-            $str .= substr($letters, mt_rand(0, strlen($letters) - 1), 1);
-        }
-        return $str;
-    }
-
-    /* function to get center position on image */
-
-    protected function ImageTTFCenter($image, $text, $font, $size, $angle = 8) {
-        $xi = imagesx($image);
-        $yi = imagesy($image);
-        $box = imagettfbbox($size, $angle, $font, $text);
-        $xr = abs(max($box[2], $box[4])) + 5;
-        $yr = abs(max($box[5], $box[7]));
-        $x = intval(($xi - $xr) / 2);
-        $y = intval(($yi + $yr) / 2);
-        return array($x, $y);
+//        $captcha = '<img src="' . $_SESSION[SESSION_CAPTCHA]['image_src'] . '" alt="CAPTCHA code"></div>';
+        $image = $this->getCaptcha();
+//        $base64 = 'data:image/png;base64,' . base64_encode($image);
+//        $captcha = '<img src="' . $base64 . '" alt="CAPTCHA code"></div>';
+        echo $image;
     }
 
 }
