@@ -16,6 +16,7 @@ $masterApproval = new MasterApproval();
 $db->select($masterApproval->getEntity(), $regDetail->getEntity() . ".*"
         . "," . $masterApproval->getEntity() . DOT . $masterApproval->getCreatedOn() . " as created_date_approval"
         . "," . $linkRegistration->getEntity() . DOT . $linkRegistration->getId() . " as link_registration_id"
+        . "," . $linkRegistration->getEntity() . DOT . $linkRegistration->getStatus() . " as status_link_registration"
         . "", array($linkRegistration->getEntity(), $regDetail->getEntity()), ""
         . "  " . $masterApproval->getEntity() . DOT . $masterApproval->getApprovalDetailId() . EQUAL . $linkRegistration->getEntity() . DOT . $linkRegistration->getId()
         . " AND " . $linkRegistration->getEntity() . DOT . $linkRegistration->getRegistrationDetailsId() . EQUAL . $regDetail->getEntity() . DOT . $regDetail->getId() . ""
@@ -29,13 +30,15 @@ $rs_reg_detail = $db->getResult();
 ?>
 <?= Form()->formHeader(); ?>
 <?php
-if (!is_null($dt_approval[0][$masterApproval->getStatus()])) {
+/*if (!is_null($dt_approval[0][$masterApproval->getStatus()])) {
     if ($dt_approval[0][$masterApproval->getStatus()] == 1) {
         echo resultPageMsg('warning', lang('transaction.data_have_approved'), '');
     } else {
         echo resultPageMsg('warning', lang('transaction.data_have_rejected'), $rs_registration[0][$transactionRegistration->getApprovedMessage()]);
     }
 }
+ * 
+ */
 echo Form()->attr('style="width:50%;"')
         ->title(lang('transaction.subject_name'))
         ->label($data_subject[0]['label'])
@@ -94,11 +97,11 @@ if ($dt_participant_type[0][$m_participant_type->getCode()] == 'GOVERNMENT_AGENC
             $status = "";
             $detail = '<a href="javascript:void(0)" '
                     . 'onclick="postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit-participant') . '\',\'link_registration_id=' . $value['link_registration_id'] . '&approval_id=' . $id.'\')">' . lang("general.detail") . '</a>';
-            if (is_null($value[$regDetail->getIsApproved()])) {
+            if (is_null($value['status_link_registration'])) {
                 $status = '';
-            } else if ($value[$regDetail->getIsApproved()] == 1) {
+            } else if ($value['status_link_registration'] == 1) {
                 $status = '<span class="text-success">' . lang('general.approve') . '</span>';
-            } else if ($value[$regDetail->getIsApproved()] == 0) {
+            } else if ($value['status_link_registration'] == 0) {
                 $status = '<span class="text-danger">' . lang('general.reject') . '</span>';
             }
             ?>

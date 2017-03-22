@@ -43,6 +43,7 @@ use app\Model\MasterAttachment;
 use app\Model\SecurityUserProfile;
 use app\Model\SecurityUser;
 use app\Model\SecurityGroup;
+use app\Model\SecurityRole;
 use app\Constant\IURLConstant;
 use app\Constant\IViewConstant;
 use app\Util\Form;
@@ -123,7 +124,8 @@ class ParticipantRegistration extends Controller {
                 . $masterApproval->getEntity() . DOT . $masterApproval->getCreatedOn() . " as created_on,"
                 . $masterApproval->getEntity() . DOT . $masterApproval->getIsExecuted() . " as excecuted,"
                 . $masterApproval->getEntity() . DOT . $masterApproval->getStatus() . " as status,"
-                . $masterApprovalCategory->getEntity() . "." . $masterApprovalCategory->getName() . " as approval_category_name", $linkRegistration->getEntity() . DOT . $linkRegistration->getRegistrationId());
+                . $masterApprovalCategory->getEntity() . "." . $masterApprovalCategory->getName() . " as approval_category_name"
+                , $linkRegistration->getEntity() . DOT . $linkRegistration->getActivityId());
 
 //        print_r($list_data);
         include_once FILE_PATH($this->viewList);
@@ -262,6 +264,7 @@ class ParticipantRegistration extends Controller {
             $regDetail->getModifiedByUsername() => null,
                 ), $regDetail->getId() . equalToIgnoreCase($regDetailId));
         $rs_update_reg_detail = $db->getResult();
+//        print_r($rs_update_reg_detail);
     }
 
     public function rollBackLinkRegistration($linkRegistrationId) {
@@ -269,12 +272,13 @@ class ParticipantRegistration extends Controller {
         $db = new Database();
         $db->connect();
         $db->update($linkRegistration->getEntity(), array(
-            $linkRegistration->getStatus() => 1,
-            $linkRegistration->getDescription() => "Approved Success",
-            $linkRegistration->getCreatedBy() => $_SESSION[SESSION_ADMIN_USERNAME],
-            $linkRegistration->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+            $linkRegistration->getStatus() => null,
+            $linkRegistration->getDescription() => null,
+            $linkRegistration->getCreatedBy() => null,
+            $linkRegistration->getCreatedOn() => null,
                 ), $linkRegistration->getId() . equalToIgnoreCase($linkRegistrationId));
         $rs_update_link_registration = $db->getResult();
+//        print_r($rs_update_link_registration);
     }
 
     public function approveData() {
@@ -284,45 +288,332 @@ class ParticipantRegistration extends Controller {
         $regDetail = new TransactionRegistrationDetails();
         $linkRegistration = new LinkRegistration();
         $masterApproval = new MasterApproval();
+        $securityUser = new SecurityUser();
+        $securityUserProfile = new SecurityUserProfile();
+        $securityGroup = new SecurityGroup();
+        $masterUserMain = new MasterUserMain();
+        $masterUserAssignment = new MasterUserAssignment();
+//        $masterReligion = new MasterReligion();
+        $masterAddress = new MasterAddress();
+        $masterContact = new MasterContact();
+        $securityRole = new SecurityRole();
+        $transactionActivity = new TransactionActivity();
+
         $db = new Database();
         $db->connect();
 
-        $rs_link_registration = $db->selectByID($linkRegistrationId, $linkRegistration->getId() . equalToIgnoreCase($linkRegistrationId));
-        $db->update($regDetail->getEntity(), array(
-            $regDetail->getIsApproved() => 1,
-            $regDetail->getApprovedMessage() => "Approved Success",
-            $regDetail->getApprovedBy() => $_SESSION[SESSION_ADMIN_USERNAME],
-            $regDetail->getApprovedOn() => date(DATE_FORMAT_PHP_DEFAULT),
-            $regDetail->getModifiedOn() => date(DATE_FORMAT_PHP_DEFAULT),
-            $regDetail->getModifiedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
-                ), $regDetail->getId() . equalToIgnoreCase($rs_link_registration[0][$linkRegistration->getRegistrationDetailsId()]));
-        $rs_update_reg_detail = $db->getResult();
-        if (is_numeric($rs_update_reg_detail[0] == 1)) {
-            $db->update($linkRegistration->getEntity(), array(
-                $linkRegistration->getStatus() => 1,
-                $linkRegistration->getDescription() => "Approved Success",
-                $linkRegistration->getCreatedBy() => $_SESSION[SESSION_ADMIN_USERNAME],
-                $linkRegistration->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
-                    ), $linkRegistration->getId() . equalToIgnoreCase($linkRegistrationId));
-            $rs_update_link_registration = $db->getResult();
-            if (is_numeric($rs_update_link_registration[0] == 1)) {
-                $db->update($masterApproval->getEntity(), array(
-                    $masterApproval->getStatus() => 1,
-                    $masterApproval->getDescription() => "Approved Success",
-                    $masterApproval->getCreatedBy() => $_SESSION[SESSION_ADMIN_USERNAME],
-                    $masterApproval->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
-                        ), $masterApproval->getId() . equalToIgnoreCase($approvalId));
-                $rs_update_approval = $db->getResult();
-                if (is_numeric($rs_update_approval[0] == 1)) {
-                    
+        $rs_link_registration = $db->selectByID($linkRegistration, $linkRegistration->getId() . equalToIgnoreCase($linkRegistrationId));
+        $rs_registration_detail = $db->selectByID($regDetail, $regDetail->getId() . equalToIgnoreCase($rs_link_registration[0][$linkRegistration->getRegistrationDetailsId()]));
+        $rs_activity = $db->selectByID($transactionActivity, $transactionActivity->getId() . equalToIgnoreCase($rs_link_registration[0][$linkRegistration->getActivityId()]));
+
+        $rs_group = $db->selectByID($securityGroup, $securityGroup->getCode() . equalToIgnoreCase('EXTERNAL'));
+        $rs_role = $db->selectByID($securityRole, $securityRole->getCode() . equalToIgnoreCase('PARTICIPANT'));
+
+
+        $db->update($linkRegistration->getEntity(), array(
+            $linkRegistration->getStatus() => 1,
+            $linkRegistration->getDescription() => "Approved Success",
+            $linkRegistration->getCreatedBy() => $_SESSION[SESSION_ADMIN_USERNAME],
+            $linkRegistration->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+                ), $linkRegistration->getId() . equalToIgnoreCase($linkRegistrationId));
+        $rs_update_link_registration = $db->getResult();
+//            print_r($rs_update_link_registration);
+        if (is_numeric($rs_update_link_registration[0]) == 1) {
+            $db->update($masterApproval->getEntity(), array(
+                $masterApproval->getStatus() => 1,
+                $masterApproval->getDescription() => "Approved Success",
+                $masterApproval->getModifiedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
+                $masterApproval->getModifiedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+                    ), $masterApproval->getId() . equalToIgnoreCase($approvalId));
+            $rs_update_approval = $db->getResult();
+//                print_r($rs_update_approval);
+            if (is_numeric($rs_update_approval[0]) == 1) {
+                if ($rs_registration_detail[0][$regDetail->getUserId()] == null) {
+                    $rs_address = $db->selectByID($masterAddress, $masterAddress->getName() . equalToIgnoreCase($rs_registration_detail[0][$regDetail->getAddress()]));
+                    $id_address = null;
+                    $result_insert_address = false;
+                    if (empty($rs_address)) {
+                        $db->insert($masterAddress->getEntity(), array(
+                            $masterAddress->getCode() => createRandomBooking(),
+                            $masterAddress->getName() => $rs_registration_detail[0][$regDetail->getAddress()],
+                            $masterAddress->getZipCode() => $rs_registration_detail[0][$regDetail->getZipCode()],
+                            $masterAddress->getStatus() => 1,
+                            $masterAddress->getDescription() => "Address " . $rs_registration_detail[0][$regDetail->getName()],
+                            $masterAddress->getCreatedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
+                            $masterAddress->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+                        ));
+                        $rs_insert_address = $db->getResult();
+                        if (is_numeric($rs_insert_address[0])) {
+                            $result_insert_address = true;
+                            $id_address = $rs_insert_address[0];
+                        } else {
+                            $result_insert_address = false;
+                        }
+                    } else {
+                        $result_insert_address = true;
+                        $id_address = $rs_address[0][$masterAddress->getId()];
+                    }
+                    if ($result_insert_address == true) {
+//                        $id_address = null;
+//                        $result_insert_address = false;
+                        $db->insert($masterContact->getEntity(), array(
+                            $masterContact->getCode() => createRandomBooking(),
+                            $masterContact->getName() => $rs_registration_detail[0][$regDetail->getName()],
+                            $masterContact->getPhoneNumber1() => $rs_registration_detail[0][$regDetail->getPhoneNumber()],
+                            $masterContact->getFax() => $rs_registration_detail[0][$regDetail->getFax()],
+                            $masterContact->getEmail1() => $rs_registration_detail[0][$regDetail->getEmail()],
+                            $masterContact->getStatus() => 1,
+                            $masterContact->getDescription() => "Contact " . $rs_registration_detail[0][$regDetail->getName()],
+                            $masterContact->getCreatedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
+                            $masterContact->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+                        ));
+                        $rs_insert_contact = $db->getResult();
+                        if (is_numeric($rs_insert_contact[0])) {
+                            $password_new = password_hash($rs_registration_detail[0][$regDetail->getIdNumber()], PASSWORD_BCRYPT);
+                            $db->insert($securityUser->getEntity(), array(
+                                $securityUser->getCode() => $rs_registration_detail[0][$regDetail->getIdNumber()],
+                                $securityUser->getName() => $rs_registration_detail[0][$regDetail->getName()],
+                                $securityUser->getEmail() => $rs_registration_detail[0][$regDetail->getEmail()],
+                                $securityUser->getPassword() => $password_new,
+                                $securityUser->getGroupId() => $rs_group[0][$securityGroup->getId()],
+                                $securityUser->getStatus() => ONE,
+                                $securityUser->getCreatedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
+                                $securityUser->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+                            ));
+                            $rs_insert_user = $db->getResult();
+                            if (is_numeric($rs_insert_user[0])) {
+                                $db->insert($securityUserProfile->getEntity(), array(
+                                    $securityUserProfile->getCode() => $rs_registration_detail[0][$regDetail->getIdNumber()],
+                                    $securityUserProfile->getName() => $rs_registration_detail[0][$regDetail->getName()],
+                                    $securityUserProfile->getUserId() => $rs_insert_user[0],
+                                    $securityUserProfile->getBirthdate() => $rs_registration_detail[0][$regDetail->getDob()],
+                                    $securityUserProfile->getPlace() => $rs_registration_detail[0][$regDetail->getPob()],
+                                    $securityUserProfile->getGender() => $rs_registration_detail[0][$regDetail->getGender()],
+                                    $securityUserProfile->getReligionId() => $rs_registration_detail[0][$regDetail->getReligionId()],
+                                    $securityUserProfile->getAddressId() => $id_address,
+                                    $securityUserProfile->getContactId() => $rs_insert_contact[0],
+                                    $securityUserProfile->getMarriage() => $rs_registration_detail[0][$regDetail->getMaritalStatus()],
+                                    $securityUserProfile->getStatus() => 1,
+                                    $securityUserProfile->getCreatedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
+                                    $securityUserProfile->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+                                        )
+                                );
+                                $rs_insert_user_profile = $db->getResult();
+                                if (is_numeric($rs_insert_user_profile[0])) {
+                                    $db->insert($masterUserMain->getEntity(), array(
+                                        $masterUserMain->getCode() => $rs_registration_detail[0][$regDetail->getIdNumber()],
+                                        $masterUserMain->getName() => $rs_registration_detail[0][$regDetail->getName()],
+                                        $masterUserMain->getIdNumber() => $rs_registration_detail[0][$regDetail->getIdNumber()],
+                                        $masterUserMain->getFront_degree() => $rs_registration_detail[0][$regDetail->getFrontDegree()],
+                                        $masterUserMain->getBehind_degree() => $rs_registration_detail[0][$regDetail->getBehindDegree()],
+                                        $masterUserMain->getUserProfileId() => $rs_insert_user_profile[0],
+                                        $masterUserMain->getParticipantTypeId() => $rs_registration_detail[0][$regDetail->getParticipantTypeId()],
+                                        $masterUserMain->getNoIdTypeId() => $rs_registration_detail[0][$regDetail->getNoidTypeId()],
+                                        $masterUserMain->getJsonOccupation() => $rs_registration_detail[0][$regDetail->getJsonOccupation()],
+                                        $masterUserMain->getGovernmentClassificationId() => $rs_registration_detail[0][$regDetail->getGovernmentClassificationId()],
+                                        $masterUserMain->getDegree() => $rs_registration_detail[0][$regDetail->getDegree()],
+                                        $masterUserMain->getIsExternal() => 1,
+                                        $masterUserMain->getCollege() => $rs_registration_detail[0][$regDetail->getCollege()],
+                                        $masterUserMain->getCollegeId() => $rs_registration_detail[0][$regDetail->getCollegeId()],
+                                        $masterUserMain->getFaculty() => $rs_registration_detail[0][$regDetail->getFaculity()],
+                                        $masterUserMain->getStudyProgram() => $rs_registration_detail[0][$regDetail->getStudyProgram()],
+                                        $masterUserMain->getStudyProgramId() => $rs_registration_detail[0][$regDetail->getStudyProgramId()],
+                                        $masterUserMain->getGraduationYear() => $rs_registration_detail[0][$regDetail->getGraduationYear()],
+                                        $masterUserMain->getStatus() => 1,
+                                        $masterUserMain->getCreatedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
+                                        $masterUserMain->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+                                            )
+                                    );
+                                    $rs_insert_user_main = $db->getResult();
+                                    if (is_numeric($rs_insert_user_main[0])) {
+                                        $db->insert($masterUserAssignment->getEntity(), array(
+                                            $masterUserAssignment->getCode() => createRandomBooking(),
+                                            $masterUserAssignment->getName() => $rs_registration_detail[0][$regDetail->getName()],
+                                            $masterUserAssignment->getActivity_id() => $rs_link_registration[0][$linkRegistration->getActivityId()],
+                                            $masterUserAssignment->getRoleId() => $rs_role[0][$securityRole->getId()],
+                                            $masterUserAssignment->getUser_main_id() => $rs_insert_user_main[0],
+                                            $masterUserAssignment->getStatus() => 1,
+                                            $masterUserAssignment->getCreatedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
+                                            $masterUserAssignment->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+                                                )
+                                        );
+                                        $rs_insert_user_assignment = $db->getResult();
+                                        if (is_numeric($rs_insert_user_assignment[0])) {
+
+                                            $db->update($regDetail->getEntity(), array(
+                                                $regDetail->getIsApproved() => 1,
+                                                $regDetail->getApprovedMessage() => "Approved Success",
+                                                $regDetail->getApprovedBy() => $_SESSION[SESSION_ADMIN_USERNAME],
+                                                $regDetail->getApprovedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+                                                $regDetail->getModifiedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+                                                $regDetail->getModifiedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
+                                                    ), $regDetail->getId() . equalToIgnoreCase($rs_link_registration[0][$linkRegistration->getRegistrationDetailsId()]));
+                                            $rs_update_reg_detail = $db->getResult();
+                                            if (is_numeric($rs_update_reg_detail[0]) == 1) {
+                                                $img_logo = 'http://54.251.168.102/e-portal/contents/logo-kecil.png';
+                                                $subject = 'Approval Registrasi Peserta Pusbang BKN';
+                                                $body = '<div style="border-style: solid;border-width: thin;font-family: \'Roboto\';">
+                      <div align="center" style="margin:15px;"><img src="' . $img_logo . '" width="120" height="40"/></div>
+                        <div align="left" style="margin:15px;">
+                            Kepada Yang Terhormat ' . $rs_registration_detail[0][$regDetail->getName()] . ',
+                        <br/><br/>
+                       <p>
+                            Pendaftaran Kegiatan anda telah disetujui, 
+                            Anda bisa melakukan pendaftaran peserta menggunakan username dan password dibawah ini:
+                            <br/><br/>Username : <b>' . $rs_registration_detail[0][$regDetail->getIdNumber()] . '</b>
+                            <br/>Password : <b>' . $rs_registration_detail[0][$regDetail->getIdNumber()] . '</b>
+                            <br/><br/>Nama Kegiatan : <b>' . $rs_activity[0][$transactionActivity->getName()] . '</b>
+                            <br/>Waktu Pelaksanaan : <b>' . subMonth($rs_activity[0][$transactionActivity->getStartActivity()]) . ' - ' . subMonth($rs_activity[0][$transactionActivity->getEndActivity()]) . '</b>
+                            <br/><br/>
+                            Silahkan klik link dibawah ini untuk menuju kehalaman Portal Pusbang ASN,
+                            <br/>
+                            <a href="' . URL('') . '" target="_blank">' . URL('') . '</a>
+                       </p>
+                        <br/>
+                        <br/>
+                        Terima Kasih telah mendaftar di Pusbang ASN
+                        <br/><a href="' . URL('') . '" target="_blank">' . URL('') . '</a>
+                        </div>
+                        </div>
+                            ';
+                                                $sendMail = sendMail(array(
+                                                    "email" => $rs_registration_detail[0][$regDetail->getEmail()],
+                                                    "name" => $rs_registration_detail[0][$regDetail->getName()]), $subject, $body);
+                                                if ($sendMail == true) {
+                                                    echo toastAlert('success', lang('general.title_approved_success'), lang('general.message_approved_success'));
+                                                    echo $this->backSuccessApprovedReject($approvalId);
+                                                } else {
+                                                    $this->rollBackMasterUserAssignment($rs_insert_user_assignment[0]);
+                                                    $this->rollBackMasterUserMain($rs_insert_user_main[0]);
+                                                    $this->rollBackUserProfile($rs_insert_user_profile[0]);
+                                                    $this->rollBackUser($rs_insert_user[0]);
+                                                    $this->rollBackContact($rs_insert_contact[0]);
+                                                    $this->rollBackApproval($approvalId);
+                                                    $this->rollBackLinkRegistration($linkRegistrationId);
+                                                    $this->rollBackRegDetail($rs_link_registration[0][$linkRegistration->getRegistrationDetailsId()]);
+                                                    echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+                                                    echo $this->backErrorApprovedReject($linkRegistrationId, $approvalId);
+                                                }
+                                            } else {
+                                                $this->rollBackMasterUserAssignment($rs_insert_user_assignment[0]);
+                                                $this->rollBackMasterUserMain($rs_insert_user_main[0]);
+                                                $this->rollBackUserProfile($rs_insert_user_profile[0]);
+                                                $this->rollBackUser($rs_insert_user[0]);
+                                                $this->rollBackContact($rs_insert_contact[0]);
+                                                $this->rollBackApproval($approvalId);
+                                                $this->rollBackLinkRegistration($linkRegistrationId);
+                                                echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+                                                echo $this->backErrorApprovedReject($linkRegistrationId, $approvalId);
+                                            }
+                                        } else {
+                                            $this->rollBackMasterUserMain($rs_insert_user_main[0]);
+                                            $this->rollBackUserProfile($rs_insert_user_profile[0]);
+                                            $this->rollBackUser($rs_insert_user[0]);
+                                            $this->rollBackContact($rs_insert_contact[0]);
+                                            $this->rollBackApproval($approvalId);
+                                            $this->rollBackLinkRegistration($linkRegistrationId);
+                                            echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+                                            echo $this->backErrorApprovedReject($linkRegistrationId, $approvalId);
+                                        }
+                                    } else {
+                                        $this->rollBackUserProfile($rs_insert_user_profile[0]);
+                                        $this->rollBackUser($rs_insert_user[0]);
+                                        $this->rollBackContact($rs_insert_contact[0]);
+                                        $this->rollBackApproval($approvalId);
+                                        $this->rollBackLinkRegistration($linkRegistrationId);
+                                        echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+                                        echo $this->backErrorApprovedReject($linkRegistrationId, $approvalId);
+                                    }
+                                } else {
+                                    $this->rollBackUser($rs_insert_user[0]);
+                                    $this->rollBackContact($rs_insert_contact[0]);
+                                    $this->rollBackApproval($approvalId);
+                                    $this->rollBackLinkRegistration($linkRegistrationId);
+                                    echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+                                    echo $this->backErrorApprovedReject($linkRegistrationId, $approvalId);
+                                }
+                            } else {
+                                $this->rollBackContact($rs_insert_contact[0]);
+                                $this->rollBackLinkRegistration($linkRegistrationId);
+                                $this->rollBackApproval($approvalId);
+                                echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+                                echo $this->backErrorApprovedReject($linkRegistrationId, $approvalId);
+                            }
+                        } else {
+                            $this->rollBackLinkRegistration($linkRegistrationId);
+                            $this->rollBackApproval($approvalId);
+                            echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+                            echo $this->backErrorApprovedReject($linkRegistrationId, $approvalId);
+                        }
+                    } else {
+                        $this->rollBackApproval($approvalId);
+                        $this->rollBackLinkRegistration($linkRegistrationId);
+                        echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+                        echo $this->backErrorApprovedReject($linkRegistrationId, $approvalId);
+                    }
                 } else {
-                    $this->rollBackLinkRegistration($linkRegistrationId);
-                    $this->rollBackRegDetail($rs_link_registration[0][$linkRegistration->getRegistrationDetailsId()]);
-                    echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
-                    echo $this->backErrorApprovedReject($linkRegistrationId, $approvalId);
+                    $rs_user_profile = $db->selectByID($securityUserProfile, ""
+                            . $securityUserProfile->getUserId() . equalToIgnoreCase($rs_registration_detail[0][$regDetail->getUserId()]));
+                    $rs_user_main = $db->selectByID($masterUserMain, ""
+                            . $masterUserMain->getUserProfileId() . equalToIgnoreCase($rs_user_profile[0][$securityUserProfile->getId()]));
+                    $db->insert($masterUserAssignment->getEntity(), array(
+                        $masterUserAssignment->getCode() => createRandomBooking(),
+                        $masterUserAssignment->getName() => $rs_registration_detail[0][$regDetail->getName()],
+                        $masterUserAssignment->getActivity_id() => $rs_link_registration[0][$linkRegistration->getActivityId()],
+                        $masterUserAssignment->getRoleId() => $rs_role[0][$securityRole->getId()],
+                        $masterUserAssignment->getUser_main_id() => $rs_user_main[0][$masterUserMain->getId()],
+                        $masterUserAssignment->getStatus() => 1,
+                        $masterUserAssignment->getCreatedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
+                        $masterUserAssignment->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+                            )
+                    );
+                    $rs_insert_user_assignment = $db->getResult();
+                    if (is_numeric($rs_insert_user_assignment[0])) {
+                        $img_logo = 'http://54.251.168.102/e-portal/contents/logo-kecil.png';
+                        $subject = 'Approval Registrasi Peserta Pusbang BKN';
+                        $body = '<div style="border-style: solid;border-width: thin;font-family: \'Roboto\';">
+                      <div align="center" style="margin:15px;"><img src="' . $img_logo . '" width="120" height="40"/></div>
+                        <div align="left" style="margin:15px;">
+                            Kepada Yang Terhormat ' . $rs_registration_detail[0][$regDetail->getName()] . ',
+                        <br/><br/>
+                       <p>
+                             Pendaftaran Kegiatan anda <b>Disetujui</b> dengan Catatan:
+                            <br/><br/>Nama Kegiatan : <b>' . $rs_activity[0][$transactionActivity->getName()] . '</b>
+                            <br/>Waktu Pelaksanaan : <b>' . subMonth($rs_activity[0][$transactionActivity->getStartActivity()]) . ' - ' . subMonth($rs_activity[0][$transactionActivity->getEndActivity()]) . '</b>
+                            <br/><br/>
+                            Silahkan klik link dibawah ini untuk menuju kehalaman Portal Pusbang ASN,
+                            <br/>
+                            <a href="' . URL('') . '" target="_blank">' . URL('') . '</a>
+                       </p>
+                        <br/>
+                        <br/>
+                        Terima Kasih telah mendaftar di Pusbang ASN
+                        <br/><a href="' . URL('') . '" target="_blank">' . URL('') . '</a>
+                        </div>
+                        </div>
+                            ';
+                        $sendMail = sendMail(array(
+                            "email" => $rs_registration_detail[0][$regDetail->getEmail()],
+                            "name" => $rs_registration_detail[0][$regDetail->getName()]), $subject, $body);
+                        if ($sendMail == true) {
+                            echo toastAlert('success', lang('general.title_approved_success'), lang('general.message_approved_success'));
+                            echo $this->backSuccessApprovedReject($approvalId);
+                        } else {
+                            $this->rollBackMasterUserAssignment($rs_insert_user_assignment[0]);
+                            $this->rollBackLinkRegistration($linkRegistrationId);
+                            $this->rollBackApproval($approvalId);
+                            echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+                            echo $this->backErrorApprovedReject($linkRegistrationId, $approvalId);
+                        }
+                    } else {
+                        $this->rollBackLinkRegistration($linkRegistrationId);
+                        $this->rollBackApproval($approvalId);
+                        echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+                        echo $this->backErrorApprovedReject($linkRegistrationId, $approvalId);
+                    }
                 }
             } else {
-                $this->rollBackRegDetail($rs_link_registration[0][$linkRegistration->getRegistrationDetailsId()]);
+                $this->rollBackLinkRegistration($linkRegistrationId);
                 echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
                 echo $this->backErrorApprovedReject($linkRegistrationId, $approvalId);
             }
@@ -330,6 +621,48 @@ class ParticipantRegistration extends Controller {
             echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
             echo $this->backErrorApprovedReject($linkRegistrationId, $approvalId);
         }
+    }
+
+    public function rollBackMasterUserAssignment($id) {
+        $masterUserAssignment = new MasterUserAssignment();
+        $db = new Database();
+        $db->connect();
+        $db->delete($masterUserAssignment, $masterUserAssignment->getId() . equalToIgnoreCase($id));
+    }
+
+    public function rollBackMasterUserMain($id) {
+        $masterUserMain = new MasterUserMain();
+        $db = new Database();
+        $db->connect();
+        $db->delete($masterUserMain, $masterUserMain->getId() . equalToIgnoreCase($id));
+    }
+
+    public function rollBackUser($id) {
+        $securityUser = new SecurityUser();
+        $db = new Database();
+        $db->connect();
+        $db->delete($securityUser, $securityUser->getId() . equalToIgnoreCase($id));
+    }
+
+    public function rollBackUserProfile($id) {
+        $securityUserProfile = new SecurityUserProfile();
+        $db = new Database();
+        $db->connect();
+        $db->delete($securityUserProfile, $securityUserProfile->getId() . equalToIgnoreCase($id));
+    }
+
+    public function rollBackContact($id) {
+        $masterContact = new MasterContact();
+        $db = new Database();
+        $db->connect();
+        $db->delete($masterContact, $masterContact->getId() . equalToIgnoreCase($id));
+    }
+
+    public function rollBackAddress($id) {
+        $masterAddress = new MasterAddress();
+        $db = new Database();
+        $db->connect();
+        $db->delete($masterAddress, $masterAddress->getId() . equalToIgnoreCase($id));
     }
 
     public function createUserFromRegistration() {
@@ -597,10 +930,10 @@ class ParticipantRegistration extends Controller {
         $db->connect();
 
 //        $rs_approval = $db->selectByID($masterApproval, $masterApproval->getAp() . equalToIgnoreCase($linkRegistrationId));
-        $db->select($linkRegistration->getEntity(), $linkRegistration->getEntity().".*"
-                . ",".$masterApproval->getEntity().DOT.$masterApproval->getId()." as approval_id", array($masterApproval->getEntity()), ""
+        $db->select($linkRegistration->getEntity(), $linkRegistration->getEntity() . ".*"
+                . "," . $masterApproval->getEntity() . DOT . $masterApproval->getId() . " as approval_id", array($masterApproval->getEntity()), ""
                 . $linkRegistration->getEntity() . DOT . $linkRegistration->getId() . EQUAL . $masterApproval->getEntity() . DOT . $masterApproval->getApprovalDetailId()
-                . " AND " . $linkRegistration->getEntity().DOT.$linkRegistration->getId() . equalToIgnoreCase($linkRegistrationId));
+                . " AND " . $linkRegistration->getEntity() . DOT . $linkRegistration->getId() . equalToIgnoreCase($linkRegistrationId));
         $rs_link_registration = $db->getResult();
         $db->update($regDetail->getEntity(), array(
             $regDetail->getIsApproved() => 0,

@@ -5,6 +5,8 @@ use app\Model\MasterWaitingList;
 use app\Model\MasterUserAssignment;
 use app\Model\TransactionRegistration;
 use app\Model\LinkRegistration;
+use app\Model\MasterApproval;
+use app\Model\MasterApprovalCategory;
 use app\Util\Database;
 
 $transactionRegistration = new TransactionRegistration();
@@ -12,7 +14,14 @@ $linkRegistration = new LinkRegistration();
 $db = new Database();
 $waitingList = new MasterWaitingList();
 $userAssignment = new MasterUserAssignment();
+$masterApproval = new MasterApproval();
+$masterApprovalCategory = new MasterApprovalCategory();
 $db->connect();
+
+$db->select($masterApprovalCategory->getEntity(), $masterApprovalCategory->getId(), null, $masterApprovalCategory->getCode() . equalToIgnoreCase('REGISTRATION'));
+$rs_approve_category1 = $db->getResult();
+$db->select($masterApprovalCategory->getEntity(), $masterApprovalCategory->getId(), null, $masterApprovalCategory->getCode() . equalToIgnoreCase('RE-REGISTRATION'));
+$rs_approve_category2 = $db->getResult();
 ?>
 <div class="col-md-12">
     <?php
@@ -31,7 +40,7 @@ $db->connect();
     ));
     $no = $list_data['from'];
 
-    $cek_regis = $db->selectByID($transactionRegistration, $transactionRegistration->getDelegationEmail() . " LIKE '" . $_SESSION[SESSION_USERNAME_GUEST] . "%'");
+//    $cek_regis = $db->selectByID($transactionRegistration, $transactionRegistration->getDelegationEmail() . " LIKE '" . $_SESSION[SESSION_USERNAME_GUEST] . "%'");
 //    print_r($cek_regis);
     foreach ($list_data['item'] as $value) {
 //        echo $_SESSION[SESSION_USERNAME_GUEST];
@@ -45,15 +54,25 @@ $db->connect();
         }
 
 //        echo $rs_user_main[0][$userMain->getId()];
-        $dt_link_reg = $db->selectByID($linkRegistration, $linkRegistration->getRegistrationId() . equalToIgnoreCase($cek_regis[0][$transactionRegistration->getId()])
-                . " AND " . $linkRegistration->getActivityId() . equalToIgnoreCase($value[$data->getId()]));
-//        print_r($dt_link_reg);
+        $dt_link_reg = $db->selectByID($linkRegistration, $linkRegistration->getRegistrationId() . equalToIgnoreCase($rs_registration[0][$transactionRegistration->getId()])
+                . " AND " . $linkRegistration->getActivityId() . equalToIgnoreCase($value[$data->getId()])
+                . " AND " . $linkRegistration->getRegistrationDetailsId() . " is null");
+//        echo json_encode($dt_link_reg);
+        $status_activity = null;
+        if (!empty($dt_link_reg)) {
+            $dt_approval = $db->selectByID($masterApproval, $masterApproval->getApprovalCategoryId() . " IN (" . $rs_approve_category1[0][$masterApprovalCategory->getId()] . "," . $rs_approve_category2[0][$masterApprovalCategory->getId()] . ") "
+                    . " AND " . $masterApproval->getApprovalDetailId() . equalToIgnoreCase($dt_link_reg[0][$linkRegistration->getId()]));
+            $status_activity = $dt_approval[0][$masterApproval->getStatus()];
+//            echo $masterApproval->getApprovalCategoryId() . " IN (" . $rs_approve_category1[0][$masterApprovalCategory->getId()] . "," . $rs_approve_category2[0][$masterApprovalCategory->getId()] . ") "
+//                    . " AND " . $masterApproval->getApprovalDetailId() . equalToIgnoreCase($dt_link_reg[0][$linkRegistration->getId()]);
+//        print_r($dt_approval);
+        }
         $db->sql("SELECT COUNT(" . $userAssignment->getId() . ") as count FROM " . $userAssignment->getEntity() . " WHERE " . $userAssignment->getActivity_id() . EQUAL . $value[$data->getId()]);
         $rs_assign = $db->getResult();
 //        print_r($rs_assign);
 
-        $btn_status = '<a href="javascript:void(0)" onclick="postAjaxEdit(\'' . URL(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_URL . '/' . $value[$data->getId()] . '/register') . '\',\'registration_id=' . $cek_regis[0][$transactionRegistration->getId()] . '\')">' . lang("member.register") . '</a>';
-        $btn_str_reg = '<a href="javascript:void(0)" onclick="pageUser(' . $value[$data->getId()] . ',' . $cek_regis[0][$transactionRegistration->getId()] . ')">' . lang("member.participant") . '</a>';
+        $btn_status = '<a href="javascript:void(0)" onclick="postAjaxEdit(\'' . URL(IURLMemberConstant::ACTIVITY_REGISTRATION_TEMP_URL . '/' . $value[$data->getId()] . '/register') . '\',\'registration_id=' . $rs_registration[0][$transactionRegistration->getId()] . '\')">' . lang("member.register") . '</a>';
+        $btn_str_reg = '<a href="javascript:void(0)" onclick="pageUser(' . $value[$data->getId()] . ',' . $rs_registration[0][$transactionRegistration->getId()] . ')">' . lang("member.participant") . '</a>';
         $status = lang('member.registered');
         $str_reg = "";
         if (empty($dt_link_reg)) {
@@ -63,7 +82,16 @@ $db->connect();
             if ($rs_assign[0]['count'] == $value[$data->getQuota()]) {
                 $status = lang('member.full');
             } else {
-                $status = lang('member.available');
+                if($status_activity == null){
+                    $status = lang('general.waiting');
+                    $str_reg = "";
+                } else if($status_activity == 0){
+                    $status = lang('general.reject');
+                    $str_reg = "";
+                } else {
+                    $status = lang('member.available');
+                }
+                
             }
         }
         $Datatable->body(array($no,

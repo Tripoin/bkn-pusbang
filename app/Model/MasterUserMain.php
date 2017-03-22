@@ -31,13 +31,50 @@ class MasterUserMain extends GeneralAuditrail {
     public $userProfileId = 'user_profile_id';
     public $governmentClassificationId = 'government_classification_id';
     public $jsonOccupation = 'json_occupation';
+    public $noIdTypeId = 'noid_type_id';
     public $degree = 'degree';
     public $college = 'college';
+    public $collegeId = 'college_id';
     public $faculty = 'faculty';
     public $studyProgram = 'study_program';
+    public $studyProgramId = 'study_program_id';
     public $graduationYear = 'graduation_year';
+    public $isExternal = 'is_external';
+    
 
-    function getGraduationYear() {
+    function getStudyProgramId() {
+        return $this->studyProgramId;
+    }
+
+    function setStudyProgramId($studyProgramId) {
+        $this->studyProgramId = $studyProgramId;
+    }
+
+        function getCollegeId() {
+        return $this->collegeId;
+    }
+
+    function setCollegeId($collegeId) {
+        $this->collegeId = $collegeId;
+    }
+
+            function getIsExternal() {
+        return $this->isExternal;
+    }
+
+    function setIsExternal($isExternal) {
+        $this->isExternal = $isExternal;
+    }
+
+        function getNoIdTypeId() {
+        return $this->noIdTypeId;
+    }
+
+    function setNoIdTypeId($noIdTypeId) {
+        $this->noIdTypeId = $noIdTypeId;
+    }
+
+        function getGraduationYear() {
         return $this->graduationYear;
     }
 

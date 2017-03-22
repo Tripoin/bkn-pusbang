@@ -22,33 +22,25 @@ use app\Util\TCaptcha\TCaptcha;
 class Test {
 
     public function index() {
-//        $phptextObj = new TCaptcha();
-//        $phptextObj->phpcaptcha('#162453','#fff',120,40,10,25);
-        /* header("Content-type: image/png");
-          $string = $_GET['text'];
-          $im = imagecreatefrompng(dirname(__FILE__) . '/polyester-lite.png');
-          $orange = imagecolorallocate($im, 220, 210, 60);
-          $px = (imagesx($im) - 7.5 * strlen($string)) / 2;
-          imagestring($im, 3, $px, 9, $string, $orange);
-          imagepng($im);
-          imagedestroy($im);
-         * 
-         */
-//        ini_set("display_errors", 'On');
+//        error_reporting(E_ALL);
+//        ini_set('display_errors', "On");
         $im = imagecreatetruecolor(120, 20);
+//        $im = imagecreate(100, 100) or die("Cannot Initialize new GD image stream");
         $text_color = imagecolorallocate($im, 233, 14, 91);
         imagestring($im, 1, 5, 5, 'A Simple Text String', $text_color);
 
-// Set the content type header - in this case image/jpeg
-        header('Content-Type: image/jpeg');
+//        print_r($im->getMessage);
 
+
+
+// Set the content type header - in this case image/jpeg
+//        header('Content-Type: image/jpg');
+//        header("Content-Length: " . filesize($imagepath));
 // Output the image
-        imagejpeg($im);
+//        imagejpeg($im,  FILE_PATH('/captcha/captcha.jpg'));
 
 // Free up memory
-        imagedestroy($im);
-
-//        echo error_get_last();
+//        imagedestroy($im);
     }
 
     //put your code here
@@ -179,36 +171,37 @@ class Test {
     public function hashing() {
 //        $tripoinRestClient = new TripoinRestClient();
         $restClient = new RestClient();
-        $postData = array('username' => 'tripoin', 'password' => 'Moodle123!');
-
-//        $resp = $restClient->to('http://54.251.168.102/e-learning/login/index.php')
-//                ->setBody($postData)
-//                ->setHeader(array('Content-Type: application/x-www-form-urlencoded'))
-//                ->post();
-//        print_r($resp);
-//        $resp = $tripoinRestClient->doPOST('http://54.251.168.102/e-learning/login/index.php', array(), array(), $postData);
-//        print_r($resp);
-        $dbOld = new Database();
-
-        $ch = curl_init();
-//    echo rb_json_config;
-        curl_setopt($ch, CURLOPT_URL, 'http://54.251.168.102/e-learning/login/index.php');
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, 'username=tripoin&password=Moodle123!');
-//        curl_setopt($ch, CURLOPT_COOKIESESSION, true);
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-//        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-//        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-//        curl_setopt_array($ch, $options);
-
-
-        $response = curl_exec($ch);
-        $header = curl_getinfo($ch);
-        print_r($header);
-        print_r($response);
-        curl_close($ch);
+//        $postData = array('username' => 'tripoin', 'password' => 'Moodle123!');
+        echo password_hash('fandrianah2', PASSWORD_BCRYPT);
+//
+////        $resp = $restClient->to('http://54.251.168.102/e-learning/login/index.php')
+////                ->setBody($postData)
+////                ->setHeader(array('Content-Type: application/x-www-form-urlencoded'))
+////                ->post();
+////        print_r($resp);
+////        $resp = $tripoinRestClient->doPOST('http://54.251.168.102/e-learning/login/index.php', array(), array(), $postData);
+////        print_r($resp);
+//        $dbOld = new Database();
+//
+//        $ch = curl_init();
+////    echo rb_json_config;
+//        curl_setopt($ch, CURLOPT_URL, 'http://54.251.168.102/e-learning/login/index.php');
+//        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+//        curl_setopt($ch, CURLOPT_POST, 1);
+//        curl_setopt($ch, CURLOPT_POSTFIELDS, 'username=tripoin&password=Moodle123!');
+////        curl_setopt($ch, CURLOPT_COOKIESESSION, true);
+//
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+////        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+////        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+////        curl_setopt_array($ch, $options);
+//
+//
+//        $response = curl_exec($ch);
+//        $header = curl_getinfo($ch);
+//        print_r($header);
+//        print_r($response);
+//        curl_close($ch);
 
         /* $ch = curl_init();
           //    echo rb_json_config;
@@ -266,13 +259,13 @@ class Test {
 //        print_r($encode2);
 //        echo '<iframe src="http://54.251.168.102/e-learning"  height="1200" width="1200"></iframe>';
 //        echo password_hash('trijep3t3', PASSWORD_BCRYPT);
-        $tripoinCrypt = new TripoinCrypt();
-        $user = array("code" => "12345", "password" => "admin123");
-//        print_r($tripoinCrypt->encrypt('admin:admin'));
-        for ($i = 1; $i <= 10; $i++) {
-            $j = $i * 2;
-//            echo $j . ' ';
-        }
+//        $tripoinCrypt = new TripoinCrypt();
+//        $user = array("code" => "12345", "password" => "admin123");
+////        print_r($tripoinCrypt->encrypt('admin:admin'));
+//        for ($i = 1; $i <= 10; $i++) {
+//            $j = $i * 2;
+////            echo $j . ' ';
+//        }
 
         /*
          * Input deret yang akan di eksekusi

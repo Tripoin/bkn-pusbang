@@ -11,36 +11,29 @@ if (!is_null($dt_approval[0][$masterApproval->getStatus()])) {
         echo resultPageMsg('warning', lang('transaction.data_have_rejected'), $rs_registration[0][$transactionRegistration->getApprovedMessage()]);
     }
 }
-
-$detailSubject = lang('transaction.tentative');
-$due = strtotime($dt_activity[0][$m_act->getStartActivity()]);
-if ($due != strtotime('0000-00-00')) {
-    $detailSubject = '' . subMonth($dt_activity[0][$m_act->getStartActivity()]) . ' - ' . subMonth($dt_activity[0][$m_act->getEndActivity()]) . '';
-} else if ($dt_activity[0][$m_act->getStartActivity()] == null) {
-    $detailSubject = lang('transaction.tentative');
-}
 echo Form()->attr('style="width:50%;"')
         ->title(lang('transaction.subject_name'))
         ->label($data_subject[0]['label'])
         ->formLayout('horizontal')->labels();
 echo Form()->attr('style="width:50%;"')
         ->title(lang('transaction.execution_time'))
-        ->label($detailSubject)
+        ->label($dt_activity[0][$m_act->getStartActivity()] . " - " . $dt_activity[0][$m_act->getEndActivity()])
         ->formLayout('horizontal')->labels();
 
-if ($dt_participant_type[0][$m_participant_type->getCode()] == 'GOVERNMENT_AGENCY') {
+if($dt_participant_type[0][$m_participant_type->getCode()]=='GOVERNMENT_AGENCY'){
     $potret_title = $dt_participant_type[0][$m_participant_type->getName()];
     $label_working_unit = lang('transaction.work_unit');
     $label_telephone_working_unit = lang('transaction.telephone_work_unit');
     $label_fax_working_unit = lang('transaction.fax_work_unit');
     $label_address_working_unit = lang('transaction.address_work_unit');
-} else if ($dt_participant_type[0][$m_participant_type->getCode()] == 'PRIVATE_AGENCY') {
+} else if($dt_participant_type[0][$m_participant_type->getCode()]=='PRIVATE_AGENCY'){
     $potret_title = $dt_participant_type[0][$m_participant_type->getName()];
     $label_working_unit = lang('transaction.office_name');
     $label_telephone_working_unit = lang('transaction.office_telephone');
     $label_fax_working_unit = lang('transaction.office_fax');
     $label_address_working_unit = lang('transaction.office_address');
 }
+
 ?>
 <div class="portlet light bordered">
     <div class="portlet-title">
@@ -116,13 +109,13 @@ $button_reject = "";
 $button_approve = "";
 if (is_null($dt_approval[0][$masterApproval->getStatus()])) {
     $button_reject = Button()->id('btn-reject')
-            ->onClick('ajaxPostModalManual(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/' . $dt_activity[0][$m_act->getId()] . '/reject-detail') . '\', \'approval_category_id='.$dt_approval[0][$masterApproval->getApprovalCategoryId()].'&registration_id=' . $dt_approval[0][$masterApproval->getApprovalDetailId()] . '&id=' . $id . '\')')
+            ->onClick('ajaxPostModalManual(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/' . $dt_activity[0][$m_act->getId()] . '/reject-detail') . '\', \'approval_category_id=1&registration_id=' . $dt_approval[0][$masterApproval->getApprovalDetailId()] . '&id=' . $id . '\')')
             ->label(lang('general.reject'))
             ->setClass('btn btn-warning')
             ->icon('fa fa-times')
             ->buttonManual();
     $button_approve = Button()->id('btn-approve')
-            ->onClick('postAjaxByAlertManual(this,\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/' . $dt_activity[0][$m_act->getId()] . '/approve') . '\', \'approval_category_id='.$dt_approval[0][$masterApproval->getApprovalCategoryId()].'&registration_id=' . $dt_approval[0][$masterApproval->getApprovalDetailId()] . '&id=' . $id . '\')')
+            ->onClick('postAjaxByAlertManual(this,\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/' . $dt_activity[0][$m_act->getId()] . '/approve-detail') . '\', \'approval_category_id=1&registration_id=' . $dt_approval[0][$masterApproval->getApprovalDetailId()] . '&id=' . $id . '\')')
             ->label(lang('general.approve'))
             ->alertTitle(lang('general.approve'))
             ->alertMsg(lang('member.notif_approved_candidates'))

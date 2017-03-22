@@ -10,6 +10,7 @@
  * @FRAMEWORK NATIVE ECCOMERCE V.1.0
  */
 
+use app\Model\SecurityFunction;
 use app\Model\SecurityFunctionLanguage;
 use app\Model\SecurityFunctionAssignment;
 use app\Model\SecurityUser;
@@ -1841,6 +1842,7 @@ function convertJsonComboboxJquery($data = null, $id, $label, $manual_data = arr
 function getSubMenu($countitem, $count_function_parent, $value_function_parent, $function_child, $idPost) {
     $db = new Database();
     $sfa = new SecurityFunctionAssignment();
+    $sf = new SecurityFunction();
     $db->connect();
 
 
@@ -1853,8 +1855,8 @@ function getSubMenu($countitem, $count_function_parent, $value_function_parent, 
         $txt = '<ol class="dd-list" id="menu-parent-child' . $value_function_parent['fa_id'] . '">';
         foreach ($function_child as $value_function_child) {
             $db->sql(SELECT . "COUNT(" . $sfa->getFunction()->getId() . ") as count_function_parent " .
-                    FROM . $sfa->getFunction()->getEntity() .
-                    WHERE . $sfa->getFunction()->getParent() . EQUAL . $value_function_child[$sfa->getFunction()->getId()]);
+                    FROM . $sf->getEntity() .
+                    WHERE . $sf->getParent() . EQUAL . $value_function_child[$sf->getId()]);
             $sf_count_parent = $db->getResult();
 
             $count_function_parents = intval($sf_count_parent[0]['count_function_parent']);
@@ -1877,10 +1879,10 @@ function getSubMenu($countitem, $count_function_parent, $value_function_parent, 
                                        onclick="deleteFunction(this, \'' . URL($adminthemeurl . '/security/function-assignment/delete-function') . '\',' . $value_function_child['fa_id'] . ')" data-original-title="Delete" style="cursor:pointer"></i>';
             $txt .= '</div>';
 
-            $db->sql(SELECT . "COUNT(" . $sfa->getFunction()->getEntity() . DOT . $sfa->getFunction()->getId() . ") as count" .
-                    FROM . $sfa->getEntity() . JOIN . $sfa->getFunction()->getEntity() .
-                    ON . $sfa->getFunction()->getEntity() . DOT . $sfa->getFunction()->getId() . EQUAL . $sfa->getEntity() . DOT . $sfa->getFunctionId() .
-                    WHERE . $sfa->getFunction()->getParent() . EQUAL . $value_function_child[$sfa->getFunction()->getId()] . ""
+            $db->sql(SELECT . "COUNT(" . $sf->getEntity() . DOT . $sf->getId() . ") as count" .
+                    FROM . $sfa->getEntity() . JOIN . $sf->getEntity() .
+                    ON . $sf->getEntity() . DOT . $sf->getId() . EQUAL . $sfa->getEntity() . DOT . $sfa->getFunctionId() .
+                    WHERE . $sf->getEntity() . DOT . $sf->getParent() . EQUAL . $value_function_child[$sfa->getFunction()->getId()] . ""
                     . " AND " . $sfa->getGroupId() . EQUAL . $idPost
             );
             $sf_item = $db->getResult();
@@ -1896,7 +1898,7 @@ function getSubMenu($countitem, $count_function_parent, $value_function_parent, 
                         . " AND " . $sfa->getGroup()->getEntity() . DOT . $sfa->getGroup()->getId() . EQUAL . $sfa->getEntity() . DOT . $sfa->getGroupId()
                         . " AND " . $sfa->getEntity() . DOT . $sfa->getStatus() . EQUAL . "1"
                         . " AND " . $sfa->getEntity() . DOT . $sfa->getGroupId() . EQUAL . $idPost
-                        . " AND " . $sfa->getFunction()->getEntity() . DOT . $sfa->getFunction()->getParent() . EQUAL . $value_function_child[$sfa->getFunction->getId()]
+                        . " AND " . $sf->getEntity() . DOT . $sf->getParent() . EQUAL . $value_function_child[$sf->getId()]
                         , $sfa->getFunctionAssignmentOrder() . ' ASC'
                 );
                 $function_childs = $db->getResult();
@@ -2460,7 +2462,7 @@ function redirectURL($url) {
  * </p>
  * @return Boolean True or False.
  */
-function sendMail($mailTo = array(), $subject, $message) {
+function sendMail($mailTo = array(), $subject = '', $message = '') {
     $mail = new PHPMailer;
     try {
         $mail->isSMTP();
@@ -2479,9 +2481,24 @@ function sendMail($mailTo = array(), $subject, $message) {
         $mail->setFrom(MAIL_USERNAME, MAIL_FULLNAME);
 
 //Set an alternative reply-to address
-        foreach ($mailTo as $value) {
-            $mail->addReplyTo($value['email'], $value['name']);
-            $mail->addAddress($value['email'], $value['name']);
+        if (is_array($mailTo)) {
+            if (isset($mailTo['email']) && isset($mailTo['name'])) {
+                $mail->addReplyTo($mailTo['email'], $mailTo['name']);
+                $mail->addAddress($mailTo['email'], $mailTo['name']);
+            } else {
+                foreach ($mailTo as $value) {
+                    if (isset($value['email']) && isset($value['name'])) {
+                        $mail->addReplyTo($value['email'], $value['name']);
+                        $mail->addAddress($value['email'], $value['name']);
+                    } else {
+                        $mail->addReplyTo($value, $value);
+                        $mail->addAddress($value, $value);
+                    }
+                }
+            }
+        } else {
+            $mail->addReplyTo($mailTo, $mailTo);
+            $mail->addAddress($mailTo, $mailTo);
         }
 //        $mail->addReplyTo($pic_email, $pic_name);
 //        $mail->addAddress($pic_email, $pic_name);
@@ -2506,16 +2523,14 @@ function sendMail($mailTo = array(), $subject, $message) {
     }
 }
 
-  function replace_between($str, $needle_start, $needle_end, $replacement) {
-        $pos = strpos($str, $needle_start);
-        $start = $pos === false ? 0 : $pos + strlen($needle_start);
+function replace_between($str, $needle_start, $needle_end, $replacement) {
+    $pos = strpos($str, $needle_start);
+    $start = $pos === false ? 0 : $pos + strlen($needle_start);
 
-        $pos = strpos($str, $needle_end, $start);
-        $end = $start === false ? strlen($str) : $pos;
+    $pos = strpos($str, $needle_end, $start);
+    $end = $start === false ? strlen($str) : $pos;
 
-        return substr_replace($str, $replacement, $start, $end - $start);
-    }
-
-
+    return substr_replace($str, $replacement, $start, $end - $start);
+}
 ?>
 

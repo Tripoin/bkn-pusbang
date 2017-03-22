@@ -4,11 +4,11 @@ use app\Constant\IURLConstant;
 ?>
 <?= Form()->formHeader(); ?>
 <?php
-if (!is_null($rs_registration_detail[0][$regDetail->getIsApproved()])) {
-    if ($rs_registration_detail[0][$regDetail->getIsApproved()] == 1) {
+if (!is_null($rs_link_registration[0][$linkRegistration->getStatus()])) {
+    if ($rs_link_registration[0][$linkRegistration->getStatus()] == 1) {
         echo resultPageMsg('warning', lang('transaction.data_have_approved'), '');
-    } else {
-        echo resultPageMsg('warning', lang('transaction.data_have_rejected'), $rs_registration_detail[0][$regDetail->getApprovedMessage()]);
+    } else if ($rs_link_registration[0][$linkRegistration->getStatus()] == 0) {
+        echo resultPageMsg('warning', lang('transaction.data_have_rejected'), $rs_link_registration[0][$linkRegistration->getDescription()]);
     }
 }
 if ($dt_participant_type[0][$m_participant_type->getCode()] == 'GOVERNMENT_AGENCY') {
@@ -187,7 +187,7 @@ echo Form()
 $button_reject = "";
 $button_approve = "";
 
-if (is_null($rs_registration_detail[0][$regDetail->getIsApproved()])) {
+if (is_null($rs_link_registration[0][$linkRegistration->getStatus()])) {
     $button_reject = Button()->id('btn-reject')
             ->onClick('ajaxPostModalManual(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit-participant/reject-detail') . '\', \'link_registration_id=' . $linkRegistrationId . '&approval_id=' . $approvalId . '\')')
             ->label(lang('general.reject'))

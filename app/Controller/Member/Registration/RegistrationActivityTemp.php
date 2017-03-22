@@ -54,6 +54,7 @@ class RegistrationActivityTemp {
         $db = new Database();
 //        $group = new SecurityGroup();
         $data = new TransactionActivity();
+        $transactionRegistration = new TransactionRegistration();
 //        $userMain = new MasterUserMain();
         if ($_POST['per_page'] == "") {
             $Datatable->per_page = 10;
@@ -81,7 +82,7 @@ class RegistrationActivityTemp {
         $whereList = $search;
         $list_data = $Datatable->select_pagination($data, $data->getEntity(), $whereList, null, null, null, null
                 , null);
-
+//        print_r($list_data);
 
         $user = new SecurityUser();
         $userProfile = new SecurityUserProfile();
@@ -91,7 +92,11 @@ class RegistrationActivityTemp {
         $rs_user = $db->selectByID($user, $user->getCode() . "='" . $_SESSION[SESSION_USERNAME_GUEST] . "'");
         $rs_user_profile = $db->selectByID($userProfile, $userProfile->getUserId() . "='" . $rs_user[0][$user->getId()] . "'");
         $rs_user_main = $db->selectByID($userMain, $userMain->getUserProfileId() . "='" . $rs_user_profile[0][$userProfile->getId()] . "'");
-
+        $rs_registration = $db->selectByID($transactionRegistration, $transactionRegistration->getUserId().  equalToIgnoreCase($rs_user[0][$user->getId()]));
+        if(empty($rs_registration)){
+            $list_data = array("from"=>0,"item"=>array());
+        }
+//        print_r($rs_registration);
 
         include_once FILE_PATH(IViewMemberConstant::REGISTRATION_ACTIVITY_TEMP_LIST_VIEW_INDEX);
     }
@@ -229,10 +234,12 @@ class RegistrationActivityTemp {
 //        $data->getName();
         $linkRegistration = new LinkRegistration();
 
-        $db->select($linkRegistration->getEntity(), $linkRegistration->getRegistrationDetailsId(), null, $linkRegistration->getRegistrationId() . equalToIgnoreCase($registrationId)
-                . " AND " . $linkRegistration->getActivityId() . equalToIgnoreCase($activity)
+        $db->select($linkRegistration->getEntity(), $linkRegistration->getRegistrationDetailsId(), null, ""
+                . "" . $linkRegistration->getRegistrationId() . equalToIgnoreCase($registrationId)
+//                . " AND " . $linkRegistration->getActivityId() . equalToIgnoreCase($activity)
         );
         $dt_link_reg = $db->getResult();
+//        print_r($dt_link_reg);
         $list_reg_id_detail = '';
         foreach ($dt_link_reg as $value) {
             $list_reg_id_detail .= $value[$linkRegistration->getRegistrationDetailsId()] . ",";
@@ -240,6 +247,18 @@ class RegistrationActivityTemp {
         $list_reg_id_detail = rtrim($list_reg_id_detail, ',');
 //        $implode_reg_id_detail = implode(',', $dt_link_reg[0][$linkRegistration]);
 //                print_r($dt_link_reg);
+
+        $db->select($linkRegistration->getEntity(), $linkRegistration->getRegistrationDetailsId(), null, ""
+                . "" . $linkRegistration->getRegistrationId() . equalToIgnoreCase($registrationId)
+                . " AND " . $linkRegistration->getActivityId() . equalToIgnoreCase($activity)
+        );
+        $dt_link_reg2 = $db->getResult();
+        $list_reg_id_detail2 = '';
+        foreach ($dt_link_reg2 as $value) {
+            $list_reg_id_detail2 .= $value[$linkRegistration->getRegistrationDetailsId()] . ",";
+        }
+        $list_reg_id_detail2 = rtrim($list_reg_id_detail2, ',');
+
 
         if ($_POST['per_page'] == "") {
             $Datatable->per_page = 10;
@@ -264,10 +283,22 @@ class RegistrationActivityTemp {
                 }
             }
         }
-        $whereList = $data->getEntity() . DOT . $data->getId() . " NOT IN (" . $list_reg_id_detail . ") " . $search;
+        $sql_detail2 = "";
+        if(!empty($list_reg_id_detail2)){
+           $sql_detail2 = " AND ".$data->getEntity() . DOT . $data->getId() . " NOT IN (" . $list_reg_id_detail2 . ") ";
+        }
+        $sql_detail = $data->getEntity() . DOT . $data->getId() . " IN ('')";
+        if(!empty($list_reg_id_detail)){
+            $sql_detail = $data->getEntity() . DOT . $data->getId() . " IN (" . $list_reg_id_detail . ")";
+        }
+        $whereList = $sql_detail
+                .$sql_detail2 . $search;
+        
 //        echo $whereList;
+//        $Datatable->debug(true);
         $list_data = $Datatable->select_pagination($data, $data->getEntity(), $whereList, null, null, null, null
                 , null);
+//        print_r($list_data);
         include_once FILE_PATH(IViewMemberConstant::REGISTRATION_ACTIVITY_TEMP_LIST_USER_ADD_LIST_VIEW_INDEX);
     }
 
