@@ -163,6 +163,9 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
 
     Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/list-peserta/{activity}', 'app\Controller\Member\AgendaOrganizer@listPeserta');
     Routes::set(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/list-peserta/{activity}/view', 'app\Controller\Member\AgendaOrganizer@viewPeserta');
+
+    Routes::set(IURLMemberConstant::SURVEY_ORGANIZER_URL, 'app\Controller\Survey\OrganizerSurvey@index');
+    Routes::set(IURLMemberConstant::SURVEY_ORGANIZER_URL . '/list', 'app\Controller\Survey\OrganizerSurvey@listData');
 }
 
 //ROUTES ADMIN

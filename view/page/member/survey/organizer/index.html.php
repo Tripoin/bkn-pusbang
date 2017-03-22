@@ -8,20 +8,14 @@ include_once getTemplatePath('page/content-page.html.php');
     <?php include_once FILE_PATH(PAGE_MEMBER_PATH); ?>
     <div class="signup col-md-9 member-page">
         <fieldset id="account">
-            <legend style="font-weight: bold;"><?= lang('member.agenda_organizer'); ?></legend>
+            <legend style="font-weight: bold;"><?= lang('survey.survey_organizer'); ?></legend>
             <div id="bodyPage">
-                <!--<div id="pageListAgendaOrganizer">-->
-
-                <!--</div>-->
             </div>
         </fieldset>
     </div>
-    <input type="hidden" id="urlPage" name="urlPage" value="<?= URL(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/list'); ?>"/>
-        <!--<input type="hidden" id="urlPageManual-pageListAgendaOrganizer" name="urlPageManual" value="<?= URL(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/list'); ?>"/>-->
-        <!--<input type="hidden" id="pagination_parameter-pageListAgendaOrganizer" value="" />-->
+    <input type="hidden" id="urlPage" name="urlPage" value="<?= URL(IURLMemberConstant::SURVEY_ORGANIZER_URL . '/list'); ?>"/>
     <script>
         $(function () {
-//            postAjaxPaginationManual('pageListAgendaOrganizer');
             postAjaxPagination();
         });
     </script>
