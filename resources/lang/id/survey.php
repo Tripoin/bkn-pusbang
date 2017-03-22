@@ -12,4 +12,5 @@ return
         'evaluation_trainer' => 'Survei Widyaiswara',
         'evaluation_activity' => 'Survei Kegiatan',
         'total_value' => 'Total Nilai',
+        'survey_organizer' => 'Survei Kegiatan',
     ];

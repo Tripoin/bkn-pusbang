@@ -12,4 +12,5 @@ return
         'evaluation_trainer' => 'Survey Trainer',
         'evaluation_activity' => 'Survey Activity',
         'total_value' => 'Total Value',
+        'survey_organizer' => 'Survey Organizer',
     ];

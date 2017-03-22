@@ -26,4 +26,7 @@ interface IURLMemberConstant {
     const ACTIVITY_REGISTRATION_TEMP_URL = 'member/registration/activity-temp';
     const ACTIVITY_REGISTRATION_TEMP_LIST_USER_URL = 'member/registration/activity-temp/list-user';
     const ACTIVITY_REGISTRATION_TEMP_LIST_USER_ADD_URL = 'member/registration/activity-temp/list-user/add';
+
+    const SURVEY_TRAINER_URL = 'member/survey/trainer';
+    const SURVEY_ORGANIZER_URL = 'member/survey/organizer';
 }

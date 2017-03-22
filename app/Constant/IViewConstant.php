@@ -72,6 +72,7 @@ interface IViewConstant {
     const APPROVAL_PIC_REGISTRATION_VIEW_INDEX = 'view/page/approval/pic-registration';
 
     const SURVEY_TRAINER_VIEW_INDEX = 'view/page/survey/survey-trainer';
+    const SURVEY_ORGANIZER_VIEW_INDEX = 'view/page/survey/survey-organizer';
 
 
 }
