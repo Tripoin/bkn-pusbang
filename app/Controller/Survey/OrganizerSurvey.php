@@ -42,7 +42,7 @@ class OrganizerSurvey extends Controller
 
     public function index() {
         setTitle(' | ' . lang('survey.survey_organizer'));
-        include_once FILE_PATH(IViewMemberConstant::SURVEY_ORGANIZER_VIEW_INDEX);
+        include_once FILE_PATH(IViewConstant::SURVEY_ORGANIZER_VIEW_INDEX . "/index.html.php");
     }
 
     public function listData(){
@@ -87,6 +87,6 @@ class OrganizerSurvey extends Controller
             . $activityDetails->getEntity() . "." . $activityDetails->getDescription() . " as description,"
             . $activityDetails->getEntity() . "." . $activityDetails->getName() . " as name", $activityDetails->getEntity() . "." . $activityDetails->getId());
 
-        include_once FILE_PATH(IViewConstant::SURVEY_TRAINER_VIEW_INDEX . '/details/list.html.php');
+        include_once FILE_PATH(IViewConstant::SURVEY_ORGANIZER_VIEW_INDEX . '/details/list.html.php');
     }
 }
