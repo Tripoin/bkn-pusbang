@@ -66,6 +66,7 @@ interface IViewConstant {
     const MASTER_SUBJECT_VIEW_INDEX = 'view/page/master/subject';
     const MASTER_MATERIAL_SUBJECT_VIEW_INDEX = 'view/page/master/material-subject';
     const AGENDA_KEGIATAN_VIEW_INDEX = 'view/page/transaction/agenda-kegiatan';
+    const AGENDA_WIDYAISWARA_VIEW_INDEX = 'view/page/transaction/agenda-widyaiswara';
     
     const APPROVAL_PARTICIPANT_REGISTRATION_VIEW_INDEX = 'view/page/approval/participant-registration';
     const APPROVAL_ACTIVITY_REGISTRATION_VIEW_INDEX = 'view/page/approval/activity-registration';
