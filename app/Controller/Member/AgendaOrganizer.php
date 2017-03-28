@@ -70,7 +70,7 @@ class AgendaOrganizer {
         $data = new TransactionActivity();
 //        $userMain = new MasterUserMain();
         if ($_POST['per_page'] == "") {
-            $Datatable->per_page = 5;
+            $Datatable->per_page = 10;
         } else {
             $Datatable->per_page = $_POST['per_page'];
         }
