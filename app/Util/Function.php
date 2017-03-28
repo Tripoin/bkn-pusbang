@@ -865,6 +865,13 @@ function subMonthDay($tgl) {
     return $day . ' ' . $date . ' ' . $month . ' ' . $year;
 }
 
+function subTimeOnly($tgl) {
+    $hours = date("H", strtotime($tgl));
+    $minute = date("i", strtotime($tgl));
+    //$second = date("s", strtotime($tgl));
+    return $hours . ':' . $minute;
+}
+
 function selectMonth($month) {
     $bln = getMonth($month);
     return $bln;
