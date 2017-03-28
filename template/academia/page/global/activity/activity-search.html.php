@@ -1,9 +1,9 @@
 <table border="0" class="table table-bordered">
     <tr style="background: #D01C24;color: #FFF">
-        <th><?= lang('transaction.subject_name'); ?></th>
-        <th><?= lang('transaction.batch'); ?></th>
-        <th><?= lang('transaction.excecution_time'); ?></th>
-        <th><?= lang('general.status'); ?></th>
+        <th style="text-align:center"><?= lang('transaction.subject_name'); ?></th>
+        <th style="text-align:center"><?= lang('transaction.batch'); ?></th>
+        <th style="text-align:center"><?= lang('transaction.excecution_time'); ?></th>
+        <th style="text-align:center"><?= lang('general.status'); ?></th>
     </tr>
     <?php
     $map_activity = array();
@@ -67,9 +67,9 @@
                 ?>
                 <tr>
                     <th><?php echo $map_activity1[$map_activity1[$no]][$nos]['label']; ?></th>
-                    <th><?php echo $map_activity1[$map_activity1[$no]][$nos]['generation']; ?></th>
-                    <th><?php echo $exTime ?></th>
-                    <th>
+                    <th style="text-align:center"><?php echo $map_activity1[$map_activity1[$no]][$nos]['generation']; ?></th>
+                    <th style="text-align:center"><?php echo $exTime ?></th>
+                    <th style="text-align:center">
                         <?php
                         $status = $map_activity1[$map_activity1[$no]][$nos]['status'];
                         if ($status == 1) {

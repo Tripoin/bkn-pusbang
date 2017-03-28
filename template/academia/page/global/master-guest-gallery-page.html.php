@@ -33,13 +33,14 @@ $rest_activity = $db->getResult();
                     $res_doc = $db->getResult();
 //                    LOGGER();
                     $url = '';
-                    if (substr($res_doc[0][$masterDocumentation->getDocumentation_image_url()], 0, 7) == "http://") {
-                        $url = $res_doc[0][$masterDocumentation->getDocumentation_image_url()];
-                    } else if (substr($res_doc[0][$masterDocumentation->getDocumentation_image_url()], 0, 8) == "https://") {
-                        $url = $res_doc[0][$masterDocumentation->getDocumentation_image_url()];
-                    } else {
-                        $url = URL('contents/' . $res_doc[0][$masterDocumentation->getDocumentation_image_url()]);
-                    }
+                    if($res_doc != null){
+                        if (substr($res_doc[0][$masterDocumentation->getDocumentation_image_url()], 0, 7) == "http://") {
+                            $url = $res_doc[0][$masterDocumentation->getDocumentation_image_url()];
+                        } else if (substr($res_doc[0][$masterDocumentation->getDocumentation_image_url()], 0, 8) == "https://") {
+                            $url = $res_doc[0][$masterDocumentation->getDocumentation_image_url()];
+                        } else {
+                            $url = URL('contents/' . $res_doc[0][$masterDocumentation->getDocumentation_image_url()]);
+                        }
                     ?>
                     <div class="col-md-3 col-sm-3">
                         <div class="single_gellary_item">
@@ -49,7 +50,9 @@ $rest_activity = $db->getResult();
                             <p><a  href="javascript:void(0)" onclick="ajaxPostModalGallery('<?= FULLURL(); ?>', '#galleria', 'id=<?= $value[$transactionActivity->getId()]; ?>&name=<?= $value[$transactionActivity->getName()]; ?>')"><?= $value[$transactionActivity->getName()]; ?></a></p>					
                         </div>
                     </div>
-                <?php } ?>
+                <?php
+                    }
+                } ?>
             </div>
 
             <!-- end single new_bulletin item -->
