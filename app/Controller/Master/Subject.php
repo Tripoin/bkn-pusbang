@@ -18,6 +18,7 @@ use app\Constant\IURLConstant;
 use app\Constant\IViewConstant;
 use app\Constant\IRestURLConstant;
 use app\Constant\IRestCommandConstant;
+use app\Util\Database;
 use app\Util\RestClient\TripoinRestClient;
 use app\Model\MasterSubject;
 use app\Model\MasterCurriculum;
@@ -28,6 +29,7 @@ class Subject extends ControllerRestUI {
     //put your code here
     public $budget_types= array();
     public $subject_requirements= array();
+    public $subject_parents= array();
 
     public function __construct() {
         $this->restURL = IRestURLConstant::MASTER . SLASH . IRestURLConstant::SUBJECT;
@@ -97,12 +99,14 @@ class Subject extends ControllerRestUI {
     public function create() {
         $this->getSubjectRequirements();
         $this->getBudgetTypes();
+        $this->getSubjectParents();
         parent::create();
     }
 
     public function edit() {
         $this->getSubjectRequirements();
         $this->getBudgetTypes();
+        $this->getSubjectParents();
         parent::edit();
     }
 
@@ -114,8 +118,44 @@ class Subject extends ControllerRestUI {
             array());
         $this->subject_requirements = $data_sr->getBody;
     }
+
+
+
     public function getBudgetTypes(){
         $this->budget_types = getRestLov(IRestURLConstant::MASTER . SLASH . IRestURLConstant::BUDGET_TYPE);
+    }
+
+    public function getSubjectParents(){
+        $db = new Database();
+        $db->connect();
+        $masterSubject = new MasterSubject();
+
+
+        $this->subject_parents = $db->selectByID($masterSubject,$masterSubject->getIsChild(). "='" . '0'. "'");
+
+    }
+
+    public function save(){
+        $db = new Database();
+        $db->connect();
+        $masterSubject = new MasterSubject();
+
+        $subjectCode = $_POST['subject_code'];
+        $subjectName = $_POST['subject_name'];
+        $budgetTypeId =  $_POST['budget_type_id'];
+        $budgetAmount =  $_POST['budget_amount'];
+
+
+
+        $db->insert($masterSubject->getEntity(), array(
+            $masterSubject->getCode() => $subjectCode,
+            $masterSubject->getName() => $subjectName,
+            $masterSubject->getBudgetTypeId() => $budgetTypeId,
+            $masterSubject->getSubjectAmount() =>  $budgetAmount,
+        ));
+        echo toastAlert("success", lang('general.title_insert_success'), lang('general.message_insert_success'));
+        echo '<script>$(function(){postAjaxPagination()});</script>';
+
     }
 
 }
