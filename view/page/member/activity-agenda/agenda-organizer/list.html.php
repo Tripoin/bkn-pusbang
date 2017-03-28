@@ -19,7 +19,8 @@ $Datatable->header(array(lang("general.no"), lang("member.activity_type"),
     lang("member.budget_of_type"),
     lang("member.execution_time"),
     lang("member.participant"),
-    lang("general.status")));
+    //lang("general.status")
+));
 $no = $list_data['from'];
 
 
@@ -27,7 +28,7 @@ foreach ($list_data['item'] as $value) {
 
 //    $action_delete = $Button->url($this->deleteUrl)->value($value[$data->getId()])->buttonDelete();
 //    $action_edit = $Button->url($this->editUrl)->value($value[$data->getId()])->buttonEdit();
-    $approval = '<a href="javascript:void(0)" onclick="viewAgendaOrganizer(' . $value[$data->getId()] . ')">' . lang('member.approval') . '</a>';
+    //$approval = '<a href="javascript:void(0)" onclick="viewAgendaOrganizer(' . $value[$data->getId()] . ')">' . lang('member.approval') . '</a>';
     $db->sql("SELECT COUNT(" . $userAssignment->getId() . ") as count FROM " . $userAssignment->getEntity() . " WHERE " . $userAssignment->getActivity_id() . EQUAL . $value[$data->getId()]);
     $rs_assign = $db->getResult();
     $panitia = '<a href="javascript:void(0)" onclick="pageAssignment(' . $value[$data->getId()] . ')">' . lang("transaction.organizer") . '</a>';
@@ -41,7 +42,8 @@ foreach ($list_data['item'] as $value) {
         $detailSubject,
         $list_peserta,
 //        $panitia,
-        $approval));
+        //$approval
+    ));
     $no += 1;
 }
 

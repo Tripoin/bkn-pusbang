@@ -4,7 +4,7 @@
     $datatable->enableSearch(false);
     $datatable->enableRecord(false);
 //    $datatable->setPageTable('pageListAlumnus');
-    $datatable->styleHeader(array("background: #D01C24;color: #FFF;border-bottom:0","background: #D01C24;color: #FFF;border-bottom:0"));
+    $datatable->styleHeader(array("text-align:center;background: #D01C24;color: #FFF;border-bottom:0","text-align:center;background: #D01C24;color: #FFF;border-bottom:0"));
     $datatable->styleBody(array("background: #FFF","background: #FFF"));
     $datatable->header(array(
         lang("alumnus.participant_name"),

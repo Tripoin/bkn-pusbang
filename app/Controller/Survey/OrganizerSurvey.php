@@ -34,8 +34,8 @@ class OrganizerSurvey extends Controller
             "code" => lang('transaction.type')
         );
         $this->orderBy = $this->modelData->getId() . " DESC";
-        $this->indexUrl = IURLConstant::SURVEY_TRAINER_INDEX_URL;
-        $this->viewPath = IViewConstant::SURVEY_TRAINER_VIEW_INDEX;
+        $this->indexUrl = IURLConstant::SURVEY_ORGANIZER_INDEX_URL;
+        $this->viewPath = IViewConstant::SURVEY_ORGANIZER_VIEW_INDEX;
         $this->setAutoCrud();
         parent::__construct();
     }
