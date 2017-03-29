@@ -93,6 +93,11 @@ return [
     "gallery_title" => "Galeri",
     "list_participant" => "List Peserta",
     "place_birth_of_date" => "Tempat, Tanggal Lahir",
-    
+    "recapitulation_value" => "Rekapitulasi Nilai",
+    'day_of_date' => 'Day/Date',
+    'material' => 'Materi',
+    'lesson_time' => 'Jam Pelajaran',
+    'trainer_activities' => 'Trainer Activities',
+    'total_value' => 'Total Value',
 ];
 

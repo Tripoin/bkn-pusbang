@@ -1,5 +1,5 @@
 <?php
-use app\Constant\IURLMemberConstant;
+use app\Constant\IURLConstant;
 //    $Datatable->styleHeader(array("text-align:center;"));
 $Datatable->styleColumn(array("text-align:center;width:5%;", "", "","","","", "text-align:center;width:100px;"));
 $Datatable->header(array(lang("general.no"),
@@ -23,7 +23,7 @@ foreach ($list_data['item'] as $value) {
 //        $value[$data->getName()],
         $exTime = subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]),
         $status = '<a href="javascript:void(0)" '
-            . 'onclick="postAjaxEdit(\'' . URL(IURLMemberConstant::SURVEY_TRAINER_URL . '/detail') . '\',\'id=' . $value[$data->getId()] . '\')">' . lang("survey.survey") . '</a>'
+            . 'onclick="postAjaxEdit(\'' . URL(getAdminTheme().IURLConstant::SURVEY_TRAINER_INDEX_URL . '/detail') . '\',\'id=' . $value[$data->getId()] . '\')">' . lang("survey.survey") . '</a>'
     ));
     $no++;
 }

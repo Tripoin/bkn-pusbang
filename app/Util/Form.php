@@ -846,7 +846,7 @@ class Form {
 
     /**
      * (PHP 4, PHP 5+)<br/>
-     * Create Component Checkbox <COMBOBOX>
+     * Create Component RadioBox <RadioBOX>
      * <br/>
      * Licensed by Tripoin Team
      * @link http://www.tripoin.co.id/

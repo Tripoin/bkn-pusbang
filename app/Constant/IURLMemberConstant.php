@@ -36,4 +36,7 @@ interface IURLMemberConstant {
     /*SURVEY*/
     const SURVEY_TRAINER_URL = 'member/survey/survey-trainer';
     const SURVEY_ORGANIZER_URL = 'member/survey/survey-organizer';
+    
+    /*REKAPITULASI*/
+    const REKAPITULASI_NILAI_URL = 'member/rekapitulasi/rekapitulasi-nilai';
 }

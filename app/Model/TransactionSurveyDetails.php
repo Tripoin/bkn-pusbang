@@ -22,12 +22,22 @@ class TransactionSurveyDetails extends GeneralAuditrail {
         $this->setEntity('trx_survey_details');
     }
     
+    private $surveyId = 'survey_id';
     private $evaluationId = 'evaluation_id';
     private $categoryAssessId = 'category_assess_id';
     private $value= 'value';
     private $evaluatedBy = 'surveyed_by';
     private $evaluatedOn = 'surveyed_on';
     
+    function getSurveyId() {
+        return $this->surveyId;
+    }
+
+    function setSurveyId($surveyId) {
+        $this->surveyId = $surveyId;
+    }
+
+        
     public function getEvaluationId() {
         return $this->evaluationId;
     }

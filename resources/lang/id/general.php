@@ -192,4 +192,6 @@ return [
     'material'=>'Materi',
     'non_material'=>'Bukan Materi',
     'waiting'=>'Menunggu',
+    'total'=>'Total',
+    'average'=>'Rata rata',
 ];

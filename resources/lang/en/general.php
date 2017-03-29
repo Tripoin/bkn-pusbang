@@ -191,4 +191,6 @@ return [
     'material'=>'Material',
     'non_material'=>'Non Material',
     'waiting'=>'Waiting',
+    'total'=>'Total',
+    'average'=>'Average',
 ];

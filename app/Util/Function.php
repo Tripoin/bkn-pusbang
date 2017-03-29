@@ -15,6 +15,8 @@ use app\Model\SecurityFunctionLanguage;
 use app\Model\SecurityFunctionAssignment;
 use app\Model\SecurityUser;
 use app\Model\SecurityUserProfile;
+use app\Model\MasterUserMain;
+use app\Model\MasterUserAssignment;
 use app\Util\PHPMail\PHPMailer;
 use app\Model\SecurityGroup;
 use app\Model\MasterSystemParameter;
@@ -27,6 +29,24 @@ use app\Util\Button;
 
 function is_not_null($var) {
     return !is_null($var);
+}
+
+function getUserMember() {
+    $db = new Database();
+    $securityUser = new SecurityUser();
+    $securityUserProfile = new SecurityUserProfile();
+    $masterUserMain = new MasterUserMain();
+//    $masterUserAssignment = new MasterUserAssignment();
+    $user = checkUserLogin();
+    $data_user = $db->selectByID($securityUser, $securityUser->getCode() . equalToIgnoreCase($user[SESSION_USERNAME_GUEST]));
+    $data_user_profile = $db->selectByID($securityUserProfile, $securityUserProfile->getUserId() . equalToIgnoreCase($data_user[0][$securityUser->getId()]));
+    $data_user_main = $db->selectByID($masterUserMain, $masterUserMain->getUserProfileId() . equalToIgnoreCase($data_user_profile[0][$securityUserProfile->getId()]));
+    $array = array(
+        $securityUser->getEntity() => $data_user[0],
+        $securityUserProfile->getEntity() => $data_user_profile[0],
+        $masterUserMain->getEntity() => $data_user_main[0],
+    );
+    return $array;
 }
 
 function checkUserLogin() {

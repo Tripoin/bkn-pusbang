@@ -92,4 +92,10 @@ return [
     "graduation_year"=>"Graduation Year",
     "list_participant" => "List Participant",
     "place_birth_of_date" => "Place & Birthdate",
+    "recapitulation_value" => "Recapitulation Value",
+    'day_of_date' => 'Hari/Tanggal',
+    'material' => 'Material',
+    'lesson_time' => 'Lesson Time',
+    'trainer_activities' => 'Pengisi Kegiatan',
+    'total_value' => 'Total Nilai',
 ];
