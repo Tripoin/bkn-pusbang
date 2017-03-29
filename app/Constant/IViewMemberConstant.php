@@ -36,7 +36,6 @@ interface IViewMemberConstant {
     const ACTIVITY_VIEW_VIEW_INDEX = 'view/page/member/activity-agenda/view.html.php';
     const AGENDA_ORGANIZER_VIEW = 'view/page/member/agenda-organizer';
     const AGENDA_ORGANIZER_VIEW_INDEX = 'view/page/member/agenda-organizer/index.html.php';
-    const AGENDA_ORGANIZER_VIEW_VIEW_INDEX = 'view/page/member/agenda-organizer/view.html.php';
     const AGENDA_ORGANIZER_LIST_VIEW_INDEX = 'view/page/member/agenda-organizer/list.html.php';
     
     
