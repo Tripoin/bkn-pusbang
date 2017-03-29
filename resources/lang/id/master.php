@@ -6,6 +6,7 @@
  * and open the template in the editor.
  */
 
+
 return [
     "master"=>"Master",
     "bank_account" => "Akun Bank",
@@ -51,3 +52,4 @@ return [
     "material_subject" => "Materi Kegiatan",
     "subject_requirements" => "Persyaratan Kegiatan",
 ];
+

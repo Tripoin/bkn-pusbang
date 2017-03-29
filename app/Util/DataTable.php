@@ -658,8 +658,8 @@ class DataTable {
         $this->query = $query;
         return $this->select_pagination(null);
     }
-    
-    public function perPage($perPage=10){
+
+    public function perPage($perPage = 10) {
         $this->per_page = $perPage;
     }
 
@@ -677,8 +677,8 @@ class DataTable {
 //            $sql = $this->query . " " . $limit;
             $rpl_btw = replace_between($this->query, "SELECT", "FROM", " COUNT(*) as total ");
 //            $rpl_btws =replace_between($rpl_btw, "group by", " ", "");
-             $new_str = strstr($rpl_btw, 'group by');
-             $fix_replace = str_replace($new_str, "", $rpl_btw);
+            $new_str = strstr($rpl_btw, 'group by');
+            $fix_replace = str_replace($new_str, "", $rpl_btw);
 //            $new_str = preg_replace('/group$/', '', $rpl_btw);
 //            echo $rpl_btw;
 //            echo $fix_replace;
@@ -745,20 +745,26 @@ class DataTable {
             if ($dto == "")
                 $sql_search = "";
             $sql_search = rtrim($sql_search, "OR");
-            $db->sql($sql_select . " COUNT(*) as total " . $sql_from . $sql_search);  // Table name, column names and respective values
+            $sql_group = "";
+            $sql_group2 = "";
+            if ($group_by != NULL) {
+                $sql_group = " GROUP BY " . $group_by;
+                $sql_group2 = $group_by . ",";
+            }
+            $db->sql($sql_select . $sql_group2 . " COUNT(*) as total " . $sql_from . $sql_search . $sql_group);  // Table name, column names and respective values
         }
-        
-//        echo $this->sql;
+
+//        echo $sql_select . $sql_group2. " COUNT(*) as total " . $sql_from . $sql_search . $sql_group;
         $count_row = $db->getResult();
-        
+
 //        echo json_encode($count_row);
 //        print_r($count_row);
         $this->total = $count_row[0]['total'];
 //echo $this->per_page;
-        if(isset($_POST['current_page'])){
+        if (isset($_POST['current_page'])) {
             $this->current_page = $_POST['current_page'];
         }
-        
+
         if ($this->current_page == NULL)
             $this->current_page = 1;
 //        echo $this->per_page;

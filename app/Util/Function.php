@@ -1774,6 +1774,9 @@ function convertJsonCombobox($data = null, $id, $label, $manual_data = array()) 
             }
         }
     }
+    if (empty($data)) {
+        $json .= '{"id":"","label":""}';
+    }
     $json = rtrim($json, ',');
     $json .= ']';
 //    print_r($data);
@@ -1805,6 +1808,7 @@ function convertJsonCombobox($data = null, $id, $label, $manual_data = array()) 
 function convertJsonComboboxJquery($data = null, $id, $label, $manual_data = array()) {
 //    print_r($data);
     $json = '[';
+    $json .= '{"id":"0","text":"Selected"},';
     if (!empty($manual_data)) {
         foreach ($manual_data as $value_manual) {
             $json .= '{"id":"' . $value_manual['id'] . '","text":"' . $value_manual['label'] . '"},';

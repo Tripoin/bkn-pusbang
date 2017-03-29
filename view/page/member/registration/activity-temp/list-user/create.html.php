@@ -31,7 +31,15 @@ $study_program_name = "";
 $study_program = "";
 $graduation_year = "";
 $registration_detail_id = "";
+$province_id = "";
+$city_id = "";
+$district_id = "";
+$village_id = "";
 if (!empty($data_reg_detail)) {
+    $province_id = $data_reg_detail[0][$regDetail->getProvinceId()];
+    $city_id = $data_reg_detail[0][$regDetail->getCityId()];
+    $district_id = $data_reg_detail[0][$regDetail->getDistrictId()];
+    $village_id = $data_reg_detail[0][$regDetail->getVillageId()];
     $participant_name = $data_reg_detail[0][$regDetail->getName()];
     $noidType = $data_reg_detail[0][$regDetail->getNoidTypeId()];
     $idNumber = $data_reg_detail[0][$regDetail->getIdNumber()];
@@ -181,6 +189,34 @@ if (!empty($data_reg_detail)) {
                 ->formLayout('form-horizontal')
                 ->placeholder(lang('member.address') . " ... ")
                 ->textarea();
+        echo Form()->id('province')->placeholder('Selected ....')
+                ->title(lang('member.province'))
+                ->autocomplete(false)
+                ->data($data_province)
+                ->value($province_id)
+                ->formLayout('form-horizontal')
+                ->attr('onchange="ajaxCombobox(\'province\',\'' . URL('selected?action=city') . '\', \'city\', \'\',\''.$city_id.'\');"')
+                ->combobox();
+        echo Form()->id('city')->placeholder('Selected ....')
+                ->title(lang('member.city'))
+                ->autocomplete(false)
+                ->formLayout('form-horizontal')
+                ->attr('onchange="ajaxCombobox(\'city\',\'' . URL('selected?action=district') . '\', \'district\', \'\',\''.$district_id.'\');"')
+                ->combobox();
+        echo Form()->id('district')->placeholder('Selected ....')
+                ->title(lang('member.district'))
+                ->autocomplete(false)
+                ->value($data_reg_detail[0][$regDetail->getDistrictId()])
+                ->formLayout('form-horizontal')
+                ->attr('onchange="ajaxCombobox(\'district\',\'' . URL('selected?action=village') . '\', \'village\', \'\',\''.$village_id.'\');"')
+                ->combobox();
+        echo Form()->id('village')->placeholder('Selected ....')
+                ->title(lang('member.village'))
+                ->autocomplete(false)
+                ->value($data_reg_detail[0][$regDetail->getVillageId()])
+                ->formLayout('form-horizontal')
+                ->combobox();
+
 
         echo Form()->value($zip_code)
                 ->title(lang('member.zip_code'))
@@ -241,6 +277,8 @@ if (!empty($data_reg_detail)) {
 <?= Form()->formFooter(''); ?>
 <script>
     $(function () {
+//        ajaxCombobox('province', '<?= URL('selected?action=province'); ?>', 'province', '');
+        $('#province').change();
         $('.alert').remove();
 //        postFormAjaxPostSetContent()
         //        postAjaxByAlertFormManual();

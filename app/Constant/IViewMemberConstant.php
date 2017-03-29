@@ -15,6 +15,12 @@ namespace app\Constant;
  */
 interface IViewMemberConstant {
     
+    /*LIST PARTICIPANT*/
+    const LIST_PARTICIPANT_VIEW_INDEX = 'view/page/member/list-participant/index.html.php';
+    const LIST_PARTICIPANT_LIST_VIEW_INDEX = 'view/page/member/list-participant/list.html.php';
+    const LIST_PARTICIPANT_VIEW_VIEW_INDEX = 'view/page/member/list-participant/view.html.php';
+    const LIST_PARTICIPANT_EDIT_VIEW_INDEX = 'view/page/member/list-participant/edit.html.php';
+    
     /*ACTIVITY AGENDA*/
     const AGENDA_ACTIVITY_VIEW = 'view/page/member/activity-agenda';
     const ACTIVITY_VIEW_INDEX = 'view/page/member/activity-agenda/activity/activity.html.php';
