@@ -114,9 +114,9 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
     Routes::set('page/member/video-seminar/list', 'app\Controller\Member\VideoSeminar@lists');
     Routes::set('page/member/video-seminar/view', 'app\Controller\Member\VideoSeminar@view');
 
-    Routes::set(IURLMemberConstant::ACTIVITY_URL, 'app\Controller\Member\AgendaKegiatanMember@index');
-    Routes::set(IURLMemberConstant::ACTIVITY_URL . '/list', 'app\Controller\Member\AgendaKegiatanMember@listData');
-    Routes::set(IURLMemberConstant::ACTIVITY_URL . '/view', 'app\Controller\Member\AgendaKegiatanMember@view');
+    Routes::set(IURLMemberConstant::AGENDA_KEGIATAN_URL, 'app\Controller\Member\AgendaKegiatanMember@index');
+    Routes::set(IURLMemberConstant::AGENDA_KEGIATAN_URL . '/list', 'app\Controller\Member\AgendaKegiatanMember@listData');
+    Routes::set(IURLMemberConstant::AGENDA_KEGIATAN_URL . '/view', 'app\Controller\Member\AgendaKegiatanMember@view');
 
     Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_URL, 'app\Controller\Member\RegistrationActivity@index');
     Routes::set(IURLMemberConstant::ACTIVITY_REGISTRATION_URL . '/list', 'app\Controller\Member\RegistrationActivity@listData');

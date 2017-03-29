@@ -16,7 +16,7 @@ include_once getTemplatePath('page/content-page.html.php');
         </fieldset>
     </div>
 
-    <input type="hidden" id="urlPageManual-pageListActivity" name="urlPageManual" value="<?= URL(IURLMemberConstant::ACTIVITY_URL . '/list'); ?>"/>
+    <input type="hidden" id="urlPageManual-pageListActivity" name="urlPageManual" value="<?= URL(IURLMemberConstant::AGENDA_KEGIATAN_URL . '/list'); ?>"/>
     <input type="hidden" id="pagination_parameter-pageListActivity" value="" />
     <script>
         $(function () {
