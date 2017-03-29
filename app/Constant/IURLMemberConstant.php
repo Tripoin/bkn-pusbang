@@ -39,4 +39,7 @@ interface IURLMemberConstant {
     
     /*REKAPITULASI*/
     const REKAPITULASI_NILAI_URL = 'member/rekapitulasi/rekapitulasi-nilai';
+    
+    /*REPORT*/
+    const REPORT_SURVEY_ORGANIZER_URL = 'member/report/report-survey-organizer';
 }

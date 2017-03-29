@@ -99,5 +99,6 @@ return [
     'lesson_time' => 'Jam Pelajaran',
     'trainer_activities' => 'Trainer Activities',
     'total_value' => 'Total Value',
+    'survey_of_activities' => 'Survey Of Activities',
 ];
 

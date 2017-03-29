@@ -172,6 +172,8 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
 
     Routes::setScaffolding(IURLMemberConstant::SURVEY_ORGANIZER_URL, 'app\Controller\Member\Survey\OrganizerSurvey');
     Routes::setScaffolding(IURLMemberConstant::REKAPITULASI_NILAI_URL, 'app\Controller\Member\RekapitulasiNilai');
+    Routes::setScaffolding(IURLMemberConstant::REPORT_SURVEY_ORGANIZER_URL, 'app\Controller\Member\Report\ReportOrganizerSurvey');
+    
 
     Routes::setScaffolding(IURLMemberConstant::SURVEY_TRAINER_URL, 'app\Controller\Member\Survey\TrainerSurvey');
     Routes::set(IURLMemberConstant::SURVEY_TRAINER_URL . '/detail', 'app\Controller\Member\Survey\TrainerSurvey@activityDetail');

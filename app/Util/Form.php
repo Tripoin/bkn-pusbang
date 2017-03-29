@@ -1706,14 +1706,14 @@ class Form {
     public function labels() {
         $rs = '';
         if ($this->formOption['FORM_LAYOUT'] == 'vertical') {
-            $rs .= '<div class="form-vertical">
+            $rs .= '<div class="form-group">
             <label class="control-label" style="color:black;font-weight: bold;">
                 ' . $this->formOption['TITLE'] . '
             </label>
             <div id="comp' . $this->formOption['ID'] . '">' . $this->formOption['LABEL'] . '</div>
         </div>';
         } else {
-            $rs .= '<div class="form-horizontal" style="padding-bottom:30px;">
+            $rs .= '<div class="form-group" style="padding-bottom:30px;margin-bottom:0;">
             <label class="control-label col-md-4" style="text-align:left;color:black;font-size:12px;font-weight: bold;margin-top: -3.5px;">
                 ' . $this->formOption['TITLE'] . '
             </label>

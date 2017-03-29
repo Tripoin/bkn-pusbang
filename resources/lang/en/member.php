@@ -98,4 +98,5 @@ return [
     'lesson_time' => 'Lesson Time',
     'trainer_activities' => 'Pengisi Kegiatan',
     'total_value' => 'Total Nilai',
+    'survey_of_activities' => 'Hasil Survei Kegiatan',
 ];
