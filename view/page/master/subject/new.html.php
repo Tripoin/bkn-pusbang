@@ -11,6 +11,22 @@ if(empty($convert)){
 }
 ?>
 
+<?php
+$convert = convertJsonCombobox($this->subject_parents,'id','name');
+
+$dataTypes = array();
+$dataTypes=array_fill(0,1,array("id"=>"parent","name"=>"child"));
+$dataTypes=array_fill(1,1,array("id"=>"parent","name"=>"child"));
+$convert = convertJsonCombobox($dataTypes,'id','name');
+
+if(empty($convert)){
+    /* DO NOTHING */
+
+}else{
+    echo Form()->id('data_type')->title(lang('master.type_data') .'')->data(json_decode(json_encode($convert),true))->radiobox();
+}
+?>
+
 
 <?php echo $Form->id('budget_type_id')->title(lang('master.budget_type_id'))->data($this->budget_types)->combobox(); ?>
 <?php echo $Form->id('budget_amount')->title(lang('master.budget_amount'))->placeholder(lang('master.budget_amount') )->textbox(); ?>

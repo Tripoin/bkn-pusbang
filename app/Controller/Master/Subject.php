@@ -144,18 +144,26 @@ class Subject extends ControllerRestUI {
         $subjectName = $_POST['subject_name'];
         $budgetTypeId =  $_POST['budget_type_id'];
         $budgetAmount =  $_POST['budget_amount'];
-
-
-
+        $subjectParents = $_POST['subject_parents'];
         $db->insert($masterSubject->getEntity(), array(
             $masterSubject->getCode() => $subjectCode,
             $masterSubject->getName() => $subjectName,
             $masterSubject->getBudgetTypeId() => $budgetTypeId,
             $masterSubject->getSubjectAmount() =>  $budgetAmount,
+            $masterSubject->getParentId() =>  $subjectParentsss
         ));
-        echo toastAlert("success", lang('general.title_insert_success'), lang('general.message_insert_success'));
-        echo '<script>$(function(){postAjaxPagination()});</script>';
+        $rs = $db->getResult();
+        if (is_numeric($rs[0])) {
+            echo toastAlert("success", lang('general.title_insert_success'), lang('general.message_insert_success'));
+            echo '<script>$(function(){postAjaxPagination()});</script>';
+        } else {
+            echo toastAlert("error", lang('general.title_insert_error'), lang('general.message_insert_error'));
+            echo resultPageMsg('danger', lang('general.title_insert_error'), $rs[0]);
+        }
+
 
     }
+
+
 
 }
