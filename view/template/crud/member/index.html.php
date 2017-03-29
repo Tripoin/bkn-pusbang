@@ -8,6 +8,24 @@ include_once getTemplatePath('page/content-page.html.php');
             padding: 0 5px;
         }*/
     /* Style the list */
+    .display-hide{
+        display: none;
+    }
+    
+    #btn-save {
+        .btn;
+        .btn-primary;
+    }
+    
+    #btn-reset{
+        .btn;
+        .btn-default;
+    }
+    
+    .display-show{
+        display: block;
+    }
+    
     ul.page-breadcrumb {
         padding: 10px 16px;
         list-style: none;
