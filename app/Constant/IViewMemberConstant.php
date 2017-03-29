@@ -23,9 +23,9 @@ interface IViewMemberConstant {
     
     /*ACTIVITY AGENDA*/
     const AGENDA_ACTIVITY_VIEW = 'view/page/member/activity-agenda';
-    const ACTIVITY_VIEW_INDEX = 'view/page/member/activity-agenda/activity/activity.html.php';
-    const ACTIVITY_LIST_VIEW_INDEX = 'view/page/member/activity-agenda/activity/list.html.php';
-    const ACTIVITY_VIEW_VIEW_INDEX = 'view/page/member/activity-agenda/activity/view.html.php';
+    const ACTIVITY_VIEW_INDEX = 'view/page/member/activity-agenda/activity.html.php';
+    const ACTIVITY_LIST_VIEW_INDEX = 'view/page/member/activity-agenda/list.html.php';
+    const ACTIVITY_VIEW_VIEW_INDEX = 'view/page/member/activity-agenda/view.html.php';
     const AGENDA_ORGANIZER_VIEW = 'view/page/member/agenda-organizer';
     const AGENDA_ORGANIZER_VIEW_INDEX = 'view/page/member/agenda-organizer/index.html.php';
     const AGENDA_ORGANIZER_VIEW_VIEW_INDEX = 'view/page/member/agenda-organizer/view.html.php';
