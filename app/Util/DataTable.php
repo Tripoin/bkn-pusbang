@@ -759,7 +759,11 @@ class DataTable {
 
 //        echo json_encode($count_row);
 //        print_r($count_row);
-        $this->total = $count_row[0]['total'];
+        if (isset($count_row[0]['total'])) {
+            $this->total = $count_row[0]['total'];
+        } else {
+            $this->total = 0;
+        }
 //echo $this->per_page;
         if (isset($_POST['current_page'])) {
             $this->current_page = $_POST['current_page'];
