@@ -13,4 +13,7 @@ return
         'evaluation_activity' => 'Survei Kegiatan',
         'total_value' => 'Total Nilai',
         'survey_organizer' => 'Survei Kegiatan',
+        'material_name' => 'Materi',
+        'total_value' => 'Total Nilai',
+        'average_value' => 'Rata-rata Nilai',
     ];

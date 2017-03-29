@@ -13,4 +13,7 @@ return
         'evaluation_activity' => 'Survey Activity',
         'total_value' => 'Total Value',
         'survey_organizer' => 'Survey Organizer',
+        'material_name' => 'Material',
+        'total_value' => 'Total Value',
+        'average_value' => 'Average Value',
     ];

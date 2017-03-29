@@ -173,8 +173,10 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
     Routes::set(IURLMemberConstant::SURVEY_ORGANIZER_URL, 'app\Controller\Survey\OrganizerSurvey@index');
     Routes::set(IURLMemberConstant::SURVEY_ORGANIZER_URL . '/list', 'app\Controller\Survey\OrganizerSurvey@listData');
 
-    /*-AGENDA-WIDYAISWARA */
-    Routes::setScaffolding(IURLMemberConstant::AGENDA_WIDYAISWARA_URL, 'app\Controller\Member\AgendaWidyaiswara');
+    Routes::setScaffolding(IURLMemberConstant::SURVEY_TRAINER_URL, 'app\Controller\Member\Survey\TrainerSurvey');
+    Routes::set(IURLMemberConstant::SURVEY_TRAINER_URL . '/detail', 'app\Controller\Member\Survey\TrainerSurvey@activityDetail');
+    Routes::set(IURLMemberConstant::SURVEY_TRAINER_URL . '/detail/survey', 'app\Controller\Member\Survey\TrainerSurvey@activityDetailSurvey');
+    Routes::set(IURLMemberConstant::SURVEY_TRAINER_URL . '/save', 'app\Controller\Member\Survey\TrainerSurvey@saveSurvey');
 }
 
 //ROUTES ADMIN

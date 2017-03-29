@@ -57,4 +57,5 @@ interface IViewMemberConstant {
     
     /*SURVEY*/
     const SURVEY_ORGANIZER_VIEW_INDEX = 'view/page/member/survey/survey-organizer';
+    const SURVEY_TRAINER_VIEW_INDEX = 'view/page/member/survey/survey-trainer';
 }

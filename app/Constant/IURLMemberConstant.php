@@ -34,6 +34,6 @@ interface IURLMemberConstant {
     const ACTIVITY_REGISTRATION_TEMP_LIST_USER_ADD_URL = 'member/registration/activity-temp/list-user/add';
 
     /*SURVEY*/
-    const SURVEY_TRAINER_URL = 'survey/survey-trainer';
+    const SURVEY_TRAINER_URL = 'member/survey/survey-trainer';
     const SURVEY_ORGANIZER_URL = 'member/survey/survey-organizer';
 }
