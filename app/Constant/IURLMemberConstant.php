@@ -20,6 +20,11 @@ interface IURLMemberConstant {
     const ACTIVITY_URL = 'member/activity-agenda/activity';
     const AGENDA_ORGANIZER_URL = 'member/activity-agenda/agenda-organizer';
     
+    const LIST_PARTICIPANT_URL = 'member/list-participant';
+    const LIST_PARTICIPANT_EDIT_URL = 'member/list-participant/edit';
+    const LIST_PARTICIPANT_VIEW_URL = 'member/list-participant/view';
+    const LIST_PARTICIPANT_UPDATE_URL = 'member/list-participant/update';
+    
     /*REGISTRATION URL*/
     const REGISTRATION_URL = 'member/registration';
     const ACTIVITY_REGISTRATION_URL = 'member/registration/activity';

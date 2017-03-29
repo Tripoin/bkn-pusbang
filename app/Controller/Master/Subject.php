@@ -139,18 +139,24 @@ class Subject extends ControllerRestUI {
         $db = new Database();
         $db->connect();
         $masterSubject = new MasterSubject();
-
+        $dataType = $_POST['data_type'];
         $subjectCode = $_POST['subject_code'];
         $subjectName = $_POST['subject_name'];
-        $budgetTypeId =  $_POST['budget_type_id'];
-        $budgetAmount =  $_POST['budget_amount'];
-        $subjectParents = $_POST['subject_parents'];
+        $budgetTypeId =  null;
+        $budgetAmount =  null;
+        $subjectParents = null;
+        if(strcasecmp($dataType, 'parent') == 1){
+            $budgetAmount =  $_POST['budget_amount'];
+            $subjectParents = $_POST['subject_parents'];
+            $budgetTypeId =  $_POST['budget_type_id'];
+        }
+
         $db->insert($masterSubject->getEntity(), array(
             $masterSubject->getCode() => $subjectCode,
             $masterSubject->getName() => $subjectName,
             $masterSubject->getBudgetTypeId() => $budgetTypeId,
             $masterSubject->getSubjectAmount() =>  $budgetAmount,
-            $masterSubject->getParentId() =>  $subjectParentsss
+            $masterSubject->getParentId() =>  $subjectParents
         ));
         $rs = $db->getResult();
         if (is_numeric($rs[0])) {

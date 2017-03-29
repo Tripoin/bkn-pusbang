@@ -1744,3 +1744,34 @@ function addAllGroupSelect(idLeft, idRight) {
         $('#' + idLeft + ' > [value="' + arr[no] + '"]').remove();
     }
 }
+
+function ajaxCombobox(parent, page, target, value,selected) {
+        $('#' + target).html('');
+        if (typeof selected == 'undefined') {
+            selected = "";
+        }
+        var search = $('#' + parent).val();
+        var txt = '&search=' + search;
+        $.ajax({
+            type: "POST",
+            url: page + txt,
+            data: value,
+            success: function (data) {
+//                console.log(data);
+                var result = JSON.parse(data);
+
+                $('#' + target).select2({
+                    data: result
+                });
+                $('[name='+target+']').val(selected).trigger("change");
+//                $('#' + target).select2("val", selected);
+//                $('#' + target).val(selected).trigger("change");
+//                $('#inputID').select2('data', {id: 100, a_key: 'Lorem Ipsum'});
+//                $('#' + target).change();
+            },
+            error: function (data) {
+                console.log(data);
+//                $('#' + target).html(data.responseText);
+            },
+        });
+    }

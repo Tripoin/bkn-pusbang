@@ -90,4 +90,6 @@ return [
     "faculity"=>"Faculity",
     "study_program"=>"Study Program",
     "graduation_year"=>"Graduation Year",
+    "list_participant" => "List Participant",
+    "place_birth_of_date" => "Place & Birthdate",
 ];

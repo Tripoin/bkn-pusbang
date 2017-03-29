@@ -43,7 +43,13 @@ return [
     "budget_type_id" => "Budget Type",
     "budget_amount" => "Buget Amount",
     "curriculum" => "Curriculum",
+    "curriculum_code"=>"Curriculum Code",
+    "curriculum_name"=>"Curriculum Name",
+    "curriculum_duration"=>"Duration",
+    "participant_assessment_point"=>"Aspek Peniliaian Peserta",
+    "widyaswara_assessment_point"=>"Aspek Penilaian Widyaswara",
     "material_subject" => "Material Subject",
     "subject_requirements" => "Subject Requirements",
+    "data_type" => "Data Type"
 
 ];

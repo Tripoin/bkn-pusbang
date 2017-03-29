@@ -6,6 +6,7 @@
  * and open the template in the editor.
  */
 
+
 return [
     "master"=>"Master",
     "bank_account" => "Akun Bank",
@@ -34,8 +35,8 @@ return [
     "question_category" => "Kategori Pertanyaan",
     "slider"=>"Slider",
     "subject"=>"Manajemen Kegiatan",
-    "subject_code" => "Kode Kegiatan",
-    "subject_name"=>"Nama Kegiatan",
+    "subject_code" => "Kode Subjek",
+    "subject_name"=>"Nama Subjek",
     "subject_parent" => "Induk Kegiatan",
     "subject_requirements"=>"Persyaratan Kegiatan",
     "subject_description"=>"Deskripsi Kegiatan",
@@ -50,4 +51,6 @@ return [
     "widyaswara_assessment_point"=>"Aspek Penilaian Widyaswara",
     "material_subject" => "Materi Kegiatan",
     "subject_requirements" => "Persyaratan Kegiatan",
+    "data_type" => "Type Data"
 ];
+

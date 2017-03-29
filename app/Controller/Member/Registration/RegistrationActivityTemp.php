@@ -27,6 +27,7 @@ use app\Model\MasterReligion;
 use app\Model\MasterApproval;
 use app\Model\MasterApprovalCategory;
 use app\Model\MasterWaitingList;
+use app\Model\MasterProvince;
 use app\Model\MasterGovernmentClassification;
 use app\Model\MasterCollege;
 use app\Model\MasterStudyProgram;
@@ -308,6 +309,7 @@ class RegistrationActivityTemp {
         $modelActivity = new TransactionActivity();
         $masterNoidType = new MasterNoIdType();
         $masterReligion = new MasterReligion();
+        $masterProvince=  new MasterProvince();
         $masterCollege = new MasterCollege();
         $masterStudyProgram = new MasterStudyProgram();
 
@@ -329,6 +331,7 @@ class RegistrationActivityTemp {
         $data_noid_type = getLov($masterNoidType);
 //        $data_study_program = getLov($masterStudyProgram);
         $data_religion = getLov($masterReligion);
+        $data_province = getLov($masterProvince);
 //        $data_college = getLov($masterCollege);
         $data_government_class = getLov($masterGovernmentClassification);
         $data_activity = $db->selectByID($modelActivity, $modelActivity->getId() . EQUAL . $activity);
@@ -361,6 +364,11 @@ class RegistrationActivityTemp {
         $study_program = $_POST['study_program'];
         $graduation_year = $_POST['graduation_year'];
         $registration_id = $_POST['registration_id'];
+        
+        $province = $_POST['province'];
+        $city = $_POST['city'];
+        $district = $_POST['district'];
+        $village = $_POST['village'];
         /* foreach ($_POST as $key => $value) {
           echo "&#36;" . $key . " = &#36;_POST['" . $key . "'];<br/>";
           }
@@ -372,6 +380,11 @@ class RegistrationActivityTemp {
         if (isset($_POST['registration_detail_id'])) {
             $registrationDetailId = $_POST['registration_detail_id'];
             $db->update($transactionRegistrationDetails->getEntity(), array(
+                $transactionRegistrationDetails->getRegistrationId() => $registration_id,
+                $transactionRegistrationDetails->getProvinceId() => $province,
+                $transactionRegistrationDetails->getCityId() => $city,
+                $transactionRegistrationDetails->getDistrictId() => $district,
+                $transactionRegistrationDetails->getVillageId() => $village,
                 $transactionRegistrationDetails->getName() => $participant_name,
                 $transactionRegistrationDetails->getIdNumber() => $idNumber,
                 $transactionRegistrationDetails->getNoidTypeId() => $noidType,
@@ -411,6 +424,11 @@ class RegistrationActivityTemp {
         } else {
 
             $db->insert($transactionRegistrationDetails->getEntity(), array(
+                $transactionRegistrationDetails->getRegistrationId() => $registration_id,
+                $transactionRegistrationDetails->getProvinceId() => $province,
+                $transactionRegistrationDetails->getCityId() => $city,
+                $transactionRegistrationDetails->getDistrictId() => $district,
+                $transactionRegistrationDetails->getVillageId() => $village,
                 $transactionRegistrationDetails->getCode() => $idNumber,
                 $transactionRegistrationDetails->getName() => $participant_name,
                 $transactionRegistrationDetails->getIdNumber() => $idNumber,
@@ -613,3 +631,4 @@ class RegistrationActivityTemp {
     }
 
 }
+

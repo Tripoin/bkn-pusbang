@@ -90,6 +90,9 @@ return [
     "faculity"=>"Fakultas",
     "study_program"=>"Program Studi",
     "graduation_year"=>"Tahun Lulus",
+    "gallery_title" => "Galeri",
+    "list_participant" => "List Peserta",
+    "place_birth_of_date" => "Tempat, Tanggal Lahir",
     
 ];
 

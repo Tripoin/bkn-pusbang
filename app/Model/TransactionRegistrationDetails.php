@@ -56,7 +56,17 @@ class TransactionRegistrationDetails extends GeneralAuditrail {
     public $approvedBy = 'approved_by';
     public $approvedOn = 'approved_on';
     public $approvedMessage = 'approved_message';
+    public $registrationId = 'registration_id';
     
+    function getRegistrationId() {
+        return $this->registrationId;
+    }
+
+    function setRegistrationId($registrationId) {
+        $this->registrationId = $registrationId;
+    }
+
+        
     public function search($key) {
         if(isset($this->$key)){
             return $this->$key;
