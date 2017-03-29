@@ -3,6 +3,7 @@
 use app\Model\MasterWaitingList;
 use app\Model\MasterUserAssignment;
 use app\Util\Database;
+use app\Constant\IURLMemberConstant;
 
 
 $db = new Database();
@@ -32,8 +33,8 @@ $db->connect();
         $db->sql("SELECT COUNT(".$userAssignment->getId().") as count FROM ".$userAssignment->getEntity()." WHERE ".$userAssignment->getActivity_id().EQUAL.$value[$data->getId()]);
         $rs_assign = $db->getResult();
 
-        $detailSubject = '<a href="javascript:void(0)" onclick="postAjaxEdit(\'' . URL('member/activity-agenda/activity/view').'\',\'id=' . $value[$data->getId()] . '\')">' . subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]) . '</a>';
-        $Datatable->body(array($no, 
+        $detailSubject = '<a href="javascript:void(0)" onclick="postAjaxEdit(\'' . URL(IURLMemberConstant::AGENDA_KEGIATAN_URL . '/view').'\',\'id=' . $value[$data->getId()] . '\')">' . subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]) . '</a>';
+        $Datatable->body(array($no,
             $value[$data->getSubjectName()], 
             $value[$data->getGeneration()], 
             $value[$data->getBudgetTypeName()],

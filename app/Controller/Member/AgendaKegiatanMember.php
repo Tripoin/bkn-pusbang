@@ -38,7 +38,7 @@ class AgendaKegiatanMember {
         $data = new TransactionActivity();
 //        $userMain = new MasterUserMain();
         if ($_POST['per_page'] == "") {
-            $Datatable->per_page = 5;
+            $Datatable->per_page = 10;
         } else {
             $Datatable->per_page = $_POST['per_page'];
         }
@@ -74,7 +74,7 @@ class AgendaKegiatanMember {
         $activity = new TransactionActivity();
         $data_activity = $db->selectByID($activity, $activity->getId().EQUAL.$id);
         $data_activity_details = $db->selectByID($activityDetails, $activityDetails->getActivityId().EQUAL.$id);
-//        print_r($data_activity_details);
+
         include_once FILE_PATH(IViewMemberConstant::ACTIVITY_VIEW_VIEW_INDEX);
     }
 }

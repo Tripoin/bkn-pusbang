@@ -78,7 +78,6 @@ interface IURLConstant {
     const DOCUMENTATION_INDEX_URL = '/documentation';
     const MASTER_SLIDER_INDEX_URL = '/master/slider';
     const AGENDA_KEGIATAN_INDEX_URL = '/agenda-kegiatan';
-    const AGENDA_WIDYAISWARA_INDEX_URL = '/agenda-widyaiswara';
     const MASTER_SUBJECT_INDEX_URL = '/master/subject';
     const MASTER_SUBJECT_REQUIREMENTS_INDEX_URL = '/master/subject-requirements';
     const MASTER_MATERIAL_SUBJECT_INDEX_URL = '/master/material-subject';
