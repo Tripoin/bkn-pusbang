@@ -15,6 +15,14 @@ namespace app\Constant;
  */
 interface IViewMemberConstant {
     
+    /*SCAFOLDING VIEW INDEX*/
+    const CRUD_VIEW_INDEX = 'view/template/crud/member/index.html.php';
+    const CRUD_LIST_VIEW_INDEX = 'view/template/crud/member/list.html.php';
+    const CRUD_NEW_VIEW_INDEX = 'view/template/crud/member/new.html.php';
+    const CRUD_EDIT_VIEW_INDEX = 'view/template/crud/member/edit.html.php';
+    const CRUD_LOV_VIEW_INDEX = 'view/template/crud/lov/index.html.php';
+    const CRUD_LOV_LIST_VIEW_INDEX = 'view/template/crud/lov/list.html.php';
+    
     /*LIST PARTICIPANT*/
     const LIST_PARTICIPANT_VIEW_INDEX = 'view/page/member/list-participant/index.html.php';
     const LIST_PARTICIPANT_LIST_VIEW_INDEX = 'view/page/member/list-participant/list.html.php';
@@ -46,4 +54,8 @@ interface IViewMemberConstant {
     const REGISTRATION_ACTIVITY_TEMP_LIST_USER_CREATE_VIEW_INDEX = 'view/page/member/registration/activity-temp/list-user/create.html.php';
     const REGISTRATION_ACTIVITY_TEMP_LIST_USER_ADD_VIEW_INDEX = 'view/page/member/registration/activity-temp/list-user/add/index.html.php';
     const REGISTRATION_ACTIVITY_TEMP_LIST_USER_ADD_LIST_VIEW_INDEX = 'view/page/member/registration/activity-temp/list-user/add/list.html.php';
+    
+    
+    /*SURVEY*/
+    const SURVEY_ORGANIZER_VIEW_INDEX = 'view/page/member/survey/survey-organizer';
 }
