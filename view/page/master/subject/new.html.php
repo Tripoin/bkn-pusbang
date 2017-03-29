@@ -34,11 +34,11 @@ if(empty($convert)){
 <?php // echo Form()->textbox();?>
 <?= $Form->formFooter($this->insertUrl); ?>
 <div id="detail-kegiatan-header" class="hidden">
-<div id="detail-kegiatan-content" class="panel panel-default">
-    <div class="panel-heading">Detail Kegiatan</div>
-    <div class="panel-body">
+<div id="detail-kegiatan-content" class="portlet light bordered">
+    <div class="portlet-title">Detail Kegiatan</div>
+    <div class="portlet-body">
         <?php echo $Form->id('budget_type_id')->title(lang('master.budget_type_id'))->data($this->budget_types)->combobox(); ?>
-        <?php echo $Form->id('budget_amount')->title(lang('master.budget_amount'))->placeholder(lang('master.budget_amount') )->textbox(); ?>
+        <?php echo $Form->id('budget_amount')->type('number')->attr('step="any"')->title(lang('master.budget_amount'))->placeholder(lang('master.budget_amount') )->textbox(); ?>
         <?php
         $dt = json_decode($this->subject_requirements,true);
         $convert = convertJsonCombobox($dt,'id','name');
@@ -63,12 +63,13 @@ if(empty($convert)){
                 function(){
                     var data_type=$('input[name="data_type"]:checked').val();
                     if(data_type=="child"){
-                        $( "#detail-kegiatan-content" ).clone().appendTo( "#hideable" );
+                        $( "#detail-kegiatan-content" ).appendTo( "#hideable" );
                     }else{
-                        $( "#hideable" ).empty();
+                        $( "#detail-kegiatan-content" ).appendTo( "#detail-kegiatan-header" );
                     }
                 }
             );
         }
     );
+
 </script>
