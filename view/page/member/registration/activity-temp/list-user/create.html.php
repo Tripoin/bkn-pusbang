@@ -2,9 +2,14 @@
 
 use app\Constant\IURLMemberConstant;
 use app\Model\TransactionRegistrationDetails;
+use app\Model\TransactionRegistration;
+use app\Util\Database;
 
 $regDetail = new TransactionRegistrationDetails();
+$transactionRegistration = new TransactionRegistration();
+$db = new Database();
 
+$res_registration = $db->selectByID($transactionRegistration, $transactionRegistration->getId() . equalToIgnoreCase($registrationId));
 //print_r($data_reg_detail);
 $participant_name = "";
 $noidType = "";
@@ -195,20 +200,20 @@ if (!empty($data_reg_detail)) {
                 ->data($data_province)
                 ->value($province_id)
                 ->formLayout('form-horizontal')
-                ->attr('onchange="ajaxCombobox(\'province\',\'' . URL('selected?action=city') . '\', \'city\', \'\',\''.$city_id.'\');"')
+                ->attr('onchange="ajaxCombobox(\'province\',\'' . URL('selected?action=city') . '\', \'city\', \'\',\'' . $city_id . '\');"')
                 ->combobox();
         echo Form()->id('city')->placeholder('Selected ....')
                 ->title(lang('member.city'))
                 ->autocomplete(false)
                 ->formLayout('form-horizontal')
-                ->attr('onchange="ajaxCombobox(\'city\',\'' . URL('selected?action=district') . '\', \'district\', \'\',\''.$district_id.'\');"')
+                ->attr('onchange="ajaxCombobox(\'city\',\'' . URL('selected?action=district') . '\', \'district\', \'\',\'' . $district_id . '\');"')
                 ->combobox();
         echo Form()->id('district')->placeholder('Selected ....')
                 ->title(lang('member.district'))
                 ->autocomplete(false)
                 ->value($data_reg_detail[0][$regDetail->getDistrictId()])
                 ->formLayout('form-horizontal')
-                ->attr('onchange="ajaxCombobox(\'district\',\'' . URL('selected?action=village') . '\', \'village\', \'\',\''.$village_id.'\');"')
+                ->attr('onchange="ajaxCombobox(\'district\',\'' . URL('selected?action=village') . '\', \'village\', \'\',\'' . $village_id . '\');"')
                 ->combobox();
         echo Form()->id('village')->placeholder('Selected ....')
                 ->title(lang('member.village'))
@@ -224,17 +229,19 @@ if (!empty($data_reg_detail)) {
                 ->formLayout('form-horizontal')
                 ->placeholder(lang('member.zip_code') . " ... ")
                 ->textbox();
-        echo Form()->id('government_classification')->title(lang('member.government_classification'))
-                ->autocomplete(false)->value($government_classification)
-                ->formLayout('form-horizontal')
-                ->data($data_government_class)
-                ->combobox();
-        echo Form()->value($json_occupation)
-                ->title(lang('member.json_occupation'))
-                ->id('json_occupation')
-                ->formLayout('form-horizontal')
-                ->placeholder(lang('member.json_occupation') . " ... ")
-                ->textbox();
+        if ($res_registration[0][$transactionRegistration->getParticipantTypeId()] == 2) {
+            echo Form()->id('government_classification')->title(lang('member.government_classification'))
+                    ->autocomplete(false)->value($government_classification)
+                    ->formLayout('form-horizontal')
+                    ->data($data_government_class)
+                    ->combobox();
+            echo Form()->value($json_occupation)
+                    ->title(lang('member.json_occupation'))
+                    ->id('json_occupation')
+                    ->formLayout('form-horizontal')
+                    ->placeholder(lang('member.json_occupation') . " ... ")
+                    ->textbox();
+        }
         echo Form()->value($degree)
                 ->title(lang('member.degree'))
                 ->id('degree')
