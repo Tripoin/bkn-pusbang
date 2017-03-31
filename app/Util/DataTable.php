@@ -874,6 +874,7 @@ class DataTable {
             }
             $sql = $sql_select . $sql_all . $sql_from . $sql_search . $group_by_str . $order_str . $limit;
         }
+//        echo $sql;
         if ($this->tableOption['DEBUG'] == true) {
             echo $sql;
         }

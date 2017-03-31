@@ -103,4 +103,5 @@ return [
     'value' => 'Value',
     'total_evaluator' => 'Total Evaluator',
     'average_value' => 'Average Value',
+    'agenda_widyaiswara' => 'Agenda Widyaiswara',
 ];

@@ -9,7 +9,7 @@
 namespace app\Controller\Member\Registration;
 
 /**
- * Description of AgendaKegiatanMember
+ * Description of RegistrationActivityTemp
  *
  * @author sfandrianah
  */
@@ -93,9 +93,9 @@ class RegistrationActivityTemp {
         $rs_user = $db->selectByID($user, $user->getCode() . "='" . $_SESSION[SESSION_USERNAME_GUEST] . "'");
         $rs_user_profile = $db->selectByID($userProfile, $userProfile->getUserId() . "='" . $rs_user[0][$user->getId()] . "'");
         $rs_user_main = $db->selectByID($userMain, $userMain->getUserProfileId() . "='" . $rs_user_profile[0][$userProfile->getId()] . "'");
-        $rs_registration = $db->selectByID($transactionRegistration, $transactionRegistration->getUserId().  equalToIgnoreCase($rs_user[0][$user->getId()]));
-        if(empty($rs_registration)){
-            $list_data = array("from"=>0,"item"=>array());
+        $rs_registration = $db->selectByID($transactionRegistration, $transactionRegistration->getUserId() . equalToIgnoreCase($rs_user[0][$user->getId()]));
+        if (empty($rs_registration)) {
+            $list_data = array("from" => 0, "item" => array());
         }
 //        print_r($rs_registration);
 
@@ -285,16 +285,16 @@ class RegistrationActivityTemp {
             }
         }
         $sql_detail2 = "";
-        if(!empty($list_reg_id_detail2)){
-           $sql_detail2 = " AND ".$data->getEntity() . DOT . $data->getId() . " NOT IN (" . $list_reg_id_detail2 . ") ";
+        if (!empty($list_reg_id_detail2)) {
+            $sql_detail2 = " AND " . $data->getEntity() . DOT . $data->getId() . " NOT IN (" . $list_reg_id_detail2 . ") ";
         }
         $sql_detail = $data->getEntity() . DOT . $data->getId() . " IN ('')";
-        if(!empty($list_reg_id_detail)){
+        if (!empty($list_reg_id_detail)) {
             $sql_detail = $data->getEntity() . DOT . $data->getId() . " IN (" . $list_reg_id_detail . ")";
         }
         $whereList = $sql_detail
-                .$sql_detail2 . $search;
-        
+                . $sql_detail2 . $search;
+
 //        echo $whereList;
 //        $Datatable->debug(true);
         $list_data = $Datatable->select_pagination($data, $data->getEntity(), $whereList, null, null, null, null
@@ -309,7 +309,7 @@ class RegistrationActivityTemp {
         $modelActivity = new TransactionActivity();
         $masterNoidType = new MasterNoIdType();
         $masterReligion = new MasterReligion();
-        $masterProvince=  new MasterProvince();
+        $masterProvince = new MasterProvince();
         $masterCollege = new MasterCollege();
         $masterStudyProgram = new MasterStudyProgram();
 
@@ -354,8 +354,13 @@ class RegistrationActivityTemp {
         $fax = $_POST['fax'];
         $address = $_POST['address'];
         $zip_code = $_POST['zip_code'];
-        $government_classification = $_POST['government_classification'];
-        $json_occupation = $_POST['json_occupation'];
+        $government_classification = "";
+        $json_occupation = "";
+        if (isset($_POST['government_classification']) && isset($_POST['json_occupation'])) {
+            $government_classification = $_POST['government_classification'];
+            $json_occupation = $_POST['json_occupation'];
+        }
+
         $degree = $_POST['degree'];
         $college_name = $_POST['college-name'];
         $college = $_POST['college'];
@@ -364,7 +369,7 @@ class RegistrationActivityTemp {
         $study_program = $_POST['study_program'];
         $graduation_year = $_POST['graduation_year'];
         $registration_id = $_POST['registration_id'];
-        
+
         $province = $_POST['province'];
         $city = $_POST['city'];
         $district = $_POST['district'];
@@ -374,13 +379,19 @@ class RegistrationActivityTemp {
           }
          * 
          */
+        $transactionRegistration = new TransactionRegistration();
         $transactionRegistrationDetails = new TransactionRegistrationDetails();
+
+
         $db = new Database();
         $db->connect();
+
+        $res_registration = $db->selectByID($transactionRegistration, $transactionRegistration->getId() . equalToIgnoreCase($registration_id));
         if (isset($_POST['registration_detail_id'])) {
             $registrationDetailId = $_POST['registration_detail_id'];
             $db->update($transactionRegistrationDetails->getEntity(), array(
                 $transactionRegistrationDetails->getRegistrationId() => $registration_id,
+                $transactionRegistrationDetails->getParticipantTypeId() => $res_registration[0][$transactionRegistration->getParticipantTypeId()],
                 $transactionRegistrationDetails->getProvinceId() => $province,
                 $transactionRegistrationDetails->getCityId() => $city,
                 $transactionRegistrationDetails->getDistrictId() => $district,
@@ -425,6 +436,7 @@ class RegistrationActivityTemp {
 
             $db->insert($transactionRegistrationDetails->getEntity(), array(
                 $transactionRegistrationDetails->getRegistrationId() => $registration_id,
+                $transactionRegistrationDetails->getParticipantTypeId() => $res_registration[0][$transactionRegistration->getParticipantTypeId()],
                 $transactionRegistrationDetails->getProvinceId() => $province,
                 $transactionRegistrationDetails->getCityId() => $city,
                 $transactionRegistrationDetails->getDistrictId() => $district,
@@ -631,4 +643,3 @@ class RegistrationActivityTemp {
     }
 
 }
-

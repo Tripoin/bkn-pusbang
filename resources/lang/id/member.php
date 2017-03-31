@@ -104,5 +104,6 @@ return [
     'value' => 'Nilai',
     'total_evaluator' => 'Total Evaluator',
     'average_value' => 'Rata - rata nilai',
+    'agenda_widyaiswara' => 'Agenda Widyaiswara',
 ];
 

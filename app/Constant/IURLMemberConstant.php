@@ -19,7 +19,7 @@ interface IURLMemberConstant {
     const AGENDA_ACTIVITY_URL = 'member/activity-agenda';
     const AGENDA_KEGIATAN_URL = 'member/agenda-kegiatan';
     const AGENDA_ORGANIZER_URL = 'member/agenda-organizer';
-    const AGENDA_WIDYAISWARA_URL = 'member/agenda-widyaiswara';
+    const AGENDA_WIDYAISWARA_URL = 'member/activity-agenda/widyaiswara';
     
     const LIST_PARTICIPANT_URL = 'member/list-participant';
     const LIST_PARTICIPANT_EDIT_URL = 'member/list-participant/edit';
