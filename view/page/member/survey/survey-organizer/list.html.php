@@ -1,6 +1,17 @@
 <?php
 
 use app\Constant\IURLConstant;
+use app\Model\TransactionSurvey;
+use app\Model\TransactionActivity;
+use app\Util\Database;
+
+$transactionActivity = new TransactionActivity();
+$transactionSurvey = new TransactionSurvey();
+$db = new Database();
+$db->connect();
+
+
+
 $Datatable->createButton(false);
 $Datatable->styleHeader(array("text-align:center;width:5%;", "text-align:center;", "text-align:center;", "text-align:center;width:30%;", ""));
 $Datatable->styleBody(array("text-align:center;", "", "text-align:center;", "text-align:center;", ""));
@@ -14,14 +25,21 @@ $no = $list_data['from'];
 
 
 foreach ($list_data['item'] as $value) {
-
+    $db->select($transactionSurvey->getEntity(), 'COUNT(' . $transactionSurvey->getId() . ') as total', array(), $transactionSurvey->getTargetSurveyId() . equalToIgnoreCase($value[$data->getId()]));
+    $rs_survey_count = $db->getResult();
+//    print_r($rs_survey_count);
+    $exTime = subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]);
+    $status = '<label class="label label-success">Sudah Di survei</label>';
+    if ($rs_survey_count[0]['total'] == 0) {
+        $status = '<a href="javascript:void(0)" '
+                . 'onclick="postAjaxEdit(\'' . $this->editUrl . '\',\'id=' . $value[$data->getId()] . '\')">' . lang("survey.survey") . '</a>';
+    }
     $Datatable->body(array(
         $no,
         $value[$data->getSubjectName()],
         $value[$data->getGeneration()],
-        $exTime = subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]),
-        $status = '<a href="javascript:void(0)" '
-        . 'onclick="postAjaxEdit(\'' . $this->editUrl . '\',\'id=' . $value[$data->getId()] . '\')">' . lang("survey.survey") . '</a>'
+        $exTime,
+        $status
     ));
     $no++;
 }

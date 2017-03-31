@@ -184,10 +184,6 @@ class ControllerMember implements IController {
             $list_data = $Datatable->select_pagination($data, $data->getEntity(), $this->where_list, $this->join_list, $this->search_list, $this->orderBy, $this->select_entity);
         }
 
-//        $this->list_data = $list_data;
-//        print_r($this->unsetDataModel($this->list_data['item']));
-//        echo json_encode($list_data['item']);
-//        print_r($this->modelData);
         $db->connect();
         $db->sql('SHOW COLUMNS FROM ' . $data->getEntity());
         $rs_column = $db->getResult();

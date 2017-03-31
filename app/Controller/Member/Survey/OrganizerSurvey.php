@@ -54,7 +54,7 @@ class OrganizerSurvey extends ControllerMember {
     }
 
     public function edit() {
-        $this->setBreadCrumb(array(lang('survey.survey_organizer') => "","edit"=>""));
+        $this->setBreadCrumb(array(lang('survey.survey_organizer') => "", "edit" => ""));
         $db = new Database();
         $id = $_POST['id'];
 
@@ -139,9 +139,10 @@ class OrganizerSurvey extends ControllerMember {
 
                 $average = intval($total) / count($data_subject_assess);
                 $db->insert($transactionSurvey->getEntity(), array(
-                    $transactionSurvey->getCode() => createRandomBooking() . '-' . $data_parent['code'],
+                    $transactionSurvey->getCode() => createRandomBooking() . '|' . $data_parent['code'],
                     $transactionSurvey->getName() => $data_parent['name'],
                     $transactionSurvey->getValue() => $total,
+                    $transactionSurvey->getTargetSurveyId() => $id,
                     $transactionSurvey->getRateValue() => $average,
                     $transactionSurvey->getUserAssignmentId() => $data_user_assign[0][$masterUserAssignment->getId()],
                     $transactionSurvey->getSurveyCategoryId() => $data_survey_category[0][$masterSurveyCategory->getId()],
@@ -181,15 +182,26 @@ class OrganizerSurvey extends ControllerMember {
     }
 
     public function listData() {
-        $this->modelSubject = new TransactionActivity();
+        $transactionActivity = new TransactionActivity();
+        $this->modelSubject = $transactionActivity;
+        $masterUserAssignment = new MasterUserAssignment();
+        $masterUserMain = new MasterUserMain();
+        
+        $data_user = getUserMember();
+//        echo $data_user[$masterUserMain->getId()];
+        $this->search_list = $transactionActivity->getEntity();
+        $this->select_entity = $transactionActivity->getEntity().'.*';
+        $this->join_list = array($masterUserAssignment->getEntity());
+        $this->where_list = $transactionActivity->getEntity().DOT.$transactionActivity->getId().EQUAL.$masterUserAssignment->getEntity().DOT.$masterUserAssignment->getActivity_id()
+                . " AND ".$masterUserAssignment->getEntity().DOT.$masterUserAssignment->getUser_main_id().equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()]);
+        
         $sr = $this->modelSubject->search($_POST['search_by']);
+        
         if (empty($sr)) {
             $_POST['search_by'] = "";
             $_POST['search_pagination'] = "";
         }
         parent::listData();
     }
-
-    
 
 }
