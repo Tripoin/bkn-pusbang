@@ -65,9 +65,9 @@ class TrainerSurvey extends ControllerMember
         $activityModel = new TransactionActivity();
         $activityDetails = new TransactionActivityDetails();
         $trxSurvey = new TransactionSurvey();
+        $trxSurveyDtl = new TransactionSurveyDetails();
         $userMain = new MasterUserMain();
 
-        $Datatable->urlDeleteCollection($this->urlDeleteCollection);
         $search = '';
 
 //        echo $Datatable->search;
@@ -87,17 +87,18 @@ class TrainerSurvey extends ControllerMember
             . $activityDetails->getEntity() . "." . $activityDetails->getDescription() . " as description,"
             . $activityDetails->getEntity() . "." . $activityDetails->getName() . " as name", $activityDetails->getEntity() . "." . $activityDetails->getId());
 
+        //$dataSurvey = $db->select();
         include_once FILE_PATH(IViewMemberConstant::SURVEY_TRAINER_VIEW_INDEX . '/details/list.html.php');
     }
 
     public function activityDetailSurvey(){
-
         $Form = new Form();
         $Datatable = new DataTable();
         $db = new Database();
 //        $group = new SecurityGroup();
 
         $idActivityDetail = $_POST['id'];
+        $idUsrAsg = $_POST['id_usr_as'];
 
         $trxActivity = new TransactionActivity();
         $trxActivityDetails = new TransactionActivityDetails();
@@ -165,7 +166,8 @@ class TrainerSurvey extends ControllerMember
             $trxSurvey->getSurveyCategoryId() => $surveyCategoryWdy[0]['id'],
             $trxSurvey->getValue() => $_POST['total'],
             $trxSurvey->getRateValue() => $_POST['average'],
-            $trxSurvey->getTargetSurveyId() => $_POST['id']
+            $trxSurvey->getTargetSurveyId() => $_POST['id'],
+            $trxSurvey->getUserAssignmentId() => $_POST['id_usr_as'],
         ));
         $getTrxSurvey = $db->getResult();
         $getCtrAssess = $this->getCtrAssess();
@@ -173,7 +175,9 @@ class TrainerSurvey extends ControllerMember
             $db->insert($trxSurveyDtl->getEntity(), array(
                 $trxSurveyDtl->getSurveyId() => $getTrxSurvey[0],
                 $trxSurveyDtl->getCategoryAssessId() => $data['id'],
-                $trxSurveyDtl->getValue() => $_POST[$data['code']]
+                $trxSurveyDtl->getValue() => $_POST[$data['code']],
+                $trxSurveyDtl->getEvaluatedBy() => $_SESSION[SESSION_FULLNAME_GUEST],
+                $trxSurveyDtl->getEvaluatedOn() => date("Y-m-d H:i:s")
             ));
             $db->getResult();
         }

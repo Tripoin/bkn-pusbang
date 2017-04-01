@@ -20,6 +20,9 @@ interface IURLMemberConstant {
     const AGENDA_KEGIATAN_URL = 'member/agenda-kegiatan';
     const AGENDA_ORGANIZER_URL = 'member/agenda-organizer';
     const AGENDA_WIDYAISWARA_URL = 'member/activity-agenda/widyaiswara';
+    const AGENDA_WIDYAISWARA_LIST_USER_URL = 'member/activity-agenda/widyaiswara/list-user';
+    const AGENDA_WIDYAISWARA_EDIT_USER_URL = 'member/activity-agenda/widyaiswara/edit-user';
+    const AGENDA_WIDYAISWARA_SAVE_USER_URL = 'member/activity-agenda/widyaiswara/save-user';
     
     const LIST_PARTICIPANT_URL = 'member/list-participant';
     const LIST_PARTICIPANT_EDIT_URL = 'member/list-participant/edit';

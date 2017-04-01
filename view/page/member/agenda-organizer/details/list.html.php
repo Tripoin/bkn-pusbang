@@ -46,7 +46,6 @@ $Datatable->header(array(lang("general.no"),
     lang("general.action")));
 $no = $list_data['from'];
 
-
 foreach ($list_data['item'] as $value) {
     if (!empty($value)) {
         $action_delete = Button()->icon('fa fa-times')->url(URL(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/details/' . $activity . '/delete'))->value($value[$data->getId()])->buttonDelete();

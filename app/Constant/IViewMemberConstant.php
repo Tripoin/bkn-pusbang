@@ -38,6 +38,8 @@ interface IViewMemberConstant {
     const AGENDA_ORGANIZER_VIEW_INDEX = 'view/page/member/agenda-organizer/index.html.php';
     const AGENDA_ORGANIZER_LIST_VIEW_INDEX = 'view/page/member/agenda-organizer/list.html.php';
     const AGENDA_WIDYAISWARA_VIEW_INDEX = 'view/page/member/agenda-widyaiswara';
+    const AGENDA_WIDYAISWARA_LIST_USER_VIEW_INDEX = 'view/page/member/agenda-widyaiswara/list-user.html.php';
+    const AGENDA_WIDYAISWARA_EDIT_USER_VIEW_INDEX = 'view/page/member/agenda-widyaiswara/edit-user.html.php';
     
     
     

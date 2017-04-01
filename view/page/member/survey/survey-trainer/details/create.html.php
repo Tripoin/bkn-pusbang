@@ -49,6 +49,7 @@ echo Form()
 ?>
 
 <input type="hidden" id="id" name="id" value="<?=$idActivityDetail;?>"/>
+<input type="hidden" id="id_usr_as" name="id_usr_as" value="<?=$idUsrAsg;?>"/>
 <?= Form()->formFooter($this->saveUrl, null, null); ?>
 <script>
     function testFunction(){

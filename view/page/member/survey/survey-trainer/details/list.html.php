@@ -1,5 +1,7 @@
 
 <?php
+use app\Constant\IURLMemberConstant;
+
 $Datatable->createButton(false);
 //$Datatable->headerButton(false);
 //    $Datatable->styleHeader(array("text-align:center;"));
@@ -29,7 +31,7 @@ foreach ($list_data['item'] as $value) {
             $startTime." - ".$endTime,
             $value[$activityDetails->getMaterialName()],
             $value[$activityDetails->getDuration()],
-            $value[$activityDetails->getUserMainName()],
+            '<a href="javascript:void(0)" onclick="postAjaxEdit(\'' . URL(IURLMemberConstant::SURVEY_TRAINER_URL . '/detail/survey') . '\',\'id=' . $value[$data->getId()] . '&id_activity=' . $_POST['id'] . '&id_usr_as=' . $value[$activityDetails->getUserMainId()]['id'] . '\')">' . $value[$activityDetails->getUserMainName()] . '</a>',
             ));
         $no += 1;
     }
@@ -45,6 +47,7 @@ echo $Datatable->show();
     function initDetails() {
         $('#actionHeader').html(comButtonCreate('<?= lang('general.create'); ?>', 'btn btn-warning', 'fa fa-plus', '') + " " + comButtonBack('<?= lang('general.back'); ?>', 'btn btn-danger', 'fa fa-back'));
         $('#buttonBack').attr("onclick", "pageParent()");
+        $('#buttonCreate').hide();
     }
 </script>
 <!--<script>location.reload(true);</script>-->
