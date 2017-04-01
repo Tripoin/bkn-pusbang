@@ -18,7 +18,7 @@ $db->connect();
     $Datatable->setPageTable('pageListActivity');
 
 //    $Datatable->styleHeader(array("text-align:center;"));
-    $Datatable->styleColumn(array("text-align:center;width:5%;", "", "", "text-align:center;width:100px;"));
+    $Datatable->styleColumn(array("text-align:center;width:5%;", "", "text-align:center;", "text-align:center;width:100px;"));
     $Datatable->header(array(lang("general.no"), lang("member.activity_type"), 
         lang("member.alumni"), 
         lang("member.budget_of_type"), 

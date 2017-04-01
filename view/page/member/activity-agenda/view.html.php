@@ -5,25 +5,28 @@
     <table border="0" id="table-manual" class="table table-striped table-bordered order-column dataTable" width="100%">
         <thead>
             <tr>
-                <th><?= lang("transaction.day/date"); ?></th>
-                <th><?= lang("transaction.time"); ?></th>
-                <th><?= lang("transaction.material"); ?></th>
-                <th><?= lang("transaction.lesson_time"); ?></th>
-                <th><?= lang("transaction.trainer"); ?></th>
+                <th style="text-align: center" width="22%"><?= lang("transaction.day/date"); ?></th>
+                <th style="text-align: center" width="13%"><?= lang("transaction.time"); ?></th>
+                <th style="text-align: center" width="38%"><?= lang("transaction.material"); ?></th>
+                <th style="text-align: center" width="11%"><?= lang("transaction.lesson_time"); ?></th>
+                <th style="text-align: center" width="16%"><?= lang("transaction.trainer"); ?></th>
             </tr>
         </thead>
         <tbody>
 
             <?php
             foreach ($data_activity_details as $value) {
-                $startTime = date('h:i', strtotime($value[$activityDetails->getStartTime()]));
-                $endTime = date('h:i', strtotime($value[$activityDetails->getEndTime()]));
+                $startTime = date('H:i', strtotime($value[$activityDetails->getStartTime()]));
+                $endTime = date('H:i', strtotime($value[$activityDetails->getEndTime()]));
 
                 echo '<tr>';
                 echo "<td>" . fullDateString($value[$activityDetails->getStartTime()]) . "</td>";
-                echo "<td>" . $startTime . " - " . $endTime . "</td>";
+                echo "<td style=\"text-align: center\">" . $startTime . " - " . $endTime . "</td>";
                 echo "<td>" . $value[$activityDetails->getMaterialName()] . "</td>";
-                echo "<td>" . $value[$activityDetails->getDuration()] . "</td>";
+                if($value[$activityDetails->getDuration()] == 0 || $value[$activityDetails->getDuration()] == null)
+                    echo "<td></td>";
+                else
+                    echo "<td style=\"text-align: center\">" . $value[$activityDetails->getDuration()] . "</td>";
                 echo "<td>" . $value[$activityDetails->getUserMainName()] . "</td>";
                 echo '</tr>';
             }
