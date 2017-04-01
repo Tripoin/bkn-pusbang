@@ -14,6 +14,8 @@ namespace app\Controller\Member;
  * @author sfandrianah
  */
 use app\Constant\IViewMemberConstant;
+use app\Model\MasterUserAssignment;
+use app\Model\SecurityRole;
 use app\Model\TransactionActivity;
 use app\Model\TransactionActivityDetails;
 use app\Util\DataTable;
@@ -36,7 +38,8 @@ class AgendaKegiatanMember {
         $db = new Database();
 //        $group = new SecurityGroup();
         $data = new TransactionActivity();
-//        $userMain = new MasterUserMain();
+        $userAssignment = new MasterUserAssignment();
+        $secRole = new SecurityRole();
         if ($_POST['per_page'] == "") {
             $Datatable->per_page = 10;
         } else {
@@ -48,6 +51,7 @@ class AgendaKegiatanMember {
         if ($_POST['current_page'] == '') {
             $Datatable->current_page = 1;
         }
+
         $search = $_POST['search_pagination'];
         if ($_POST['search_by'] == '') {
             $search = "  " . $data->getEntity() . ".start_activity LIKE  '%" . $search . "%'";
@@ -57,13 +61,18 @@ class AgendaKegiatanMember {
             $search = "  " . $data->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search . "%'";
         }
 
-//        echo $Datatable->search;
+        $userMember = getUserMember()["mst_user_main"];
 
-        $whereList = $search;
+        $whereList =
+            $userAssignment->getEntity() . "." . $userAssignment->getActivity_id() . EQUAL . $data->getEntity() . "." . $data->getId() . " AND " .
+            $userAssignment->getEntity() . "." . $userAssignment->getRoleId() . EQUAL . $secRole->getEntity() . "." . $secRole->getId() . " AND " .
+            $userAssignment->getEntity() . "." . $userAssignment->getUser_main_id() . EQUAL . $userMember["id"] . " AND " .
+            $secRole->getEntity()        . "." . $secRole->getCode() . equalToIgnoreCase("PARTICIPANT");
+        $whereList = $whereList . " AND " . $search;
 
-        $list_data = $Datatable->select_pagination($data, $data->getEntity(), $whereList, null, null, null, null
-                , null);
-//        print_r($list_data);
+        $list_data = $Datatable->select_pagination($data, $data->getEntity(), $whereList, array($userAssignment->getEntity(), $secRole->getEntity()),
+            null, null, $data->getEntity().'.*', null);
+        //print_r($list_data);
         include_once FILE_PATH(IViewMemberConstant::ACTIVITY_LIST_VIEW_INDEX);
     }
     
