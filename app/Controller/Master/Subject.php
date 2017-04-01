@@ -18,7 +18,12 @@ use app\Constant\IURLConstant;
 use app\Constant\IViewConstant;
 use app\Constant\IRestURLConstant;
 use app\Constant\IRestCommandConstant;
+use app\Model\MasterMaterialSubject;
+use app\Model\MasterUserAssignment;
+use app\Model\MasterUserMain;
+use app\Util\Button;
 use app\Util\Database;
+use app\Util\Form;
 use app\Util\RestClient\TripoinRestClient;
 use app\Model\MasterSubject;
 use app\Model\MasterCurriculum;
@@ -32,6 +37,8 @@ class Subject extends ControllerRestUI {
     public $subject_parents= array();
 
     public function __construct() {
+//        modalHide();
+        $this->admin_theme_url = getAdminTheme();
         $this->restURL = IRestURLConstant::MASTER . SLASH . IRestURLConstant::SUBJECT;
         $this->setTitle(lang('master.subject'));
         $this->setBreadCrumb(array(lang('master.master') => "", lang('master.subject') => FULLURL()));
@@ -50,20 +57,66 @@ class Subject extends ControllerRestUI {
         parent::listData();
     }
 
-    public function createCurriculums($subjectId){
+    public function createSubject($subjectId,$materialSubjectId){
+        $Form = new Form();
+        $db = new Database();
+        $db->connect();
         $masterCurriculum = new MasterCurriculum();
-        $Datatable = new DataTable();
-        if ($_POST['current_page'] == '') {
-            $Datatable->current_page = 1;
-        }
-        $search = $_POST['search_pagination'];
-        if ($_POST['search_by'] == 'null') {
-            $search = " AND " . $masterCurriculum->getEntity() . ".code LIKE  '%" . $search . "%'";
+
+
+        $db->insert($masterCurriculum->getEntity(), array(
+            $masterCurriculum->getCode() => $_GET['code'],
+            $masterCurriculum->getName() => $_GET['name'],
+            $masterCurriculum->getSubjectId()=>$subjectId,
+            $masterCurriculum->getMaterialSubjectId()=>$materialSubjectId
+
+        ));
+        $result = $db->getResult();
+        if (is_numeric($result[0])) {
+            echo toastAlert('success', 'Add Panitia Success', 'Data Has been Added Successfully');
         } else {
-            $search = " AND " . $masterCurriculum->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search . "%'";
+            echo toastAlert('error', 'Add Panitia Error', 'Data Has been Added Failed');
         }
-        $list_data = $Datatable->select_pagination($masterCurriculum,$masterCurriculum->getEntity(),
-            $masterCurriculum->getSubjectId().EQUAL.$subjectId.$search);
+//        print_r($db->getResult());
+        echo '<script>$(function(){$(\'#myModal_self\').modal(\'hide\');postAjaxPagination();});</script>';
+    }
+
+    public function getMaterialSubjectBySubjectIdAndMaterialSubjectId($subjectId,$MaterialSubjectId){
+        $db = new Database();
+        $db->connect();
+        $submitedCurriculum =  $db->selectByID($masterCurriculum,$masterCurriculum->getMaterialSubjectId(). "='" . $materialSubjectId.
+            " AND'. $masterCurriculum->getSubjectId(). '='. $subjectId .");
+    return $submitedCurriculum;
+    }
+
+    public function subjectList($subjectId){
+        $Form = new Form();
+        $Datatable = new DataTable();
+        $Button = new Button();
+        $db = new Database();
+//       $group = new SecurityGroup();
+        $data = new MasterMaterialSubject();
+
+        $Datatable->per_page = 5;
+
+
+
+//        }
+        $Datatable->urlDeleteCollection($this->urlDeleteCollection);
+        $Datatable->searchFilter(array(
+                "code" => lang('general.code'),
+                "name" => lang('general.name'))
+        );
+
+
+
+//        echo $Datatable->search;
+
+
+        $list_data = $Datatable->select_pagination($data, $data->getEntity(),'');
+
+//        echo modalHide();
+
         include_once FILE_PATH(IViewConstant::MASTER_SUBJECT_VIEW_INDEX . '/curriculum/new.html.php');
     }
 
@@ -90,6 +143,7 @@ class Subject extends ControllerRestUI {
         } else {
             $search = " AND " . $masterCurriculum->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search . "%'";
         }
+
         $list_data = $Datatable->select_pagination($masterCurriculum,$masterCurriculum->getEntity(),
             $masterCurriculum->getSubjectId().EQUAL.$subjectId.$search);
 
@@ -142,21 +196,28 @@ class Subject extends ControllerRestUI {
         $dataType = $_POST['data_type'];
         $subjectCode = $_POST['subject_code'];
         $subjectName = $_POST['subject_name'];
+        $subjectParents = $_POST['subject_parents'];
         $budgetTypeId =  null;
         $budgetAmount =  null;
-        $subjectParents = null;
-        if(strcasecmp($dataType, 'parent') == 1){
+        $location = null;
+        $subjectDescription = null;
+        $isChild = 0;
+        if(strcasecmp($dataType, 'child') == 0){
             $budgetAmount =  $_POST['budget_amount'];
-            $subjectParents = $_POST['subject_parents'];
+            $location = $_POST['location'];
             $budgetTypeId =  $_POST['budget_type_id'];
+            $subjectDescription = $_POST['subject_description'];
+            $isChild            = 1;
         }
-
         $db->insert($masterSubject->getEntity(), array(
             $masterSubject->getCode() => $subjectCode,
             $masterSubject->getName() => $subjectName,
+            $masterSubject->getParentId()=>$subjectParents,
             $masterSubject->getBudgetTypeId() => $budgetTypeId,
             $masterSubject->getSubjectAmount() =>  $budgetAmount,
-            $masterSubject->getParentId() =>  $subjectParents
+            $masterSubject->getLocation() => $location,
+            $masterSubject->getDescription() => $subjectDescription,
+            $masterSubject->getIsChild()    => $isChild
         ));
         $rs = $db->getResult();
         if (is_numeric($rs[0])) {

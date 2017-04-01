@@ -50,6 +50,10 @@ return [
     "widyaswara_assessment_point"=>"Aspek Penilaian Widyaswara",
     "material_subject" => "Material Subject",
     "subject_requirements" => "Subject Requirements",
-    "data_type" => "Data Type"
+    "data_type" => "Data Type",
+    "location" => "Location",
+    "material_subject_code" => "Material Subject Code",
+    "material_subject_name"=>"Material Subject Name",
+    "material_subject_duration"=>"Duration"
 
 ];

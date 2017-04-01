@@ -1,40 +1,45 @@
-<?= Form()->formHeader(); ?>
 
 <?php
-//$Datatable->createButton(true);
+$Datatable->createButton(false);
 //$Datatable->headerButton(false);
 //    $Datatable->styleHeader(array("text-align:center;"));
 $Datatable->styleColumn(array("text-align:center;width:5%;", "", "", "text-align:center;width:100px;"));
-$Datatable->header(array( lang("master.curriculum_code"),
-    lang("master.curriculum_name"),
-    lang('master.curriculum_duration'),
-    lang('master.participant_assessment_point'),
-    lang('master.widyaswara_assessment_point'),
-    lang("general.action")));
+$Datatable->header(array(lang("master.material_subject_code"),
+    lang("master.material_subject_name"),
+    lang("master.material_subject_duration"),
+        lang("general.action" ),
+));
+$no = $list_data['from'];
 
 
 foreach ($list_data['item'] as $value) {
 
-    $action_delete = Button()->url($this->deleteUrl)->value($value[$masterCurriculum->getId()])->buttonDelete();
-    $action_edit =  Button()->url($this->editUrl)->value($value[$masterCurriculum->getId()])->buttonEdit();
-
-    $Datatable->body(array('a',
-        'a',
-        'a',
-        'uhuy',
-        'uhuy',
-       'pilih'));
-
+    if (!empty($value)) {
+        $action = $Button->onClick('ajaxPostModalByValueHide(\'' . URL($this->admin_theme_url . $this->indexUrl .
+                '/curriculum/' . $subjectId ) . '/create'.
+            '/' . $value[$data->getId()] .'?code='.$value[$data->getCode()]. '&name='.$value[$data->getName()].'\')')
+            ->icon('fa fa-hand-o-left')->title(lang("general.choose"))->buttonCircleManual();
+        $Datatable->body(array(
+            $value[$data->getCode()],
+            $value[$data->getName()],
+            $value[$data->getDuration()],
+            $action));
+        $no += 1;
+    }
 }
+
 echo $Datatable->show();
-//$action_kirim = Button()->onClick('ajaxPostModalManual(\'' . URL($this->admin_theme_url . $this->indexUrl . '/assignment/' . $activity . '/edit') . '\',\'id=0\')')->icon('fa fa-paper-plane')->label('Kirim Surat Penugasan  Widyaiswara')->title('Kirim Surat Penugasan Widyaiswara')->buttonManual();
 ?>
 
-
-<?php // echo Form()->textbox();?>
-<?= Form()->formFooter($this->insertUrl); ?>
 <script>
     $(function () {
+        $('.portlet-title > div > span').html('<?= lang('transaction.participant_list'); ?>');
         initDetails();
     });
-    </script>
+    function initDetails() {
+        $('#actionHeader').html(comButtonBack('<?= lang('general.back'); ?>', 'btn btn-danger', 'fa fa-back'));
+        $('#buttonBack').attr("onclick", "pageParent()");
+
+    }
+</script>
+<!--<script>location.reload(true);</script>-->

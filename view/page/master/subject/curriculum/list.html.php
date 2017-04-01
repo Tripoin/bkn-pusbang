@@ -19,7 +19,7 @@ foreach ($list_data['item'] as $value) {
 
     $Datatable->body(array($value[$masterCurriculum->getCode()],
         $value[$masterCurriculum->getName()],
-        $value[$masterCurriculum->getName()],
+        $value[$masterCurriculum->getDuration()],
         $action_edit,
         $action_edit,
         $action_edit.$action_delete));
@@ -36,7 +36,7 @@ echo $Datatable->show();
     function initDetails() {
         $('#actionHeader').html(comButtonCreate('<?= lang('general.create'); ?>', 'btn btn-warning', 'fa fa-plus', '') + " " + comButtonBack('<?= lang('general.back'); ?>', 'btn btn-danger', 'fa fa-back'));
         $('#buttonBack').attr("onclick", "pageParent()");
-        $('#buttonCreate').attr("onclick", "ajaxPostModalManual('<?= URL(getAdminTheme() . $this->indexUrl . '/curriculum/'.$subjectId.'/create'); ?>','')");
+        $('#buttonCreate').attr("onclick", "ajaxPostModalManual('<?= URL(getAdminTheme() . $this->indexUrl . '/curriculum/'.$subjectId.'/subject-list'); ?>','')");
 //        $('#url_delete_collection').val('<?//= URL($this->admin_theme_url . $this->indexUrl . '/details/' . $id. '/deleteCollection'); ?>//');
     }
 </script>

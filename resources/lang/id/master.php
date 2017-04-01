@@ -51,6 +51,10 @@ return [
     "widyaswara_assessment_point"=>"Aspek Penilaian Widyaswara",
     "material_subject" => "Materi Kegiatan",
     "subject_requirements" => "Persyaratan Kegiatan",
-    "data_type" => "Type Data"
+    "data_type" => "Type Data",
+    "location" => "Location",
+    "material_subject_code" => "Kode Materi",
+    "material_subject_name"=>"Materi Kegiatan",
+    "material_subject_duration"=>"Durasi"
 ];
 

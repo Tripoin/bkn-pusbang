@@ -39,6 +39,7 @@ if(empty($convert)){
     <div class="portlet-body">
         <?php echo $Form->id('budget_type_id')->title(lang('master.budget_type_id'))->data($this->budget_types)->combobox(); ?>
         <?php echo $Form->id('budget_amount')->type('number')->attr('step="any"')->title(lang('master.budget_amount'))->placeholder(lang('master.budget_amount') )->textbox(); ?>
+        <?php echo $Form->id('location')->title(lang('master.location'))->placeholder(lang('master.location') )->textbox(); ?>
         <?php
         $dt = json_decode($this->subject_requirements,true);
         $convert = convertJsonCombobox($dt,'id','name');
