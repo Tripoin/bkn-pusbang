@@ -298,7 +298,7 @@ class AgendaOrganizer {
         $masterWaitingList = new MasterWaitingList();
 
         if ($_POST['per_page'] == "") {
-            $Datatable->per_page = 5;
+            $Datatable->per_page = 10;
         } else {
             $Datatable->per_page = $_POST['per_page'];
         }
@@ -637,7 +637,7 @@ class AgendaOrganizer {
         $activityDetails = new TransactionActivityDetails();
         $userMain = new MasterUserMain();
         if ($_POST['per_page'] == "") {
-            $Datatable->per_page = 5;
+            $Datatable->per_page = 10;
         } else {
             $Datatable->per_page = $_POST['per_page'];
         }
@@ -666,7 +666,7 @@ class AgendaOrganizer {
 //        echo $Datatable->search;
         $whereList = $activityDetails->getEntity() . "." . $activityDetails->getActivityId() . EQUAL . $activity . " AND " .
                 $activityModel->getEntity() . "." . $activityModel->getId() . EQUAL . $activityDetails->getEntity() . "." . $activityDetails->getActivityId() . $search;
-
+//    $Datatable->debug(true);
         $list_data = $Datatable->select_pagination($activityDetails, $activityDetails->getEntity(), $whereList, $activityModel->getEntity(), $activityModel->getEntity(), null, ""
                 . $activityDetails->getEntity() . "." . $activityDetails->getId() . " as id,"
                 . $activityDetails->getEntity() . "." . $activityDetails->getCode() . " as code,"
@@ -679,9 +679,9 @@ class AgendaOrganizer {
                 . $activityDetails->getEntity() . "." . $activityDetails->getDescription() . " as description,"
                 . $activityDetails->getEntity() . "." . $activityDetails->getName() . " as name", $activityDetails->getEntity() . "." . $activityDetails->getId());
 
+//        print_r($list_data);
         $modelActivity = new TransactionActivity();
         $data_activity = $db->selectByID($modelActivity, $modelActivity->getId() . EQUAL . $activity);
-//        print_r($list_data);
         include_once FILE_PATH(IViewMemberConstant::AGENDA_ORGANIZER_VIEW . '/details/list.html.php');
     }
 
