@@ -611,21 +611,32 @@ class AgendaOrganizer {
         $rs_cur = $db->selectByID($masterCurriculum);
         $this->data_curriculum = convertJsonCombobox($rs_cur, $masterCurriculum->getId(), $masterCurriculum->getName());
 
+        $activityData = new TransactionActivity();
+        $db->select($activityDetails->getEntity(), $activityDetails->getEntity() . "." .$activityDetails->getActivityId() , null,
+            $activityDetails->getEntity() . "." . $activityDetails->getId() . EQUAL . $id);
+        $idActivity = $db->getResult()[0]["activity_id"];
+        print_r($idActivity);
         $userMain = new MasterUserMain();
         $user = new SecurityUser();
         $userProfile = new SecurityUserProfile();
         $group = new SecurityGroup();
+        $userAssignment = new MasterUserAssignment();
         $whereList = ""
                 . $userMain->getEntity() . "." . $userMain->getUser_profile_id() . EQUAL . $userProfile->getEntity() . "." . $userProfile->getId() . " AND "
                 . $userProfile->getEntity() . "." . $userProfile->getUserId() . EQUAL . $user->getEntity() . "." . $user->getId() . " AND "
                 . $user->getEntity() . "." . $user->getGroupId() . EQUAL . $group->getEntity() . "." . $group->getId() . " AND "
-                . $group->getEntity() . "." . $group->getCode() . EQUAL . "'INTERNAL'";
+                . $userAssignment->getEntity() . "." . $userAssignment->getUser_main_id() . EQUAL . $userMain->getEntity() . "." . $userMain->getId() . " AND "
+                . $group->getEntity() . "." . $group->getCode() . EQUAL . "'INTERNAL'" . " AND "
+                . $userAssignment->getEntity() . "." . $userAssignment->getActivity_id() . "<>" . $idActivity;
         $db->connect();
-        $db->select($userMain->getEntity(), $userMain->getEntity() . "." . $userMain->getId() . "," . $userProfile->getEntity() . "." . $userProfile->getName(), array(
-            $user->getEntity(),
-            $userProfile->getEntity(),
-            $group->getEntity(),
-                ), $whereList);
+        $db->select($userMain->getEntity(), $userMain->getEntity() . "." . $userMain->getId() . "," . $userProfile->getEntity() . "." . $userProfile->getName(),
+            array(
+                $user->getEntity(),
+                $userProfile->getEntity(),
+                $group->getEntity(),
+                $userAssignment->getEntity()
+            ),
+            $whereList);
         $rs_user = $db->getResult();
 //        print_r($rs_user);
 

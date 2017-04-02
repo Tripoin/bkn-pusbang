@@ -36,14 +36,21 @@ $Datatable->backButton(true);
 //$Datatable->headerButton(false);
 //    $Datatable->styleHeader(array("text-align:center;"));
 $Datatable->styleHeader(array(
-    "text-align: center;width:15%;",
-    "text-align: center;width:22%;",
-    "text-align: center;width:22%;",
-    "text-align: center;width:22%;",
-    "text-align: center;width:22%;",
-    "text-align: center;width:22%;",
-    "text-align: center;width:22%;"));
-//$Datatable->styleColumnBody(array("text-align:center;width:5%;", "", "", "text-align:center;width:100px;"));
+    "text-align: center;width:5%;",
+    "text-align: center;width:13%;",
+    "text-align: center;width:25%;",
+    "text-align: center;width:14%;",
+    "text-align: center;width:13%;",
+    "text-align: center;width:5%;",
+    "text-align: center;width:5%;"));
+$Datatable->styleBody(array(
+    "text-align:center",
+    "text-align:center",
+    "",
+    "text-align:center",
+    "",
+    "",
+    "text-align:center"));
 $Datatable->header(array(
     lang("transaction.day/date"),
     lang("transaction.time"),
@@ -62,12 +69,15 @@ foreach ($list_data['item'] as $value) {
 //    $panitia = '<a href="javascript:void(0)" onclick="postAjaxEdit(\'' . $this->editUrl . '\',\'id=\')">' . lang("transaction.organizer") . '</a>';
         $startTime = date('H:i', strtotime($value[$activityDetails->getStartTime()]));
         $endTime = date('H:i', strtotime($value[$activityDetails->getEndTime()]));
-
+        if($value[$activityDetails->getDuration()] == 0 || $value[$activityDetails->getDuration()] == null)
+            $duration="";
+        else
+            $duration=$value[$activityDetails->getDuration()];
         $Datatable->body(array(
             date('d-M-Y', strtotime($value[$activityDetails->getStartTime()])),
             $startTime . " - " . $endTime,
             $value[$activityDetails->getMaterialName()],
-            $value[$activityDetails->getDuration()],
+            $duration,
             $value[$activityDetails->getUserMainName()],
             $value[$activityDetails->getDescription()],
             $action_edit . $action_delete));
