@@ -25,31 +25,51 @@ echo Form()->attr('style="width:50%;"')
     ->label($dataAct[0]['subject_name'])
     ->formLayout('horizontal')->labels();
 foreach($dataCtrAssess as $fieldLabel){
-    echo Form()
-        ->title($fieldLabel['name'])
-        ->id($fieldLabel['code'])
-        ->type('number')
-        ->value(0)
-        ->attr('style="width:30%;" tripoin="spinner" min="0" onchange="testFunction();" onkeyup="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();"')
-        ->formLayout('horizontal')->textbox();
+    if($dataTrxSurvey != null){
+
+    }else{
+        echo Form()
+            ->title($fieldLabel['name'])
+            ->id($fieldLabel['code'])
+            ->type('number')
+            ->value(0)
+            ->attr('style="width:30%;" tripoin="spinner" min="0" onchange="testFunction();" onkeyup="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();"')
+            ->formLayout('horizontal')->textbox();
+    }
+
 }
 
-echo Form()
-    ->title(lang('survey.total_value'))
-    ->id('total')
-    ->attr('readonly style="width:30%;"')
-    ->formLayout('horizontal')->textbox();
+if($dataTrxSurvey != null){
+    echo Form()
+        ->title(lang('survey.total_value'))
+        ->id('total')
+        ->value($dataTrxSurvey[0]['value'])
+        ->attr('readonly style="width:30%;"')
+        ->formLayout('horizontal')->textbox();
 
-echo Form()
-    ->title(lang('survey.average_value'))
-    ->id('average')
-    ->attr('readonly style="width:30%;"')
-    ->formLayout('horizontal')->textbox();
+    echo Form()
+        ->title(lang('survey.average_value'))
+        ->id('average')
+        ->value($dataTrxSurvey[0]['rate_value'])
+        ->attr('readonly style="width:30%;"')
+        ->formLayout('horizontal')->textbox();
+}else{
+    echo Form()
+        ->title(lang('survey.total_value'))
+        ->id('total')
+        ->attr('readonly style="width:30%;"')
+        ->formLayout('horizontal')->textbox();
+
+    echo Form()
+        ->title(lang('survey.average_value'))
+        ->id('average')
+        ->attr('readonly style="width:30%;"')
+        ->formLayout('horizontal')->textbox();
+}
 
 ?>
 
 <input type="hidden" id="id" name="id" value="<?=$idActivityDetail;?>"/>
-<input type="hidden" id="id_usr_as" name="id_usr_as" value="<?=$idUsrAsg;?>"/>
 <?= Form()->formFooter($this->saveUrl, null, null); ?>
 <script>
     function testFunction(){

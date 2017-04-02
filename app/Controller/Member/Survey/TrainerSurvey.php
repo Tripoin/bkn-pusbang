@@ -31,11 +31,11 @@ class TrainerSurvey extends ControllerMember
     public $saveUrl = '';
     public function __construct(){
         $this->modelData = new TransactionActivity();
-        //$this->setTitle(lang('survey.survey'));
+        $this->setTitle(lang('survey.survey'));
         $this->setSubtitle(lang('survey.evaluation_trainer'));
-        $this->setBreadCrumb(array(lang('survey.survey') => "", lang('survey.evaluation_trainer') => FULLURL()));
+        $this->setBreadCrumb(array(lang('survey.evaluation_trainer') => ""));
         $this->search_filter = array(
-            "code" => lang('transaction.type')
+            "name" => lang('transaction.type')
         );
         $this->orderBy = $this->modelData->getId() . " DESC";
         $this->indexUrl = IURLMemberConstant::SURVEY_TRAINER_URL;
@@ -45,8 +45,21 @@ class TrainerSurvey extends ControllerMember
     }
 
     public function listData(){
-        $this->modelSubject = new TransactionActivity();
+        $transactionActivity = new TransactionActivity();
+        $this->modelSubject = $transactionActivity;
+        $masterUserAssignment = new MasterUserAssignment();
+        $masterUserMain = new MasterUserMain();
+        print_r(getUserMember()['sec_user']['code']);
+        $data_user = getUserMember();
+//        echo $data_user[$masterUserMain->getId()];
+        $this->search_list = $transactionActivity->getEntity();
+        $this->select_entity = $transactionActivity->getEntity().'.*';
+        $this->join_list = array($masterUserAssignment->getEntity());
+        $this->where_list = $transactionActivity->getEntity().DOT.$transactionActivity->getId().EQUAL.$masterUserAssignment->getEntity().DOT.$masterUserAssignment->getActivity_id()
+            . " AND ".$masterUserAssignment->getEntity().DOT.$masterUserAssignment->getUser_main_id().equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()]);
+
         $sr = $this->modelSubject->search($_POST['search_by']);
+
         if (empty($sr)) {
             $_POST['search_by'] = "";
             $_POST['search_pagination'] = "";
@@ -58,19 +71,15 @@ class TrainerSurvey extends ControllerMember
         $Form = new Form();
         $Datatable = new DataTable();
         $db = new Database();
-//        $group = new SecurityGroup();
-
         $activity = $_POST['id'];
         $data = new MasterUserAssignment();
         $activityModel = new TransactionActivity();
         $activityDetails = new TransactionActivityDetails();
-        $trxSurvey = new TransactionSurvey();
-        $trxSurveyDtl = new TransactionSurveyDetails();
+
         $userMain = new MasterUserMain();
 
         $search = '';
 
-//        echo $Datatable->search;
         $whereList = $activityDetails->getEntity() . "." . $activityDetails->getActivityId() . EQUAL . $activity . " AND " .
             $activityModel->getEntity() . "." . $activityModel->getId() . EQUAL . $activityDetails->getEntity() . "." . $activityDetails->getActivityId() . " AND "
             . "(" . $activityDetails->getDuration() . " is not null AND " . $activityDetails->getDuration() . notEqualToIgnoreCase(0) . ")" . $search;
@@ -95,16 +104,16 @@ class TrainerSurvey extends ControllerMember
         $Form = new Form();
         $Datatable = new DataTable();
         $db = new Database();
-//        $group = new SecurityGroup();
-
         $idActivityDetail = $_POST['id'];
-        $idUsrAsg = $_POST['id_usr_as'];
 
         $trxActivity = new TransactionActivity();
         $trxActivityDetails = new TransactionActivityDetails();
         $userMain = new MasterUserMain();
         $linkTrainerAss = new LinkTrainerAssess();
         $mstCategoryAssess = new MasterCategoryAssess();
+
+        $trxSurvey = new TransactionSurvey();
+        $trxSurveyDtl = new TransactionSurveyDetails();
 
         $dataActDetail = $db->selectByID($trxActivityDetails, $trxActivityDetails->getId() .EQUAL. $idActivityDetail);
         $dataAct = $db->selectByID($trxActivity, $trxActivity->getId() .EQUAL. $dataActDetail[0]['activity_id']);
@@ -121,6 +130,9 @@ class TrainerSurvey extends ControllerMember
             .$linkTrainerAss->getEntity().'.'.$linkTrainerAss->getCurriculumId() .EQUAL. $dataActDetail[0]['curriculum_id']
         );
         $dataCtrAssess = $db->getResult();
+
+        $dataTrxSurvey = $db->selectByID($trxSurvey, $trxSurvey->getTargetSurveyId().EQUAL. $idActivityDetail);
+
         $this->saveUrl = URL(IURLMemberConstant::SURVEY_TRAINER_URL . '/save');
         include_once FILE_PATH(IViewMemberConstant::SURVEY_TRAINER_VIEW_INDEX . '/details/create.html.php');
     }
@@ -159,15 +171,28 @@ class TrainerSurvey extends ControllerMember
         $surveyCategory = new MasterSurveyCategory();
         $trxSurvey = new TransactionSurvey();
         $trxSurveyDtl = new TransactionSurveyDetails();
+
         $surveyCategoryWdy = $db->selectByID($surveyCategory, $surveyCategory->getCode().equalToIgnoreCase('SURVEY-WIDYAISWARA'));
         $db->connect();
+        $usrMain = new MasterUserMain();
+        $usrAssigment = new MasterUserAssignment();
+        $db->select($usrAssigment->getEntity(),
+            $usrAssigment->getEntity().'.'.$usrAssigment->getId(),
+            array(
+                $usrMain->getEntity()
+            ),
+            $usrMain->getEntity().'.'.$usrMain->getId().EQUAL.$usrAssigment->getEntity().'.'.$usrAssigment->getUser_main_id().' AND '
+            .$usrMain->getEntity().'.'.$usrMain->getCode().equalToIgnoreCase(getUserMember()['sec_user']['code'])
+        );
+        $idUsrAssg = $db->getResult();
+
         $db->insert($trxSurvey->getEntity(), array(
             $trxSurvey->getCode() => createRandomBooking(),
             $trxSurvey->getSurveyCategoryId() => $surveyCategoryWdy[0]['id'],
             $trxSurvey->getValue() => $_POST['total'],
             $trxSurvey->getRateValue() => $_POST['average'],
             $trxSurvey->getTargetSurveyId() => $_POST['id'],
-            $trxSurvey->getUserAssignmentId() => $_POST['id_usr_as'],
+            $trxSurvey->getUserAssignmentId() => $idUsrAssg,
         ));
         $getTrxSurvey = $db->getResult();
         $getCtrAssess = $this->getCtrAssess();
