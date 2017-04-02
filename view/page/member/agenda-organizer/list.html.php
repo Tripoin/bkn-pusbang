@@ -3,11 +3,15 @@
 use app\Constant\IURLMemberConstant;
 use app\Model\MasterWaitingList;
 use app\Model\MasterUserAssignment;
+use app\Model\SecurityRole;
 use app\Util\Database;
 
 $db = new Database();
 $waitingList = new MasterWaitingList();
 $userAssignment = new MasterUserAssignment();
+$securityRole = new SecurityRole();
+
+$data_role = $db->selectByID($securityRole, $securityRole->getCode() . equalToIgnoreCase('PARTICIPANT'));
 $db->connect();
 ?>
 <?php
@@ -19,7 +23,7 @@ $Datatable->header(array(lang("general.no"), lang("member.activity_type"),
     lang("member.budget_of_type"),
     lang("member.execution_time"),
     lang("member.participant"),
-    //lang("general.status")
+        //lang("general.status")
 ));
 $no = $list_data['from'];
 
@@ -29,7 +33,10 @@ foreach ($list_data['item'] as $value) {
 //    $action_delete = $Button->url($this->deleteUrl)->value($value[$data->getId()])->buttonDelete();
 //    $action_edit = $Button->url($this->editUrl)->value($value[$data->getId()])->buttonEdit();
     //$approval = '<a href="javascript:void(0)" onclick="viewAgendaOrganizer(' . $value[$data->getId()] . ')">' . lang('member.approval') . '</a>';
-    $db->sql("SELECT COUNT(" . $userAssignment->getId() . ") as count FROM " . $userAssignment->getEntity() . " WHERE " . $userAssignment->getActivity_id() . EQUAL . $value[$data->getId()]);
+    $db->sql("SELECT COUNT(" . $userAssignment->getId() . ") as count FROM " . $userAssignment->getEntity() . ""
+            . " WHERE " . $userAssignment->getActivity_id() . EQUAL . $value[$data->getId()]
+//            . " AND ".$userAssignment->getRoleId() . EQUAL . $data_role[0][$securityRole->getId()]
+    );
     $rs_assign = $db->getResult();
     $panitia = '<a href="javascript:void(0)" onclick="pageAssignment(' . $value[$data->getId()] . ')">' . lang("transaction.organizer") . '</a>';
     $list_peserta = '<a href="javascript:void(0)" onclick="pageListPeserta(' . $value[$data->getId()] . ')">' . $rs_assign[0]['count'] . "/" . $value[$data->getQuota()] . '</a>';
@@ -42,7 +49,7 @@ foreach ($list_data['item'] as $value) {
         $detailSubject,
         $list_peserta,
 //        $panitia,
-        //$approval
+            //$approval
     ));
     $no += 1;
 }
@@ -62,12 +69,12 @@ echo $Datatable->show();
         $('#search_pagination').attr("style", "height:18px;");
         $('.pagination').attr("style", "margin-top:0");
     }
-    
+
     function viewAgendaOrganizer(activity) {
         $('#urlPage').val('<?= URL(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/view/'); ?>' + activity);
         postAjaxPagination();
     }
-    
+
     function pageAssignment(activity) {
         $('#urlPage').val('<?= URL(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/assignment/'); ?>' + activity);
         postAjaxPagination();
