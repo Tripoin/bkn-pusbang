@@ -6,12 +6,12 @@ use app\Model\GeneralAuditrail;
 
 class SecurityUser extends GeneralAuditrail {
 
-    private $email = 'email';
-    private $password = 'password';
-    private $groupId = 'group_id';
-    private $salt = 'salt';
-    private $approved = 'approved';
-    private $expiredDate = 'expired_date';
+    protected $email = 'email';
+    protected $password = 'password';
+    protected $groupId = 'group_id';
+    protected $salt = 'salt';
+    protected $approved = 'approved';
+    protected $expiredDate = 'expired_date';
 
     public function __construct() {
         $this->setEntity('sec_user');
@@ -76,15 +76,22 @@ class SecurityUser extends GeneralAuditrail {
 
     public function search($key) {
 //        parent::search($key);
-        return $this->$key;
+        if(isset($this->$key)){
+            return $this->$key;
+        } else {
+            return "";
+        }
     }
 
     function setData($data) {
         $array_data = array();
         foreach ($data as $key => $value) {
             $array_data[$this->$key] = $value;
+            echo $this->$key.'<br/>';
         }
         return $array_data;
     }
+    
+    
 
 }

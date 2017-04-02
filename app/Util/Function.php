@@ -373,6 +373,10 @@ function modalHide() {
     return '<script>$(function(){$(\'.modal\').modal(\'hide\')});</script>';
 }
 
+function writeMainJavascript($javascript) {
+    return "<script>$(function(){".$javascript."});</script>";
+}
+
 function postAjaxPagination() {
     return '<script>$(function(){postAjaxPagination();});</script>';
 }

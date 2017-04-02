@@ -724,6 +724,7 @@ class DataTable {
                 }
             } else {
                 $sql_from = " FROM " . $entity . " " . $join_str . " " . " WHERE " . $where . " ";
+//                echo $this->search;
                 if ($this->search == NULL) {
                     $sql_search = "";
                 } else {
@@ -732,10 +733,16 @@ class DataTable {
                     foreach ($ex_search as $value) {
                         $ex_search2 = explode(">", $value);
                         $s_1 = $ex_search2[0];
-                        if ($ex_search2[1] == "") {
-                            $sql_search .= " " . "(" . $search_pagination_str . $dto->search($s_1) . " is null OR " . $search_pagination_str . $dto->search($s_1) . " LIKE '%" . $ex_search2[1] . "%') OR";
+//                        echo 'dtos' . $dto->search($s_1);
+//                        echo $ex_search2[0];
+                        if(empty($dto->search($s_1))) {
+                            $sql_search .= " " . "(" . $ex_search2[0] . " LIKE '%" . $ex_search2[1] . "%') OR";
                         } else {
-                            $sql_search .= " " . "(" . $search_pagination_str . $dto->search($s_1) . " LIKE '%" . $ex_search2[1] . "%') OR";
+                            if ($ex_search2[1] == "") {
+                                $sql_search .= " " . "(" . $search_pagination_str . $dto->search($s_1) . " is null OR " . $search_pagination_str . $dto->search($s_1) . " LIKE '%" . $ex_search2[1] . "%') OR";
+                            } else {
+                                $sql_search .= " " . "(" . $search_pagination_str . $dto->search($s_1) . " LIKE '%" . $ex_search2[1] . "%') OR";
+                            }
                         }
                     }
                 }

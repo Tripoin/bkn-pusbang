@@ -1672,21 +1672,24 @@ class Form {
                 $rs .= '<span class="material-input"></span>
     </div>';
             } else {
-                $rs = '<div class="form-group" style="margin-bottom:40px;">
-                <label class="col-md-3 control-label" for="focusedinput"  align="' . $this->formOption['ALIGN_LABEL'] . '">' . $title . $rq_l . '</label>
+                $rs = '<div class="form-group">';
+                $rs .= '<div class="row">';
+                $rs .= '<label class="col-md-3 control-label" for="focusedinput"  align="' . $this->formOption['ALIGN_LABEL'] . '">' . $title . $rq_l . '</label>
                 <div class="col-md-9 ' . $this->formOption['CLASS_COMP'] . '" id="comp' . $this->formOption['ID'] . '">';
                 $rs .= $component;
                 $rs .= '</div>';
+                
 //            $rs .= '<div class="col-sm-2">
 //            <p class="help-block">' . $msg_rq_tx . '</p>
 //        </div>';
                 $rs .= '<span class="material-input"></span>';
                 $rs .= '</div>';
+                $rs .= '</div>';
             }
         } else {
             $rs .= $component;
         }
-
+//        $this->ResetObject();
         return $rs;
     }
 
@@ -1921,7 +1924,5 @@ class Form {
         $this->ResetObject();
         return $rs;
     }
-
-    
 
 }

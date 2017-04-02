@@ -89,4 +89,8 @@ interface IURLConstant {
 
     const SURVEY_TRAINER_INDEX_URL = '/survey/survey-trainer';
     const SURVEY_ORGANIZER_INDEX_URL = '/survey/survey-organizer';
+    
+    /*REGISTRATION ADMIN*/
+    const REGISTRATION_INTERNAL_INDEX_URL = '/registration/internal';
+    const REGISTRATION_INTERNAL_ACTIVITY_INDEX_URL = '/registration/internal-activity';
 }

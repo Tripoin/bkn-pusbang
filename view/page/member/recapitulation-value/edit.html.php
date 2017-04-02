@@ -4,6 +4,7 @@ use app\Model\MasterCategoryAssess;
 use app\Model\LinkSubjectAssess;
 use app\Model\TransactionActivity;
 use app\Model\TransactionActivityDetails;
+use app\Model\MasterUserAssignment;
 use app\Util\Database;
 
 $db = new Database();
@@ -12,6 +13,7 @@ $masterCategoryAssess = new MasterCategoryAssess();
 $linkSubjectAssess = new LinkSubjectAssess();
 $transactionActivity = new TransactionActivity();
 $transactionActivityDetails = new TransactionActivityDetails();
+$masterUserAssignment = new MasterUserAssignment();
 ?>
 
 <?= $Form->formHeader(); ?>
@@ -46,7 +48,11 @@ echo Form()->formLayout(HORIZONTAL)
         </tr>
     </thead>
     <tbody id="table-manual-body">
-        <?php foreach ($this->data_activity_details as $value) { ?>
+        <?php
+        foreach ($this->data_activity_details as $value) {
+            $db->select($masterUserAssignment->getEntity(), 'COUNT(' . $masterUserAssignment->getId() . ') as total', array(), $masterUserAssignment->getActivity_id() . equalToIgnoreCase($value[$data->getId()]));
+            $rs_survey_count = $db->getResult();
+            ?>
             <tr>
                 <td style=""><?= fullDateString($value[$transactionActivityDetails->getStartTime()]); ?></td>
                 <td style=""><?= subTimeOnly($value[$transactionActivityDetails->getStartTime()]); ?> - <?= subTimeOnly($value[$transactionActivityDetails->getEndTime()]); ?></td>
@@ -60,71 +66,6 @@ echo Form()->formLayout(HORIZONTAL)
         <?php } ?>
     </tbody>
 </table>
-<ul class="nav nav-tabs">
-    <!--<li class="active"><a data-toggle="tab" href="#home">Home</a></li>-->
-    <?php
-    $no = 0;
-    foreach ($this->data_parent_subject_assess as $data_parent) {
-        $no+=1;
-        $active = '';
-        if ($no == 1) {
-            $active = 'class="active"';
-        }
-        ?>
-        <li <?= $active; ?>><a data-toggle="tab" href="#<?= $data_parent['id']; ?>"><?= $data_parent['name']; ?></a></li>
-    <?php } ?>
-</ul>
-<div class="tab-content">
-    <?php
-    $no = 0;
-    foreach ($this->data_parent_subject_assess as $data_parent) {
-        $no+=1;
-        $active = '';
-        if ($no == 1) {
-            $active = '  in active';
-        }
-        ?>
-
-        <div id="<?= $data_parent['id']; ?>" class="tab-pane fade <?= $active; ?>">
-            <?php
-            $db->select($linkSubjectAssess->getEntity(), ""
-                    . $masterCategoryAssess->getEntity() . DOT . $masterCategoryAssess->getName() . " as name,"
-                    . $masterCategoryAssess->getEntity() . DOT . $masterCategoryAssess->getCode() . " as code,"
-                    . $masterCategoryAssess->getEntity() . DOT . $masterCategoryAssess->getId() . " as id", array(
-                $masterCategoryAssess->getEntity()
-                    ), ""
-                    . $linkSubjectAssess->getEntity() . DOT . $linkSubjectAssess->getCategoryAssessId() . EQUAL . $masterCategoryAssess->getEntity() . DOT . $masterCategoryAssess->getId()
-                    . " AND " . $linkSubjectAssess->getEntity() . DOT . $linkSubjectAssess->getSubjectId() . equalToIgnoreCase($this->data_activity[0][$transactionActivity->getSubjectId()])
-                    . " AND " . $linkSubjectAssess->getEntity() . DOT . $linkSubjectAssess->getCategoryAssessParentId() . equalToIgnoreCase($data_parent['id'])
-            );
-            $data_subject_assess = $db->getResult();
-            foreach ($data_subject_assess as $value) {
-                echo Form()->formLayout(HORIZONTAL)
-                        ->type('number')
-                        ->attr('onkeyup="this.onchange()" onchange="calculateAll(' . $data_parent['id'] . ')" tripoin="number"')
-                        ->id($value['id'])
-                        ->name($value['code'])
-                        ->title($value['name'])
-                        ->value(0)
-                        ->textbox();
-            }
-            echo Form()->formLayout(HORIZONTAL)
-                    ->attr('readonly="readonly"')
-                    ->id('total' . $data_parent['id'])
-                    ->title(lang('general.total'))
-                    ->value(0)
-                    ->textbox();
-            echo Form()->formLayout(HORIZONTAL)
-                    ->id('average' . $data_parent['id'])
-                    ->attr('readonly="readonly"')
-                    ->title(lang('general.average'))
-                    ->value(0)
-                    ->textbox();
-            ?>
-
-        </div>
-    <?php } ?>
-</div>
 <input type="hidden" id="id" name="id" value="<?= $_POST['id']; ?>"/>
 
 <?= $Form->formFooter($this->updateUrl); ?>

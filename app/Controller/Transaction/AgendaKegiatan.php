@@ -34,6 +34,7 @@ use app\Model\MasterDistrict;
 use app\Model\MasterVillage;
 use app\Model\MasterBudgetType;
 use app\Model\MasterGovernmentClassification;
+use app\Model\SecurityRole;
 use app\Model\SecurityUserProfile;
 use app\Model\SecurityUser;
 use app\Model\SecurityGroup;
@@ -279,9 +280,15 @@ class AgendaKegiatan extends Controller {
         }
 
 //        echo $Datatable->search;
+        $securityRole = new SecurityRole();
 
-        $whereList = $data->getEntity() . "." . $data->getActivity_id() . EQUAL . $activity . " AND " .
-                $userMain->getEntity() . "." . $userMain->getId() . EQUAL . $data->getUser_main_id() . $search;
+
+        $data_role = $db->selectByID($securityRole, $securityRole->getCode() . equalToIgnoreCase('PARTICIPANT'));
+        $whereList = $data->getEntity() . "." . $data->getUser_main_id() . EQUAL . $userMain->getEntity() . DOT . $userMain->getId()
+                . " AND " . $data->getEntity() . "." . $data->getActivity_id() . EQUAL . $activity
+                . " AND " . $data->getEntity() . "." . $data->getRoleId() . EQUAL . $data_role[0][$securityRole->getId()]
+                . " AND " . $userMain->getEntity() . "." . $userMain->getId() . EQUAL . $data->getUser_main_id()
+                . $search;
 
         $list_data = $Datatable->select_pagination($data, $data->getEntity(), $whereList, $userMain->getEntity(), $userMain->getEntity(), null, ""
                 . $data->getEntity() . "." . $data->getId() . " as id,"
@@ -458,8 +465,9 @@ class AgendaKegiatan extends Controller {
 
 //        echo $Datatable->search;
         $whereList = $activityDetails->getEntity() . "." . $activityDetails->getActivityId() . EQUAL . $activity . " AND " .
-                $activityModel->getEntity() . "." . $activityModel->getId() . EQUAL . $activityDetails->getEntity() . "." . $activityDetails->getActivityId() . " AND "
-                . "(" . $activityDetails->getDuration() . " is not null AND " . $activityDetails->getDuration() . notEqualToIgnoreCase(0) . ")" . $search;
+                $activityModel->getEntity() . "." . $activityModel->getId() . EQUAL . $activityDetails->getEntity() . "." . $activityDetails->getActivityId() 
+//                . " AND (" . $activityDetails->getDuration() . " is not null AND " . $activityDetails->getDuration() . notEqualToIgnoreCase(0) . ")"
+                . "" . $search;
 
         $list_data = $Datatable->select_pagination($activityDetails, $activityDetails->getEntity(), $whereList, $activityModel->getEntity(), $activityModel->getEntity(), null, ""
                 . $activityDetails->getEntity() . "." . $activityDetails->getId() . " as id,"
@@ -728,13 +736,24 @@ class AgendaKegiatan extends Controller {
 
     public function savePanitia($activity) {
         $data = new MasterUserAssignment();
+        $masterUserMain = new MasterUserMain();
         $db = new Database();
+        $securityRole = new SecurityRole();
+
+
+        $data_role = $db->selectByID($securityRole, $securityRole->getCode() . equalToIgnoreCase('ORGANIZER'));
+        $data_user_main = $db->selectByID($masterUserMain, $masterUserMain->getId() . equalToIgnoreCase($_POST['id']));
         $db->connect();
         $db->insert($data->getEntity(), array(
             $data->getCode() => createRandomBooking(),
+            $data->getName() => $data_user_main[0][$masterUserMain->getName()],
             $data->getActivity_id() => $activity,
+            $data->getRoleId() => $data_role[0][$securityRole->getId()],
             $data->getUser_main_id() => $_POST['id'],
             $data->getDescription() => 'Hadir',
+            $data->getStatus() => 1,
+            $data->getCreatedByUsername() => $_SESSION[SESSION_ADMIN_USERNAME],
+            $data->getModifiedOn() => date(DATE_FORMAT_PHP_DEFAULT)
         ));
         $result = $db->getResult();
         if (is_numeric($result[0])) {

@@ -6,6 +6,7 @@ use app\Controller\Base\ControllerMember;
 use app\Model\TransactionActivity;
 use app\Constant\IURLMemberConstant;
 use app\Constant\IViewConstant;
+use app\Model\SecurityRole;
 use app\Model\TransactionActivityDetails;
 //use app\Model\TransactionSurvey;
 use app\Model\LinkSubjectAssess;
@@ -16,12 +17,10 @@ use app\Model\MasterUserAssignment;
 use app\Model\MasterUserMain;
 use app\Model\TransactionSurvey;
 use app\Model\TransactionSurveyDetails;
-use app\Model\SecurityUser;
-use app\Util\Form;
-use app\Util\DataTable;
-use app\Util\Database;
-use app\Util\Button;
+use app\Model\TransactionEvaluation;
+use app\Model\TransactionEvaluationDetails;
 use app\Constant\IViewMemberConstant;
+use app\Util\Database;
 
 /**
  * created by Netbeans 8.1.
@@ -31,7 +30,8 @@ use app\Constant\IViewMemberConstant;
  */
 class AgendaWidyaiswara extends ControllerMember {
 
-    public $data_activity, $data_parent_subject_assess;
+    public $data_activity, $data_activity_details, $data_evaluation, $data_parent_subject_assess;
+    public $urlListUser, $urlEditUser, $urlSaveUser;
 
     public function __construct() {
         $this->modelData = new TransactionActivity();
@@ -48,149 +48,221 @@ class AgendaWidyaiswara extends ControllerMember {
     }
 
     public function edit() {
-        $this->setBreadCrumb(array(lang('survey.survey_organizer') => "", "edit" => ""));
         $db = new Database();
         $id = $_POST['id'];
 
         $transactionActivity = new TransactionActivity();
-        $masterCategoryAssess = new MasterCategoryAssess();
-        $masterSubject = new MasterSubject();
-        $linkSubjectAssess = new LinkSubjectAssess();
-        $masterSurveyCategory = new MasterSurveyCategory();
 
-        $data_survey_category = $db->selectByID($masterSurveyCategory, $masterSurveyCategory->getCode() . equalToIgnoreCase('SURVEY-KEGIATAN'));
         $this->data_activity = $db->selectByID($transactionActivity, $transactionActivity->getId() . equalToIgnoreCase($id));
 
-        $db->select($linkSubjectAssess->getEntity(), $masterCategoryAssess->getEntity() . DOT . $masterCategoryAssess->getName() . " as name,"
-                . $masterCategoryAssess->getEntity() . DOT . $masterCategoryAssess->getId() . " as id", array(
-            $masterCategoryAssess->getEntity()
-                ), ""
-                . $linkSubjectAssess->getEntity() . DOT . $linkSubjectAssess->getCategoryAssessParentId() . EQUAL . $masterCategoryAssess->getEntity() . DOT . $masterCategoryAssess->getId()
-                . " AND " . $linkSubjectAssess->getEntity() . DOT . $linkSubjectAssess->getSubjectId() . equalToIgnoreCase($this->data_activity[0][$transactionActivity->getSubjectId()])
-                . " GROUP BY " . $linkSubjectAssess->getEntity() . DOT . $linkSubjectAssess->getCategoryAssessParentId());
-        $this->data_parent_subject_assess = $db->getResult();
+        $this->urlListUser = URL(IURLMemberConstant::AGENDA_WIDYAISWARA_LIST_USER_URL);
         parent::edit();
     }
 
-    public function update() {
+    public function listUser() {
+        $db = new Database();
+        $id = $_POST['id'];
+
+        $transactionActivity = new TransactionActivity();
+
+        $this->data_activity = $db->selectByID($transactionActivity, $transactionActivity->getId() . equalToIgnoreCase($id));
+        $this->urlEditUser = URL(IURLMemberConstant::AGENDA_WIDYAISWARA_EDIT_USER_URL);
+        include_once FILE_PATH(IViewMemberConstant::AGENDA_WIDYAISWARA_LIST_USER_VIEW_INDEX);
+    }
+
+    public function editUser() {
+        $db = new Database();
+        $id = $_POST['id'];
+
+        $transactionActivity = new TransactionActivity();
+        $transactionActivityDetails = new TransactionActivityDetails();
+        $transactionEvaluation = new TransactionEvaluation();
+        $masterUserAssignment = new MasterUserAssignment();
+        $masterUserMain = new MasterUserMain();
+
+        $data_user = getUserMember();
+
+
+        $this->data_activity_details = $db->selectByID($transactionActivityDetails, $transactionActivityDetails->getId() . equalToIgnoreCase($id));
+        $this->data_activity = $db->selectByID($transactionActivity, $transactionActivity->getId() . equalToIgnoreCase($this->data_activity_details[0][$transactionActivityDetails->getActivityId()]));
+
+        $data_user_assignment = $db->selectByID($masterUserAssignment, $masterUserAssignment->getUser_main_id() . equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()])
+                . " AND " . $masterUserAssignment->getActivity_id() . equalToIgnoreCase($this->data_activity_details[0][$transactionActivityDetails->getActivityId()]));
+
+        $this->data_evaluation = $db->selectByID($transactionEvaluation, $transactionEvaluation->getActivityDetailsId() . equalToIgnoreCase($this->data_activity_details[0][$transactionActivityDetails->getId()])
+                . " AND " . $transactionEvaluation->getUserAssignmentId() . equalToIgnoreCase($data_user_assignment[0][$masterUserAssignment->getId()])
+        );
+//                print_r($this->data_evaluation);
+        $this->urlListUser = URL(IURLMemberConstant::AGENDA_WIDYAISWARA_LIST_USER_URL);
+        $this->urlEditUser = URL(IURLMemberConstant::AGENDA_WIDYAISWARA_EDIT_USER_URL);
+        $this->urlSaveUser = URL(IURLMemberConstant::AGENDA_WIDYAISWARA_SAVE_USER_URL);
+        include_once FILE_PATH(IViewMemberConstant::AGENDA_WIDYAISWARA_EDIT_USER_VIEW_INDEX);
+    }
+
+    public function saveUser() {
         $id = $_POST['id'];
         $db = new Database();
         $db->connect();
-
-
-        $masterUserMain = new MasterUserMain();
-        $masterUserAssignment = new MasterUserAssignment();
-        $data_user = getUserMember();
-//        echo $data_user[$masterUserMain->getEntity()][$masterUserMain->getId()];
-        $data_user_assign = $db->selectByID($masterUserAssignment, ""
-                . $masterUserAssignment->getUser_main_id() . equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()])
-                . " AND " . $masterUserAssignment->getActivity_id() . equalToIgnoreCase($id));
-
         $transactionActivity = new TransactionActivity();
+        $transactionActivityDetails = new TransactionActivityDetails();
+        $transactionEvaluation = new TransactionEvaluation();
+        $transactionEvaluationDetails = new TransactionEvaluationDetails();
+
+        $masterUserAssignment = new MasterUserAssignment();
+        $masterUserMain = new MasterUserMain();
         $masterCategoryAssess = new MasterCategoryAssess();
-//        $masterSubject = new MasterSubject();
-        $linkSubjectAssess = new LinkSubjectAssess();
-        $masterSurveyCategory = new MasterSurveyCategory();
-        $transactionSurvey = new TransactionSurvey();
-        $transactionSurveyDetails = new TransactionSurveyDetails();
+
+        $data_user = getUserMember();
 
 
-        $data_survey_category = $db->selectByID($masterSurveyCategory, $masterSurveyCategory->getCode() . equalToIgnoreCase('SURVEY-KEGIATAN'));
-        $this->data_activity = $db->selectByID($transactionActivity, $transactionActivity->getId() . equalToIgnoreCase($id));
+        $this->data_activity_details = $db->selectByID($transactionActivityDetails, $transactionActivityDetails->getId() . equalToIgnoreCase($id));
+        $this->data_activity = $db->selectByID($transactionActivity, $transactionActivity->getId() . equalToIgnoreCase($this->data_activity_details[0][$transactionActivityDetails->getActivityId()]));
 
-        $db->select($linkSubjectAssess->getEntity(), ""
-                . $masterCategoryAssess->getEntity() . DOT . $masterCategoryAssess->getName() . " as name,"
-                . $masterCategoryAssess->getEntity() . DOT . $masterCategoryAssess->getCode() . " as code,"
-                . $masterCategoryAssess->getEntity() . DOT . $masterCategoryAssess->getId() . " as id", array(
-            $masterCategoryAssess->getEntity()
-                ), ""
-                . $linkSubjectAssess->getEntity() . DOT . $linkSubjectAssess->getCategoryAssessParentId() . EQUAL . $masterCategoryAssess->getEntity() . DOT . $masterCategoryAssess->getId()
-                . " AND " . $linkSubjectAssess->getEntity() . DOT . $linkSubjectAssess->getSubjectId() . equalToIgnoreCase($this->data_activity[0][$transactionActivity->getSubjectId()])
-                . " GROUP BY " . $linkSubjectAssess->getEntity() . DOT . $linkSubjectAssess->getCategoryAssessParentId());
-        $this->data_parent_subject_assess = $db->getResult();
+        $data_user_assignment = $db->selectByID($masterUserAssignment, $masterUserAssignment->getUser_main_id() . equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()])
+                . " AND " . $masterUserAssignment->getActivity_id() . equalToIgnoreCase($this->data_activity_details[0][$transactionActivityDetails->getActivityId()]));
+
+        $sql_assess = SELECT . 'mca1.' . $masterCategoryAssess->getId() . ',' . 'mca1.' . $masterCategoryAssess->getName() . ',' . 'mca1.' . $masterCategoryAssess->getCode() . ''
+                . FROM . $masterCategoryAssess->getEntity() . ' as mca1 '
+                . '' . JOIN . $masterCategoryAssess->getEntity() . ' as mca2' . ON . ''
+                . ' mca1.' . $masterCategoryAssess->getParentId() . EQUAL . 'mca2.' . $masterCategoryAssess->getId()
+                . ' WHERE mca2.' . $masterCategoryAssess->getCode() . equalToIgnoreCase('ET');
+        $db->sql($sql_assess);
+
+        $data_category_asses = $db->getResult();
 
         $result = true;
+        $totalValue = 0;
+        $no = 0;
+        foreach ($data_category_asses as $value_) {
+            $no += 1;
+            $totalValue += intval($_POST[$value_[$masterCategoryAssess->getCode()]]);
+        }
+        $totalAverage = $totalValue / $no;
+        LOGGER('total-average:' . $totalAverage . ' | totalvalue:' . $totalValue);
 
-        if (!empty($data_user_assign)) {
-            foreach ($this->data_parent_subject_assess as $data_parent) {
+        $this->data_evaluation = $db->selectByID($transactionEvaluation, $transactionEvaluation->getActivityDetailsId() . equalToIgnoreCase($this->data_activity_details[0][$transactionActivityDetails->getId()])
+                . " AND " . $transactionEvaluation->getUserAssignmentId() . equalToIgnoreCase($data_user_assignment[0][$masterUserAssignment->getId()])
+        );
+        if (empty($this->data_evaluation)) {
+            $db->insert($transactionEvaluation->getEntity(), array(
+                $transactionEvaluation->getCode() => createRandomBooking() . '|' . $this->data_activity_details[0][$transactionActivityDetails->getCode()],
+                $transactionEvaluation->getName() => $this->data_activity_details[0][$transactionActivityDetails->getCode()],
+                $transactionEvaluation->getValue() => intval($totalValue),
+                $transactionEvaluation->getRateValue() => intval($totalAverage),
+                $transactionEvaluation->getUserAssignmentId() => $data_user_assignment[0][$masterUserAssignment->getId()],
+                $transactionEvaluation->getActivityDetailsId() => $this->data_activity_details[0][$transactionActivityDetails->getId()],
+                $transactionEvaluation->getStatus() => 1,
+                $transactionEvaluation->getCreatedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
+                $transactionEvaluation->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT)
+            ));
+            $rs_insert_evaluation = $db->getResult();
+//        LOGGER($rs_insert_evaluation);
 
-                $db->select($linkSubjectAssess->getEntity(), ""
-                        . $masterCategoryAssess->getEntity() . DOT . $masterCategoryAssess->getName() . " as name,"
-                        . $masterCategoryAssess->getEntity() . DOT . $masterCategoryAssess->getCode() . " as code,"
-                        . $masterCategoryAssess->getEntity() . DOT . $masterCategoryAssess->getId() . " as id", array(
-                    $masterCategoryAssess->getEntity()
-                        ), ""
-                        . $linkSubjectAssess->getEntity() . DOT . $linkSubjectAssess->getCategoryAssessId() . EQUAL . $masterCategoryAssess->getEntity() . DOT . $masterCategoryAssess->getId()
-                        . " AND " . $linkSubjectAssess->getEntity() . DOT . $linkSubjectAssess->getSubjectId() . equalToIgnoreCase($this->data_activity[0][$transactionActivity->getSubjectId()])
-                        . " AND " . $linkSubjectAssess->getEntity() . DOT . $linkSubjectAssess->getCategoryAssessParentId() . equalToIgnoreCase($data_parent['id'])
-                );
-                $data_subject_assess = $db->getResult();
-                $total = 0;
-//            $average = 0;
-                foreach ($data_subject_assess as $value) {
-                    $total += intval($_POST[$value['code']]);
+            if (is_numeric($rs_insert_evaluation[0])) {
+                $result = true;
+            } else {
+                $result = false;
+            }
+            foreach ($data_category_asses as $value) {
+                if ($result == true) {
+                    $db->insert($transactionEvaluationDetails->getEntity(), array(
+                        $transactionEvaluationDetails->getEvaluationId() => $rs_insert_evaluation[0],
+                        $transactionEvaluationDetails->getCategoryAssessId() => $value[$masterCategoryAssess->getId()],
+                        $transactionEvaluationDetails->getValue() => $_POST[$value[$masterCategoryAssess->getCode()]],
+                        $transactionEvaluationDetails->getEvaluatedBy() => $_SESSION[SESSION_USERNAME_GUEST],
+                        $transactionEvaluationDetails->getEvaluatedOn() => date(DATE_FORMAT_PHP_DEFAULT)
+                            )
+                    );
+                    $rs_insert_survey_details = $db->getResult();
+                    if (!is_numeric($rs_insert_survey_details[0])) {
+                        $result = false;
+                    }
                 }
+            }
+        } else {
+            $db->update($transactionEvaluation->getEntity(), array(
+                $transactionEvaluation->getValue() => intval($totalValue),
+                $transactionEvaluation->getRateValue() => intval($totalAverage),
+                $transactionEvaluation->getUserAssignmentId() => $data_user_assignment[0][$masterUserAssignment->getId()],
+                $transactionEvaluation->getActivityDetailsId() => $this->data_activity_details[0][$transactionActivityDetails->getId()],
+                $transactionEvaluation->getStatus() => 1,
+                $transactionEvaluation->getModifiedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
+                $transactionEvaluation->getModifiedOn() => date(DATE_FORMAT_PHP_DEFAULT)
+                    ), $transactionEvaluation->getId() . equalToIgnoreCase($this->data_evaluation[0][$transactionEvaluation->getId()]));
+            $rs_insert_evaluation = $db->getResult();
+//        LOGGER($rs_insert_evaluation);
 
-                $average = intval($total) / count($data_subject_assess);
-                $db->insert($transactionSurvey->getEntity(), array(
-                    $transactionSurvey->getCode() => createRandomBooking() . '|' . $data_parent['code'],
-                    $transactionSurvey->getName() => $data_parent['name'],
-                    $transactionSurvey->getValue() => $total,
-                    $transactionSurvey->getTargetSurveyId() => $id,
-                    $transactionSurvey->getRateValue() => $average,
-                    $transactionSurvey->getUserAssignmentId() => $data_user_assign[0][$masterUserAssignment->getId()],
-                    $transactionSurvey->getSurveyCategoryId() => $data_survey_category[0][$masterSurveyCategory->getId()],
-                    $transactionSurvey->getStatus() => 1,
-                    $transactionSurvey->getCreatedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
-                    $transactionSurvey->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT)
-                ));
-                $rs_insert_survey = $db->getResult();
-                if (is_numeric($rs_insert_survey[0])) {
-                    foreach ($data_subject_assess as $value) {
-                        $db->insert($transactionSurveyDetails->getEntity(), array(
-                            $transactionSurveyDetails->getSurveyId() => $rs_insert_survey[0],
-                            $transactionSurveyDetails->getCategoryAssessId() => $value['id'],
-                            $transactionSurveyDetails->getValue() => $_POST[$value['code']],
-                            $transactionSurveyDetails->getEvaluatedBy() => $_SESSION[SESSION_USERNAME_GUEST],
-                            $transactionSurveyDetails->getEvaluatedOn() => date(DATE_FORMAT_PHP_DEFAULT)
+            if (is_numeric($rs_insert_evaluation[0]) == 1) {
+                $result = true;
+            } else {
+                $result = false;
+            }
+            foreach ($data_category_asses as $value) {
+                if ($result == true) {
+                    $data_value = $db->selectByID($transactionEvaluationDetails, $transactionEvaluationDetails->getEvaluationId() . equalToIgnoreCase($this->data_evaluation[0][$transactionEvaluation->getId()])
+                            . " AND " . $transactionEvaluationDetails->getCategoryAssessId() . equalToIgnoreCase($value[$masterCategoryAssess->getId()]));
+                    if (empty($data_value)) {
+                        $db->insert($transactionEvaluationDetails->getEntity(), array(
+                            $transactionEvaluationDetails->getEvaluationId() => $rs_insert_evaluation[0],
+                            $transactionEvaluationDetails->getCategoryAssessId() => $value[$masterCategoryAssess->getId()],
+                            $transactionEvaluationDetails->getValue() => $_POST[$value[$masterCategoryAssess->getCode()]],
+                            $transactionEvaluationDetails->getEvaluatedBy() => $_SESSION[SESSION_USERNAME_GUEST],
+                            $transactionEvaluationDetails->getEvaluatedOn() => date(DATE_FORMAT_PHP_DEFAULT)
                                 )
                         );
                         $rs_insert_survey_details = $db->getResult();
                         if (!is_numeric($rs_insert_survey_details[0])) {
                             $result = false;
                         }
+                    } else {
+                        $db->update($transactionEvaluationDetails->getEntity(), array(
+                            $transactionEvaluationDetails->getValue() => $_POST[$value[$masterCategoryAssess->getCode()]],
+                            $transactionEvaluationDetails->getEvaluatedBy() => $_SESSION[SESSION_USERNAME_GUEST],
+                            $transactionEvaluationDetails->getEvaluatedOn() => date(DATE_FORMAT_PHP_DEFAULT)
+                                ), $transactionEvaluationDetails->getEvaluationId() . equalToIgnoreCase($this->data_evaluation[0][$transactionEvaluation->getId()])
+                                . " AND " . $transactionEvaluationDetails->getCategoryAssessId() . equalToIgnoreCase($value[$masterCategoryAssess->getId()])
+                        );
+                        $rs_insert_survey_details = $db->getResult();
+                        if (is_numeric($rs_insert_survey_details[0]) != 1) {
+                            $result = false;
+                        }
                     }
-                } else {
-                    $result = false;
                 }
             }
-            if ($result == true) {
-                echo toastAlert("success", lang('general.title_update_success'), lang('general.message_update_success'));
-            } else {
-                echo toastAlert("error", lang('general.title_update_error'), lang('general.message_update_error'));
-            }
-        } else {
-            echo toastAlert("error", lang('general.title_update_error'), "Anda Belum terdaftar pada kegiatan ini");
         }
-        echo postAjaxPagination();
+        if ($result == true) {
+            echo toastAlert("success", lang('general.title_update_success'), lang('general.message_update_success'));
+            echo resultPageMsg("danger", lang('general.title_update_error'), lang('general.message_update_error'));
+            echo writeMainJavascript("postAjaxEdit('" . URL(IURLMemberConstant::AGENDA_WIDYAISWARA_LIST_USER_URL) . "','id=" . $this->data_activity_details[0][$transactionActivityDetails->getActivityId()] . "')");
+        } else {
+            echo resultPageMsg("danger", lang('general.title_update_error'), lang('general.message_update_error'));
+            echo toastAlert("error", lang('general.title_update_error'), lang('general.message_update_error'));
+        }
     }
 
     public function listData() {
+        $db = new Database();
+//        $db->connect();
         $transactionActivity = new TransactionActivity();
         $this->modelSubject = $transactionActivity;
         $masterUserAssignment = new MasterUserAssignment();
         $masterUserMain = new MasterUserMain();
-        
+        $securityRole = new SecurityRole();
+
+
         $data_user = getUserMember();
+
+        $data_role = $db->selectByID($securityRole, $securityRole->getCode() . equalToIgnoreCase('TRAINER'));
 //        echo $data_user[$masterUserMain->getId()];
         $this->search_list = $transactionActivity->getEntity();
-        $this->select_entity = $transactionActivity->getEntity().'.*';
+        $this->select_entity = $transactionActivity->getEntity() . '.*';
         $this->join_list = array($masterUserAssignment->getEntity());
-        $this->where_list = $transactionActivity->getEntity().DOT.$transactionActivity->getId().EQUAL.$masterUserAssignment->getEntity().DOT.$masterUserAssignment->getActivity_id()
-                . " AND ".$masterUserAssignment->getEntity().DOT.$masterUserAssignment->getUser_main_id().equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()]);
+        $this->where_list = $transactionActivity->getEntity() . DOT . $transactionActivity->getId() . EQUAL . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getActivity_id()
+                . " AND " . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getUser_main_id() . equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()])
+                . " AND " . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getRoleId() . equalToIgnoreCase($data_role[0][$securityRole->getId()]);
 //        echo $_POST['search_by'];
         $sr = $this->modelSubject->search($_POST['search_by']);
-        
+
         if (empty($sr)) {
             $_POST['search_by'] = "";
             $_POST['search_pagination'] = "";

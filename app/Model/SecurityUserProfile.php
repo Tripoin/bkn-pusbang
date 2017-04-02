@@ -9,8 +9,8 @@ class SecurityUserProfile extends GeneralAuditrail {
 
 //    private $filename = 'user_profile';
 //    private $entity = 'security_user_profile';
-    
-    
+
+
     public $fullname = 'fullname';
     public $birthdate = 'dob';
     public $place = 'pob';
@@ -30,12 +30,11 @@ class SecurityUserProfile extends GeneralAuditrail {
     public $city = 'city_id';
     public $district = 'district_id';
     public $village = 'village_id';
-    
 
     public function __construct() {
         $this->setEntity('sec_user_profile');
     }
-    
+
     function getAddressId() {
         return $this->addressId;
     }
@@ -44,7 +43,6 @@ class SecurityUserProfile extends GeneralAuditrail {
         $this->addressId = $addressId;
     }
 
-        
     function getReligionId() {
         return $this->religionId;
     }
@@ -53,7 +51,6 @@ class SecurityUserProfile extends GeneralAuditrail {
         $this->religionId = $religionId;
     }
 
-        
     function getContactId() {
         return $this->contactId;
     }
@@ -62,7 +59,7 @@ class SecurityUserProfile extends GeneralAuditrail {
         $this->contactId = $contactId;
     }
 
-        function getUserId() {
+    function getUserId() {
         return $this->userId;
     }
 
@@ -70,12 +67,10 @@ class SecurityUserProfile extends GeneralAuditrail {
         $this->userId = $userId;
     }
 
-        
-    public function getUser(){
+    public function getUser() {
         return new SecurityUser();
     }
 
-    
     function getFullname() {
         return $this->fullname;
     }
@@ -196,7 +191,16 @@ class SecurityUserProfile extends GeneralAuditrail {
         $this->village = $village;
     }
 
-        function setData($data) {
+    public function search($key) {
+//        parent::search($key);
+        if (isset($this->$key)) {
+            return $this->$key;
+        } else {
+            return "";
+        }
+    }
+
+    function setData($data) {
         $array_data = array();
 //        unset($_POST['fullname'])
         foreach ($data as $key => $value) {
@@ -205,6 +209,4 @@ class SecurityUserProfile extends GeneralAuditrail {
         return $array_data;
     }
 
-
 }
-

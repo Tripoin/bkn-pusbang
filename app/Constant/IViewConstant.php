@@ -75,6 +75,9 @@ interface IViewConstant {
     const SURVEY_TRAINER_VIEW_INDEX = 'view/page/survey/survey-trainer';
     const SURVEY_ORGANIZER_VIEW_INDEX = 'view/page/survey/survey-organizer';
     
+    const REGISTRATION_INTERNAL_VIEW_INDEX = 'view/page/registration/internal';
+    const REGISTRATION_INTERNAL_ACTIVITY_VIEW_INDEX = 'view/page/registration/internal-activity';
+    
 
 
 }

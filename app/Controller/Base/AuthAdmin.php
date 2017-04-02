@@ -1,5 +1,4 @@
 <?php
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -172,8 +171,8 @@ class AuthAdmin {
                 $result = array("result" => "error", "title" => "Login Failed", "message" => "Email Or Password Is Incorrect");
                 echo json_encode($result);
             } else {
-                
-                
+
+
 //                $dbNew->selectByID($user->getEntity(), $user->getCode() . EQUAL . "'" . $code . "'");
 //                $rsPostNews = $dbNew->getResult();
 //                if ($rsPostNew[0][$user->getPassword()] == hash("sha256", $password . $rsPostNew[0][$user->getSalt()])) {
@@ -451,6 +450,23 @@ class AuthAdmin {
 
     public function logout() {
 //        ini_set("display_errors", "Off");
+        if (isset($_GET['sesskey'])) {
+//            unset($_COOKIE['MoodleSession']);
+
+            $url = "http://54.251.168.102/e-learning/login/logout.php";
+            ?>
+            <form
+                id="moodleformlogout" target="iframe"
+                method="GET" action="<?= $url; ?>"
+                >
+                <input type="hidden" name="sesskey" value="<?= $_GET['sesskey']; ?>"/>
+            </form>
+            <iframe name="iframe" id="moodleframelogout" height="0" width="0"></iframe>
+            <script>
+                document.getElementById('moodleformlogout').submit();
+            </script>
+            <?php
+        }
         session_destroy();
         if (isset($_SESSION[SESSION_ADMIN_USERNAME])) {
             unset($_SESSION[SESSION_ADMIN_USERNAME]);

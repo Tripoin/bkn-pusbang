@@ -193,4 +193,6 @@ return [
     'waiting'=>'Waiting',
     'total'=>'Total',
     'average'=>'Average',
+    'registration_internal'=>'Internal Registration',
+    'registration_internal_activity'=>'Internal Registrasi Activity',
 ];

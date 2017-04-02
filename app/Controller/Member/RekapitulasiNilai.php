@@ -14,6 +14,7 @@ use app\Model\MasterUserAssignment;
 use app\Model\MasterUserMain;
 use app\Model\TransactionSurvey;
 use app\Model\TransactionSurveyDetails;
+use app\Model\SecurityRole;
 use app\Constant\IViewMemberConstant;
 use app\Util\Database;
 
@@ -173,8 +174,28 @@ class RekapitulasiNilai extends ControllerMember {
     }
 
     public function listData() {
-        $this->modelSubject = new TransactionActivity();
+        $db = new Database();
+//        $db->connect();
+        $transactionActivity = new TransactionActivity();
+        $this->modelSubject = $transactionActivity;
+        $masterUserAssignment = new MasterUserAssignment();
+        $masterUserMain = new MasterUserMain();
+        $securityRole = new SecurityRole();
+
+
+        $data_user = getUserMember();
+
+        $data_role = $db->selectByID($securityRole, $securityRole->getCode() . equalToIgnoreCase('PARTICIPANT'));
+//        echo $data_user[$masterUserMain->getId()];
+        $this->search_list = $transactionActivity->getEntity();
+        $this->select_entity = $transactionActivity->getEntity() . '.*';
+        $this->join_list = array($masterUserAssignment->getEntity());
+        $this->where_list = $transactionActivity->getEntity() . DOT . $transactionActivity->getId() . EQUAL . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getActivity_id()
+                . " AND " . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getUser_main_id() . equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()])
+                . " AND " . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getRoleId() . equalToIgnoreCase($data_role[0][$securityRole->getId()]);
+//        echo $_POST['search_by'];
         $sr = $this->modelSubject->search($_POST['search_by']);
+
         if (empty($sr)) {
             $_POST['search_by'] = "";
             $_POST['search_pagination'] = "";

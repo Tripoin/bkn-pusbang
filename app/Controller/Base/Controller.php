@@ -37,6 +37,7 @@ abstract class Controller implements IController {
     public $viewEdit = '';
     public $urlDeleteCollection = '';
     public $search_by = '';
+    public $search_datatable = null;
     public $select_entity = null;
     public $search_filter = array();
     public $where_list = null;
@@ -165,12 +166,16 @@ abstract class Controller implements IController {
             $Datatable->current_page = 1;
         }
         $search = $_POST['search_pagination'];
-        if ($_POST['search_by'] == '') {
-            $Datatable->search = 'code>' . $search;
-        } else if ($_POST['search_by'] == 'null') {
-            $Datatable->search = 'code>' . $search;
+        if ($this->search_datatable == null) {
+            if ($_POST['search_by'] == '') {
+                $Datatable->search = 'code>' . $search;
+            } else if ($_POST['search_by'] == 'null') {
+                $Datatable->search = 'code>' . $search;
+            } else {
+                $Datatable->search = $_POST['search_by'] . '>' . $search;
+            }
         } else {
-            $Datatable->search = $_POST['search_by'] . '>' . $search;
+            $Datatable->search = $this->search_datatable;
         }
         if (getActionType(ACTION_TYPE_CREATE) != true) {
             $Datatable->createButton(false);
@@ -184,6 +189,7 @@ abstract class Controller implements IController {
             $list_data = $Datatable->select_pagination($data, $data->getEntity(), $this->where_list, $this->join_list, $this->search_list, $this->orderBy, $this->select_entity);
         }
 
+//        print_r($list_data);
 //        $this->list_data = $list_data;
 //        print_r($this->unsetDataModel($this->list_data['item']));
 //        echo json_encode($list_data['item']);
@@ -218,10 +224,10 @@ abstract class Controller implements IController {
         $datas = array();
         if (!empty($data)) {
             foreach ($data as $value) {
-                if(!in_array($value['Field'], array($createdOn,$createdBy,$modifiedOn,$modifiedBy,$status))){
+                if (!in_array($value['Field'], array($createdOn, $createdBy, $modifiedOn, $modifiedBy, $status))) {
                     $datas[] = $value['Field'];
                 }
-                
+
 //            foreach (array_keys($data) as $key) {
 //            echo $data[$key]['created_on'];
 //                $rs_column[0]

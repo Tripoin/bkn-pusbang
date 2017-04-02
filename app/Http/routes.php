@@ -174,6 +174,9 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
     Routes::setScaffolding(IURLMemberConstant::REKAPITULASI_NILAI_URL, 'app\Controller\Member\RekapitulasiNilai');
     Routes::setScaffolding(IURLMemberConstant::REPORT_SURVEY_ORGANIZER_URL, 'app\Controller\Member\Report\ReportOrganizerSurvey');
     Routes::setScaffolding(IURLMemberConstant::AGENDA_WIDYAISWARA_URL, 'app\Controller\Member\AgendaActivity\AgendaWidyaiswara');
+    Routes::set(IURLMemberConstant::AGENDA_WIDYAISWARA_LIST_USER_URL, 'app\Controller\Member\AgendaActivity\AgendaWidyaiswara@listUser');
+    Routes::set(IURLMemberConstant::AGENDA_WIDYAISWARA_EDIT_USER_URL, 'app\Controller\Member\AgendaActivity\AgendaWidyaiswara@editUser');
+    Routes::set(IURLMemberConstant::AGENDA_WIDYAISWARA_SAVE_USER_URL, 'app\Controller\Member\AgendaActivity\AgendaWidyaiswara@saveUser');
     
 
     Routes::setScaffolding(IURLMemberConstant::SURVEY_TRAINER_URL, 'app\Controller\Member\Survey\TrainerSurvey');
@@ -300,6 +303,18 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
             Routes::set(IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/{activity}/approve', 'app\Controller\Approval\ActivityRegistration@approveData');
             Routes::set(IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/{activity}/reject', 'app\Controller\Approval\ActivityRegistration@rejectData');
             Routes::set(IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/{activity}/reject-detail', 'app\Controller\Approval\ActivityRegistration@rejectDetail');
+            
+            Routes::setScaffolding(IURLConstant::REGISTRATION_INTERNAL_INDEX_URL, 'app\Controller\Registration\InternalRegistration');
+            
+            Routes::setScaffolding(IURLConstant::REGISTRATION_INTERNAL_ACTIVITY_INDEX_URL, 'app\Controller\Registration\InternalRegistrationActivity');
+            Routes::set(IURLConstant::REGISTRATION_INTERNAL_ACTIVITY_INDEX_URL . '/assignment/{activity}', 'app\Controller\Registration\InternalRegistrationActivity@listAssignment');
+            Routes::set(IURLConstant::REGISTRATION_INTERNAL_ACTIVITY_INDEX_URL . '/assignment/{activity}/create', 'app\Controller\Registration\InternalRegistrationActivity@createAssignment');
+            Routes::set(IURLConstant::REGISTRATION_INTERNAL_ACTIVITY_INDEX_URL . '/assignment/{activity}/edit', 'app\Controller\Registration\InternalRegistrationActivity@editAssignment');
+            Routes::set(IURLConstant::REGISTRATION_INTERNAL_ACTIVITY_INDEX_URL . '/assignment/{activity}/list-user', 'app\Controller\Registration\InternalRegistrationActivity@listUserAssignment');
+            Routes::set(IURLConstant::REGISTRATION_INTERNAL_ACTIVITY_INDEX_URL . '/assignment/{activity}/save', 'app\Controller\Registration\InternalRegistrationActivity@saveAssignment');
+            Routes::set(IURLConstant::REGISTRATION_INTERNAL_ACTIVITY_INDEX_URL . '/assignment/{activity}/update', 'app\Controller\Registration\InternalRegistrationActivity@updateAssignment');
+            Routes::set(IURLConstant::REGISTRATION_INTERNAL_ACTIVITY_INDEX_URL . '/assignment/{activity}/delete', 'app\Controller\Registration\InternalRegistrationActivity@deleteAssignment');
+            Routes::set(IURLConstant::REGISTRATION_INTERNAL_ACTIVITY_INDEX_URL . '/assignment/{activity}/deleteCollection', 'app\Controller\Registration\InternalRegistrationActivity@deleteCollectionAssignment');
         });
     }
 }

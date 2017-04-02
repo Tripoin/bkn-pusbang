@@ -194,4 +194,6 @@ return [
     'waiting'=>'Menunggu',
     'total'=>'Total',
     'average'=>'Rata rata',
+    'registration_internal'=>'Registrasi Internal',
+    'registration_internal_activity'=>'Registrasi Internal Kegiatan',
 ];

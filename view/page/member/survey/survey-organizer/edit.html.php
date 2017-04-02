@@ -76,7 +76,7 @@ echo Form()->formLayout(HORIZONTAL)
             foreach ($data_subject_assess as $value) {
                 echo Form()->formLayout(HORIZONTAL)
                         ->type('number')
-                        ->attr('onkeyup="this.onchange()" onchange="calculateAll(' . $data_parent['id'] . ')" tripoin="number"')
+                        ->attr('onkeyup="this.onchange()" onchange="calculateAll(' . $data_parent['id'] . ')" tripoin="number" min="0"')
                         ->id($value['id'])
                         ->name($value['code'])
                         ->title($value['name'])

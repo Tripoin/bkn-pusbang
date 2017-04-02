@@ -12,7 +12,7 @@ $db->connect();
 $securityRole = new SecurityRole();
 
 $data_role = $db->selectByID($securityRole, $securityRole->getCode() . equalToIgnoreCase('PARTICIPANT'));
-
+$Datatable->createButton(false);
 //    $Datatable->styleHeader(array("text-align:center;"));
 $Datatable->styleColumn(array("text-align:center;width:5%;", "", "text-align:center;", "", "", "text-align:center;", "text-align:center;", "text-align:center;width:100px;"));
 $Datatable->header(array(lang("general.no"), lang("transaction.type"),
@@ -21,8 +21,10 @@ $Datatable->header(array(lang("general.no"), lang("transaction.type"),
     lang('transaction.budget_type'),
     lang("transaction.excecution_time"),
     lang("transaction.number_of_participants"),
-    lang("transaction.assignment"),
-    lang("general.action")));
+//    lang("transaction.assignment"),
+//    lang("general.action")
+        )
+);
 $no = $list_data['from'];
 
 
@@ -37,7 +39,7 @@ foreach ($list_data['item'] as $value) {
 
     $db->sql("SELECT COUNT(" . $userAssignment->getId() . ") as count FROM " . $userAssignment->getEntity() . ""
             . " WHERE " . $userAssignment->getActivity_id() . EQUAL . $value[$data->getId()]
-            . " AND ".$userAssignment->getRoleId() . EQUAL . $data_role[0][$securityRole->getId()]
+            . " AND " . $userAssignment->getRoleId() . EQUAL . $data_role[0][$securityRole->getId()]
     );
     $rs_assign = $db->getResult();
     $exTime = lang('transaction.tentative');
@@ -47,10 +49,11 @@ foreach ($list_data['item'] as $value) {
     } else if ($value[$data->getStartActivity()] == null) {
         $exTime = lang('transaction.tentative');
     }
-    $panitia = '<a href="javascript:void(0)" onclick="pageAssignment(' . $value[$data->getId()] . ')">' . lang("transaction.organizer") . '</a>';
-    $list_peserta = '<a href="javascript:void(0)" onclick="pageListPeserta(' . $value[$data->getId()] . ')">' . $rs_assign[0]['count'] . "/" . $value[$data->getQuota()] . '</a>';
-    $detailSubject = '<a href="javascript:void(0)" onclick="pageDetails(' . $value[$data->getId()] . ')">' . $exTime . '</a>';
-  
+//    $panitia = '<a href="javascript:void(0)" onclick="pageAssignment(' . $value[$data->getId()] . ')">' . lang("transaction.organizer") . '</a>';
+    $list_peserta = '<a href="javascript:void(0)" onclick="pageAssignment(' . $value[$data->getId()] . ')">' . $rs_assign[0]['count'] . "/" . $value[$data->getQuota()] . '</a>';
+    
+//    $detailSubject = '<a href="javascript:void(0)" onclick="pageDetails(' . $value[$data->getId()] . ')">' . $exTime . '</a>';
+    $detailSubject = $exTime;
     $Datatable->body(array(
         $no,
         $value[$data->getSubjectName()],
@@ -59,8 +62,9 @@ foreach ($list_data['item'] as $value) {
 //        $value[$data->getName()],
         $detailSubject,
         $list_peserta,
-        $panitia,
-        $action_edit . $action_delete));
+//        $panitia,
+//        $action_edit . $action_delete
+    ));
     $no += 1;
 }
 
@@ -69,8 +73,9 @@ echo $Datatable->show();
 
 <script>
     $(function () {
-        $('.portlet-title > div > span').html('<?= lang('transaction.agenda_subject'); ?>');
+        $('.portlet-title > div > span').html('<?= lang('general.registration_internal_activity'); ?>');
         $('#buttonBack').remove();
+        
     });
     function pageAssignment(activity) {
         $('#urlPage').val('<?= URL(getAdminTheme() . $this->indexUrl . '/assignment/'); ?>' + activity);

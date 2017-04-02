@@ -15,7 +15,7 @@ namespace app\Model;
  */
 use app\Model\Auditrail;
 
-class GeneralAuditrail extends Auditrail {
+abstract class GeneralAuditrail extends Auditrail {
 
     //put your code here
     protected $filename = 'default';
@@ -84,6 +84,18 @@ class GeneralAuditrail extends Auditrail {
             $array_data[$this->$key] = $value;
         }
         return $array_data;
+    }
+    
+    public function data(){
+        $array = array();
+        $newData = new $this;
+        foreach ($this as $key => $value) {
+            if($this->$key != $newData->$key){
+                $array[$newData->$key] = $value;
+            }
+            
+        }
+        return $array;
     }
 
 }

@@ -18,6 +18,7 @@ use app\Model\MasterSystemParameter;
 use app\Model\MasterLanguage;
 use app\Util\Database;
 use app\Util\Form;
+use app\Util\RestClient\TripoinRestClient;
 
 class Settings {
 
@@ -27,8 +28,10 @@ class Settings {
         setTitleBody(lang('security.setting'));
         setBreadCrumb(array(lang('security.setting') => FULLURL()));
     }
-    
+
     public function eLearning() {
+
+        
         include 'view/page/security/settings/e-learning.html.php';
     }
 
@@ -37,9 +40,9 @@ class Settings {
         $Form = new Form();
         $mo = new MasterSystemParameter();
         $db = new Database();
-        
+
         $ml = new MasterLanguage();
-        $list_ml = $db->selectByID($ml, $ml->getStatus().EQUAL.ONE);
+        $list_ml = $db->selectByID($ml, $ml->getStatus() . EQUAL . ONE);
         $data_ml = convertJsonCombobox($list_ml, $ml->getCode(), $ml->getName());
         include 'view/page/security/settings/index.html.php';
     }
