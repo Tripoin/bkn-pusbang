@@ -584,19 +584,22 @@ class AgendaOrganizer {
         $user = new SecurityUser();
         $userProfile = new SecurityUserProfile();
         $group = new SecurityGroup();
+        $userAssignment = new MasterUserAssignment();
         $whereList = ""
-                . $userMain->getEntity() . "." . $userMain->getUser_profile_id() . EQUAL . $userProfile->getEntity() . "." . $userProfile->getId() . " AND "
-                . $userProfile->getEntity() . "." . $userProfile->getUserId() . EQUAL . $user->getEntity() . "." . $user->getId() . " AND "
-                . $user->getEntity() . "." . $user->getGroupId() . EQUAL . $group->getEntity() . "." . $group->getId() . " AND "
-                . $group->getEntity() . "." . $group->getCode() . EQUAL . "'INTERNAL'";
+            . $userMain->getEntity() . "." . $userMain->getUser_profile_id() . EQUAL . $userProfile->getEntity() . "." . $userProfile->getId() . " AND "
+            . $userProfile->getEntity() . "." . $userProfile->getUserId() . EQUAL . $user->getEntity() . "." . $user->getId() . " AND "
+            . $user->getEntity() . "." . $user->getGroupId() . EQUAL . $group->getEntity() . "." . $group->getId() . " AND "
+            . $group->getEntity() . "." . $group->getCode() . EQUAL . "'INTERNAL'";
         $db->connect();
-        $db->select($userMain->getEntity(), $userMain->getEntity() . "." . $userMain->getId() . "," . $userProfile->getEntity() . "." . $userProfile->getName(), array(
-            $user->getEntity(),
-            $userProfile->getEntity(),
-            $group->getEntity(),
-                ), $whereList);
+        $db->select($userMain->getEntity(), $userMain->getEntity() . "." . $userMain->getId() . "," . $userProfile->getEntity() . "." . $userProfile->getName(),
+            array(
+                $user->getEntity(),
+                $userProfile->getEntity(),
+                $group->getEntity()
+            ),
+            $whereList);
         $rs_user = $db->getResult();
-//        print_r($rs_user);
+
         $this->data_user = convertJsonCombobox($rs_user, $userMain->getId(), $userProfile->getName());
         include_once FILE_PATH(IViewMemberConstant::AGENDA_ORGANIZER_VIEW . '/details/create.html.php');
     }
@@ -611,38 +614,27 @@ class AgendaOrganizer {
         $rs_cur = $db->selectByID($masterCurriculum);
         $this->data_curriculum = convertJsonCombobox($rs_cur, $masterCurriculum->getId(), $masterCurriculum->getName());
 
-        $activityData = new TransactionActivity();
-        $db->select($activityDetails->getEntity(), $activityDetails->getEntity() . "." .$activityDetails->getActivityId() , null,
-            $activityDetails->getEntity() . "." . $activityDetails->getId() . EQUAL . $id);
-        $idActivity = $db->getResult()[0]["activity_id"];
-        print_r($idActivity);
         $userMain = new MasterUserMain();
         $user = new SecurityUser();
         $userProfile = new SecurityUserProfile();
         $group = new SecurityGroup();
-        $userAssignment = new MasterUserAssignment();
         $whereList = ""
                 . $userMain->getEntity() . "." . $userMain->getUser_profile_id() . EQUAL . $userProfile->getEntity() . "." . $userProfile->getId() . " AND "
                 . $userProfile->getEntity() . "." . $userProfile->getUserId() . EQUAL . $user->getEntity() . "." . $user->getId() . " AND "
                 . $user->getEntity() . "." . $user->getGroupId() . EQUAL . $group->getEntity() . "." . $group->getId() . " AND "
-                . $userAssignment->getEntity() . "." . $userAssignment->getUser_main_id() . EQUAL . $userMain->getEntity() . "." . $userMain->getId() . " AND "
-                . $group->getEntity() . "." . $group->getCode() . EQUAL . "'INTERNAL'" . " AND "
-                . $userAssignment->getEntity() . "." . $userAssignment->getActivity_id() . "<>" . $idActivity;
+                . $group->getEntity() . "." . $group->getCode() . EQUAL . "'INTERNAL'";
         $db->connect();
         $db->select($userMain->getEntity(), $userMain->getEntity() . "." . $userMain->getId() . "," . $userProfile->getEntity() . "." . $userProfile->getName(),
             array(
                 $user->getEntity(),
                 $userProfile->getEntity(),
-                $group->getEntity(),
-                $userAssignment->getEntity()
+                $group->getEntity()
             ),
             $whereList);
         $rs_user = $db->getResult();
-//        print_r($rs_user);
 
         $get_data = $db->selectByID($activityDetails, $activityDetails->getId() . EQUAL . $id);
 
-//        print_r($get_data);
         $this->data_user = convertJsonCombobox($rs_user, $userMain->getId(), $userProfile->getName());
         include_once FILE_PATH(IViewMemberConstant::AGENDA_ORGANIZER_VIEW . '/details/create.html.php');
     }
