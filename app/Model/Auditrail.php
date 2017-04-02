@@ -13,7 +13,7 @@ namespace app\Model;
  *
  * @author sfandrianah
  */
-abstract class Auditrail {
+class Auditrail {
     //put your code here
     protected $status = 'status';
     protected $createdByUsername = 'created_by';
