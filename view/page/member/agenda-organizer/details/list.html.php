@@ -35,8 +35,16 @@ $Datatable->backButton(true);
 
 //$Datatable->headerButton(false);
 //    $Datatable->styleHeader(array("text-align:center;"));
-$Datatable->styleColumn(array("text-align:center;width:5%;", "", "", "text-align:center;width:100px;"));
-$Datatable->header(array(lang("general.no"),
+$Datatable->styleHeader(array(
+    "text-align: center;width:15%;",
+    "text-align: center;width:22%;",
+    "text-align: center;width:22%;",
+    "text-align: center;width:22%;",
+    "text-align: center;width:22%;",
+    "text-align: center;width:22%;",
+    "text-align: center;width:22%;"));
+//$Datatable->styleColumnBody(array("text-align:center;width:5%;", "", "", "text-align:center;width:100px;"));
+$Datatable->header(array(
     lang("transaction.day/date"),
     lang("transaction.time"),
     lang("transaction.material"),
@@ -52,12 +60,11 @@ foreach ($list_data['item'] as $value) {
 //    $action_edit = $Button->url($this->editUrl)->value($value[$data->getId()])->buttonEdit();
         $action_edit = Button()->setClass('btn btn-success')->onClick('ajaxPostModalManual(\'' . URL(IURLMemberConstant::AGENDA_ORGANIZER_URL . '/details/' . $activity . '/edit') . '\',\'id=' . $value[$data->getId()] . '\')')->icon('fa fa-pencil-square-o')->title(lang("general.edit"))->buttonCircleManual();
 //    $panitia = '<a href="javascript:void(0)" onclick="postAjaxEdit(\'' . $this->editUrl . '\',\'id=\')">' . lang("transaction.organizer") . '</a>';
-        $startTime = date('h:i', strtotime($value[$activityDetails->getStartTime()]));
-        $endTime = date('h:i', strtotime($value[$activityDetails->getEndTime()]));
+        $startTime = date('H:i', strtotime($value[$activityDetails->getStartTime()]));
+        $endTime = date('H:i', strtotime($value[$activityDetails->getEndTime()]));
 
         $Datatable->body(array(
-            $no,
-            fullDateString($value[$activityDetails->getStartTime()]),
+            date('d-M-Y', strtotime($value[$activityDetails->getStartTime()])),
             $startTime . " - " . $endTime,
             $value[$activityDetails->getMaterialName()],
             $value[$activityDetails->getDuration()],

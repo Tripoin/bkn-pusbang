@@ -13,6 +13,7 @@ namespace app\Controller\Member;
  *
  * @author sfandrianah
  */
+use app\Model\SecurityRole;
 use app\Model\TransactionActivity;
 use app\Model\TransactionActivityDetails;
 use app\Constant\IURLMemberConstant;
@@ -68,6 +69,8 @@ class AgendaOrganizer {
         $db = new Database();
 //        $group = new SecurityGroup();
         $data = new TransactionActivity();
+        $userAssignment = new MasterUserAssignment();
+        $secRole = new SecurityRole();
 //        $userMain = new MasterUserMain();
         if ($_POST['per_page'] == "") {
             $Datatable->per_page = 10;
@@ -89,9 +92,17 @@ class AgendaOrganizer {
             $search = $data->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search . "%'";
         }
 
-        $whereList = $search;
-        $list_data = $Datatable->select_pagination($data, $data->getEntity(), $whereList, null, null, null, null
-                , null);
+        $userMember = getUserMember()["mst_user_main"];
+
+        $whereList =
+            $userAssignment->getEntity() . "." . $userAssignment->getActivity_id() . EQUAL . $data->getEntity() . "." . $data->getId() . " AND " .
+            $userAssignment->getEntity() . "." . $userAssignment->getRoleId() . EQUAL . $secRole->getEntity() . "." . $secRole->getId() . " AND " .
+            $userAssignment->getEntity() . "." . $userAssignment->getUser_main_id() . EQUAL . $userMember["id"] . " AND " .
+            $secRole->getEntity()        . "." . $secRole->getCode() . equalToIgnoreCase("ORGANIZER");
+        $whereList = $whereList . " AND " . $search;
+
+        $list_data = $Datatable->select_pagination($data, $data->getEntity(), $whereList, array($userAssignment->getEntity(), $secRole->getEntity()),
+            null, null, $data->getEntity().'.*', null);
 
 
         $user = new SecurityUser();
