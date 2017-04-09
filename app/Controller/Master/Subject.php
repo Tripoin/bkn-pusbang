@@ -19,6 +19,7 @@ use app\Constant\IViewConstant;
 use app\Constant\IRestURLConstant;
 use app\Constant\IRestCommandConstant;
 use app\Model\MasterMaterialSubject;
+use app\Model\MasterUnit;
 use app\Model\MasterUserAssignment;
 use app\Model\MasterUserMain;
 use app\Util\Button;
@@ -121,31 +122,90 @@ class Subject extends ControllerRestUI {
     }
 
     public function curriculums($subjectId) {
+//        $Datatable = new DataTable();
+//        $db = new Database();
+//        $db->connect();
+//        $curriculums=array();
+//        $masterCurriculum =new MasterCurriculum();
+//
+//        $curriculums = $db->selectByID($masterCurriculum,$masterCurriculum->getSubjectId(). "='" . $subjectId. "'");
+//
+//
+//        if ($_POST['per_page'] == "") {
+//            $Datatable->per_page = 5;
+//        } else {
+//            $Datatable->per_page = $_POST['per_page'];
+//        }
+//        $Datatable->urlDeleteCollection($this->urlDeleteCollection);
+//        $Datatable->searchFilter($this->search_filter);
+//        $Datatable->current_page = $_POST['current_page'];
+//        if ($_POST['current_page'] == '') {
+//            $Datatable->current_page = 1;
+//        }
+//        $search = $_POST['search_pagination'];
+//        if ($_POST['search_by'] == '') {
+//            $search = " AND " . $masterCurriculum->getEntity() . ".code LIKE  '%" . $search . "%'";
+//        } else if ($_POST['search_by'] == 'null') {
+//            $search = " AND " . $masterCurriculum->getEntity() . ".code LIKE  '%" . $search . "%'";
+//        } else {
+//            $search = " AND " . $masterCurriculum->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search . "%'";
+//        }
+//
+//        $list_data = $Datatable->select_pagination($masterCurriculum,$masterCurriculum->getEntity(),
+//            $masterCurriculum->getSubjectId().EQUAL.$subjectId.$search AND );
+        $Form = new Form();
         $Datatable = new DataTable();
-        $masterCurriculum = new MasterCurriculum();
-
+        $Button = new Button();
+        $db = new Database();
+//        $group = new SecurityGroup();
+        $data = new MasterCurriculum();
+        $masterMaterialSubject = new MasterMaterialSubject();
+        $masterUnit = new MasterUnit();
         if ($_POST['per_page'] == "") {
             $Datatable->per_page = 5;
         } else {
             $Datatable->per_page = $_POST['per_page'];
         }
+
+//        }
         $Datatable->urlDeleteCollection($this->urlDeleteCollection);
-        $Datatable->searchFilter($this->search_filter);
+        $Datatable->searchFilter(array(
+                "code" => lang('general.code'),
+                "name" => lang('general.name'),
+            )
+        );
+//        $Datatable->se
         $Datatable->current_page = $_POST['current_page'];
         if ($_POST['current_page'] == '') {
             $Datatable->current_page = 1;
         }
+//        echo $_POST['search_by'];
         $search = $_POST['search_pagination'];
         if ($_POST['search_by'] == '') {
-            $search = " AND " . $masterCurriculum->getEntity() . ".code LIKE  '%" . $search . "%'";
+
         } else if ($_POST['search_by'] == 'null') {
-            $search = " AND " . $masterCurriculum->getEntity() . ".code LIKE  '%" . $search . "%'";
+
         } else {
-            $search = " AND " . $masterCurriculum->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search . "%'";
+            $sr = $masterMaterialSubject->search($_POST['search_by']);
+            if (!empty($sr)) {
+                $search = " AND " . $data->getEntity() . "." . $_POST['search_by'] . " LIKE  '%" . $search . "%'";
+            }
         }
 
-        $list_data = $Datatable->select_pagination($masterCurriculum,$masterCurriculum->getEntity(),
-            $masterCurriculum->getSubjectId().EQUAL.$subjectId.$search);
+//        echo $Datatable->search;
+        $joins = array($masterMaterialSubject->getEntity(), $masterUnit->getEntity());
+        $whereList = $data->getEntity() . DOT . $data->getMaterialSubjectId() . EQUAL . $masterMaterialSubject->getEntity() . DOT . $masterMaterialSubject->getId()
+            . " AND " . $data->getEntity() . DOT . $data->getSubjectId() . EQUAL . $subjectId
+            . " AND " .$masterUnit->getEntity() . DOT . $masterUnit->getId() . EQUAL .  $masterMaterialSubject->getEntity() . DOT . $masterMaterialSubject->getUnitId()
+            . $search;
+
+        $list_data = $Datatable->select_pagination($data, $data->getEntity(), $whereList, $joins, $masterMaterialSubject->getEntity(), null, ""
+            . $masterMaterialSubject->getEntity() . "." . $masterMaterialSubject->getId() . " as id,"
+            . $masterMaterialSubject->getEntity() . "." . $masterMaterialSubject->getCode() . " as code,"
+            . $masterMaterialSubject->getEntity() . "." . $masterMaterialSubject->getName() . " as name,"
+            . $masterMaterialSubject->getEntity() . "." . $masterMaterialSubject->getDuration() . " as duration,"
+            . $masterUnit->getEntity() . "."  . $masterUnit->getName() . " as unitName"
+          ,  $masterMaterialSubject->getEntity() . "." . $masterMaterialSubject->getId());
 
         include_once FILE_PATH(IViewConstant::MASTER_SUBJECT_VIEW_INDEX . '/curriculum/list.html.php');
 
@@ -203,6 +263,7 @@ class Subject extends ControllerRestUI {
         $subjectDescription = null;
         $isChild = 0;
         if(strcasecmp($dataType, 'child') == 0){
+
             $budgetAmount =  $_POST['budget_amount'];
             $location = $_POST['location'];
             $budgetTypeId =  $_POST['budget_type_id'];

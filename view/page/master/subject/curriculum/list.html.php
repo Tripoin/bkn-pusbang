@@ -13,15 +13,23 @@ $Datatable->header(array( lang("master.curriculum_code"),
 
 
 foreach ($list_data['item'] as $value) {
+//    $action_delete = Button()->url($this->deleteUrl)->value($value[$masterCurriculum->getId()])->buttonDelete();
+//    $action_edit =  Button()->url($this->editUrl)->value($value[$masterCurriculum->getId()])->buttonEdit();
 
-    $action_delete = Button()->url($this->deleteUrl)->value($value[$masterCurriculum->getId()])->buttonDelete();
-    $action_edit =  Button()->url($this->editUrl)->value($value[$masterCurriculum->getId()])->buttonEdit();
+//    $Datatable->body(array($value[$masterCurriculum->getCode()],
+//        $value[$masterCurriculum->getName()],
+//        $value[$masterCurriculum->getName()],
+//        $action_edit,
+//        $action_edit,
+//        $action_edit.$action_delete));
+    $action_delete = Button()->url($this->deleteUrl)->value($value['id'])->buttonDelete();
+   $action_edit =  Button()->url($this->editUrl)->value($value['id'])->buttonEdit();
 
-    $Datatable->body(array($value[$masterCurriculum->getCode()],
-        $value[$masterCurriculum->getName()],
-        $value[$masterCurriculum->getDuration()],
-        $action_edit,
-        $action_edit,
+    $Datatable->body(array($value['code'],
+        $value['name'],
+        $value['duration'] .' '. $value['unitName'],
+         $action_edit,
+       $action_edit,
         $action_edit.$action_delete));
 
 }
