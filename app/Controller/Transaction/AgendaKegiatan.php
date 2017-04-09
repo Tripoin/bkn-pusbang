@@ -230,8 +230,10 @@ class AgendaKegiatan extends Controller {
 
 //        echo $Datatable->search;
 
-        $whereList = $data->getEntity() . "." . $data->getActivity_id() . EQUAL . $activity . " AND " .
-                $userMain->getEntity() . "." . $userMain->getId() . EQUAL . $data->getUser_main_id() . $search;
+        $whereList = $data->getEntity() . "." . $data->getActivity_id() . EQUAL . $activity
+                . " AND " . $userMain->getEntity() . "." . $userMain->getId() . EQUAL . $data->getUser_main_id()
+                . " AND " . $data->getEntity() . "." . $data->getRoleId() . equalToIgnoreCase(3)
+                . $search;
 
         $list_data = $Datatable->select_pagination($data, $data->getEntity(), $whereList, $userMain->getEntity(), $userMain->getEntity(), null, ""
                 . $data->getEntity() . "." . $data->getId() . " as id,"
@@ -465,7 +467,7 @@ class AgendaKegiatan extends Controller {
 
 //        echo $Datatable->search;
         $whereList = $activityDetails->getEntity() . "." . $activityDetails->getActivityId() . EQUAL . $activity . " AND " .
-                $activityModel->getEntity() . "." . $activityModel->getId() . EQUAL . $activityDetails->getEntity() . "." . $activityDetails->getActivityId() 
+                $activityModel->getEntity() . "." . $activityModel->getId() . EQUAL . $activityDetails->getEntity() . "." . $activityDetails->getActivityId()
 //                . " AND (" . $activityDetails->getDuration() . " is not null AND " . $activityDetails->getDuration() . notEqualToIgnoreCase(0) . ")"
                 . "" . $search;
 

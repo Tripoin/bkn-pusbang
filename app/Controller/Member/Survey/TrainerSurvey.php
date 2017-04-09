@@ -19,17 +19,17 @@ use app\Util\Database;
 use app\Util\Button;
 use app\Constant\IViewMemberConstant;
 
-
-    /**
+/**
  * Created by PhpStorm.
  * User: Dayat
  * Date: 21/03/2017
  * Time: 4:47
  */
-class TrainerSurvey extends ControllerMember
-{
+class TrainerSurvey extends ControllerMember {
+
     public $saveUrl = '';
-    public function __construct(){
+
+    public function __construct() {
         $this->modelData = new TransactionActivity();
         $this->setTitle(lang('survey.survey'));
         $this->setSubtitle(lang('survey.evaluation_trainer'));
@@ -44,19 +44,21 @@ class TrainerSurvey extends ControllerMember
         parent::__construct();
     }
 
-    public function listData(){
+    public function listData() {
         $transactionActivity = new TransactionActivity();
         $this->modelSubject = $transactionActivity;
         $masterUserAssignment = new MasterUserAssignment();
         $masterUserMain = new MasterUserMain();
-        print_r(getUserMember()['sec_user']['code']);
+//        print_r(getUserMember()['sec_user']['code']);
         $data_user = getUserMember();
 //        echo $data_user[$masterUserMain->getId()];
         $this->search_list = $transactionActivity->getEntity();
-        $this->select_entity = $transactionActivity->getEntity().'.*';
+        $this->select_entity = $transactionActivity->getEntity() . '.*';
         $this->join_list = array($masterUserAssignment->getEntity());
-        $this->where_list = $transactionActivity->getEntity().DOT.$transactionActivity->getId().EQUAL.$masterUserAssignment->getEntity().DOT.$masterUserAssignment->getActivity_id()
-            . " AND ".$masterUserAssignment->getEntity().DOT.$masterUserAssignment->getUser_main_id().equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()]);
+        $this->where_list = $transactionActivity->getEntity() . DOT . $transactionActivity->getId() . EQUAL . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getActivity_id()
+                . " AND " . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getUser_main_id() . equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()])
+                . " AND " . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getRoleId() . equalToIgnoreCase(1)
+        ;
 
         $sr = $this->modelSubject->search($_POST['search_by']);
 
@@ -67,7 +69,7 @@ class TrainerSurvey extends ControllerMember
         parent::listData();
     }
 
-    public function activityDetail(){
+    public function activityDetail() {
         $Form = new Form();
         $Datatable = new DataTable();
         $db = new Database();
@@ -81,26 +83,26 @@ class TrainerSurvey extends ControllerMember
         $search = '';
 
         $whereList = $activityDetails->getEntity() . "." . $activityDetails->getActivityId() . EQUAL . $activity . " AND " .
-            $activityModel->getEntity() . "." . $activityModel->getId() . EQUAL . $activityDetails->getEntity() . "." . $activityDetails->getActivityId() . " AND "
-            . "(" . $activityDetails->getDuration() . " is not null AND " . $activityDetails->getDuration() . notEqualToIgnoreCase(0) . ")" . $search;
+                $activityModel->getEntity() . "." . $activityModel->getId() . EQUAL . $activityDetails->getEntity() . "." . $activityDetails->getActivityId() . " AND "
+                . "(" . $activityDetails->getDuration() . " is not null AND " . $activityDetails->getDuration() . notEqualToIgnoreCase(0) . ")" . $search;
 
         $list_data = $Datatable->select_pagination($activityDetails, $activityDetails->getEntity(), $whereList, $activityModel->getEntity(), $activityModel->getEntity(), null, ""
-            . $activityDetails->getEntity() . "." . $activityDetails->getId() . " as id,"
-            . $activityDetails->getEntity() . "." . $activityDetails->getCode() . " as code,"
-            . $activityDetails->getEntity() . "." . $activityDetails->getStartTime() . ","
-            . $activityDetails->getEntity() . "." . $activityDetails->getEndTime() . ","
-            . $activityDetails->getEntity() . "." . $activityDetails->getDuration() . ","
-            . $activityDetails->getEntity() . "." . $activityDetails->getMaterialName() . ","
-            . $activityDetails->getEntity() . "." . $activityDetails->getUserMainId() . ","
-            . $activityDetails->getEntity() . "." . $activityDetails->getUserMainName() . ","
-            . $activityDetails->getEntity() . "." . $activityDetails->getDescription() . " as description,"
-            . $activityDetails->getEntity() . "." . $activityDetails->getName() . " as name", $activityDetails->getEntity() . "." . $activityDetails->getId());
+                . $activityDetails->getEntity() . "." . $activityDetails->getId() . " as id,"
+                . $activityDetails->getEntity() . "." . $activityDetails->getCode() . " as code,"
+                . $activityDetails->getEntity() . "." . $activityDetails->getStartTime() . ","
+                . $activityDetails->getEntity() . "." . $activityDetails->getEndTime() . ","
+                . $activityDetails->getEntity() . "." . $activityDetails->getDuration() . ","
+                . $activityDetails->getEntity() . "." . $activityDetails->getMaterialName() . ","
+                . $activityDetails->getEntity() . "." . $activityDetails->getUserMainId() . ","
+                . $activityDetails->getEntity() . "." . $activityDetails->getUserMainName() . ","
+                . $activityDetails->getEntity() . "." . $activityDetails->getDescription() . " as description,"
+                . $activityDetails->getEntity() . "." . $activityDetails->getName() . " as name", $activityDetails->getEntity() . "." . $activityDetails->getId());
 
         //$dataSurvey = $db->select();
         include_once FILE_PATH(IViewMemberConstant::SURVEY_TRAINER_VIEW_INDEX . '/details/list.html.php');
     }
 
-    public function activityDetailSurvey(){
+    public function activityDetailSurvey() {
         $Form = new Form();
         $Datatable = new DataTable();
         $db = new Database();
@@ -115,29 +117,26 @@ class TrainerSurvey extends ControllerMember
         $trxSurvey = new TransactionSurvey();
         $trxSurveyDtl = new TransactionSurveyDetails();
 
-        $dataActDetail = $db->selectByID($trxActivityDetails, $trxActivityDetails->getId() .EQUAL. $idActivityDetail);
-        $dataAct = $db->selectByID($trxActivity, $trxActivity->getId() .EQUAL. $dataActDetail[0]['activity_id']);
+        $dataActDetail = $db->selectByID($trxActivityDetails, $trxActivityDetails->getId() . EQUAL . $idActivityDetail);
+        $dataAct = $db->selectByID($trxActivity, $trxActivity->getId() . EQUAL . $dataActDetail[0]['activity_id']);
 
-        $dataLinkTrainer = $db->selectByID($linkTrainerAss, $linkTrainerAss->getCurriculumId().EQUAL.$dataActDetail[0]['curriculum_id']);
+        $dataLinkTrainer = $db->selectByID($linkTrainerAss, $linkTrainerAss->getCurriculumId() . EQUAL . $dataActDetail[0]['curriculum_id']);
 
         $db->select(
-            $linkTrainerAss->getEntity(),
-            $mstCategoryAssess->getEntity().'.'.$mstCategoryAssess->getName().','.$mstCategoryAssess->getEntity().'.'.$mstCategoryAssess->getCode(),
-            array(
-                $mstCategoryAssess->getEntity()
-            ),
-            $linkTrainerAss->getEntity().'.'.$linkTrainerAss->getCategoryAssessId().EQUAL. $mstCategoryAssess->getEntity().'.'.$mstCategoryAssess->getId().' AND '
-            .$linkTrainerAss->getEntity().'.'.$linkTrainerAss->getCurriculumId() .EQUAL. $dataActDetail[0]['curriculum_id']
+                $linkTrainerAss->getEntity(), $mstCategoryAssess->getEntity() . '.' . $mstCategoryAssess->getName() . ',' . $mstCategoryAssess->getEntity() . '.' . $mstCategoryAssess->getCode(), array(
+            $mstCategoryAssess->getEntity()
+                ), $linkTrainerAss->getEntity() . '.' . $linkTrainerAss->getCategoryAssessId() . EQUAL . $mstCategoryAssess->getEntity() . '.' . $mstCategoryAssess->getId() . ' AND '
+                . $linkTrainerAss->getEntity() . '.' . $linkTrainerAss->getCurriculumId() . EQUAL . $dataActDetail[0]['curriculum_id']
         );
         $dataCtrAssess = $db->getResult();
 
-        $dataTrxSurvey = $db->selectByID($trxSurvey, $trxSurvey->getTargetSurveyId().EQUAL. $idActivityDetail);
+        $dataTrxSurvey = $db->selectByID($trxSurvey, $trxSurvey->getTargetSurveyId() . EQUAL . $idActivityDetail);
 
         $this->saveUrl = URL(IURLMemberConstant::SURVEY_TRAINER_URL . '/save');
         include_once FILE_PATH(IViewMemberConstant::SURVEY_TRAINER_VIEW_INDEX . '/details/create.html.php');
     }
 
-    public function getCtrAssess(){
+    public function getCtrAssess() {
         $Form = new Form();
         $Datatable = new DataTable();
         $db = new Database();
@@ -149,22 +148,19 @@ class TrainerSurvey extends ControllerMember
         $linkTrainerAss = new LinkTrainerAssess();
         $mstCategoryAssess = new MasterCategoryAssess();
 
-        $dataActDetail = $db->selectByID($trxActivityDetails, $trxActivityDetails->getId() .EQUAL. $idActivityDetail);
+        $dataActDetail = $db->selectByID($trxActivityDetails, $trxActivityDetails->getId() . EQUAL . $idActivityDetail);
 
         $db->select(
-            $linkTrainerAss->getEntity(),
-            $mstCategoryAssess->getEntity().'.'.$mstCategoryAssess->getId().','.$mstCategoryAssess->getEntity().'.'.$mstCategoryAssess->getName().','.$mstCategoryAssess->getEntity().'.'.$mstCategoryAssess->getCode(),
-            array(
-                $mstCategoryAssess->getEntity()
-            ),
-            $linkTrainerAss->getEntity().'.'.$linkTrainerAss->getCategoryAssessId().EQUAL. $mstCategoryAssess->getEntity().'.'.$mstCategoryAssess->getId().' AND '
-            .$linkTrainerAss->getEntity().'.'.$linkTrainerAss->getCurriculumId() .EQUAL. $dataActDetail[0]['curriculum_id']
+                $linkTrainerAss->getEntity(), $mstCategoryAssess->getEntity() . '.' . $mstCategoryAssess->getId() . ',' . $mstCategoryAssess->getEntity() . '.' . $mstCategoryAssess->getName() . ',' . $mstCategoryAssess->getEntity() . '.' . $mstCategoryAssess->getCode(), array(
+            $mstCategoryAssess->getEntity()
+                ), $linkTrainerAss->getEntity() . '.' . $linkTrainerAss->getCategoryAssessId() . EQUAL . $mstCategoryAssess->getEntity() . '.' . $mstCategoryAssess->getId() . ' AND '
+                . $linkTrainerAss->getEntity() . '.' . $linkTrainerAss->getCurriculumId() . EQUAL . $dataActDetail[0]['curriculum_id']
         );
         $dataCtrAssess = $db->getResult();
         return $dataCtrAssess;
     }
 
-    public function saveSurvey(){
+    public function saveSurvey() {
         $Form = new Form();
         $db = new Database();
 
@@ -172,17 +168,14 @@ class TrainerSurvey extends ControllerMember
         $trxSurvey = new TransactionSurvey();
         $trxSurveyDtl = new TransactionSurveyDetails();
 
-        $surveyCategoryWdy = $db->selectByID($surveyCategory, $surveyCategory->getCode().equalToIgnoreCase('SURVEY-WIDYAISWARA'));
+        $surveyCategoryWdy = $db->selectByID($surveyCategory, $surveyCategory->getCode() . equalToIgnoreCase('SURVEY-WIDYAISWARA'));
         $db->connect();
         $usrMain = new MasterUserMain();
         $usrAssigment = new MasterUserAssignment();
-        $db->select($usrAssigment->getEntity(),
-            $usrAssigment->getEntity().'.'.$usrAssigment->getId(),
-            array(
-                $usrMain->getEntity()
-            ),
-            $usrMain->getEntity().'.'.$usrMain->getId().EQUAL.$usrAssigment->getEntity().'.'.$usrAssigment->getUser_main_id().' AND '
-            .$usrMain->getEntity().'.'.$usrMain->getCode().equalToIgnoreCase(getUserMember()['sec_user']['code'])
+        $db->select($usrAssigment->getEntity(), $usrAssigment->getEntity() . '.' . $usrAssigment->getId(), array(
+            $usrMain->getEntity()
+                ), $usrMain->getEntity() . '.' . $usrMain->getId() . EQUAL . $usrAssigment->getEntity() . '.' . $usrAssigment->getUser_main_id() . ' AND '
+                . $usrMain->getEntity() . '.' . $usrMain->getCode() . equalToIgnoreCase(getUserMember()['sec_user']['code'])
         );
         $idUsrAssg = $db->getResult();
 
@@ -196,7 +189,7 @@ class TrainerSurvey extends ControllerMember
         ));
         $getTrxSurvey = $db->getResult();
         $getCtrAssess = $this->getCtrAssess();
-        foreach($getCtrAssess as $data){
+        foreach ($getCtrAssess as $data) {
             $db->insert($trxSurveyDtl->getEntity(), array(
                 $trxSurveyDtl->getSurveyId() => $getTrxSurvey[0],
                 $trxSurveyDtl->getCategoryAssessId() => $data['id'],
@@ -207,11 +200,12 @@ class TrainerSurvey extends ControllerMember
             $db->getResult();
         }
 
-        if(is_numeric($getTrxSurvey[0])){
+        if (is_numeric($getTrxSurvey[0])) {
             echo toastAlert('success', lang('general.title_insert_success'), lang('general.message_insert_success'));
         } else {
             echo toastAlert('error', lang('general.title_insert_error'), lang('general.message_insert_error'));
         }
         echo postAjaxPagination();
     }
+
 }

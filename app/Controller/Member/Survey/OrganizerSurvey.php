@@ -67,7 +67,8 @@ class OrganizerSurvey extends ControllerMember {
         $data_survey_category = $db->selectByID($masterSurveyCategory, $masterSurveyCategory->getCode() . equalToIgnoreCase('SURVEY-KEGIATAN'));
         $this->data_activity = $db->selectByID($transactionActivity, $transactionActivity->getId() . equalToIgnoreCase($id));
 
-        $db->select($linkSubjectAssess->getEntity(), $masterCategoryAssess->getEntity() . DOT . $masterCategoryAssess->getName() . " as name,"
+        $db->select($linkSubjectAssess->getEntity(), 
+                $masterCategoryAssess->getEntity() . DOT . $masterCategoryAssess->getName() . " as name,"
                 . $masterCategoryAssess->getEntity() . DOT . $masterCategoryAssess->getId() . " as id", array(
             $masterCategoryAssess->getEntity()
                 ), ""
@@ -193,7 +194,9 @@ class OrganizerSurvey extends ControllerMember {
         $this->select_entity = $transactionActivity->getEntity().'.*';
         $this->join_list = array($masterUserAssignment->getEntity());
         $this->where_list = $transactionActivity->getEntity().DOT.$transactionActivity->getId().EQUAL.$masterUserAssignment->getEntity().DOT.$masterUserAssignment->getActivity_id()
-                . " AND ".$masterUserAssignment->getEntity().DOT.$masterUserAssignment->getUser_main_id().equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()]);
+                . " AND ".$masterUserAssignment->getEntity().DOT.$masterUserAssignment->getRoleId().  equalToIgnoreCase(1)
+                . " AND ".$masterUserAssignment->getEntity().DOT.$masterUserAssignment->getUser_main_id().equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()])
+                ;
         
         $sr = $this->modelSubject->search($_POST['search_by']);
         

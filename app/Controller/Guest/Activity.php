@@ -92,7 +92,7 @@ class Activity {
 
         $recommendLetter = $_FILES['recommend_letter'];
         $reArray = reArrayFiles($recommendLetter);
-        $upload = uploadFileImg($reArray[0],$reArray[0]['name'],FILE_PATH('uploads/'));
+        $upload = uploadFileImg($reArray[0],$reArray[0]['name'],FILE_PATH('uploads/'),'pdf');
         $fileName = $upload["file_name"];
 
         $trxRegdata = new TransactionRegistration();

@@ -106,14 +106,16 @@ echo Form()->formLayout(HORIZONTAL)
                         $db->select($transactionSurveyDetails->getEntity(), 'COUNT(' . $transactionSurvey->getUserAssignmentId() . ') as total', array($transactionSurvey->getEntity()), $transactionSurvey->getEntity() . DOT . $transactionSurvey->getId() . EQUAL . $transactionSurveyDetails->getEntity() . DOT . $transactionSurveyDetails->getSurveyId()
                                 . " AND " . $transactionSurvey->getEntity() . DOT . $transactionSurvey->getTargetSurveyId() . equalToIgnoreCase($this->data_activity[0][$transactionActivity->getId()])
                                 . " AND " . $transactionSurveyDetails->getEntity() . DOT . $transactionSurveyDetails->getCategoryAssessId() . equalToIgnoreCase($value['id'])
-                                . " AND " . $transactionSurvey->getEntity() . DOT . $transactionSurvey->getUserAssignmentId() . equalToIgnoreCase($data_user_assign[0][$masterUserAssignment->getId()]));
+//                                . " AND " . $transactionSurvey->getEntity() . DOT . $transactionSurvey->getUserAssignmentId() . equalToIgnoreCase($data_user_assign[0][$masterUserAssignment->getId()])
+                                );
 //                        echo $db->querySql();
                         $rs_count_evaluator = $db->getResult();
 
                         $db->select($transactionSurveyDetails->getEntity(), 'SUM(' . $transactionSurveyDetails->getEntity() . DOT . $transactionSurveyDetails->getValue() . ') as total_nilai', array($transactionSurvey->getEntity()), $transactionSurvey->getEntity() . DOT . $transactionSurvey->getId() . EQUAL . $transactionSurveyDetails->getEntity() . DOT . $transactionSurveyDetails->getSurveyId()
                                 . " AND " . $transactionSurvey->getEntity() . DOT . $transactionSurvey->getTargetSurveyId() . equalToIgnoreCase($this->data_activity[0][$transactionActivity->getId()])
                                 . " AND " . $transactionSurveyDetails->getEntity() . DOT . $transactionSurveyDetails->getCategoryAssessId() . equalToIgnoreCase($value['id'])
-                                . " AND " . $transactionSurvey->getEntity() . DOT . $transactionSurvey->getUserAssignmentId() . equalToIgnoreCase($data_user_assign[0][$masterUserAssignment->getId()]));
+//                                . " AND " . $transactionSurvey->getEntity() . DOT . $transactionSurvey->getUserAssignmentId() . equalToIgnoreCase($data_user_assign[0][$masterUserAssignment->getId()])
+                                );
 //                         
                         $rs_total_value = $db->getResult();
 

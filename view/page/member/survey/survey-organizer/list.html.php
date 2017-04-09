@@ -3,13 +3,18 @@
 use app\Constant\IURLConstant;
 use app\Model\TransactionSurvey;
 use app\Model\TransactionActivity;
+use app\Model\MasterUserAssignment;
+use app\Model\MasterUserMain;
 use app\Util\Database;
 
 $transactionActivity = new TransactionActivity();
 $transactionSurvey = new TransactionSurvey();
+$masterUserAssignment = new MasterUserAssignment();
+$masterUserMain = new MasterUserMain();
 $db = new Database();
 $db->connect();
 
+$data_user = getUserMember();
 
 
 $Datatable->createButton(false);
@@ -25,7 +30,14 @@ $no = $list_data['from'];
 
 
 foreach ($list_data['item'] as $value) {
-    $db->select($transactionSurvey->getEntity(), 'COUNT(' . $transactionSurvey->getId() . ') as total', array(), $transactionSurvey->getTargetSurveyId() . equalToIgnoreCase($value[$data->getId()]));
+    $db->select($transactionSurvey->getEntity(), 'COUNT(' .$transactionSurvey->getEntity().DOT. $transactionSurvey->getId() . ') as total', 
+            array($transactionActivity->getEntity(), $masterUserAssignment->getEntity()), 
+            $transactionSurvey->getEntity() . DOT . $transactionSurvey->getUserAssignmentId() . EQUAL . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getId()
+            . " AND " . $transactionActivity->getEntity() . DOT . $transactionActivity->getId() . EQUAL . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getActivity_id()
+            . " AND " . $transactionSurvey->getEntity().DOT.$transactionSurvey->getTargetSurveyId() . equalToIgnoreCase($value[$data->getId()])
+            . " AND " . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getUser_main_id() . equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()])
+    );
+//    echo $db->getSql();
     $rs_survey_count = $db->getResult();
 //    print_r($rs_survey_count);
     $exTime = subMonth($value[$data->getStartActivity()]) . ' - ' . subMonth($value[$data->getEndActivity()]);

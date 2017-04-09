@@ -186,7 +186,9 @@ class ReportOrganizerSurvey extends ControllerMember {
         $this->select_entity = $transactionActivity->getEntity().'.*';
         $this->join_list = array($masterUserAssignment->getEntity());
         $this->where_list = $transactionActivity->getEntity().DOT.$transactionActivity->getId().EQUAL.$masterUserAssignment->getEntity().DOT.$masterUserAssignment->getActivity_id()
-                . " AND ".$masterUserAssignment->getEntity().DOT.$masterUserAssignment->getUser_main_id().equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()]);
+                . " AND ".$masterUserAssignment->getEntity().DOT.$masterUserAssignment->getUser_main_id().equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()])
+                . " AND ".$masterUserAssignment->getEntity().DOT.$masterUserAssignment->getRoleId().  equalToIgnoreCase(3)
+                ;
         
         $sr = $this->modelSubject->search($_POST['search_by']);
         

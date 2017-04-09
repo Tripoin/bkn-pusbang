@@ -49,7 +49,7 @@ if ($this->modelData == null) {
                         } else {
                             $langData = $valueData;
                         }
-                        $keys = array_search ($valueData, $modelDataArray);
+                        $keys = array_search($valueData, $modelDataArray);
                         echo $Form->id($keys)->title(lang('general.' . $langData))
                                 ->data($cv)->placeholder('Select')->combobox();
                     }
@@ -62,18 +62,22 @@ if ($this->modelData == null) {
                         
                     } else {
                         if (empty($this->changeValueNewEdit)) {
-                            $keys = array_search ($valueData, $modelDataArray);
+                            $keys = array_search($valueData, $modelDataArray);
                             echo $Form->id($keys)->title(lang('general.' . $valueData))->placeholder(lang('general.' . $valueData) . ' ....')->textbox();
                         } else {
                             foreach ($this->changeValueNewEdit as $key => $value) {
-                                if($keys == $valueData){
-                                    echo $value;
+                                if (isset($key)) {
+                                    if ($key == $valueData) {
+                                        echo $value;
+                                    } else {
+                                        $keys = array_search($valueData, $modelDataArray);
+                                        echo $Form->id($valueData)->title(lang('general.' . $valueData))->placeholder(lang('general.' . $valueData) . ' ....')->textbox();
+                                    }
                                 } else {
-                                    $keys = array_search ($valueData, $modelDataArray);
+                                    $keys = array_search($valueData, $modelDataArray);
                                     echo $Form->id($valueData)->title(lang('general.' . $valueData))->placeholder(lang('general.' . $valueData) . ' ....')->textbox();
                                 }
                             }
-                            
                         }
                     }
                 }

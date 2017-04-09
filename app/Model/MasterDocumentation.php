@@ -22,8 +22,8 @@ class MasterDocumentation extends GeneralAuditrail {
         $this->setEntity('mst_documentation');
     }
     
-    private $activity_id = 'activity_id';
-    private $documentation_image_url = 'documentation_image_url';
+    protected $activity_id = 'activity_id';
+    protected $documentation_image_url = 'documentation_image_url';
     
     public function search($key) {
         return $this->$key;

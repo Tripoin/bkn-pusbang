@@ -225,6 +225,7 @@ class ActivityRegistration extends Controller {
                     $db->insert($masterUserAssignment->getEntity(), array(
                         $masterUserAssignment->getCode() => $code_user_assignment,
                         $masterUserAssignment->getName() => $code_user_assignment . '-' . $_SESSION[SESSION_USERNAME_GUEST],
+                        $masterUserAssignment->getRoleId() => 1,
                         $masterUserAssignment->getUser_main_id() => $userMainId,
                         $masterUserAssignment->getActivity_id() => $activity_id,
                         $masterUserAssignment->getCreatedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],

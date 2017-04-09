@@ -10,6 +10,7 @@ $db->connect();
 $masterCategoryAssess = new MasterCategoryAssess();
 $linkSubjectAssess = new LinkSubjectAssess();
 $transactionActivity = new TransactionActivity();
+//$transactionSurvey
 ?>
 
 <?= $Form->formHeader(); ?>
@@ -74,13 +75,14 @@ echo Form()->formLayout(HORIZONTAL)
             );
             $data_subject_assess = $db->getResult();
             foreach ($data_subject_assess as $value) {
+                $db->selectByID($table, $where);
                 echo Form()->formLayout(HORIZONTAL)
                         ->type('number')
                         ->attr('onkeyup="this.onchange()" onchange="calculateAll(' . $data_parent['id'] . ')" tripoin="number" min="0"')
                         ->id($value['id'])
                         ->name($value['code'])
                         ->title($value['name'])
-                        ->value(0)
+                        ->value($value['name'])
                         ->textbox();
             }
             echo Form()->formLayout(HORIZONTAL)

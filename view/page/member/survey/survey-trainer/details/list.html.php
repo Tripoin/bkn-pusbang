@@ -39,6 +39,7 @@ echo $Datatable->show();
     $(function () {
         $('.portlet-title > div > span').html('<?= lang('transaction.activity_details'); ?>');
         initDetails();
+        initPage();
     });
     function initDetails() {
         $('#actionHeader').html(comButtonBack('<?= lang('general.back'); ?>', 'btn btn-danger', 'fa fa-back'));

@@ -211,14 +211,14 @@ if (!empty($data_reg_detail)) {
         echo Form()->id('district')->placeholder('Selected ....')
                 ->title(lang('member.district'))
                 ->autocomplete(false)
-                ->value($data_reg_detail[0][$regDetail->getDistrictId()])
+                ->value($district_id)
                 ->formLayout('form-horizontal')
                 ->attr('onchange="ajaxCombobox(\'district\',\'' . URL('selected?action=village') . '\', \'village\', \'\',\'' . $village_id . '\');"')
                 ->combobox();
         echo Form()->id('village')->placeholder('Selected ....')
                 ->title(lang('member.village'))
                 ->autocomplete(false)
-                ->value($data_reg_detail[0][$regDetail->getVillageId()])
+                ->value($village_id)
                 ->formLayout('form-horizontal')
                 ->combobox();
 

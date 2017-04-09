@@ -85,6 +85,7 @@ class ParticipantRegistration extends Controller {
         $masterApprovalCategory = new MasterApprovalCategory();
         $linkRegistration = new LinkRegistration();
         $transactionRegistration = new TransactionRegistration();
+//        $Datatable->per_page = 10;
         if ($_POST['per_page'] == "") {
             $Datatable->per_page = 10;
         } else {
@@ -109,11 +110,12 @@ class ParticipantRegistration extends Controller {
         }
 
 //        echo $Datatable->search;
-
+//        $Datatable->debug = true;
         $whereList = $masterApprovalCategory->getEntity() . DOT . $masterApprovalCategory->getId() . EQUAL . $masterApproval->getEntity() . DOT . $masterApproval->getApprovalCategoryId() . ""
                 . " AND " . $masterApproval->getEntity() . DOT . $masterApproval->getApprovalDetailId() . EQUAL . $linkRegistration->getEntity() . DOT . $linkRegistration->getId() . ""
                 . " AND " . $linkRegistration->getEntity() . DOT . $linkRegistration->getRegistrationId() . EQUAL . $transactionRegistration->getEntity() . DOT . $transactionRegistration->getId() . ""
-                . " AND " . $masterApprovalCategory->getEntity() . DOT . $masterApproval->getCode() . equalToIgnoreCase('REGISTRATION-DETAILS') . ""
+                . " AND (" . $masterApprovalCategory->getEntity() . DOT . $masterApprovalCategory->getCode() . equalToIgnoreCase('REGISTRATION') . " OR " . $masterApprovalCategory->getEntity() . DOT . $masterApprovalCategory->getCode() . equalToIgnoreCase('RE-REGISTRATION') . ")"
+                . " AND " . $linkRegistration->getEntity() . DOT . $linkRegistration->getRegistrationDetailsId() . " is null "
                 . "" . $search;
 //        $Datatable->debug(true);
         $list_data = $Datatable->select_pagination($masterApproval, $masterApproval->getEntity(), $whereList, array($masterApprovalCategory->getEntity(), $linkRegistration->getEntity(), $transactionRegistration->getEntity()), $masterApprovalCategory->getEntity(), $this->orderBy, ""
@@ -125,7 +127,7 @@ class ParticipantRegistration extends Controller {
                 . $masterApproval->getEntity() . DOT . $masterApproval->getIsExecuted() . " as excecuted,"
                 . $masterApproval->getEntity() . DOT . $masterApproval->getStatus() . " as status,"
                 . $masterApprovalCategory->getEntity() . "." . $masterApprovalCategory->getName() . " as approval_category_name"
-                , $linkRegistration->getEntity() . DOT . $linkRegistration->getActivityId());
+        );
 
 //        print_r($list_data);
         include_once FILE_PATH($this->viewList);
@@ -442,6 +444,7 @@ class ParticipantRegistration extends Controller {
 
                                             $db->update($regDetail->getEntity(), array(
                                                 $regDetail->getIsApproved() => 1,
+                                                $regDetail->getUserId() => $rs_insert_user[0],
                                                 $regDetail->getApprovedMessage() => "Approved Success",
                                                 $regDetail->getApprovedBy() => $_SESSION[SESSION_ADMIN_USERNAME],
                                                 $regDetail->getApprovedOn() => date(DATE_FORMAT_PHP_DEFAULT),
@@ -912,7 +915,7 @@ class ParticipantRegistration extends Controller {
         $db->update($masterApproval->getEntity(), array(
             $masterApproval->getStatus() => null,
             $masterApproval->getDescription() => null,
-            $masterApproval->getCreatedBy() => null,
+            $masterApproval->getCreatedByUsername() => null,
             $masterApproval->getCreatedOn() => null,
                 ), $masterApproval->getId() . equalToIgnoreCase($approvalId));
         $rs_update_approval = $db->getResult();
