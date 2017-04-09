@@ -75,7 +75,7 @@ echo Form()->formLayout(HORIZONTAL)
             );
             $data_subject_assess = $db->getResult();
             foreach ($data_subject_assess as $value) {
-                $db->selectByID($table, $where);
+//                $db->selectByID($table, $where);
                 echo Form()->formLayout(HORIZONTAL)
                         ->type('number')
                         ->attr('onkeyup="this.onchange()" onchange="calculateAll(' . $data_parent['id'] . ')" tripoin="number" min="0"')

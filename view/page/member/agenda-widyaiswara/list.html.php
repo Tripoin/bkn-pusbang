@@ -24,7 +24,9 @@ $no = $list_data['from'];
 
 foreach ($list_data['item'] as $value) {
     $db->select($masterUserAssignment->getEntity(), 'COUNT(' . $masterUserAssignment->getId() . ') as total', array(), 
-            $masterUserAssignment->getActivity_id() . equalToIgnoreCase($value[$data->getId()]));
+            $masterUserAssignment->getActivity_id() . equalToIgnoreCase($value[$data->getId()])
+            ." AND ".$masterUserAssignment->getRoleId().  equalToIgnoreCase(1)
+            );
     $rs_survey_count = $db->getResult();
 //    print_r($rs_survey_count);
     $exTime = '<a href="javascript:void(0)" '

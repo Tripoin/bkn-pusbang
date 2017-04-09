@@ -56,9 +56,22 @@ echo Form()->formLayout(HORIZONTAL)
         ->label($data_user_main[0][$masterUserMain->getIdNumber()])
         ->labels();
 ?>
-
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Aspek Penilaian</th>
+            <th><?=lang('member.value');?></th>
+        </tr>
+    </thead>
+    <tbody>
+        
+    
 <?php
+$total_value = 0;
+$no = 0;
 foreach ($data_category_asses as $value) {
+    $no += 1;
+    echo '<tr>';
     $evaluation_id = '';
     if(isset($this->data_evaluation[0][$transactionEvaluation->getId()])){
         $evaluation_id = $this->data_evaluation[0][$transactionEvaluation->getId()];
@@ -66,24 +79,30 @@ foreach ($data_category_asses as $value) {
     $data_value = $db->selectByID($transactionEvaluationDetails, $transactionEvaluationDetails->getEvaluationId() . equalToIgnoreCase($evaluation_id)
             . " AND " . $transactionEvaluationDetails->getCategoryAssessId() . equalToIgnoreCase($value[$masterCategoryAssess->getId()]));
     if (empty($data_value)) {
-        echo Form()->formLayout(HORIZONTAL)
-                ->type('number')
-                ->id($value[$masterCategoryAssess->getCode()])
-                ->attr('onkeyup="this.onchange()" onchange="calculateAll()" tripoin="number" min="0"')
-                ->title($value[$masterCategoryAssess->getName()])
-                ->value(0)
-                ->textbox();
+        echo '<td>'.$value[$masterCategoryAssess->getName()].'</td>';
+        echo '<td>0</td>';
     } else {
-        echo Form()->formLayout(HORIZONTAL)
-                ->type('number')
-                ->id($value[$masterCategoryAssess->getCode()])
-                ->attr('onkeyup="this.onchange()" onchange="calculateAll()" tripoin="number" min="0"')
-                ->title($value[$masterCategoryAssess->getName()])
-                ->value(intval($data_value[0][$transactionEvaluationDetails->getValue()]))
-                ->textbox();
+        $total_value += $data_value[0][$transactionEvaluationDetails->getValue()];
+        echo '<td>'.$value[$masterCategoryAssess->getName()].'</td>';
+        echo '<td>'.intval($data_value[0][$transactionEvaluationDetails->getValue()]).'</td>';
     }
+    echo '</tr>';
 }
-echo Form()->formLayout(HORIZONTAL)
+$rate_value = $total_value / $no;
+?>
+        <tr>
+            <td><?=lang('member.total_value');?></td>
+            <td><?=$total_value;?></td>
+        </tr>
+        <tr>
+            <td><?=lang('member.average_value');?></td>
+            <td><?=$rate_value;?></td>
+        </tr>
+        
+        </tbody>
+</table>
+        <?php
+/*echo Form()->formLayout(HORIZONTAL)
         ->attr('readonly="readonly"')
         ->id('total')
         ->title(lang('general.total'))
@@ -95,6 +114,8 @@ echo Form()->formLayout(HORIZONTAL)
         ->title(lang('general.average'))
         ->value(0)
         ->textbox();
+ * 
+ */
 ?>
 
 <?php
@@ -103,7 +124,7 @@ echo Form()->formLayout(HORIZONTAL)
 <input type="hidden" id="id" name="id" value="<?= $this->data_activity_details[0][$transactionActivityDetails->getId()]; ?>"/>
 <input type="hidden" id="id_user_assignment" name="id_user_assignment" value="<?= $data_user_assignment[0][$masterUserAssignment->getId()]; ?>"/>
 
-<?= Form()->formFooter(null, null, "postFormAjaxPostSetContent('" . $this->urlSaveUser . "','form-message')"); ?>
+<?= Form()->formFooter(null, ' '); ?>
 <script>
     $(function () {
         calculateAll();

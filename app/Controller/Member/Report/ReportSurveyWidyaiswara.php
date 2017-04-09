@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Controller\Member\Survey;
+namespace app\Controller\Member\Report;
 
 use app\Constant\IURLMemberConstant;
 use app\Controller\Base\ControllerMember;
@@ -20,26 +20,25 @@ use app\Util\Button;
 use app\Constant\IViewMemberConstant;
 
 /**
- * Created by PhpStorm.
- * User: Dayat
- * Date: 21/03/2017
- * Time: 4:47
+ * Created by Netbeans 8.1.
+ * User: Syahrial Fandrianah
+ * Date: 09/04/2017
+ * Time: 05:47
  */
-class TrainerSurvey extends ControllerMember {
+class ReportSurveyWidyaiswara extends ControllerMember {
 
     public $saveUrl = '';
 
     public function __construct() {
         $this->modelData = new TransactionActivity();
-        $this->setTitle(lang('survey.survey'));
-        $this->setSubtitle(lang('survey.evaluation_trainer'));
-        $this->setBreadCrumb(array(lang('survey.evaluation_trainer') => ""));
+        $this->setTitle(lang('member.survey_of_widyaiswara'));
+        $this->setBreadCrumb(array(lang('member.survey_of_widyaiswara') => ""));
         $this->search_filter = array(
             "name" => lang('transaction.type')
         );
         $this->orderBy = $this->modelData->getId() . " DESC";
-        $this->indexUrl = IURLMemberConstant::SURVEY_TRAINER_URL;
-        $this->viewPath = IViewMemberConstant::SURVEY_TRAINER_VIEW_INDEX;
+        $this->indexUrl = IURLMemberConstant::REPORT_SURVEY_WIDYAISWARA_URL;
+        $this->viewPath = IViewMemberConstant::REPORT_SURVEY_WIDYAISWARA_VIEW_INDEX;
         $this->setAutoCrud();
         parent::__construct();
     }
@@ -57,7 +56,7 @@ class TrainerSurvey extends ControllerMember {
         $this->join_list = array($masterUserAssignment->getEntity());
         $this->where_list = $transactionActivity->getEntity() . DOT . $transactionActivity->getId() . EQUAL . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getActivity_id()
                 . " AND " . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getUser_main_id() . equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()])
-                . " AND " . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getRoleId() . equalToIgnoreCase(1)
+                . " AND " . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getRoleId() . equalToIgnoreCase(3)
         ;
 
         $sr = $this->modelSubject->search($_POST['search_by']);
@@ -69,7 +68,7 @@ class TrainerSurvey extends ControllerMember {
         parent::listData();
     }
 
-    public function activityDetail() {
+    public function create() {
         $Form = new Form();
         $Datatable = new DataTable();
         $db = new Database();
@@ -99,10 +98,10 @@ class TrainerSurvey extends ControllerMember {
                 . $activityDetails->getEntity() . "." . $activityDetails->getName() . " as name", $activityDetails->getEntity() . "." . $activityDetails->getId());
 
         //$dataSurvey = $db->select();
-        include_once FILE_PATH(IViewMemberConstant::SURVEY_TRAINER_VIEW_INDEX . '/details/list.html.php');
+        include_once FILE_PATH(IViewMemberConstant::REPORT_SURVEY_WIDYAISWARA_VIEW_INDEX . '/details/list.html.php');
     }
 
-    public function activityDetailSurvey() {
+    public function edit() {
         $Form = new Form();
         $Datatable = new DataTable();
         $db = new Database();
@@ -123,7 +122,7 @@ class TrainerSurvey extends ControllerMember {
         $dataLinkTrainer = $db->selectByID($linkTrainerAss, $linkTrainerAss->getCurriculumId() . EQUAL . $dataActDetail[0]['curriculum_id']);
 
         $db->select(
-                $linkTrainerAss->getEntity(), $mstCategoryAssess->getEntity() . '.' . $mstCategoryAssess->getName() . ',' . $mstCategoryAssess->getEntity() . '.' . $mstCategoryAssess->getCode(), array(
+                $linkTrainerAss->getEntity(), $mstCategoryAssess->getEntity() . '.' . $mstCategoryAssess->getId() . ','.$mstCategoryAssess->getEntity() . '.' . $mstCategoryAssess->getName() . ',' . $mstCategoryAssess->getEntity() . '.' . $mstCategoryAssess->getCode(), array(
             $mstCategoryAssess->getEntity()
                 ), $linkTrainerAss->getEntity() . '.' . $linkTrainerAss->getCategoryAssessId() . EQUAL . $mstCategoryAssess->getEntity() . '.' . $mstCategoryAssess->getId() . ' AND '
                 . $linkTrainerAss->getEntity() . '.' . $linkTrainerAss->getCurriculumId() . EQUAL . $dataActDetail[0]['curriculum_id']
@@ -133,7 +132,7 @@ class TrainerSurvey extends ControllerMember {
         $dataTrxSurvey = $db->selectByID($trxSurvey, $trxSurvey->getTargetSurveyId() . EQUAL . $idActivityDetail);
 
         $this->saveUrl = URL(IURLMemberConstant::SURVEY_TRAINER_URL . '/save');
-        include_once FILE_PATH(IViewMemberConstant::SURVEY_TRAINER_VIEW_INDEX . '/details/create.html.php');
+        include_once FILE_PATH(IViewMemberConstant::REPORT_SURVEY_WIDYAISWARA_VIEW_INDEX . '/details/view.html.php');
     }
 
     public function getCtrAssess() {
@@ -173,16 +172,6 @@ class TrainerSurvey extends ControllerMember {
 
         $surveyCategoryWdy = $db->selectByID($surveyCategory, $surveyCategory->getCode() . equalToIgnoreCase('SURVEY-WIDYAISWARA'));
         $db->connect();
-        /* $usrMain = new MasterUserMain();
-          $usrAssigment = new MasterUserAssignment();
-          $db->select($usrAssigment->getEntity(), $usrAssigment->getEntity() . '.' . $usrAssigment->getId(), array(
-          $usrMain->getEntity()
-          ), $usrMain->getEntity() . '.' . $usrMain->getId() . EQUAL . $usrAssigment->getEntity() . '.' . $usrAssigment->getUser_main_id() . ' AND '
-          . $usrMain->getEntity() . '.' . $usrMain->getCode() . equalToIgnoreCase(getUserMember()['sec_user']['code'])
-          );
-          $idUsrAssg = $db->getResult();
-         * 
-         */
         $data_user_member = getUserMember();
         $id = $_POST['id'];
         $rs_activity_details = $db->selectByID($transactionActivityDetails, $transactionActivityDetails->getId() . equalToIgnoreCase($id));

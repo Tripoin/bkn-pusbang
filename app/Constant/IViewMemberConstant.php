@@ -67,4 +67,5 @@ interface IViewMemberConstant {
     const RECAPITULATION_VALUE_VIEW_INDEX = 'view/page/member/recapitulation-value';
     
     const REPORT_SURVEY_ORGANIZER_VIEW_INDEX = 'view/page/member/report/report-survey-organizer';
+    const REPORT_SURVEY_WIDYAISWARA_VIEW_INDEX = 'view/page/member/report/report-survey-widyaiswara';
 }

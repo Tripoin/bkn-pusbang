@@ -45,4 +45,5 @@ interface IURLMemberConstant {
     
     /*REPORT*/
     const REPORT_SURVEY_ORGANIZER_URL = 'member/report/report-survey-organizer';
+    const REPORT_SURVEY_WIDYAISWARA_URL = 'member/report/report-survey-widyaiswara';
 }

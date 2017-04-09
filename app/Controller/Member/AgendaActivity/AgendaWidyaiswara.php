@@ -36,7 +36,7 @@ class AgendaWidyaiswara extends ControllerMember {
     public function __construct() {
         $this->modelData = new TransactionActivity();
         $this->setTitle(lang('member.agenda_widyaiswara'));
-        $this->setBreadCrumb(array(lang('survey.survey_organizer') => ""));
+        $this->setBreadCrumb(array(lang('survey.agenda_widyaiswara') => ""));
         $this->search_filter = array(
             "startActivity" => lang('member.year')
         );
@@ -83,14 +83,16 @@ class AgendaWidyaiswara extends ControllerMember {
         $data_user = getUserMember();
 
 
+        $id_user_assignment = $_POST['id_user_assignment'];
         $this->data_activity_details = $db->selectByID($transactionActivityDetails, $transactionActivityDetails->getId() . equalToIgnoreCase($id));
         $this->data_activity = $db->selectByID($transactionActivity, $transactionActivity->getId() . equalToIgnoreCase($this->data_activity_details[0][$transactionActivityDetails->getActivityId()]));
 
-        $data_user_assignment = $db->selectByID($masterUserAssignment, $masterUserAssignment->getUser_main_id() . equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()])
-                . " AND " . $masterUserAssignment->getActivity_id() . equalToIgnoreCase($this->data_activity_details[0][$transactionActivityDetails->getActivityId()]));
+        $data_user_assignment = $db->selectByID($masterUserAssignment, 
+//                $masterUserAssignment->getUser_main_id() . equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()])
+                $masterUserAssignment->getId() . equalToIgnoreCase($id_user_assignment));
 
         $this->data_evaluation = $db->selectByID($transactionEvaluation, $transactionEvaluation->getActivityDetailsId() . equalToIgnoreCase($this->data_activity_details[0][$transactionActivityDetails->getId()])
-                . " AND " . $transactionEvaluation->getUserAssignmentId() . equalToIgnoreCase($data_user_assignment[0][$masterUserAssignment->getId()])
+                . " AND " . $transactionEvaluation->getUserAssignmentId() . equalToIgnoreCase($id_user_assignment)
         );
 //                print_r($this->data_evaluation);
         $this->urlListUser = URL(IURLMemberConstant::AGENDA_WIDYAISWARA_LIST_USER_URL);
@@ -113,13 +115,14 @@ class AgendaWidyaiswara extends ControllerMember {
         $masterCategoryAssess = new MasterCategoryAssess();
 
         $data_user = getUserMember();
-
+        $id_user_assignment = $_POST['id_user_assignment'];
 
         $this->data_activity_details = $db->selectByID($transactionActivityDetails, $transactionActivityDetails->getId() . equalToIgnoreCase($id));
         $this->data_activity = $db->selectByID($transactionActivity, $transactionActivity->getId() . equalToIgnoreCase($this->data_activity_details[0][$transactionActivityDetails->getActivityId()]));
 
-        $data_user_assignment = $db->selectByID($masterUserAssignment, $masterUserAssignment->getUser_main_id() . equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()])
-                . " AND " . $masterUserAssignment->getActivity_id() . equalToIgnoreCase($this->data_activity_details[0][$transactionActivityDetails->getActivityId()]));
+        $data_user_assignment = $db->selectByID($masterUserAssignment, 
+//                $masterUserAssignment->getUser_main_id() . equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()])
+                $masterUserAssignment->getId() . equalToIgnoreCase($id_user_assignment));
 
         $sql_assess = SELECT . 'mca1.' . $masterCategoryAssess->getId() . ',' . 'mca1.' . $masterCategoryAssess->getName() . ',' . 'mca1.' . $masterCategoryAssess->getCode() . ''
                 . FROM . $masterCategoryAssess->getEntity() . ' as mca1 '
@@ -135,7 +138,7 @@ class AgendaWidyaiswara extends ControllerMember {
         $no = 0;
         foreach ($data_category_asses as $value_) {
             $no += 1;
-            $totalValue += intval($_POST[$value_[$masterCategoryAssess->getCode()]]);
+            $totalValue += doubleval($_POST[$value_[$masterCategoryAssess->getCode()]]);
         }
         $totalAverage = $totalValue / $no;
         LOGGER('total-average:' . $totalAverage . ' | totalvalue:' . $totalValue);
@@ -147,8 +150,8 @@ class AgendaWidyaiswara extends ControllerMember {
             $db->insert($transactionEvaluation->getEntity(), array(
                 $transactionEvaluation->getCode() => createRandomBooking() . '|' . $this->data_activity_details[0][$transactionActivityDetails->getCode()],
                 $transactionEvaluation->getName() => $this->data_activity_details[0][$transactionActivityDetails->getCode()],
-                $transactionEvaluation->getValue() => intval($totalValue),
-                $transactionEvaluation->getRateValue() => intval($totalAverage),
+                $transactionEvaluation->getValue() => doubleval($totalValue),
+                $transactionEvaluation->getRateValue() => doubleval($totalAverage),
                 $transactionEvaluation->getUserAssignmentId() => $data_user_assignment[0][$masterUserAssignment->getId()],
                 $transactionEvaluation->getActivityDetailsId() => $this->data_activity_details[0][$transactionActivityDetails->getId()],
                 $transactionEvaluation->getStatus() => 1,
@@ -181,8 +184,8 @@ class AgendaWidyaiswara extends ControllerMember {
             }
         } else {
             $db->update($transactionEvaluation->getEntity(), array(
-                $transactionEvaluation->getValue() => intval($totalValue),
-                $transactionEvaluation->getRateValue() => intval($totalAverage),
+                $transactionEvaluation->getValue() => doubleval($totalValue),
+                $transactionEvaluation->getRateValue() => doubleval($totalAverage),
                 $transactionEvaluation->getUserAssignmentId() => $data_user_assignment[0][$masterUserAssignment->getId()],
                 $transactionEvaluation->getActivityDetailsId() => $this->data_activity_details[0][$transactionActivityDetails->getId()],
                 $transactionEvaluation->getStatus() => 1,
@@ -233,7 +236,7 @@ class AgendaWidyaiswara extends ControllerMember {
         if ($result == true) {
             echo toastAlert("success", lang('general.title_update_success'), lang('general.message_update_success'));
             echo resultPageMsg("danger", lang('general.title_update_error'), lang('general.message_update_error'));
-            echo writeMainJavascript("postAjaxEdit('" . URL(IURLMemberConstant::AGENDA_WIDYAISWARA_LIST_USER_URL) . "','id=" . $this->data_activity_details[0][$transactionActivityDetails->getActivityId()] . "')");
+            echo writeMainJavascript("postAjaxEdit('" . URL(IURLMemberConstant::AGENDA_WIDYAISWARA_LIST_USER_URL) . "','activity_details_id=".$this->data_activity_details[0][$transactionActivityDetails->getId()]."&id=" . $this->data_activity_details[0][$transactionActivityDetails->getActivityId()] . "')");
         } else {
             echo resultPageMsg("danger", lang('general.title_update_error'), lang('general.message_update_error'));
             echo toastAlert("error", lang('general.title_update_error'), lang('general.message_update_error'));
@@ -244,6 +247,7 @@ class AgendaWidyaiswara extends ControllerMember {
         $db = new Database();
 //        $db->connect();
         $transactionActivity = new TransactionActivity();
+        $transactionActivityDetails = new TransactionActivityDetails();
         $this->modelSubject = $transactionActivity;
         $masterUserAssignment = new MasterUserAssignment();
         $masterUserMain = new MasterUserMain();
@@ -251,15 +255,28 @@ class AgendaWidyaiswara extends ControllerMember {
 
 
         $data_user = getUserMember();
+        
+        
 
         $data_role = $db->selectByID($securityRole, $securityRole->getCode() . equalToIgnoreCase('TRAINER'));
 //        echo $data_user[$masterUserMain->getId()];
         $this->search_list = $transactionActivity->getEntity();
         $this->select_entity = $transactionActivity->getEntity() . '.*';
-        $this->join_list = array($masterUserAssignment->getEntity());
-        $this->where_list = $transactionActivity->getEntity() . DOT . $transactionActivity->getId() . EQUAL . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getActivity_id()
+        $this->join_list = array($transactionActivityDetails->getEntity());
+        $this->group_by = $transactionActivity->getEntity().DOT.$transactionActivity->getId();
+//        $this->gr
+        /*$this->where_list = $transactionActivity->getEntity() . DOT . $transactionActivity->getId() . EQUAL . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getActivity_id()
                 . " AND " . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getUser_main_id() . equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()])
-                . " AND " . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getRoleId() . equalToIgnoreCase($data_role[0][$securityRole->getId()]);
+                . " AND " . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getRoleId() . equalToIgnoreCase($data_role[0][$securityRole->getId()])
+                ;
+         * 
+         */
+        
+        $this->where_list = $transactionActivity->getEntity() . DOT . $transactionActivity->getId() . EQUAL . $transactionActivityDetails->getEntity() . DOT . $transactionActivityDetails->getActivityId()
+                . " AND " . $transactionActivityDetails->getEntity() . DOT . $transactionActivityDetails->getUserMainId() . equalToIgnoreCase($data_user[$masterUserMain->getEntity()][$masterUserMain->getId()])
+//                . " AND " . $masterUserAssignment->getEntity() . DOT . $masterUserAssignment->getRoleId() . equalToIgnoreCase($data_role[0][$securityRole->getId()])
+                ;
+        
 //        echo $_POST['search_by'];
         $sr = $this->modelSubject->search($_POST['search_by']);
 

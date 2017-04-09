@@ -42,6 +42,7 @@ class ControllerMember implements IController {
     public $where_list = null;
     public $search_list = null;
     public $join_list = null;
+    public $group_by = null;
     public $modelData;
     public $orderBy = null;
     public $per_page = 5;
@@ -181,7 +182,7 @@ class ControllerMember implements IController {
         } else if ($this->where_list == null && $this->join_list == null) {
             $list_data = $Datatable->select_pagination($data, $data->getEntity());
         } else {
-            $list_data = $Datatable->select_pagination($data, $data->getEntity(), $this->where_list, $this->join_list, $this->search_list, $this->orderBy, $this->select_entity);
+            $list_data = $Datatable->select_pagination($data, $data->getEntity(), $this->where_list, $this->join_list, $this->search_list, $this->orderBy, $this->select_entity,  $this->group_by);
         }
 
         $db->connect();

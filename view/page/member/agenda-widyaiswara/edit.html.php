@@ -4,14 +4,18 @@ use app\Model\MasterCategoryAssess;
 use app\Model\LinkSubjectAssess;
 use app\Model\TransactionActivity;
 use app\Model\TransactionActivityDetails;
+use app\Model\MasterUserMain;
 use app\Util\Database;
 
 $db = new Database();
 $db->connect();
+$masterUserMain = new MasterUserMain();
 $masterCategoryAssess = new MasterCategoryAssess();
 $linkSubjectAssess = new LinkSubjectAssess();
 $transactionActivity = new TransactionActivity();
 $transactionActivityDetails = new TransactionActivityDetails();
+
+$data_user_member = getUserMember();
 
 $db->select($transactionActivityDetails->getEntity(), ""
         . $transactionActivityDetails->getEntity() . "." . $transactionActivityDetails->getId() . " as id,"
@@ -24,7 +28,10 @@ $db->select($transactionActivityDetails->getEntity(), ""
         . $transactionActivityDetails->getEntity() . "." . $transactionActivityDetails->getUserMainName() . ","
         . $transactionActivityDetails->getEntity() . "." . $transactionActivityDetails->getActivityId() . ","
         . $transactionActivityDetails->getEntity() . "." . $transactionActivityDetails->getDescription() . " as description,"
-        . $transactionActivityDetails->getEntity() . "." . $transactionActivityDetails->getName() . " as name", array($transactionActivity->getEntity()), $transactionActivityDetails->getEntity() . DOT . $transactionActivityDetails->getActivityId() . EQUAL . $transactionActivity->getEntity() . DOT . $transactionActivity->getId()
+        . $transactionActivityDetails->getEntity() . "." . $transactionActivityDetails->getName() . " as name", 
+        array($transactionActivity->getEntity()), 
+        $transactionActivityDetails->getEntity() . DOT . $transactionActivityDetails->getActivityId() . EQUAL . $transactionActivity->getEntity() . DOT . $transactionActivity->getId()
+        . " AND " . $transactionActivityDetails->getEntity().DOT.$transactionActivityDetails->getUserMainId().  equalToIgnoreCase($data_user_member[$masterUserMain->getEntity()][$masterUserMain->getId()])
         . " AND " . $transactionActivityDetails->getEntity() . DOT . $transactionActivityDetails->getActivityId() . equalToIgnoreCase($this->data_activity[0][$transactionActivity->getId()]));
 $data_activity_details = $db->getResult();
 ?>
@@ -60,7 +67,7 @@ echo Form()->formLayout(HORIZONTAL)
             $materialName = $value[$transactionActivityDetails->getMaterialName()];
             if($value[$transactionActivityDetails->getUserMainName()] != null){
                 $materialName = '<a href="javascript:void(0)" '
-                . 'onclick="postAjaxEdit(\'' . $this->urlListUser . '\',\'id=' . $value[$transactionActivityDetails->getActivityId()] . '\')">' .$value[$transactionActivityDetails->getMaterialName()].'</a>';
+                . 'onclick="postAjaxEdit(\'' . $this->urlListUser . '\',\'id=' . $value[$transactionActivityDetails->getActivityId()] . '&activity_details_id=' . $value[$transactionActivityDetails->getId()] . '\')">' .$value[$transactionActivityDetails->getMaterialName()].'</a>';
             }
             $startTime = date('h:i', strtotime($value[$transactionActivityDetails->getStartTime()]));
             $endTime = date('h:i', strtotime($value[$transactionActivityDetails->getEndTime()]));

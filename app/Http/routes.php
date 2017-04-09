@@ -173,6 +173,7 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
     Routes::setScaffolding(IURLMemberConstant::SURVEY_ORGANIZER_URL, 'app\Controller\Member\Survey\OrganizerSurvey');
     Routes::setScaffolding(IURLMemberConstant::REKAPITULASI_NILAI_URL, 'app\Controller\Member\RekapitulasiNilai');
     Routes::setScaffolding(IURLMemberConstant::REPORT_SURVEY_ORGANIZER_URL, 'app\Controller\Member\Report\ReportOrganizerSurvey');
+    Routes::setScaffolding(IURLMemberConstant::REPORT_SURVEY_WIDYAISWARA_URL, 'app\Controller\Member\Report\ReportSurveyWidyaiswara');
     Routes::setScaffolding(IURLMemberConstant::AGENDA_WIDYAISWARA_URL, 'app\Controller\Member\AgendaActivity\AgendaWidyaiswara');
     Routes::set(IURLMemberConstant::AGENDA_WIDYAISWARA_LIST_USER_URL, 'app\Controller\Member\AgendaActivity\AgendaWidyaiswara@listUser');
     Routes::set(IURLMemberConstant::AGENDA_WIDYAISWARA_EDIT_USER_URL, 'app\Controller\Member\AgendaActivity\AgendaWidyaiswara@editUser');

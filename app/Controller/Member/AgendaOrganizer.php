@@ -94,15 +94,13 @@ class AgendaOrganizer {
 
         $userMember = getUserMember()["mst_user_main"];
 
-        $whereList =
-            $userAssignment->getEntity() . "." . $userAssignment->getActivity_id() . EQUAL . $data->getEntity() . "." . $data->getId() . " AND " .
-            $userAssignment->getEntity() . "." . $userAssignment->getRoleId() . EQUAL . $secRole->getEntity() . "." . $secRole->getId() . " AND " .
-            $userAssignment->getEntity() . "." . $userAssignment->getUser_main_id() . EQUAL . $userMember["id"] . " AND " .
-            $secRole->getEntity()        . "." . $secRole->getCode() . equalToIgnoreCase("ORGANIZER");
+        $whereList = $userAssignment->getEntity() . "." . $userAssignment->getActivity_id() . EQUAL . $data->getEntity() . "." . $data->getId() . " AND " .
+                $userAssignment->getEntity() . "." . $userAssignment->getRoleId() . EQUAL . $secRole->getEntity() . "." . $secRole->getId() . " AND " .
+                $userAssignment->getEntity() . "." . $userAssignment->getUser_main_id() . EQUAL . $userMember["id"] . " AND " .
+                $secRole->getEntity() . "." . $secRole->getCode() . equalToIgnoreCase("ORGANIZER");
         $whereList = $whereList . " AND " . $search;
 
-        $list_data = $Datatable->select_pagination($data, $data->getEntity(), $whereList, array($userAssignment->getEntity(), $secRole->getEntity()),
-            null, null, $data->getEntity().'.*', null);
+        $list_data = $Datatable->select_pagination($data, $data->getEntity(), $whereList, array($userAssignment->getEntity(), $secRole->getEntity()), null, null, $data->getEntity() . '.*', null);
 
 
         $user = new SecurityUser();
@@ -370,14 +368,14 @@ class AgendaOrganizer {
         $db->update($masterWaitingList->getEntity(), array(
             $masterWaitingList->getApprovedBy() => $_SESSION[SESSION_USERNAME_GUEST],
             $masterWaitingList->getIsApproved() => 1,
-            $masterWaitingList->getApprovedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
+            $masterWaitingList->getApprovedOn() => date(DATE_FORMAT_PHP_DEFAULT),
                 ), $masterWaitingList->getId() . EQUAL . $id);
         $result = $db->getResult();
         if ($result[0] == 1) {
             $db->update($masterApproval->getEntity(), array(
                 $masterApproval->getStatus() => 1,
                 $masterApproval->getModifiedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
-                $masterApproval->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
+                $masterApproval->getModifiedOn() => date(DATE_FORMAT_PHP_DEFAULT),
                     ), $masterApproval->getApprovalDetailId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . "3");
 //            echo $db->getSql();
             $result_2 = $db->getResult();
@@ -390,7 +388,7 @@ class AgendaOrganizer {
                     $masterUserAssignment->getUser_main_id() => $userMainId,
                     $masterUserAssignment->getActivity_id() => $activity_id,
                     $masterUserAssignment->getCreatedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
-                    $masterUserAssignment->getCreatedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
+                    $masterUserAssignment->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
                 ));
                 $result_3 = $db->getResult();
                 if (is_numeric($result_3[0])) {
@@ -428,14 +426,14 @@ class AgendaOrganizer {
             $masterWaitingList->getApprovedBy() => $_SESSION[SESSION_USERNAME_GUEST],
             $masterWaitingList->getIsApproved() => 0,
             $masterWaitingList->getApprovedMessage() => $message,
-            $masterWaitingList->getApprovedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
+            $masterWaitingList->getApprovedOn() => date(DATE_FORMAT_PHP_DEFAULT),
                 ), $masterWaitingList->getId() . EQUAL . $id);
         $result = $db->getResult();
         if ($result[0] == 1) {
             $db->update($masterApproval->getEntity(), array(
                 $masterApproval->getStatus() => 0,
                 $masterApproval->getModifiedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
-                $masterApproval->getModifiedOn() =>  date(DATE_FORMAT_PHP_DEFAULT),
+                $masterApproval->getModifiedOn() => date(DATE_FORMAT_PHP_DEFAULT),
                     ), $masterApproval->getApprovalDetailId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . "3");
 //            echo $db->getSql();
             $result_2 = $db->getResult();
@@ -586,18 +584,16 @@ class AgendaOrganizer {
         $group = new SecurityGroup();
         $userAssignment = new MasterUserAssignment();
         $whereList = ""
-            . $userMain->getEntity() . "." . $userMain->getUser_profile_id() . EQUAL . $userProfile->getEntity() . "." . $userProfile->getId() . " AND "
-            . $userProfile->getEntity() . "." . $userProfile->getUserId() . EQUAL . $user->getEntity() . "." . $user->getId() . " AND "
-            . $user->getEntity() . "." . $user->getGroupId() . EQUAL . $group->getEntity() . "." . $group->getId() . " AND "
-            . $group->getEntity() . "." . $group->getCode() . EQUAL . "'INTERNAL'";
+                . $userMain->getEntity() . "." . $userMain->getUser_profile_id() . EQUAL . $userProfile->getEntity() . "." . $userProfile->getId() . " AND "
+                . $userProfile->getEntity() . "." . $userProfile->getUserId() . EQUAL . $user->getEntity() . "." . $user->getId() . " AND "
+                . $user->getEntity() . "." . $user->getGroupId() . EQUAL . $group->getEntity() . "." . $group->getId() . " AND "
+                . $group->getEntity() . "." . $group->getCode() . EQUAL . "'INTERNAL'";
         $db->connect();
-        $db->select($userMain->getEntity(), $userMain->getEntity() . "." . $userMain->getId() . "," . $userProfile->getEntity() . "." . $userProfile->getName(),
-            array(
-                $user->getEntity(),
-                $userProfile->getEntity(),
-                $group->getEntity()
-            ),
-            $whereList);
+        $db->select($userMain->getEntity(), $userMain->getEntity() . "." . $userMain->getId() . "," . $userProfile->getEntity() . "." . $userProfile->getName(), array(
+            $user->getEntity(),
+            $userProfile->getEntity(),
+            $group->getEntity()
+                ), $whereList);
         $rs_user = $db->getResult();
 
         $this->data_user = convertJsonCombobox($rs_user, $userMain->getId(), $userProfile->getName());
@@ -624,13 +620,11 @@ class AgendaOrganizer {
                 . $user->getEntity() . "." . $user->getGroupId() . EQUAL . $group->getEntity() . "." . $group->getId() . " AND "
                 . $group->getEntity() . "." . $group->getCode() . EQUAL . "'INTERNAL'";
         $db->connect();
-        $db->select($userMain->getEntity(), $userMain->getEntity() . "." . $userMain->getId() . "," . $userProfile->getEntity() . "." . $userProfile->getName(),
-            array(
-                $user->getEntity(),
-                $userProfile->getEntity(),
-                $group->getEntity()
-            ),
-            $whereList);
+        $db->select($userMain->getEntity(), $userMain->getEntity() . "." . $userMain->getId() . "," . $userProfile->getEntity() . "." . $userProfile->getName(), array(
+            $user->getEntity(),
+            $userProfile->getEntity(),
+            $group->getEntity()
+                ), $whereList);
         $rs_user = $db->getResult();
 
         $get_data = $db->selectByID($activityDetails, $activityDetails->getId() . EQUAL . $id);
@@ -794,6 +788,7 @@ class AgendaOrganizer {
         $userProfile = new SecurityUserProfile();
         $group = new SecurityGroup();
         $curriculumModel = new MasterCurriculum();
+        $masterUserAssignment = new MasterUserAssignment();
         $whereList = ""
                 . $userMain->getEntity() . "." . $userMain->getUser_profile_id() . EQUAL . $userProfile->getEntity() . "." . $userProfile->getId() . " AND "
                 . $userProfile->getEntity() . "." . $userProfile->getUserId() . EQUAL . $user->getEntity() . "." . $user->getId() . " AND "
@@ -827,6 +822,18 @@ class AgendaOrganizer {
                 $data->getCurriculumId() => $curriculumId,
                 $data->getMaterialName() => $rs_cur[0][$curriculumModel->getName()],
             );
+            $db->insert($masterUserAssignment->getEntity(), array(
+                $masterUserAssignment->getCode() => createRandomBooking(),
+                $masterUserAssignment->getName() => $rs_user[0][$userProfile->getName()],
+                $masterUserAssignment->getActivity_id() => $activity,
+                $masterUserAssignment->getRoleId() => 2,
+                $masterUserAssignment->getUser_main_id() => $trainer,
+                $masterUserAssignment->getDescription() => 'Hadir',
+                $masterUserAssignment->getStatus() => 1,
+                $masterUserAssignment->getCreatedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
+                $masterUserAssignment->getModifiedOn() => date(DATE_FORMAT_PHP_DEFAULT)
+            ));
+            $rs_insert_user_assign = $db->getResult();
         } else {
             $curriculumName = $_POST['curriculum_name'];
             $ar_dt_cr = array(
@@ -881,6 +888,8 @@ class AgendaOrganizer {
         $userProfile = new SecurityUserProfile();
         $group = new SecurityGroup();
         $curriculumModel = new MasterCurriculum();
+        $masterUserAssignment = new MasterUserAssignment();
+
         $whereList = ""
                 . $userMain->getEntity() . "." . $userMain->getUser_profile_id() . EQUAL . $userProfile->getEntity() . "." . $userProfile->getId() . " AND "
                 . $userProfile->getEntity() . "." . $userProfile->getUserId() . EQUAL . $user->getEntity() . "." . $user->getId() . " AND "
@@ -920,6 +929,14 @@ class AgendaOrganizer {
             );
         }
 
+        $rs_activity_details = $db->selectByID($data, $data->getId() . equalToIgnoreCase($id));
+        $rs_assign_widyaiswara_1 = $db->selectByID($masterUserAssignment, ""
+                . $masterUserAssignment->getActivity_id() . equalToIgnoreCase($activity)
+                . " AND " . $masterUserAssignment->getRoleId() . equalToIgnoreCase(2)
+                . " AND " . $masterUserAssignment->getUser_main_id() . equalToIgnoreCase($rs_activity_details[0][$data->getUserMainId()])
+        );
+
+
         $ar_dt_trainer = array();
         if ($trainer != "") {
 
@@ -927,13 +944,51 @@ class AgendaOrganizer {
                 $data->getUserMainId() => $trainer,
                 $data->getUserMainName() => $rs_user[0][$userProfile->getName()],
             );
+
+            if (empty($rs_assign_widyaiswara_1)) {
+                $db->insert($masterUserAssignment->getEntity(), array(
+                    $masterUserAssignment->getCode() => createRandomBooking(),
+                    $masterUserAssignment->getName() => $rs_user[0][$userProfile->getName()],
+                    $masterUserAssignment->getActivity_id() => $activity,
+                    $masterUserAssignment->getRoleId() => 2,
+                    $masterUserAssignment->getUser_main_id() => $trainer,
+                    $masterUserAssignment->getDescription() => 'Hadir',
+                    $masterUserAssignment->getStatus() => 1,
+                    $masterUserAssignment->getCreatedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
+                    $masterUserAssignment->getModifiedOn() => date(DATE_FORMAT_PHP_DEFAULT)
+                ));
+                $rs_insert_user_assign = $db->getResult();
+            } else {
+                $db->update($masterUserAssignment->getEntity(), array(
+                    $masterUserAssignment->getCode() => createRandomBooking(),
+                    $masterUserAssignment->getName() => $rs_user[0][$userProfile->getName()],
+                    $masterUserAssignment->getActivity_id() => $activity,
+                    $masterUserAssignment->getRoleId() => 2,
+                    $masterUserAssignment->getUser_main_id() => $trainer,
+                    $masterUserAssignment->getDescription() => 'Hadir',
+                    $masterUserAssignment->getStatus() => 1,
+                    $masterUserAssignment->getCreatedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
+                    $masterUserAssignment->getModifiedOn() => date(DATE_FORMAT_PHP_DEFAULT)
+                        ), $masterUserAssignment->getActivity_id() . equalToIgnoreCase($activity)
+                        . " AND " . $masterUserAssignment->getRoleId() . equalToIgnoreCase(2)
+                        . " AND " . $masterUserAssignment->getUser_main_id() . equalToIgnoreCase($trainer)
+                );
+                $rs_update_user_assign = $db->getResult();
+            }
         } else {
             $trainerName = $_POST['trainer_name'];
             $ar_dt_trainer = array(
                 $data->getUserMainId() => null,
                 $data->getUserMainName() => $trainerName,
             );
+            if (!empty($rs_assign_widyaiswara_1)) {
+                $db->delete($masterUserAssignment->getEntity(), $masterUserAssignment->getActivity_id() . equalToIgnoreCase($activity)
+                        . " AND " . $masterUserAssignment->getRoleId() . equalToIgnoreCase(2)
+                        . " AND " . $masterUserAssignment->getUser_main_id() . equalToIgnoreCase($rs_assign_widyaiswara_1[0][$masterUserAssignment->getUser_main_id()]));
+                $rs_delete_user_assign = $db->getResult();
+            }
         }
+
 
         $db->update($data->getEntity(), array_merge($ar_dt, $ar_dt_cr, $ar_dt_trainer), $data->getId() . EQUAL . $id);
         $result = $db->getResult();
@@ -1008,12 +1063,22 @@ class AgendaOrganizer {
         echo $delete_data;
     }
 
-    public function deleteDetails() {
+    public function deleteDetails($activity) {
         $id = $_POST['id'];
         $Form = new Form();
         $db = new Database();
         $data = new TransactionActivityDetails();
+        $masterUserAssignment = new MasterUserAssignment();
         $db->connect();
+        $rs_activity_details = $db->selectByID($data, $data->getId() . equalToIgnoreCase($id));
+        $rs_assign_widyaiswara_1 = $db->selectByID($masterUserAssignment, ""
+                . $masterUserAssignment->getActivity_id() . equalToIgnoreCase($activity)
+                . " AND " . $masterUserAssignment->getRoleId() . equalToIgnoreCase(2)
+                . " AND " . $masterUserAssignment->getUser_main_id() . equalToIgnoreCase($rs_activity_details[0][$data->getUserMainId()])
+        );
+        if (!empty($rs_assign_widyaiswara_1)) {
+            $db->delete($masterUserAssignment->getEntity(), $masterUserAssignment->getId() . equalToIgnoreCase($rs_assign_widyaiswara_1[0][$masterUserAssignment->getId()]));
+        }
         $get_data = $db->delete($data->getEntity(), $data->getId() . EQUAL . $id);
         echo $get_data;
     }
