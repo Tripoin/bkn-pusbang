@@ -59,3 +59,5 @@ define('ACTION_TYPE_VIEW', 'view');
 define('ACTION_TYPE_EDIT', 'edit');
 define('ACTION_TYPE_DELETE', 'delete');
 define('ACTION_TYPE_LIST_ALL', 'list_all');
+
+define('IMAGE_ICON_EMAIL_URL','http://54.251.168.102/e-portal/contents/logo-kecil.png');
