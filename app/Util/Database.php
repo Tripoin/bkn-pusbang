@@ -27,43 +27,43 @@ class Database {
     private $updateAuditrail = array();
     public $insert_log = true;
     
-    function getDb_host() {
+    public function getDb_host() {
         return $this->db_host;
     }
 
-    function getDb_user() {
+    public function getDb_user() {
         return $this->db_user;
     }
 
-    function getDb_pass() {
+    public function getDb_pass() {
         return $this->db_pass;
     }
 
-    function getDb_name() {
+    public function getDb_name() {
         return $this->db_name;
     }
 
-    function getDb_driver() {
+    public function getDb_driver() {
         return $this->db_driver;
     }
 
-    function setDb_host($db_host) {
+    public function setDb_host($db_host) {
         $this->db_host = $db_host;
     }
 
-    function setDb_user($db_user) {
+    public function setDb_user($db_user) {
         $this->db_user = $db_user;
     }
 
-    function setDb_pass($db_pass) {
+    public function setDb_pass($db_pass) {
         $this->db_pass = $db_pass;
     }
 
-    function setDb_name($db_name) {
+    public function setDb_name($db_name) {
         $this->db_name = $db_name;
     }
 
-    function setDb_driver($db_driver) {
+    public function setDb_driver($db_driver) {
         $this->db_driver = $db_driver;
     }
 

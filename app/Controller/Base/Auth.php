@@ -39,6 +39,7 @@ use app\Model\MasterAddress;
 use app\Model\MasterContact;
 use app\Model\MasterWorkingUnit;
 use app\Model\MasterGovernmentAgencies;
+use app\Util\PasswordLib\TripoinCrypt;
 
 class Auth {
 
@@ -387,7 +388,7 @@ class Auth {
                 AND " . $user->getStatus() . EQUAL . ONE);
                 $rsPostNew = $dbNew->getResult();
             }
-            
+
             if (empty($rsPostNew)) {
                 echo resultPageMsg("danger", lang('general.login_failed'), lang('general.login_failed_username'));
                 echo '<script>ajaxPostManual(\'' . URL('captcha/reload') . '\',\'captcha_image_security_code\');</script>';
@@ -415,6 +416,11 @@ class Auth {
                         $_SESSION[SESSION_FULLNAME_GUEST] = $res_user[0][$userProfile->getName()];
                         $_SESSION[SESSION_GROUP_GUEST] = $rsPostNew[0][$user->getGroupId()];
                         $_SESSION[SESSION_EXPIRED_DATE_GUEST] = $rsPostNew[0][$user->getExpiredDate()];
+
+                        $tripoinCrypt = new TripoinCrypt();
+                        $crypt = $tripoinCrypt->encrypt($rsPostNew[0][$user->getCode()] . ':' . $password);
+                        $_SESSION[SESSION_AUTHORIZATION_GUEST] = $crypt;
+
                         echo resultPageMsg("success", lang('general.login_success'), lang('general.login_success_message'));
                         echo '<script>window.location.href = "' . URL('page/member/dashboard') . '";</script>';
                     } else {

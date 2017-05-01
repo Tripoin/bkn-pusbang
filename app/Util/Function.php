@@ -38,19 +38,23 @@ function getUserMember() {
     $masterUserMain = new MasterUserMain();
 //    $masterUserAssignment = new MasterUserAssignment();
     $user = checkUserLogin();
-    $data_user = $db->selectByID($securityUser, $securityUser->getCode() . equalToIgnoreCase($user[SESSION_USERNAME_GUEST]));
-    $data_user_profile = $db->selectByID($securityUserProfile, $securityUserProfile->getUserId() . equalToIgnoreCase($data_user[0][$securityUser->getId()]));
-    $data_user_main = $db->selectByID($masterUserMain, $masterUserMain->getUserProfileId() . equalToIgnoreCase($data_user_profile[0][$securityUserProfile->getId()]));
+    if (!empty($user)) {
+        $data_user = $db->selectByID($securityUser, $securityUser->getCode() . equalToIgnoreCase($user[SESSION_USERNAME_GUEST]));
+        $data_user_profile = $db->selectByID($securityUserProfile, $securityUserProfile->getUserId() . equalToIgnoreCase($data_user[0][$securityUser->getId()]));
+        $data_user_main = $db->selectByID($masterUserMain, $masterUserMain->getUserProfileId() . equalToIgnoreCase($data_user_profile[0][$securityUserProfile->getId()]));
 //    print_r($data_user_main);
-    $user_main = array();
-    if(!empty($data_user_main)){
-        $user_main = $data_user_main[0];
+        $user_main = array();
+        if (!empty($data_user_main)) {
+            $user_main = $data_user_main[0];
+        }
+        $array = array(
+            $securityUser->getEntity() => $data_user[0],
+            $securityUserProfile->getEntity() => $data_user_profile[0],
+            $masterUserMain->getEntity() => $user_main,
+        );
+    } else {
+        $array = array();
     }
-    $array = array(
-        $securityUser->getEntity() => $data_user[0],
-        $securityUserProfile->getEntity() => $data_user_profile[0],
-        $masterUserMain->getEntity() => $user_main,
-    );
     return $array;
 }
 
@@ -379,7 +383,7 @@ function modalHide() {
 }
 
 function writeMainJavascript($javascript) {
-    return "<script>$(function(){".$javascript."});</script>";
+    return "<script>$(function(){" . $javascript . "});</script>";
 }
 
 function postAjaxPagination() {
@@ -387,7 +391,7 @@ function postAjaxPagination() {
 }
 
 function postAjaxPaginationManual($id) {
-    return '<script>$(function(){postAjaxPaginationManual(\''.$id.'\');});</script>';
+    return '<script>$(function(){postAjaxPaginationManual(\'' . $id . '\');});</script>';
 }
 
 function toastAlert($type, $title, $message) {
@@ -622,8 +626,8 @@ function LOGGER($message = '') {
     }
 //    $conversion_file = formatSizeUnits(filesize(FILE_PATH($file_url)));
     $conversion_file = filesize(FILE_PATH($file_url));
-    if($conversion_file >= 31457280){
-        rename(FILE_PATH($file_url), FILE_PATH('logs/log-'.date(DATE_FORMAT_PHP_DEFAULT).'.logs'));
+    if ($conversion_file >= 31457280) {
+        rename(FILE_PATH($file_url), FILE_PATH('logs/log-' . date(DATE_FORMAT_PHP_DEFAULT) . '.logs'));
     }
     file_put_contents(FILE_PATH($file_url), $txt . PHP_EOL, FILE_APPEND | LOCK_EX);
 }
@@ -1774,7 +1778,7 @@ function getActionType($value = null) {
  * </p>
  * @return json_decode A formatted version of <i>$data</i>.
  */
-function convertJsonCombobox($data = null, $id, $label, $manual_data = array(),$separator="-") {
+function convertJsonCombobox($data = null, $id, $label, $manual_data = array(), $separator = "-") {
 //    print_r($data);
     $json = '[';
     if (!empty($manual_data)) {
@@ -2000,7 +2004,7 @@ function uploadFileImg($img, $filenames, $path, $addExtension = array(), $addFil
         $file_extension = end($temporary);
         $file_name = $filenames . "." . $file_extension;
         $file_path_name = $path . $file_name;
-        
+
         if ($img["size"] > 2097152) {
             return array("result" => 0, "message" => lang('message.051'));
         } else if (in_array($img["type"], $ex_file_type) && in_array($file_extension, $validextensions)) {

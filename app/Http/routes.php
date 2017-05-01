@@ -98,13 +98,10 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
     Routes::set('page/member/user-profile/list-saldo', 'app\Controller\Member\UserProfile@detailSaldoTopup');
     Routes::set('page/member/user-profile/changeProfile', 'app\Controller\Member\UserProfile@changeUserProfile');
 
-    Routes::set('page/member/topup-saldo/konfirmasi', 'app\Controller\Member\TopupSaldo@indexKonfirmasi');
-    Routes::set('page/member/topup-saldo/konfirmasi/layout', 'app\Controller\Member\TopupSaldo@konfirmasi');
-    Routes::set('page/member/topup-saldo/konfirmasi/save', 'app\Controller\Member\TopupSaldo@uploadImage');
-
 
     Routes::set('page/member/dashboard', 'app\Controller\Member\Dashboard@index');
 
+    Routes::set('e-learning', 'app\Controller\Member\InternalApplication@index');
 
 
 

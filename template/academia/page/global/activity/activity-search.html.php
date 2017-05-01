@@ -75,7 +75,12 @@
                         if ($status == 1) {
                             $status = "Penuh";
                         } else {
-                            $status = "<a href='" . URL('/activity/' . $map_activity1[$map_activity1[$no]][$nos]['id'] . '/register') . "'>Daftar</a>";
+                            $checkUserLogin = checkUserLogin();
+                            if (empty($checkUserLogin)) {
+                                $status = "<a href='" . URL('/activity/' . $map_activity1[$map_activity1[$no]][$nos]['id'] . '/register') . "'>Daftar</a>";
+                            } else {
+                                $status = "<a href='" . URL('/page/member/dashboard') . "'>Kunjungi Halaman Member anda</a>";
+                            }
                         }
 
                         echo $status;

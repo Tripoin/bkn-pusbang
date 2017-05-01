@@ -25,7 +25,7 @@
     <link href="<?= getTemplateURL('/assets/css/montserrat-light.css') ?>" rel="stylesheet"  type="text/css">
     
     
-    <link href="<?= getTemplateURL('/import.css'); ?>?v=1" rel="stylesheet"  type="text/css">
+    <link href="<?= getTemplateURL('/import.css'); ?>?v=1.2" rel="stylesheet"  type="text/css">
     <?php 
     $them_style = getSystemParameter('GENERAL_THEME_STYLE'); 
 //    if($them_style == 'default'){
