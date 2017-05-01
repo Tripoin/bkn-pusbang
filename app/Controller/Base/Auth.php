@@ -689,6 +689,21 @@ class Auth {
     }
 
     public function logout() {
+        if (isset($_GET['sesskey'])) {
+            $url = "http://54.251.168.102/e-learning/login/logout.php";
+            ?>
+            <form
+                id="moodleformlogout" target="iframe"
+                method="GET" action="<?= $url; ?>"
+                >
+                <input type="hidden" name="sesskey" value="<?= $_GET['sesskey']; ?>"/>
+            </form>
+            <iframe name="iframe" id="moodleframelogout" height="0" width="0"></iframe>
+            <script>
+                document.getElementById('moodleformlogout').submit();
+            </script>
+            <?php
+        }
         ini_set("display_errors", "Off");
         unset($_SESSION[SESSION_USERNAME_GUEST]);
         unset($_SESSION[SESSION_EMAIL_GUEST]);
