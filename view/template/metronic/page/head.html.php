@@ -181,6 +181,11 @@ $total_notif_all = $total_app_pic + $total_app_participant + $total_app_activity
                                                 </li>-->
                         <li class="divider"> </li>
                         <li>
+                            <a href="<?= URL($admin_url . '/about-application'); ?>">
+                                <i class="icon-settings"></i> About Application
+                            </a>
+                        </li>
+                        <li>
                             <a href="<?= URL(''); ?>" target="_blank">
                                 <i class="icon-globe"></i> <?= lang('general.view_website'); ?> </a>
                         </li>

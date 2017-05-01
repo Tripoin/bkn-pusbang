@@ -176,5 +176,15 @@ class General {
 
         echo json_encode($data);
     }
+    
+    public function aboutApplication() {
+        $Form = new Form();
+
+        setTitle('About Tripoin E-Pusbang');
+        setTitleBody('About Tripoin E-Pusbang');
+        setBreadCrumb(array('About Tripoin E-Pusbang' => FULLURL()));
+
+        include FILE_PATH('/view/page/general/about-application.html.php');
+    }
 
 }

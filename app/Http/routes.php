@@ -45,6 +45,8 @@ Routes::set('test-parameter/{param}', 'app\Controller\Master\Test@testParam');
 //Routes::set('page/carrer', 'app\Controller\Master\Carrer@page');
 //Routes::set('page/tala-membership', 'app\Controller\Master\MemberShip@page');
 
+
+
 Routes::set('search/lov', 'app\Controller\Base\SelectLOV@index');
 Routes::set('chat/send', 'app\Controller\Base\Chat@sendChat');
 Routes::set('chat/load', 'app\Controller\Base\Chat@loadChat');
@@ -190,6 +192,8 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
 //ROUTES ADMIN
 if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
     if ($_SESSION[SESSION_GROUP] != 1) {
+        
+        Routes::set($sys_url_admin.'/about-application', 'app\Controller\Base\General@aboutApplication');
 
         //ROUTES MENU POSTING - POST
         $post_class = 'app\Controller\Posting\Posting';
