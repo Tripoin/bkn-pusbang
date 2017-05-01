@@ -102,6 +102,7 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
     Routes::set('page/member/dashboard', 'app\Controller\Member\Dashboard@index');
 
     Routes::set('e-learning', 'app\Controller\Member\InternalApplication@index');
+    Routes::set('e-learning/sesskey', 'app\Controller\Member\InternalApplication@setSessionKey');
 
 
 

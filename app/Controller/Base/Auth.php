@@ -690,11 +690,11 @@ class Auth {
 
     public function logout() {
         if (isset($_GET['sesskey'])) {
-            $url = "http://54.251.168.102/e-learning/login/logout.php";
+            $url_moodle = "http://54.251.168.102/e-learning/login/logout.php";
             ?>
             <form
                 id="moodleformlogout" target="iframe"
-                method="GET" action="<?= $url; ?>"
+                method="GET" action="<?= $url_moodle; ?>"
                 >
                 <input type="hidden" name="sesskey" value="<?= $_GET['sesskey']; ?>"/>
             </form>

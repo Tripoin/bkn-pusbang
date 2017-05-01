@@ -135,7 +135,7 @@ curl_close($ch);
                         framehtml.find("body").find("#header").remove();
                         framehtml.find("body").find("#footer").remove();
                         var sesskey = getParameterByName(myArr[7], 'sesskey');
-                        $('[href="<?=URL(getAdminTheme().'/logout');?>"]').attr('href','<?=URL(getAdminTheme().'/logout');?>?sesskey='+sesskey);
+                        $('[href="<?=URL('page/logout');?>"]').attr('href','<?=URL('page/logout');?>?sesskey='+sesskey);
                         console.log(getParameterByName(myArr[7], 'sesskey'));
                     }
                 }

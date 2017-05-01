@@ -38,8 +38,8 @@ $db = new Database();
 
 $db2 = new Database();
 $db2->setDb_driver('mysqli');
-//$db2->setDb_host('localhost');
-$db2->setDb_host('54.251.168.102');
+$db2->setDb_host('localhost');
+//$db2->setDb_host('54.251.168.102');
 $db2->setDb_user('bkn');
 $db2->setDb_pass('bknP@ssw0rd123');
 $db2->setDb_name('e_learning');
@@ -126,7 +126,62 @@ include_once getTemplatePath('page/content-page.html.php');
             <script type="text/javascript">
                 $(function () {
                     document.getElementById('moodleforms').submit();
+                    setTimeout(
+                            function () {
+                                checkFrame();
+                            }, 1);
                 });
+                function getParameterByName(url, name) {
+                    if (!url) {
+                        url = window.location.href;
+                    }
+                    name = name.replace(/[\[\]]/g, "\\$&");
+                    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                            results = regex.exec(url);
+                    if (!results)
+                        return null;
+                    if (!results[2])
+                        return '';
+                    return decodeURIComponent(results[2].replace(/\+/g, " "));
+                }
+                function checkFrame() {
+                    var editFrame = document.getElementById('moodleframe');
+                    var framehtml = $(editFrame).contents().find("html");
+    //                    console.log(framehtml.find("body").find("#header").find('.header-top'));
+    //                    if (typeof (framehtml.find("body").find("#header").find('.header-top')) == "undefined") {
+    //                    console.log(framehtml.find("body").find("#header"));
+                    if (framehtml.find("body").find("#header").length == 0) {
+                        setTimeout(
+                                function () {
+                                    checkFrame();
+                                }, 1);
+                    } else {
+    //                        alert("masuk");
+                        var headerframe = framehtml.find("body").find("#header");
+                        var usermenu = headerframe.find('.header-top').find('div').find('div').find('div').find('.usermenu');
+                        var ulmenulogout = usermenu.find('#action-menu-0-menu').find('li');
+                        var myArr = [];
+                        ulmenulogout.each(function () {
+    //                            myArr.push($(this).html());
+                            myArr.push($(this).find('a').attr('href'));
+                        });
+    //                        console.log(myArr[7]);
+    //                        framehtml.find("body").find("#header").remove();
+    //                        framehtml.find("body").find("#footer").remove();
+                        var sesskey = getParameterByName(myArr[7], 'sesskey');
+                        $('#menu-logout-portal').attr('href', '<?= URL('page/logout'); ?>?sesskey=' + sesskey);
+                        console.log(getParameterByName(myArr[7], 'sesskey'));
+                        $.ajax({
+                            type: "POST",
+                            url: '<?= URL('e-learning/sesskey'); ?>',
+                            data: 'sesskey='+sesskey,
+                            success: function (data) {
+                                console.log(data);
+                            }
+                        });
+                    }
+                }
+
             </script>
         <?php } ?>
     </div>

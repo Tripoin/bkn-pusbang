@@ -24,6 +24,7 @@ define('SESSION_TOKEN_GUEST', 'token_guest_e_portal');
 define('SESSION_LOCK_SCREEN_GUEST', 'LOCK_SCREEN_guest_e_portal');
 define('SESSION_EXPIRED_DATE_GUEST', 'EXPIRED_DATE_guest_e_portal');
 define('SESSION_AUTHORIZATION_GUEST', 'AUTHORIZATION_guest_e_portal');
+define('SESSION_SESSKEY_GUEST', 'MOODLE_SESSKEY_guest_e_portal');
 
 
 define('SESSION_ADMIN_USERNAME', 'username');

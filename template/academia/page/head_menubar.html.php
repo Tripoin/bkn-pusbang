@@ -143,8 +143,15 @@ $sfLanguage = new SecurityFunctionLanguage();
                                             <?=lang('general.dashboard');?>
                                         </a>
                                     </li>
+                                    
+                                    <?php
+                                    $url_logout_e_portal = URL('/page/logout');
+                                    if(isset($_SESSION[SESSION_SESSKEY_GUEST])){
+                                        $url_logout_e_portal = URL('/page/logout?sesskey='.$_SESSION[SESSION_SESSKEY_GUEST]);
+                                    }
+                                    ?>
                                     <li>
-                                        <a href="<?= URL('/page/logout'); ?>">
+                                        <a id="menu-logout-portal" href="<?= $url_logout_e_portal; ?>">
                                             <i class="fa fa-sign-out"></i>
                                             <?= lang('general.sign_out'); ?>
                                         </a>

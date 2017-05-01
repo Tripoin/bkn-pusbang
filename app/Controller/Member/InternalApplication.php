@@ -31,5 +31,11 @@ class InternalApplication {
     }
 
     
+    public function setSessionKey(){
+        if(isset($_POST['sesskey'])){
+            $_SESSION[SESSION_SESSKEY_GUEST] = $_POST['sesskey'];
+        }
+    }
+    
 
 }
