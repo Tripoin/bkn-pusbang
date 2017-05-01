@@ -106,9 +106,9 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
 
 
 
-    Routes::set('page/member/notification', 'app\Controller\Member\Notification@index');
-    Routes::set('page/member/notification/list', 'app\Controller\Member\Notification@lists');
-    Routes::set('page/member/notification/view', 'app\Controller\Member\Notification@view');
+    Routes::setScaffolding(IURLMemberConstant::NOTIFICATION_URL, 'app\Controller\Member\Notification');
+    Routes::set(IURLMemberConstant::NOTIFICATION_URL.'/list-user', 'app\Controller\Member\Notification@listUser');
+    
 
     Routes::set('page/member/video-seminar', 'app\Controller\Member\VideoSeminar@index');
     Routes::set('page/member/video-seminar/list', 'app\Controller\Member\VideoSeminar@lists');
@@ -166,6 +166,7 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
 
     Routes::set(IURLMemberConstant::LIST_PARTICIPANT_URL . '', 'app\Controller\Member\ListParticipant@index');
     Routes::set(IURLMemberConstant::LIST_PARTICIPANT_URL . '/list', 'app\Controller\Member\ListParticipant@listData');
+    Routes::set(IURLMemberConstant::LIST_PARTICIPANT_UPLOAD_URL, 'app\Controller\Member\ListParticipant@upload');
     Routes::set(IURLMemberConstant::LIST_PARTICIPANT_EDIT_URL, 'app\Controller\Member\ListParticipant@edit');
     Routes::set(IURLMemberConstant::LIST_PARTICIPANT_VIEW_URL, 'app\Controller\Member\ListParticipant@view');
     Routes::set(IURLMemberConstant::LIST_PARTICIPANT_UPDATE_URL, 'app\Controller\Member\ListParticipant@update');

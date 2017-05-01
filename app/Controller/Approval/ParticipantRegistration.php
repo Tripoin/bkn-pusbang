@@ -27,6 +27,7 @@ use app\Model\MasterWorkingUnit;
 use app\Model\MasterGovernmentAgencies;
 use app\Model\MasterUserAssignment;
 use app\Model\MasterUserMain;
+use app\Model\MasterNotification;
 use app\Model\MasterCurriculum;
 use app\Model\MasterSubject;
 use app\Model\MasterReligion;
@@ -85,6 +86,7 @@ class ParticipantRegistration extends Controller {
         $masterApprovalCategory = new MasterApprovalCategory();
         $linkRegistration = new LinkRegistration();
         $transactionRegistration = new TransactionRegistration();
+        $transactionActivity = new TransactionActivity();
 //        $Datatable->per_page = 10;
         if ($_POST['per_page'] == "") {
             $Datatable->per_page = 10;
@@ -114,13 +116,24 @@ class ParticipantRegistration extends Controller {
         $whereList = $masterApprovalCategory->getEntity() . DOT . $masterApprovalCategory->getId() . EQUAL . $masterApproval->getEntity() . DOT . $masterApproval->getApprovalCategoryId() . ""
                 . " AND " . $masterApproval->getEntity() . DOT . $masterApproval->getApprovalDetailId() . EQUAL . $linkRegistration->getEntity() . DOT . $linkRegistration->getId() . ""
                 . " AND " . $linkRegistration->getEntity() . DOT . $linkRegistration->getRegistrationId() . EQUAL . $transactionRegistration->getEntity() . DOT . $transactionRegistration->getId() . ""
+                . " AND " . $linkRegistration->getEntity() . DOT . $linkRegistration->getActivityId() . EQUAL . $transactionActivity->getEntity() . DOT . $transactionActivity->getId() . ""
                 . " AND (" . $masterApprovalCategory->getEntity() . DOT . $masterApprovalCategory->getCode() . equalToIgnoreCase('REGISTRATION') . " OR " . $masterApprovalCategory->getEntity() . DOT . $masterApprovalCategory->getCode() . equalToIgnoreCase('RE-REGISTRATION') . ")"
+                . "AND " . $masterApproval->getEntity() . DOT . $masterApproval->getStatus() . " = 1"
                 . " AND " . $linkRegistration->getEntity() . DOT . $linkRegistration->getRegistrationDetailsId() . " is null "
                 . "" . $search;
 //        $Datatable->debug(true);
-        $list_data = $Datatable->select_pagination($masterApproval, $masterApproval->getEntity(), $whereList, array($masterApprovalCategory->getEntity(), $linkRegistration->getEntity(), $transactionRegistration->getEntity()), $masterApprovalCategory->getEntity(), $this->orderBy, ""
+        $list_data = $Datatable->select_pagination($masterApproval, $masterApproval->getEntity(), $whereList, array(
+            $masterApprovalCategory->getEntity(),
+            $linkRegistration->getEntity(),
+            $transactionRegistration->getEntity(),
+            $transactionActivity->getEntity()
+                ), $masterApprovalCategory->getEntity(), $this->orderBy, ""
                 . $masterApproval->getEntity() . DOT . $masterApproval->getId() . " as id,"
                 . $masterApproval->getEntity() . DOT . $masterApproval->getCode() . " as code,"
+                . $transactionActivity->getEntity() . DOT . $transactionActivity->getId() . " as activity_id,"
+                . $transactionActivity->getEntity() . DOT . $transactionActivity->getName() . " as activity_name,"
+                . $linkRegistration->getEntity() . DOT . $linkRegistration->getId() . " as link_registration_id,"
+                . $transactionRegistration->getEntity() . DOT . $transactionRegistration->getId() . " as registration_id,"
                 . $transactionRegistration->getEntity() . DOT . $transactionRegistration->getName() . " as pic_name,"
                 . $masterApproval->getEntity() . DOT . $masterApproval->getCreatedByUsername() . " as username,"
                 . $masterApproval->getEntity() . DOT . $masterApproval->getCreatedOn() . " as created_on,"
@@ -483,6 +496,7 @@ class ParticipantRegistration extends Controller {
                                                     "email" => $rs_registration_detail[0][$regDetail->getEmail()],
                                                     "name" => $rs_registration_detail[0][$regDetail->getName()]), $subject, $body);
                                                 if ($sendMail == true) {
+
                                                     echo toastAlert('success', lang('general.title_approved_success'), lang('general.message_approved_success'));
                                                     echo $this->backSuccessApprovedReject($approvalId);
                                                 } else {
@@ -599,8 +613,37 @@ class ParticipantRegistration extends Controller {
                             "email" => $rs_registration_detail[0][$regDetail->getEmail()],
                             "name" => $rs_registration_detail[0][$regDetail->getName()]), $subject, $body);
                         if ($sendMail == true) {
-                            echo toastAlert('success', lang('general.title_approved_success'), lang('general.message_approved_success'));
-                            echo $this->backSuccessApprovedReject($approvalId);
+//                            echo toastAlert('success', lang('general.title_approved_success'), lang('general.message_approved_success'));
+//                            echo $this->backSuccessApprovedReject($approvalId);
+
+                            $securityUser = new SecurityUser();
+                            $securityUserProfile = new SecurityUserProfile();
+
+                            $rs_user_admin = $db->selectByID($securityUser, $securityUser->getCode() . equalToIgnoreCase($_SESSION[SESSION_ADMIN_USERNAME]));
+                            $rs_user_profile_admin = $db->selectByID($securityUserProfile, $securityUserProfile->getUserId() . equalToIgnoreCase($rs_user_admin[0][$securityUser->getId()]));
+
+                            $rs_user_profile = $db->selectByID($securityUserProfile, $securityUserProfile->getUserId() . equalToIgnoreCase($rs_registration_detail[0][$regDetail->getUserId()]));
+
+                            $code_notif = createRandomBooking();
+                            $masterNotification = new MasterNotification();
+                            $db->insert($masterNotification->getEntity(), array(
+                                $masterNotification->getCode() => $code_notif,
+                                $masterNotification->getName() => $subject,
+                                $masterNotification->getTitle() => $subject,
+                                $masterNotification->getMessage() => $body,
+                                $masterNotification->getFrom() => $rs_user_profile_admin[0][$securityUserProfile->getId()],
+                                $masterNotification->getTo() => $rs_user_profile[0][$securityUserProfile->getId()],
+                                $masterNotification->getDate() => date(DATE_FORMAT_PHP_DEFAULT),
+                            ));
+
+                            $rs_insert_notif = $db->getResult();
+                            if (is_numeric($rs_insert_notif[0])) {
+                                echo toastAlert('success', lang('general.title_approved_success'), lang('general.message_approved_success'));
+                                echo $this->backSuccessApprovedReject($approvalId);
+                            } else {
+                                echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+                                echo $this->backErrorApprovedReject($linkRegistrationId, $approvalId);
+                            }
                         } else {
                             $this->rollBackMasterUserAssignment($rs_insert_user_assignment[0]);
                             $this->rollBackLinkRegistration($linkRegistrationId);
@@ -968,8 +1011,63 @@ class ParticipantRegistration extends Controller {
                 if (is_numeric($rs_update_approval[0]) == 1) {
                     $sendMail = $this->sendMailRejectData();
                     if ($sendMail == true) {
-                        echo toastAlert('success', lang('general.title_rejected_success'), lang('general.message_rejected_success'));
-                        echo $this->backSuccessModalApprovedReject($approvalId);
+                        $rs_reg_detail = $db->selectByID($regDetail, $regDetail->getId() . equalToIgnoreCase($rs_link_registration[0][$linkRegistration->getRegistrationDetailsId()]));
+                        if (!is_null($rs_reg_detail[0][$regDetail->getUserId()])) {
+
+                            $securityUser = new SecurityUser();
+                            $securityUserProfile = new SecurityUserProfile();
+
+                            $rs_user_admin = $db->selectByID($securityUser, $securityUser->getCode() . equalToIgnoreCase($_SESSION[SESSION_ADMIN_USERNAME]));
+                            $rs_user_profile_admin = $db->selectByID($securityUserProfile, $securityUserProfile->getUserId() . equalToIgnoreCase($rs_user_admin[0][$securityUser->getId()]));
+
+                            $rs_user_profile = $db->selectByID($securityUserProfile, $securityUserProfile->getUserId() . equalToIgnoreCase($rs_reg_detail[0][$regDetail->getUserId()]));
+
+                            $img_logo_tala = 'http://54.251.168.102/e-portal/contents/logo-kecil.png';
+                            $subject = 'Approval Registrasi Pusbang BKN';
+                            $body = '<div style="border-style: solid;border-width: thin;font-family: \'Roboto\';">
+                      <div align="center" style="margin:15px;"><img src="' . $img_logo_tala . '" width="120" height="40"/></div>
+                        <div align="left" style="margin:15px;">
+                            Kepada Yang Terhormat ' . $rs_user_profile[0][$securityUserProfile->getName()] . ',
+                        <br/><br/>
+                       <p>
+                            Pendaftaran Kegiatan anda <b>Tidak Disetujui</b> dengan Catatan:
+                            <br/><br/>
+                            ' . $_POST['message'] . '
+                            <br/>
+                       </p>
+                        <br/>
+                        <br/>
+                        Terima Kasih telah mendaftar di Pusbang ASN
+                        <br/><a href="' . URL('') . '" target="_blank">' . URL('') . '</a>
+                        </div>
+                        </div>
+                            ';
+
+                            $code_notif = createRandomBooking();
+                            $masterNotification = new MasterNotification();
+                            $db->insert($masterNotification->getEntity(), array(
+                                $masterNotification->getCode() => $code_notif,
+                                $masterNotification->getName() => $subject,
+                                $masterNotification->getTitle() => $subject,
+                                $masterNotification->getMessage() => $body,
+                                $masterNotification->getFrom() => $rs_user_profile_admin[0][$securityUserProfile->getId()],
+                                $masterNotification->getTo() => $rs_user_profile[0][$securityUserProfile->getId()],
+                                $masterNotification->getDate() => date(DATE_FORMAT_PHP_DEFAULT),
+                            ));
+
+                            $rs_insert_notif = $db->getResult();
+                            if (is_numeric($rs_insert_notif[0])) {
+                                echo toastAlert('success', lang('general.title_rejected_success'), lang('general.message_rejected_success'));
+                                echo $this->backSuccessModalApprovedReject($approvalId);
+                            } else {
+                                echo toastAlert('error', lang('general.title_rejected_error'), lang('general.message_rejected_error'));
+                                echo $this->backErrorApprovedReject($linkRegistrationId, $rs_link_registration[0]['approval_id']);
+                            }
+                        } else {
+
+                            echo toastAlert('success', lang('general.title_rejected_success'), lang('general.message_rejected_success'));
+                            echo $this->backSuccessModalApprovedReject($approvalId);
+                        }
                     } else {
                         $this->rollBackApproval($rs_link_registration[0]['approval_id']);
                         $this->rollBackLinkRegistration($linkRegistrationId);

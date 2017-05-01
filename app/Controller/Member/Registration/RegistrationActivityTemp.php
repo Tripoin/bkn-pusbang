@@ -120,12 +120,15 @@ class RegistrationActivityTemp {
         $masterAttachment = new MasterAttachment();
         $masterApproval = new MasterApproval();
         $masterApprovalCategory = new MasterApprovalCategory();
+        $securityUser = new SecurityUser();
+        $transactionRegistration = new TransactionRegistration();
 
         $registrationId = $_POST['registration_id'];
 //        print_r($_FILES['recommend_letter']);
         $recommendLetter = $_FILES['recommend_letter'];
         $reArray = reArrayFiles($recommendLetter);
-        $upload = uploadFileImg($reArray[0], $reArray[0]['name'], FILE_PATH('uploads/' . $_SESSION[SESSION_USERNAME_GUEST] . '/'));
+        $upload = uploadFileImg($reArray[0], $reArray[0]['name'], FILE_PATH('uploads/member/' . $_SESSION[SESSION_USERNAME_GUEST] . '/'), array('pdf'), array('application/pdf'));
+//        print_r($upload);
         if ($upload['result'] == true) {
             $code = createRandomBooking();
             $db->insert($masterAttachment->getEntity(), array(
@@ -143,29 +146,33 @@ class RegistrationActivityTemp {
                 $rs_insert_link_registration = $db->getResult();
                 if (is_numeric($rs_insert_link_registration[0])) {
                     $rs_app_cat = $db->selectByID($masterApprovalCategory, $masterApprovalCategory->getCode() . equalToIgnoreCase('RE-REGISTRATION'));
+                    $securityUser = new SecurityUser();
+                    $rs_registration = $db->selectByID($transactionRegistration, $transactionRegistration->getId() . equalToIgnoreCase($registrationId));
+                    $rs_user = $db->selectByID($securityUser, $securityUser->getId() . equalToIgnoreCase($rs_registration[0][$transactionRegistration->getUserId()]));
                     $db->insert($masterApproval->getEntity(), array(
                         $masterApproval->getCode() => $code . "-" . $registrationId . "",
                         $masterApproval->getName() => $code . "-" . $registrationId . "",
+                        $masterApproval->getCreatedByUsername() => $rs_user[0][$securityUser->getCode()],
                         $masterApproval->getApprovalCategoryId() => $rs_app_cat[0][$masterApproval->getId()],
                         $masterApproval->getApprovalDetailId() => $rs_insert_link_registration[0],
                         $masterApproval->getStatus() => null
                     ));
                     $rs_insert_approval = $db->getResult();
                     if (is_numeric($rs_insert_link_registration[0])) {
-                        echo toastAlert('success', lang('general.title_register_success'), lang('general.messsage_register_success'));
-                        echo resultPageMsg('success', lang('general.title_register_success'), lang('general.messsage_register_success'));
+                        echo toastAlert('success', lang('general.title_register_success'), lang('general.message_register_success'));
+                        echo resultPageMsg('success', lang('general.title_register_success'), lang('general.message_register_success'));
                         echo postAjaxPagination();
                     } else {
-                        echo toastAlert('error', lang('general.title_register_failed'), lang('general.messsage_register_failed'));
-                        echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.messsage_register_failed'));
+                        echo toastAlert('error', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                        echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.message_register_failed'));
                     }
                 } else {
-                    echo toastAlert('error', lang('general.title_register_failed'), lang('general.messsage_register_failed'));
-                    echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.messsage_register_failed'));
+                    echo toastAlert('error', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                    echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.message_register_failed'));
                 }
             } else {
-                echo toastAlert('error', lang('general.title_register_failed'), lang('general.messsage_register_failed'));
-                echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.messsage_register_failed'));
+                echo toastAlert('error', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.message_register_failed'));
             }
         } else {
             echo toastAlert('error', lang('general.title_upload_failed'), $upload['message']);
@@ -235,17 +242,26 @@ class RegistrationActivityTemp {
 //        $data->getName();
         $linkRegistration = new LinkRegistration();
 
-        $db->select($linkRegistration->getEntity(), $linkRegistration->getRegistrationDetailsId(), null, ""
-                . "" . $linkRegistration->getRegistrationId() . equalToIgnoreCase($registrationId)
-//                . " AND " . $linkRegistration->getActivityId() . equalToIgnoreCase($activity)
+        /* $db->select($linkRegistration->getEntity(), $linkRegistration->getRegistrationDetailsId(), null, ""
+          . "" . $linkRegistration->getRegistrationId() . equalToIgnoreCase($registrationId)
+          //                . " AND " . $linkRegistration->getActivityId() . equalToIgnoreCase($activity)
+          );
+         * 
+         */
+
+        $db->select($data->getEntity(), $data->getId(), null, ""
+                . "" . $data->getRegistrationId() . equalToIgnoreCase($registrationId)
         );
+
         $dt_link_reg = $db->getResult();
 //        print_r($dt_link_reg);
         $list_reg_id_detail = '';
         foreach ($dt_link_reg as $value) {
-            $list_reg_id_detail .= $value[$linkRegistration->getRegistrationDetailsId()] . ",";
+//            $list_reg_id_detail .= $value[$linkRegistration->getRegistrationDetailsId()] . ",";
+            $list_reg_id_detail .= $value[$data->getId()] . ",";
         }
         $list_reg_id_detail = rtrim($list_reg_id_detail, ',');
+//        echo $list_reg_id_detail;
 //        $implode_reg_id_detail = implode(',', $dt_link_reg[0][$linkRegistration]);
 //                print_r($dt_link_reg);
 
@@ -333,7 +349,9 @@ class RegistrationActivityTemp {
         $data_religion = getLov($masterReligion);
         $data_province = getLov($masterProvince);
 //        $data_college = getLov($masterCollege);
-        $data_government_class = getLov($masterGovernmentClassification);
+//        $data_government_class = getLov($masterGovernmentClassification);
+        $rs_lov_government_class = $db->selectByID($masterGovernmentClassification);
+        $data_government_class = convertJsonCombobox($rs_lov_government_class, 'id', array("name", "code"),array(),", ");
         $data_activity = $db->selectByID($modelActivity, $modelActivity->getId() . EQUAL . $activity);
         include_once FILE_PATH(IViewMemberConstant::REGISTRATION_ACTIVITY_TEMP_LIST_USER_CREATE_VIEW_INDEX);
     }

@@ -1,4 +1,5 @@
 <form role="form" id="login_form" action="<?= URL('/page/login/proses'); ?>" onsubmit="return false;" method="POST" novalidate="novalidate">
+    
     <div id="form-message-login">
     </div>
     <div class="signup">
@@ -21,7 +22,8 @@
                         ->captcha();
                 ?>
                 <div class="col-md-12">
-                    <button type="button" style="width:100%" onclick="return postAjax('login_form', 'form-message-login')"  
+                    <button type="button" style="width:100%" 
+                            onclick="return postAjax('login_form', 'form-message-login')"  
                             class="btn btn-danger"><?= strtoupper(lang('general.sign_in')); ?></button>
                 </div>
             </div>

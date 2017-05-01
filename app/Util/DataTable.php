@@ -590,8 +590,15 @@ class DataTable {
             } else {
                 
             }
+//            print_r($attrRowBody[$no]);
             if ($this->tableOption['DELETE_COLLECTION'] == true) {
-                $rs .= '<tr ' . $attrRowBody[$no] . '  onclick="checkCollectionRow(this)" class="collection" style="cursor:pointer">';
+                if(empty($attrRowBody[$no])){
+                    $attrManual = 'onclick="checkCollectionRow(this)" class="collection" style="cursor:pointer"';
+                } else {
+                    $attrManual = $attrRowBody[$no];
+                }
+                    
+                $rs .= '<tr  '.$attrManual.'>';
             } else {
                 $rs .= '<tr ' . $attrRowBody[$no] . ' >';
             }

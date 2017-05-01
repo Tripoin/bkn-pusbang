@@ -23,6 +23,8 @@ interface IViewMemberConstant {
     const CRUD_LOV_VIEW_INDEX = 'view/template/crud/lov/index.html.php';
     const CRUD_LOV_LIST_VIEW_INDEX = 'view/template/crud/lov/list.html.php';
     
+    const NOTIFICATION_VIEW_INDEX = 'view/page/member/notification';
+    
     /*LIST PARTICIPANT*/
     const LIST_PARTICIPANT_VIEW_INDEX = 'view/page/member/list-participant/index.html.php';
     const LIST_PARTICIPANT_LIST_VIEW_INDEX = 'view/page/member/list-participant/list.html.php';

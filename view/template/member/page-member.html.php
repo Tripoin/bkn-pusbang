@@ -4,23 +4,27 @@ use app\Util\Database;
 use app\Model\SecurityFunctionAssignment;
 use app\Model\SecurityUser;
 use app\Model\SecurityUserProfile;
-use app\Model\Notification;
+use app\Model\MasterNotification;
 use app\Model\Confirm;
 
 $db = new Database();
 $secFuncAssg = new SecurityFunctionAssignment();
 $su = new SecurityUser();
 $sup = new SecurityUserProfile();
+$masterNotification = new MasterNotification();
 $db->connect();
+
 $db->select(
         $su->getEntity(), $su->getId() . "," . $su->getExpiredDate(), array(), $su->getCode() . EQUAL . "'" . $_SESSION[SESSION_USERNAME_GUEST] . "'"
 );
 $cek_user = $db->getResult();
-
+//print_r($cek_user);
 $db->select(
-        $sup->getEntity(), "*", array(), $sup->getId() . EQUAL . "'" . $cek_user[0][$su->getId()] . "'"
+        $sup->getEntity(), "*", array(), $sup->getUserId() . EQUAL . "'" . $cek_user[0][$su->getId()] . "'"
 );
 $cek_user_profile = $db->getResult();
+//print_r($cek_user_profile);
+
 //$db = new Database();
 //        $db->connect();
 if (!empty($cek_user_profile[0][$sup->getPathimage()])) {
@@ -120,6 +124,29 @@ if (!empty($cek_user_profile[0][$sup->getPathimage()])) {
                                     <i class="<?= $val_func_member[$secFuncAssg->getFunction()->getStyle()]; ?>"></i>
                                     <?= FunctionLanguageName($val_func_member); ?>
                                     <?= $chevron; ?>
+                                    <?php
+                                    if ($val_func_member[$secFuncAssg->getFunction()->getCode()] == 'parent-pesan') {
+                                        if (isset($cek_user_profile[0][$su->getId()])) {
+                                            $db->select($masterNotification->getEntity(), "COUNT(" . $masterNotification->getId() . ") as total", array(), ""
+                                                    . "" . $masterNotification->getTo() . equalToIgnoreCase($cek_user_profile[0][$su->getId()])
+//                                                . " OR " . $masterNotification->getFrom() . equalToIgnoreCase($cek_user_profile[0][$su->getId()]) . ")"
+                                                    . " AND (" . $masterNotification->getRead() . "<>1"
+                                                    . " OR " . $masterNotification->getRead() . " is null)");
+                                            $data_notification = $db->getResult();
+//                                        print_r($data_notification);
+                                            if (!empty($data_notification)) {
+                                                if (isset($data_notification[0]['total'])) {
+                                                    if ($data_notification[0]['total'] == 0) {
+                                                        echo '<span class="badge badge-info" id="notif-message"></span>';
+                                                    } else {
+                                                        echo '<span class="badge badge-info" id="notif-message">' . $data_notification[0]['total'] . '</span>';
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    ?>
+
                                 </a>
                                 <?php
                                 if ($countitem != 0) {

@@ -30,10 +30,9 @@ $db->connect();
 
     foreach ($list_data['item'] as $value) {
         if ($value['user_id'] == null) {
-            $btn = '<a href="javascript:void(0)" onclick="ajaxPostManual(\''.URL(IURLMemberConstant::LIST_PARTICIPANT_EDIT_URL).'\',\'pageListParticipant\',\'id='.$value['id'].'\')">' . lang('general.edit') . '</a>';
+            $btn = '<a href="javascript:void(0)" onclick="ajaxPostManual(\'' . URL(IURLMemberConstant::LIST_PARTICIPANT_EDIT_URL) . '\',\'pageListParticipant\',\'id=' . $value['id'] . '\')">' . lang('general.edit') . '</a>';
         } else {
-            $btn = '<a href="javascript:void(0)" onclick="ajaxPostManual(\''.URL(IURLMemberConstant::LIST_PARTICIPANT_VIEW_URL).'\',\'pageListParticipant\',\'id='.$value['id'].'\')">' . lang('general.view') . '</a>';
-            
+            $btn = '<a href="javascript:void(0)" onclick="ajaxPostManual(\'' . URL(IURLMemberConstant::LIST_PARTICIPANT_VIEW_URL) . '\',\'pageListParticipant\',\'id=' . $value['id'] . '\')">' . lang('general.view') . '</a>';
         }
         $Datatable->body(array($no,
             $value['front_degree'] . " " . $value['name'] . " " . $value['behind_degree'],
@@ -50,10 +49,24 @@ $db->connect();
     echo $Datatable->show();
     ?>
 </div>
+
+<form id="form-upload-user" 
+      action="<?= URL(IURLMemberConstant::LIST_PARTICIPANT_UPLOAD_URL) ?>" 
+      method="POST" class="form" onsubmit="return false;">
+    <div id="form-message"></div>
+    <?=
+            Form()->id('upload_participant')->required(true)->value('')
+            ->title(lang('general.upload_participant') . " (format:'csv')")
+            ->placeholder(lang('general.upload_participant'))->fileinput();
+    ?>
+
+    <button id="btn_signup" type="submit" onsubmit="return false;" 
+            onclick="return ajaxPostFormManual('form-upload-user', 'pageListParticipant', 'form-message')" 
+            class="btn btn-danger"><i class="fa fa-upload"></i> <?= lang('general.upload'); ?>
+    </button>
+</form>
 <script>
     $(function () {
-        
-        
 //        postAjaxEdit()
         $('#list_search_by-pageListActivity').attr("class", "input-sm input-xsmall input-inline");
         $('#search_pagination-pageListActivity').attr("class", "form-control");

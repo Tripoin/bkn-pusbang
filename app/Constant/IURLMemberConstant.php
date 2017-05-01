@@ -28,6 +28,7 @@ interface IURLMemberConstant {
     const LIST_PARTICIPANT_EDIT_URL = 'member/list-participant/edit';
     const LIST_PARTICIPANT_VIEW_URL = 'member/list-participant/view';
     const LIST_PARTICIPANT_UPDATE_URL = 'member/list-participant/update';
+    const LIST_PARTICIPANT_UPLOAD_URL = 'member/list-participant/upload';
     
     /*REGISTRATION URL*/
     const REGISTRATION_URL = 'member/registration';
@@ -46,4 +47,6 @@ interface IURLMemberConstant {
     /*REPORT*/
     const REPORT_SURVEY_ORGANIZER_URL = 'member/report/report-survey-organizer';
     const REPORT_SURVEY_WIDYAISWARA_URL = 'member/report/report-survey-widyaiswara';
+    
+    const NOTIFICATION_URL = 'member/message';
 }

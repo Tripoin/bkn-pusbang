@@ -416,7 +416,7 @@ class Auth {
                         $_SESSION[SESSION_GROUP_GUEST] = $rsPostNew[0][$user->getGroupId()];
                         $_SESSION[SESSION_EXPIRED_DATE_GUEST] = $rsPostNew[0][$user->getExpiredDate()];
                         echo resultPageMsg("success", lang('general.login_success'), lang('general.login_success_message'));
-                        echo '<script>window.location.href = "' . URL('') . '";</script>';
+                        echo '<script>window.location.href = "' . URL('page/member/dashboard') . '";</script>';
                     } else {
                         echo resultPageMsg("danger", lang('general.login_failed'), lang('general.login_failed_username'));
                         echo '<script>ajaxPostManual(\'' . URL('captcha/reload') . '\',\'captcha_image_security_code\');</script>';

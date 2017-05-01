@@ -758,9 +758,10 @@ function checkLogin(id, type) {
 //    form.validate();
 //    alert(form.valid());
     if (form.valid() || type == 2) {
-        modalLogin.append(highlightLoader());
-        var spinner = $('.panel-loading');
-        spinner.attr("style", "position: absolute;left: 50%;top: 50%;margin-top: -40px;margin-left: -40px;");
+        modalLogin.append('<div class="background-overlay" style="padding-top: 50%;padding-left: 40%;"><div class="overlay-spinner2"></div></div>');
+//        modalLogin.append(highlightLoader());
+//        var spinner = $('.panel-loading');
+//        spinner.attr("style", "position: absolute;left: 50%;top: 50%;margin-top: -40px;margin-left: -40px;");
 //    $('#modal-body-login').hide();
 //    $('#modal-body-login').html(spinnerLoader());
         var datastring = form.serialize();
@@ -1745,33 +1746,69 @@ function addAllGroupSelect(idLeft, idRight) {
     }
 }
 
-function ajaxCombobox(parent, page, target, value,selected) {
-        $('#' + target).html('');
-        if (typeof selected == 'undefined') {
-            selected = "";
-        }
-        var search = $('#' + parent).val();
-        var txt = '&search=' + search;
-        $.ajax({
-            type: "POST",
-            url: page + txt,
-            data: value,
-            success: function (data) {
+function ajaxCombobox(parent, page, target, value, selected) {
+    $('#' + target).html('');
+    if (typeof selected == 'undefined') {
+        selected = "";
+    }
+    var search = $('#' + parent).val();
+    var txt = '&search=' + search;
+    $.ajax({
+        type: "POST",
+        url: page + txt,
+        data: value,
+        success: function (data) {
 //                console.log(data);
-                var result = JSON.parse(data);
+            var result = JSON.parse(data);
 
-                $('#' + target).select2({
-                    data: result
-                });
-                $('[name='+target+']').val(selected).trigger("change");
+            $('#' + target).select2({
+                data: result
+            });
+            $('[name=' + target + ']').val(selected).trigger("change");
 //                $('#' + target).select2("val", selected);
 //                $('#' + target).val(selected).trigger("change");
 //                $('#inputID').select2('data', {id: 100, a_key: 'Lorem Ipsum'});
 //                $('#' + target).change();
-            },
-            error: function (data) {
-                console.log(data);
+        },
+        error: function (data) {
+            console.log(data);
 //                $('#' + target).html(data.responseText);
-            },
+        },
+    });
+}
+
+function ajaxPostFormManual(idForm, targetLoader, idTarget) {
+
+    CKupdate();
+    var form = $('#' + idForm);
+    var ti = document.getElementById(idForm);
+//    var content = 'bodyPage';
+    var contents = $('#' + targetLoader);
+//alert(form.valid());
+    if (form.valid()) {
+        contents.append('<div class="background-overlay" style="padding: 50%;"><div class="overlay-spinner2"></div></div>');
+        var page = form.attr("action");
+        $.ajax({
+            type: "POST",
+            url: page,
+//            data: datastring,
+            data: new FormData(ti),
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (data) {
+                try {
+                    $('#' + idTarget).html(data);
+                    $('.background-overlay').remove();
+                } catch (e) {
+                    $('#' + idTarget).html(data);
+                    $('.background-overlay').remove();
+                }
+            }, error: function (jqXHR, textStatus, errorThrown) {
+//                alert(jqXHR.responseText);
+                $('#' + idTarget).html(jqXHR.responseText);
+                $('.background-overlay').remove();
+            }
         });
     }
+}

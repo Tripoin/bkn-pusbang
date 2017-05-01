@@ -1,6 +1,13 @@
 <?php
 
 use app\Constant\IURLConstant;
+use app\Model\SecurityUser;
+use app\Util\Database;
+
+$db = new Database();
+$db->connect();
+$securityUser = new SecurityUser();
+$rs_user = $db->selectByID($securityUser, $securityUser->getId().  equalToIgnoreCase($rs_registration[0][$transactionRegistration->getUserId()]));
 ?>
 <?= Form()->formHeader(); ?>
 <?php
@@ -55,7 +62,15 @@ if ($dt_participant_type[0][$m_participant_type->getCode()] == 'GOVERNMENT_AGENC
     </div>
     <div class="portlet-body"> 
         <?php
-        $attach = '<a href="' . URL('uploads/' . $rs_attachment[0][$masterAttachment->getName()]) . '" target="_blank">Download</a>';
+        $file_document = '';
+        if(file_exists(FILE_PATH('uploads/' . $rs_attachment[0][$masterAttachment->getName()]))){
+            $file_document = URL('uploads/' . $rs_attachment[0][$masterAttachment->getName()]);
+        } else if(file_exists(FILE_PATH('uploads/member/'.$rs_user[0][$securityUser->getCode()].'/' . $rs_attachment[0][$masterAttachment->getName()]))){
+            $file_document = URL('uploads/member/'.$rs_user[0][$securityUser->getCode()].'/' . $rs_attachment[0][$masterAttachment->getName()]);
+        } else {
+            $file_document = URL('uploads/'.$rs_user[0][$securityUser->getCode()].'/' . $rs_attachment[0][$masterAttachment->getName()]);
+        }
+        $attach = '<a href="' . $file_document . '" target="_blank">Download</a>';
         echo Form()->attr('style="width:50%;"')
                 ->title(lang('transaction.recommend_letter'))
                 ->label($attach)

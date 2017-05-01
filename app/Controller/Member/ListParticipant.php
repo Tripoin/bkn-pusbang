@@ -245,4 +245,120 @@ class ListParticipant {
         include_once FILE_PATH(IViewMemberConstant::LIST_PARTICIPANT_LIST_VIEW_INDEX);
     }
 
+    public function upload() {
+        $transactionRegistrationDetails = new TransactionRegistrationDetails();
+        $transactionRegistration = new TransactionRegistration();
+        $db = new Database();
+        $db->connect();
+
+        $securityUser = new SecurityUser();
+        $masterNoIdType = new MasterNoIdType();
+        $masterReligion = new MasterReligion();
+//    $masterUserAssignment = new MasterUserAssignment();
+        $user = checkUserLogin();
+        $data_user = $db->selectByID($securityUser, $securityUser->getCode() . equalToIgnoreCase($user[SESSION_USERNAME_GUEST]));
+        $data_registration = $db->selectByID($transactionRegistration, $transactionRegistration->getUserId() . equalToIgnoreCase($data_user[0][$securityUser->getId()]));
+
+        if (!empty($data_registration)) {
+            if (isset($_FILES['upload_participant'])) {
+                $uploads = $_FILES['upload_participant'];
+                $reArray = reArrayFiles($uploads);
+                $upload = uploadFileImg($reArray[0], $reArray[0]['name'] . '-' . createRandomBooking(), FILE_PATH('uploads/member/' . $_SESSION[SESSION_USERNAME_GUEST] . '/'), array('csv', 'csv'), array('text/csv', 'application/vnd.ms-excel'));
+                if ($upload['result'] == 1) {
+                    $row = 1;
+                    if (($handle = fopen(FILE_PATH('uploads/member/' . $_SESSION[SESSION_USERNAME_GUEST] . '/' . $upload['file_name']), 'r')) !== FALSE) {
+                        $result_set = true;
+                        while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+                            $num = count($data);
+//                            echo $num;
+                            if ($num == 11) {
+                                if ($result_set = true) {
+                                    $data_noIdType = $db->selectByID($masterNoIdType, $masterNoIdType->getName() . equalToIgnoreCase(strtoupper($data[2])));
+                                    $id_idNumber = null;
+                                    if (empty($data_noIdType)) {
+                                        $db->insert($masterNoIdType->getEntity(), array(
+                                            $masterNoIdType->getCode() => strtoupper($data[2]),
+                                            $masterNoIdType->getName() => strtoupper($data[2]),
+                                            $masterNoIdType->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+                                            $masterNoIdType->getCreatedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
+                                            $masterNoIdType->getStatus() => null,
+                                                )
+                                        );
+                                        $rs_insert_noIdType = $db->getResult();
+                                        if (is_numeric($rs_insert_noIdType[0])) {
+                                            $id_idNumber = $rs_insert_noIdType[0];
+                                        }
+                                    } else {
+                                        $id_idNumber = $data_noIdType[0][$masterNoIdType->getId()];
+                                    }
+                                    
+                                    $data_religion = $db->selectByID($masterReligion, 
+                                            $masterReligion->getName() . equalToIgnoreCase(strtoupper($data[7])));
+                                    $id_religion = null;
+                                    if (empty($data_religion)) {
+                                        $db->insert($masterReligion->getEntity(), array(
+                                            $masterReligion->getCode() => strtoupper($data[7]),
+                                            $masterReligion->getName() => strtoupper($data[7]),
+                                            $masterReligion->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+                                            $masterReligion->getCreatedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
+                                            $masterReligion->getStatus() => null,
+                                                )
+                                        );
+                                        $rs_insert_religion = $db->getResult();
+                                        if (is_numeric($rs_insert_religion[0])) {
+                                            $id_religion = $rs_insert_religion[0];
+                                        }
+                                    } else {
+                                        $id_religion = $data_religion[0][$masterReligion->getId()];
+                                    }
+                                    $gender = "";
+                                    if($data[9] == "L"){
+                                        $gender = "M";
+                                    }
+                                    
+                                    if($data[9] == "P"){
+                                        $gender = "F";
+                                    }
+                                    $db->insert($transactionRegistrationDetails->getEntity(), array(
+                                        $transactionRegistrationDetails->getRegistrationId() => $data_registration[0][$transactionRegistration->getId()],
+                                        $transactionRegistrationDetails->getCode() => $data[1],
+                                        $transactionRegistrationDetails->getName() => $data[0],
+                                        $transactionRegistrationDetails->getIdNumber() => $data[1],
+                                        $transactionRegistrationDetails->getNoidTypeId() => $id_idNumber,
+                                        $transactionRegistrationDetails->getFrontDegree() => $data[3],
+                                        $transactionRegistrationDetails->getBehindDegree() => $data[4],
+                                        $transactionRegistrationDetails->getPob() => $data[5],
+                                        $transactionRegistrationDetails->getDob() => $data[6],
+                                        $transactionRegistrationDetails->getEmail() => $data[8],
+                                        $transactionRegistrationDetails->getReligionId() => $id_religion,
+                                        $transactionRegistrationDetails->getGender() => $gender,
+                                        $transactionRegistrationDetails->getPhoneNumber() => $data[10],
+                                        $transactionRegistrationDetails->getCreatedOn() => date(DATE_FORMAT_PHP_DEFAULT),
+                                        $transactionRegistrationDetails->getCreatedByUsername() => $_SESSION[SESSION_USERNAME_GUEST],
+                                        $transactionRegistrationDetails->getStatus() => null,
+                                            )
+                                    );
+                                    $rs_insert_reg_detail = $db->getResult();
+                                    if (!is_numeric($rs_insert_reg_detail[0])) {
+                                        $result_set = false;
+                                    }
+                                }
+                            } else {
+                                echo resultPageMsg('danger', 'Insert Error', 'The data format does not match, please look at the example data');
+                            }
+                        }
+                        fclose($handle);
+                        if($result_set == true){
+                            echo postAjaxPaginationManual('pageListParticipant');
+                        } else {
+                            echo resultPageMsg('danger', lang('general.title_insert_error'), lang('general.message_insert_error'));
+                        }
+                    }
+                } else {
+                    echo resultPageMsg('danger', 'Upload Error', 'Format file must be csv');
+                }
+            }
+        }
+    }
+
 }

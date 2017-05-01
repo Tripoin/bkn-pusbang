@@ -37,8 +37,8 @@ class Activity {
         $Form = new Form();
         include getTemplatePath('page/global/activity.html.php');
     }
-    
-    public function search(){
+
+    public function search() {
         $years = $_POST['years'];
         $Form = new Form();
         $masterSubject = new MasterSubject();
@@ -47,7 +47,7 @@ class Activity {
 
 //        $rs_activity = $db->selectByID($transActivity);
         $db->connect();
-        $db->select($transActivity->getEntity(), "*", null, $transActivity->getYearActivity().  equalToIgnoreCase($years), $transActivity->getId()." DESC");
+        $db->select($transActivity->getEntity(), "*", null, $transActivity->getYearActivity() . equalToIgnoreCase($years), $transActivity->getId() . " DESC");
         $rs_activity = $db->getResult();
         include getTemplatePath('/page/global/activity/activity-search.html.php');
     }
@@ -56,13 +56,13 @@ class Activity {
         $transActivity = new TransactionActivity();
         $db = new Database();
 
-        $rs_subject = $db->selectByID($transActivity,$transActivity->getId().EQUAL.$id);
+        $rs_subject = $db->selectByID($transActivity, $transActivity->getId() . EQUAL . $id);
 //        print_r($rs_subject);
         $Form = new Form();
         include getTemplatePath('/page/global/activity/register.html.php');
     }
 
-    public function saveNewRegister($idActivity){
+    public function saveNewRegister($idActivity) {
         $code = createRandomBooking();
         $picName = $_POST['pic_name'];
         $picEmail = $_POST['pic_email'];
@@ -92,105 +92,109 @@ class Activity {
 
         $recommendLetter = $_FILES['recommend_letter'];
         $reArray = reArrayFiles($recommendLetter);
-        $upload = uploadFileImg($reArray[0],$reArray[0]['name'],FILE_PATH('uploads/'),'pdf');
-        $fileName = $upload["file_name"];
+        $upload = uploadFileImg($reArray[0], $reArray[0]['name'], FILE_PATH('uploads/'), array('pdf'), array('application/pdf'));
+        if ($upload['result'] == 0) {
+            echo toastAlert('error', lang('general.title_register_failed'), 'Mohon periksa format file dokumen anda');
+            echo resultPageMsg('danger', lang('general.title_register_failed'), 'Mohon periksa format file dokumen anda');
+        } else {
+            $fileName = $upload["file_name"];
 
-        $trxRegdata = new TransactionRegistration();
+            $trxRegdata = new TransactionRegistration();
 
-        $dataInstSwasta = array(
-            $trxRegdata->getCode() => $code,
-            $trxRegdata->getName() => $picName,
-            $trxRegdata->getDelegationName() => $picName,
-            $trxRegdata->getDelegationEmail() => $picEmail,
-            $trxRegdata->getDelegationPhoneNumber() => $picPhone,
-            $trxRegdata->getDelegationFax() => $picFax,
-            $trxRegdata->getDelegationAddress() => $picAddress,
-            $trxRegdata->getProvinceId() => $picProvince,
-            $trxRegdata->getCityId() => $picCity,
-            $trxRegdata->getDistrictId() => $picDistrict,
-            $trxRegdata->getVillageId() => $picVillage,
-            $trxRegdata->getZipCode() =>$picZipCode,
-            $trxRegdata->getParticipantTypeId() => $picParticipant,
-            $trxRegdata->getWorkingUnitName() => $picOfficeName,
-            $trxRegdata->getWuPhoneNumber() => $ofcOfficePhone,
-            $trxRegdata->getWuFax() =>$ofcFax,
-            $trxRegdata->getWuAddress() => $ofcAddress,
-            $trxRegdata->getWuProvinceId() => $ofcProvince,
-            $trxRegdata->getWuCityId() => $ofcCity,
-            $trxRegdata->getWuDistrictId() => $ofcDistrict,
-            $trxRegdata->getWuVillageId() => $ofcVillage,
-            $trxRegdata->getWuZipCode() => $ofcZipCode,
-            $trxRegdata->getMessageTitle() => $subjectTitle,
-            $trxRegdata->getMessageContent() => $msgSubject,
-        );
+            $dataInstSwasta = array(
+                $trxRegdata->getCode() => $code,
+                $trxRegdata->getName() => $picName,
+                $trxRegdata->getDelegationName() => $picName,
+                $trxRegdata->getDelegationEmail() => $picEmail,
+                $trxRegdata->getDelegationPhoneNumber() => $picPhone,
+                $trxRegdata->getDelegationFax() => $picFax,
+                $trxRegdata->getDelegationAddress() => $picAddress,
+                $trxRegdata->getProvinceId() => $picProvince,
+                $trxRegdata->getCityId() => $picCity,
+                $trxRegdata->getDistrictId() => $picDistrict,
+                $trxRegdata->getVillageId() => $picVillage,
+                $trxRegdata->getZipCode() => $picZipCode,
+                $trxRegdata->getParticipantTypeId() => $picParticipant,
+                $trxRegdata->getWorkingUnitName() => $picOfficeName,
+                $trxRegdata->getWuPhoneNumber() => $ofcOfficePhone,
+                $trxRegdata->getWuFax() => $ofcFax,
+                $trxRegdata->getWuAddress() => $ofcAddress,
+                $trxRegdata->getWuProvinceId() => $ofcProvince,
+                $trxRegdata->getWuCityId() => $ofcCity,
+                $trxRegdata->getWuDistrictId() => $ofcDistrict,
+                $trxRegdata->getWuVillageId() => $ofcVillage,
+                $trxRegdata->getWuZipCode() => $ofcZipCode,
+                $trxRegdata->getMessageTitle() => $subjectTitle,
+                $trxRegdata->getMessageContent() => $msgSubject,
+            );
 
-        $dataInstNgr = array(
-            $trxRegdata->getCode() => $code,
-            $trxRegdata->getName() => $picName,
-            $trxRegdata->getDelegationName() => $picName,
-            $trxRegdata->getDelegationEmail() => $picEmail,
-            $trxRegdata->getDelegationPhoneNumber() => $picPhone,
-            $trxRegdata->getDelegationFax() => $picFax,
-            $trxRegdata->getDelegationAddress() => $picAddress,
-            $trxRegdata->getProvinceId() => $picProvince,
-            $trxRegdata->getCityId() => $picCity,
-            $trxRegdata->getDistrictId() => $picDistrict,
-            $trxRegdata->getVillageId() => $picVillage,
-            $trxRegdata->getZipCode() =>$picZipCode,
-            $trxRegdata->getParticipantTypeId() => $picParticipant,
-            $trxRegdata->getWorkingUnitName() => $picWorkingUnit,
-            $trxRegdata->getGovernmentAgencies() => $picGovAgencies,
-            $trxRegdata->getWuPhoneNumber() => $ofcOfficePhone,
-            $trxRegdata->getWuFax() =>$ofcFax,
-            $trxRegdata->getWuAddress() => $ofcAddress,
-            $trxRegdata->getWuProvinceId() => $ofcProvince,
-            $trxRegdata->getWuCityId() => $ofcCity,
-            $trxRegdata->getWuDistrictId() => $ofcDistrict,
-            $trxRegdata->getWuVillageId() => $ofcVillage,
-            $trxRegdata->getWuZipCode() => $ofcZipCode,
-            $trxRegdata->getMessageTitle() => $subjectTitle,
-            $trxRegdata->getMessageContent() => $msgSubject,
-        );
+            $dataInstNgr = array(
+                $trxRegdata->getCode() => $code,
+                $trxRegdata->getName() => $picName,
+                $trxRegdata->getDelegationName() => $picName,
+                $trxRegdata->getDelegationEmail() => $picEmail,
+                $trxRegdata->getDelegationPhoneNumber() => $picPhone,
+                $trxRegdata->getDelegationFax() => $picFax,
+                $trxRegdata->getDelegationAddress() => $picAddress,
+                $trxRegdata->getProvinceId() => $picProvince,
+                $trxRegdata->getCityId() => $picCity,
+                $trxRegdata->getDistrictId() => $picDistrict,
+                $trxRegdata->getVillageId() => $picVillage,
+                $trxRegdata->getZipCode() => $picZipCode,
+                $trxRegdata->getParticipantTypeId() => $picParticipant,
+                $trxRegdata->getWorkingUnitName() => $picWorkingUnit,
+                $trxRegdata->getGovernmentAgencies() => $picGovAgencies,
+                $trxRegdata->getWuPhoneNumber() => $ofcOfficePhone,
+                $trxRegdata->getWuFax() => $ofcFax,
+                $trxRegdata->getWuAddress() => $ofcAddress,
+                $trxRegdata->getWuProvinceId() => $ofcProvince,
+                $trxRegdata->getWuCityId() => $ofcCity,
+                $trxRegdata->getWuDistrictId() => $ofcDistrict,
+                $trxRegdata->getWuVillageId() => $ofcVillage,
+                $trxRegdata->getWuZipCode() => $ofcZipCode,
+                $trxRegdata->getMessageTitle() => $subjectTitle,
+                $trxRegdata->getMessageContent() => $msgSubject,
+            );
 
-        $db = new Database();
-        $db->connect();
+            $db = new Database();
+            $db->connect();
 
-        $getValidEmail = $db->selectByID($trxRegdata, $trxRegdata->getDelegationEmail().equalToIgnoreCase($picEmail));
+            $getValidEmail = $db->selectByID($trxRegdata, $trxRegdata->getDelegationEmail() . equalToIgnoreCase($picEmail));
 
-        if(!empty($getValidEmail)){
-            echo toastAlert('error',lang('general.message_register_failed_email'),lang('general.message_register_failed_email'));
-            echo resultPageMsg('danger',lang('general.message_register_failed_email'),lang('general.message_register_failed_email'));
-        }else{
-            if($picParticipant == 1){
-                $db->insert($trxRegdata->getEntity(), $dataInstSwasta);
-            }else{
-                $db->insert($trxRegdata->getEntity(), $dataInstNgr);
-            }
-            $result = $db->getResult();
-            $idReg = $result[0];
-
-            if(is_numeric($result[0])){
-                $this->saveAttachFile($db, $fileName, $idReg, $idActivity, null);
-
-                echo toastAlert('success',lang('general.title_register_success'),lang('general.message_register_success'));
-                echo resultPageMsg('success',lang('general.title_register_success'),lang('general.message_register_success'));
-
-                redirectURL(URL('activity'));
+            if (!empty($getValidEmail)) {
+                echo toastAlert('error', lang('general.message_register_failed_email'), lang('general.message_register_failed_email'));
+                echo resultPageMsg('danger', lang('general.message_register_failed_email'), lang('general.message_register_failed_email'));
             } else {
-                echo toastAlert('error',lang('general.title_register_failed'),lang('general.message_register_failed'));
-                echo resultPageMsg('danger',lang('general.title_register_failed'),lang('general.message_register_failed'));
+                if ($picParticipant == 1) {
+                    $db->insert($trxRegdata->getEntity(), $dataInstSwasta);
+                } else {
+                    $db->insert($trxRegdata->getEntity(), $dataInstNgr);
+                }
+                $result = $db->getResult();
+                $idReg = $result[0];
+
+                if (is_numeric($result[0])) {
+                    $this->saveAttachFile($db, $fileName, $idReg, $idActivity, null);
+
+                    echo toastAlert('success', lang('general.title_register_success'), lang('general.message_register_success'));
+                    echo resultPageMsg('success', lang('general.title_register_success'), lang('general.message_register_success'));
+
+                    redirectURL(URL('activity'));
+                } else {
+                    echo toastAlert('error', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                    echo resultPageMsg('danger', lang('general.title_register_failed'), lang('general.message_register_failed'));
+                }
             }
         }
-        
     }
 
-    public function saveAttachFile($dB, $fileName, $idReg, $idActivity, $idRegDetail){
+    public function saveAttachFile($dB, $fileName, $idReg, $idActivity, $idRegDetail) {
         $attachmentFile = new MasterAttachment();
         $linkReg = new LinkRegistration();
         $dB = new Database();
         $dB->connect();
 
-        $codeAttach = createRandomBooking().$fileName;
+        $codeAttach = createRandomBooking() . $fileName;
 
         $dB->insert($attachmentFile->getEntity(), array(
             $attachmentFile->getCode() => $codeAttach,
@@ -213,7 +217,7 @@ class Activity {
         $mstApproval = new MasterApproval();
         $apprvCtgr = new MasterApprovalCategory();
 
-        $ctgrId = $dB->selectByID($apprvCtgr, $apprvCtgr->getCode()."='REGISTRATION';");
+        $ctgrId = $dB->selectByID($apprvCtgr, $apprvCtgr->getCode() . "='REGISTRATION';");
 
         $ctgrIds = $ctgrId[0][$apprvCtgr->getId()];
 

@@ -23,6 +23,7 @@ $db->select($masterApproval->getEntity(), $regDetail->getEntity() . ".*"
         . " AND " . $linkRegistration->getEntity() . DOT . $linkRegistration->getRegistrationDetailsId() . " is not null"
         . " AND " . $linkRegistration->getEntity() . DOT . $linkRegistration->getActivityId() . equalToIgnoreCase($rs_link_registration[0][$linkRegistration->getActivityId()]) . ""
         . " AND " . $linkRegistration->getEntity() . DOT . $linkRegistration->getRegistrationId() . equalToIgnoreCase($rs_link_registration[0][$linkRegistration->getRegistrationId()]) . ""
+        . " GROUP BY ".$regDetail->getEntity().DOT.$regDetail->getId()
         . "", null, null);
 //echo $db->getSql();
 $rs_reg_detail = $db->getResult();

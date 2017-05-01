@@ -28,6 +28,7 @@ use app\Model\MasterGovernmentAgencies;
 use app\Model\MasterUserAssignment;
 use app\Model\MasterUserMain;
 use app\Model\MasterCurriculum;
+use app\Model\MasterNotification;
 use app\Model\MasterSubject;
 use app\Model\MasterReligion;
 use app\Model\MasterContact;
@@ -233,8 +234,64 @@ class ActivityRegistration extends Controller {
                     ));
                     $result_3 = $db->getResult();
                     if (is_numeric($result_3[0])) {
-                        echo toastAlert('success', lang('general.title_approved_success'), lang('general.message_approved_success'));
-                        echo '<script>$(function () {postAjaxPagination();});</script>';
+                        $securityUser = new SecurityUser();
+                        $securityUserProfile = new SecurityUserProfile();
+                        $masterUserMain = new MasterUserMain();
+                        $transactionActivity = new TransactionActivity();
+
+                        $rs_user_admin = $db->selectByID($securityUser, $securityUser->getCode() . equalToIgnoreCase($_SESSION[SESSION_ADMIN_USERNAME]));
+                        $rs_user_profile_admin = $db->selectByID($securityUserProfile, $securityUserProfile->getUserId() . equalToIgnoreCase($rs_user_admin[0][$securityUser->getId()]));
+
+                        $rs_activity = $db->selectByID($transactionActivity, $transactionActivity->getId() . equalToIgnoreCase($activity_id));
+
+                        $rs_user_main = $db->selectByID($masterUserMain, $masterUserMain->getId() . equalToIgnoreCase($userMainId));
+
+                        $rs_user_profile = $db->selectByID($securityUserProfile, $securityUserProfile->getId() . equalToIgnoreCase($rs_user_main[0][$masterUserMain->getUserProfileId()]));
+
+                        $img_logo = IMAGE_ICON_EMAIL_URL;
+                        $subject = 'Approval Registrasi Peserta Pusbang BKN';
+                        $body = '<div style="border-style: solid;border-width: thin;font-family: \'Roboto\';">
+                      <div align="center" style="margin:15px;"><img src="' . $img_logo . '" width="120" height="40"/></div>
+                        <div align="left" style="margin:15px;">
+                            Kepada Yang Terhormat ' . $rs_user_profile[0][$securityUserProfile->getName()] . ',
+                        <br/><br/>
+                       <p>
+                            Pendaftaran Kegiatan anda telah disetujui, 
+                            Anda bisa melakukan pendaftaran peserta menggunakan username dan password dibawah ini:
+                            <br/><br/>Nama Kegiatan : <b>' . $rs_activity[0][$transactionActivity->getName()] . '</b>
+                            <br/>Waktu Pelaksanaan : <b>' . subMonth($rs_activity[0][$transactionActivity->getStartActivity()]) . ' - ' . subMonth($rs_activity[0][$transactionActivity->getEndActivity()]) . '</b>
+                            <br/><br/>
+                            Silahkan klik link dibawah ini untuk menuju kehalaman Portal Pusbang ASN,
+                            <br/>
+                            <a href="' . URL('') . '" target="_blank">' . URL('') . '</a>
+                       </p>
+                        <br/>
+                        <br/>
+                        Terima Kasih telah mendaftar di Pusbang ASN
+                        <br/><a href="' . URL('') . '" target="_blank">' . URL('') . '</a>
+                        </div>
+                        </div>
+                            ';
+                        $code_notif = createRandomBooking();
+                        $masterNotification = new MasterNotification();
+                        $db->insert($masterNotification->getEntity(), array(
+                            $masterNotification->getCode() => $code_notif,
+                            $masterNotification->getName() => $subject,
+                            $masterNotification->getTitle() => $subject,
+                            $masterNotification->getMessage() => $body,
+                            $masterNotification->getFrom() => $rs_user_profile_admin[0][$securityUserProfile->getId()],
+                            $masterNotification->getTo() => $rs_user_profile[0][$securityUserProfile->getId()],
+                            $masterNotification->getDate() => date(DATE_FORMAT_PHP_DEFAULT),
+                        ));
+
+                        $rs_insert_notif = $db->getResult();
+                        if (is_numeric($rs_insert_notif[0])) {
+                            echo toastAlert('success', lang('general.title_approved_success'), lang('general.message_approved_success'));
+                            echo '<script>$(function () {postAjaxPagination();});</script>';
+                        } else {
+                            echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+                            echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+                        }
                     } else {
                         $db->update($masterApproval->getEntity(), array(
                             $masterApproval->getStatus() => null,
@@ -630,10 +687,59 @@ class ActivityRegistration extends Controller {
                         ), $masterApproval->getApprovalDetailId() . EQUAL . $id . " AND " . $masterApproval->getApprovalCategoryId() . EQUAL . "3");
                 $result_2 = $db->getResult();
                 if ($result_2[0] == 1) {
-//                    $send_mail = $this->sendMailRejectData();
-//                    if ($send_mail == true) {
-                    echo toastAlert('success', lang('general.title_rejected_success'), lang('general.message_rejected_success'));
-                    echo '<script>$(function () {$(\'#myModal_self\').modal(\'hide\');postAjaxPagination();});</script>';
+                    $securityUser = new SecurityUser();
+                    $securityUserProfile = new SecurityUserProfile();
+                    $masterUserMain = new MasterUserMain();
+//                    $transactionActivity = new TransactionActivity();
+
+                    $rs_user_admin = $db->selectByID($securityUser, $securityUser->getCode() . equalToIgnoreCase($_SESSION[SESSION_ADMIN_USERNAME]));
+                    $rs_user_profile_admin = $db->selectByID($securityUserProfile, $securityUserProfile->getUserId() . equalToIgnoreCase($rs_user_admin[0][$securityUser->getId()]));
+
+
+                    $rs_user_main = $db->selectByID($masterUserMain, $masterUserMain->getId() . equalToIgnoreCase($userMainId));
+
+                    $rs_user_profile = $db->selectByID($securityUserProfile, $securityUserProfile->getId() . equalToIgnoreCase($rs_user_main[0][$masterUserMain->getUserProfileId()]));
+
+                    $img_logo = IMAGE_ICON_EMAIL_URL;
+                    $subject = 'Approval Registrasi Pusbang BKN';
+                    $body = '<div style="border-style: solid;border-width: thin;font-family: \'Roboto\';">
+                      <div align="center" style="margin:15px;"><img src="' . $img_logo . '" width="120" height="40"/></div>
+                        <div align="left" style="margin:15px;">
+                            Kepada Yang Terhormat ' . $rs_user_profile[0][$securityUserProfile->getName()] . ',
+                        <br/><br/>
+                       <p>
+                            Pendaftaran Kegiatan anda <b>Tidak Disetujui</b> dengan Catatan:
+                            <br/><br/>
+                            ' . $_POST['message'] . '
+                            <br/>
+                       </p>
+                        <br/>
+                        <br/>
+                        Terima Kasih telah mendaftar di Pusbang ASN
+                        <br/><a href="' . URL('') . '" target="_blank">' . URL('') . '</a>
+                        </div>
+                        </div>
+                            ';
+                    $code_notif = createRandomBooking();
+                    $masterNotification = new MasterNotification();
+                    $db->insert($masterNotification->getEntity(), array(
+                        $masterNotification->getCode() => $code_notif,
+                        $masterNotification->getName() => $subject,
+                        $masterNotification->getTitle() => $subject,
+                        $masterNotification->getMessage() => $body,
+                        $masterNotification->getFrom() => $rs_user_profile_admin[0][$securityUserProfile->getId()],
+                        $masterNotification->getTo() => $rs_user_profile[0][$securityUserProfile->getId()],
+                        $masterNotification->getDate() => date(DATE_FORMAT_PHP_DEFAULT),
+                    ));
+
+                    $rs_insert_notif = $db->getResult();
+                    if (is_numeric($rs_insert_notif[0])) {
+                        echo toastAlert('success', lang('general.title_rejected_success'), lang('general.message_rejected_success'));
+                        echo '<script>$(function () {$(\'#myModal_self\').modal(\'hide\');postAjaxPagination();});</script>';
+                    } else {
+                        echo toastAlert('error', lang('general.title_rejected_error'), lang('general.message_rejected_error'));
+                        echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+                    }
                 } else {
                     $this->rollBackApproval(0);
                     echo toastAlert('error', lang('general.title_rejected_error'), lang('general.message_rejected_error'));

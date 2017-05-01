@@ -238,6 +238,7 @@ class Routes {
 
     public static function setScaffolding($url, $class) {
         Routes::set($url, $class . "@index");
+        Routes::set($url . '/view', $class . "@view");
         Routes::set($url . '/list', $class . "@listData");
         Routes::set($url . '/create', $class . "@create");
         Routes::set($url . '/edit', $class . "@edit");

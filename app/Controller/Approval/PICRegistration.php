@@ -28,6 +28,7 @@ use app\Model\MasterGovernmentAgencies;
 use app\Model\MasterUserAssignment;
 use app\Model\MasterUserMain;
 use app\Model\MasterCurriculum;
+use app\Model\MasterNotification;
 use app\Model\MasterSubject;
 use app\Model\MasterReligion;
 use app\Model\MasterContact;
@@ -319,8 +320,34 @@ class PICRegistration extends Controller {
                     "name" => $rs_registration[0][$transactionRegistration->getDelegationName()]
                         ), $subject, $body);
                 if ($sendMail == true) {
-                    echo toastAlert('success', lang('general.title_approved_success'), lang('general.message_approved_success'));
-                    echo '<script>$(function () {$(\'#myModal_self\').modal(\'hide\');postAjaxPagination();});</script>';
+                    $securityUser = new SecurityUser();
+                    $securityUserProfile = new SecurityUserProfile();
+
+                    $rs_user_admin = $db->selectByID($securityUser, $securityUser->getCode() . equalToIgnoreCase($_SESSION[SESSION_ADMIN_USERNAME]));
+                    $rs_user_profile_admin = $db->selectByID($securityUserProfile, $securityUserProfile->getUserId() . equalToIgnoreCase($rs_user_admin[0][$securityUser->getId()]));
+
+                    $rs_user_profile = $db->selectByID($securityUserProfile, $securityUserProfile->getUserId() . equalToIgnoreCase($rs_registration[0][$transactionRegistration->getUserId()]));
+
+                    $code_notif = createRandomBooking();
+                    $masterNotification = new MasterNotification();
+                    $db->insert($masterNotification->getEntity(), array(
+                        $masterNotification->getCode() => $code_notif,
+                        $masterNotification->getName() => $subject,
+                        $masterNotification->getTitle() => $subject,
+                        $masterNotification->getMessage() => $body,
+                        $masterNotification->getFrom() => $rs_user_profile_admin[0][$securityUserProfile->getId()],
+                        $masterNotification->getTo() => $rs_user_profile[0][$securityUserProfile->getId()],
+                        $masterNotification->getDate() => date(DATE_FORMAT_PHP_DEFAULT),
+                    ));
+
+                    $rs_insert_notif = $db->getResult();
+                    if (!is_numeric($rs_insert_notif[0])) {
+                        echo toastAlert('error', lang('general.title_approved_error'), lang('general.message_approved_error'));
+                        echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
+                    } else {
+                        echo toastAlert('success', lang('general.title_approved_success'), lang('general.message_approved_success'));
+                        echo '<script>$(function () {$(\'#myModal_self\').modal(\'hide\');postAjaxPagination();});</script>';
+                    }
                 } else {
                     $db->update($masterApproval->getEntity(), array(
                         $masterApproval->getStatus() => null,
@@ -426,7 +453,7 @@ class PICRegistration extends Controller {
                     echo toastAlert('success', lang('general.title_approved_success'), lang('general.message_approved_success'));
                     echo '<script>$(function () {$(\'#myModal_self\').modal(\'hide\');postAjaxPagination();});</script>';
                 } else {
-                    $db->delete($securityUser->getId(), $securityUser->getId().  equalToIgnoreCase($rs_user[0]));
+                    $db->delete($securityUser->getId(), $securityUser->getId() . equalToIgnoreCase($rs_user[0]));
                     if (is_numeric($rs_contact[0])) {
                         $db->delete($masterContact->getEntity(), $masterContact->getId() . equalToIgnoreCase($rs_contact[0]));
                         $rs_delete = $db->getResult();
@@ -442,7 +469,7 @@ class PICRegistration extends Controller {
                     echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $rs_approve[0][$masterApproval->getId()] . '\');});</script>';
                 }
             } else {
-                $db->delete($securityUser->getId(), $securityUser->getId().  equalToIgnoreCase($rs_user[0]));
+                $db->delete($securityUser->getId(), $securityUser->getId() . equalToIgnoreCase($rs_user[0]));
                 if (is_numeric($rs_contact[0])) {
                     $db->delete($masterContact->getEntity(), $masterContact->getId() . equalToIgnoreCase($rs_contact[0]));
                     $rs_delete = $db->getResult();
@@ -756,8 +783,63 @@ class PICRegistration extends Controller {
                         ), $masterApproval->getId() . equalToIgnoreCase($id));
                 $result_2 = $db->getResult();
                 if (is_numeric($result_2[0]) == 1) {
-                    echo toastAlert('success', lang('general.title_rejected_success'), lang('general.message_rejected_success'));
-                    echo '<script>$(function () {$(\'#myModal_self\').modal(\'hide\');postAjaxPagination();});</script>';
+                    $rs_link_registration = $db->selectByID($linkRegistration, $linkRegistration->getId() 
+                            . equalToIgnoreCase($rs_approve[0][$masterApproval->getApprovalDetailId()]));
+                    
+                    $rs_registration = $db->selectByID($transactionRegistration, $transactionRegistration->getId() 
+                            . equalToIgnoreCase($rs_link_registration[0][$linkRegistration->getRegistrationId()]));
+                    $securityUser = new SecurityUser();
+                    $securityUserProfile = new SecurityUserProfile();
+
+                    $rs_user_admin = $db->selectByID($securityUser, $securityUser->getCode() . equalToIgnoreCase($_SESSION[SESSION_ADMIN_USERNAME]));
+                    $rs_user_profile_admin = $db->selectByID($securityUserProfile, $securityUserProfile->getUserId() . equalToIgnoreCase($rs_user_admin[0][$securityUser->getId()]));
+
+                    $rs_user_profile = $db->selectByID($securityUserProfile, $securityUserProfile->getUserId() . equalToIgnoreCase($rs_registration[0][$transactionRegistration->getUserId()]));
+                    
+                    $img_logo_tala = 'http://54.251.168.102/e-portal/contents/logo-kecil.png';
+                    $subject = 'Approval Registrasi Pusbang BKN';
+                    $body = '<div style="border-style: solid;border-width: thin;font-family: \'Roboto\';">
+                      <div align="center" style="margin:15px;"><img src="' . $img_logo_tala . '" width="120" height="40"/></div>
+                        <div align="left" style="margin:15px;">
+                            Kepada Yang Terhormat ' . $rs_user_profile[0][$securityUserProfile->getName()] . ',
+                        <br/><br/>
+                       <p>
+                            Pendaftaran Kegiatan anda <b>Tidak Disetujui</b> dengan Catatan:
+                            <br/><br/>
+                            ' . $_POST['message'] . '
+                            <br/>
+                       </p>
+                        <br/>
+                        <br/>
+                        Terima Kasih telah mendaftar di Pusbang ASN
+                        <br/><a href="' . URL('') . '" target="_blank">' . URL('') . '</a>
+                        </div>
+                        </div>
+                            ';
+                    
+
+                    $code_notif = createRandomBooking();
+                    $masterNotification = new MasterNotification();
+                    $db->insert($masterNotification->getEntity(), array(
+                        $masterNotification->getCode() => $code_notif,
+                        $masterNotification->getName() => $subject,
+                        $masterNotification->getTitle() => $subject,
+                        $masterNotification->getMessage() => $body,
+                        $masterNotification->getFrom() => $rs_user_profile_admin[0][$securityUserProfile->getId()],
+                        $masterNotification->getTo() => $rs_user_profile[0][$securityUserProfile->getId()],
+                        $masterNotification->getDate() => date(DATE_FORMAT_PHP_DEFAULT),
+                    ));
+
+                    $rs_insert_notif = $db->getResult();
+                    if (!is_numeric($rs_insert_notif[0])) {
+                        echo toastAlert('error', lang('general.title_rejected_error'), lang('general.message_rejected_error'));
+                        echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $id . '\');});</script>';
+                    } else {
+                        echo toastAlert('success', lang('general.title_rejected_success'), lang('general.message_rejected_success'));
+                        echo '<script>$(function () {$(\'#myModal_self\').modal(\'hide\');postAjaxPagination();});</script>';
+                    }
+//                    echo toastAlert('success', lang('general.title_rejected_success'), lang('general.message_rejected_success'));
+//                    echo '<script>$(function () {$(\'#myModal_self\').modal(\'hide\');postAjaxPagination();});</script>';
                 } else {
                     echo toastAlert('error', lang('general.title_rejected_error'), lang('general.message_rejected_error'));
                     echo '<script>$(function () {postAjaxEdit(\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/edit') . '\',\'id=' . $id . '\');});</script>';
@@ -774,7 +856,18 @@ class PICRegistration extends Controller {
         echo '<form role="form" id="form-message-reject" class="signup" action="#" onsubmit="return false;" method="POST" novalidate="novalidate">';
         echo Form()->id('message')->title(lang('member.rejection_notes'))->placeholder('Tulis Alasan Penolakan')->textarea();
         $approvalCategoryId = $_POST['approval_category_id'];
-        if ($approvalCategoryId == 3) {
+        if ($approvalCategoryId == 4) {
+            $registration_id = $_POST['registration_id'];
+//            echo $registration_id;
+            echo Button()->icon('fa fa-times')
+                    ->setClass('btn btn-warning')
+                    ->alertBtnMsg(lang('member.yes'))
+                    ->alertMsg(lang('member.notif_rejected_candidates'))
+                    ->alertTitle(lang('general.reject'))
+                    ->onClick('postAjaxByAlertFormManual(this,\'' . URL(getAdminTheme() . IURLConstant::APPROVAL_PIC_REGISTRATION_INDEX_URL . '/' . $activity_id . '/reject') . '\',\'form-message-reject\',\'approval_category_id=' . $approvalCategoryId . '&id=' . $_POST['id'] . '&registration_id=' . $registration_id . '\')')
+                    ->label(lang('general.reject'))->buttonManual();
+            echo '</form>';
+        } else if ($approvalCategoryId == 3) {
             echo Button()->icon('fa fa-times')
                     ->setClass('btn btn-warning')
                     ->alertBtnMsg(lang('member.yes'))

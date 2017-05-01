@@ -10,6 +10,7 @@
 <script src="<?= URL('/assets/plugins/select2/js/select2.full.min.js'); ?>" type="text/javascript"></script>
 <script src="<?= URL('/assets/plugins/jquery-nestable/jquery.nestable.js'); ?>" type="text/javascript"></script>
 
+
 <!--	Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
 <script src="<?= getAdminTemplateURL('/assets/js/app.min.js'); ?>" type="text/javascript"></script>
 

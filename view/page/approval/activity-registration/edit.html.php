@@ -197,7 +197,7 @@ if (!is_null($dt_approval[0][$masterApproval->getStatus()])) {
 if (is_null($dt_approval[0][$masterApproval->getStatus()])) {
     ?>
     <button id="btn_signup" class="btn btn-warning" type="submit" 
-            onsubmit="return false;" onclick="ajaxPostModalManual('<?= URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/' . $dt_activity[0][$m_act->getId()] . '/reject-detail'); ?>', 'approval_category_id=3id=<?= $dt_waiting_list[0][$masterWaitingList->getId()]; ?>&user_main_id=<?= $dt_user_main[0][$m_user_main->getId()]; ?>')" 
+            onsubmit="return false;" onclick="ajaxPostModalManual('<?= URL(getAdminTheme() . IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/' . $dt_activity[0][$m_act->getId()] . '/reject-detail'); ?>', 'approval_category_id=3&id=<?= $dt_waiting_list[0][$masterWaitingList->getId()]; ?>&user_main_id=<?= $dt_user_main[0][$m_user_main->getId()]; ?>')" 
             >
         <i class="fa fa-times"></i> <?= lang('general.reject'); ?>
     </button>
