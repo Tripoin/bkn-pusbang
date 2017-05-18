@@ -97,6 +97,7 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
     Routes::set('page/member/user-profile/edit', 'app\Controller\Member\UserProfile@edit');
     Routes::set('page/member/user-profile/list-saldo', 'app\Controller\Member\UserProfile@detailSaldoTopup');
     Routes::set('page/member/user-profile/changeProfile', 'app\Controller\Member\UserProfile@changeUserProfile');
+    Routes::set('page/member/user-profile/changeProfileAnggota', 'app\Controller\Member\UserProfile@changeUserProfileAnggota');
 
 
     Routes::set('page/member/dashboard', 'app\Controller\Member\Dashboard@index');
