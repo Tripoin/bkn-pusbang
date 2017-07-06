@@ -170,12 +170,12 @@ class Test {
 
     public function hashing() {
         $tripoinCrypt = new TripoinCrypt();
-        echo $tripoinCrypt->encrypt('tripoin:Moodle123!');
+//        echo $tripoinCrypt->encrypt('tripoin:Moodle123!');
 //        $tripoinRestClient = new TripoinRestClient();
 //        $tripoinRestClient->
 //        $restClient = new RestClient();
 //        $postData = array('username' => 'tripoin', 'password' => 'Moodle123!');
-//        echo password_hash('fandrianah2', PASSWORD_BCRYPT);
+        echo password_hash('sigma123', PASSWORD_BCRYPT);
 //
 ////        $resp = $restClient->to('http://54.251.168.102/e-learning/login/index.php')
 ////                ->setBody($postData)

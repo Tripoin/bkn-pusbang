@@ -49,6 +49,7 @@ class Form {
         'TITLE_BUTTON' => '',
         'ONCLICK' => '',
         'ICON' => '',
+        'ACTION_FORM' => '',
         'ONLY_COMPONENT' => false,
         'VALUE' => null,
         'VALUE_RIGHT' => null,
@@ -75,6 +76,10 @@ class Form {
 
     public function search($search) {
         return $this->setFormOption('SEARCH', $search);
+    }
+
+    public function actionForm($actionForm) {
+        return $this->setFormOption('ACTION_FORM', $actionForm);
     }
 
     /**
@@ -112,31 +117,57 @@ class Form {
         $dataRight = $this->formOption['OPTION_LABEL_VALUE_RIGHT'];
         $dataRightArray = (array) $dataRight;
 
+        $nameLeft = $idLeft;
+        $nameRight = $idRight;
+        
+        $trimIdLeft = rtrim($idLeft, "[]");
+        $idLeft = $trimIdLeft;
+        
+        
+        $trimIdRight = rtrim($idRight, "[]");
+        $idRight = $trimIdRight;
 
-        $txt = '';
-        $txt = '<div class="row">
+        $txt = '<div id="form-message-group-select"></div>';
+        $txt .= '<div class="row">
     <div class="col-md-12">
         <div class="col-md-5">
             <div class="form-group">
                 <label class="control-label">' . $titleLeft . '</label>
-                <select size="10" multiple="multiple" ondblclick="addGroupSelect(\'' . $idLeft . '\', \'' . $idRight . '\')" id="' . $idLeft . '" class="form-control">';
+                <select size="10" multiple="multiple" ondblclick="addGroupSelect(\'' . $idLeft . '\', \'' . $idRight . '\')" id="' . $idLeft . '" name="' . $nameLeft . '" class="form-control">';
 //        print_r($dataLeftArray);
         if (!empty($dataLeftArray)) {
             foreach ($dataLeftArray as $value) {
-                if (is_array($valueLeft)) {
-
-                    if (in_array($value['id'], $valueLeft)) {
-                        $txt .= '<option value="' . $value['id'] . '" selected>' . $value['label'] . '</option>';
+                if (is_object($value)) {
+                    if (is_array($valueLeft)) {
+                        if (in_array($value->id, $valueLeft)) {
+                            $txt .= '<option value="' . $value->id . '" selected>' . $value->label . '</option>';
+                        } else {
+                            $txt .= '<option value="' . $value->id . '">' . $value->label . '</option>';
+                        }
                     } else {
-                        $txt .= '<option value="' . $value['id'] . '">' . $value['label'] . '</option>';
+//                    echo $value['id'];
+                        if ($value->id == $valueLeft) {
+                            $txt .= '<option value="' . $value->id . '" selected>' . $value->label . '</option>';
+                        } else {
+                            $txt .= '<option value="' . $value->id . '">' . $value->label . '</option>';
+                        }
                     }
                 } else {
-//                    echo $value['id'];
-                    if ($value['id'] == $valueLeft) {
-                        $txt .= '<option value="' . $value['id'] . '" selected>' . $value['label'] . '</option>';
+                    if (is_array($valueLeft)) {
+
+                        if (in_array($value['id'], $valueLeft)) {
+                            $txt .= '<option value="' . $value['id'] . '" selected>' . $value['label'] . '</option>';
+                        } else {
+                            $txt .= '<option value="' . $value['id'] . '">' . $value['label'] . '</option>';
+                        }
                     } else {
+//                    echo $value['id'];
+                        if ($value['id'] == $valueLeft) {
+                            $txt .= '<option value="' . $value['id'] . '" selected>' . $value['label'] . '</option>';
+                        } else {
 //                        echo $value['id'];
-                        $txt .= '<option value="' . $value['id'] . '">' . $value['label'] . '</option>';
+                            $txt .= '<option value="' . $value['id'] . '">' . $value['label'] . '</option>';
+                        }
                     }
                 }
             }
@@ -146,36 +177,52 @@ class Form {
         </div>
         <div class="col-md-2" style="text-align: center;margin-top: 35px;">
             <div class="col-md-12" style="margin-bottom: 10px;">
-                <button type="button" onclick="addGroupSelect(\'' . $idLeft . '\', \'' . $idRight . '\')" class="btn btn-primary btn-sm">' . lang('general.add') . ' <i class="fa fa-arrow-right"></i></button>
+                <button type="button" onclick="addGroupSelect(\'' . $idLeft . '\', \'' . $idRight . '\')" id="createToRight'.$idLeft.'" class="btn btn-primary btn-sm">' . lang('general.add') . ' <i class="fa fa-arrow-right"></i></button>
             </div>
             <div class="col-md-12" style="margin-bottom: 10px;">
-                <button type="button" onclick="addGroupSelect(\'' . $idRight . '\', \'' . $idLeft . '\')" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i> ' . lang('general.remove') . '</button>
+                <button type="button" onclick="addGroupSelect(\'' . $idRight . '\', \'' . $idLeft . '\')" id="createToLeft'.$idRight.'" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i> ' . lang('general.remove') . '</button>
             </div>
             <div class="col-md-12" style="margin-bottom: 10px;">
-                <button type="button" onclick="addAllGroupSelect(\'' . $idLeft . '\', \'' . $idRight . '\')"  class="btn btn-primary btn-sm">' . lang('general.add_all') . ' <i class="fa fa-forward"></i></button>
+                <button type="button" onclick="addAllGroupSelect(\'' . $idLeft . '\', \'' . $idRight . '\')" id="createAllToRight'.$idLeft.'"  class="btn btn-primary btn-sm">' . lang('general.add_all') . ' <i class="fa fa-forward"></i></button>
             </div>
             <div class="col-md-12" style="margin-bottom: 10px;">
-                <button type="button" onclick="addAllGroupSelect(\'' . $idRight . '\', \'' . $idLeft . '\')" class="btn btn-primary btn-sm"><i class="fa fa-backward"></i> ' . lang('general.remove_all') . '</button>
+                <button type="button" onclick="addAllGroupSelect(\'' . $idRight . '\', \'' . $idLeft . '\')" id="createAllToLeft'.$idRight.'" class="btn btn-primary btn-sm"><i class="fa fa-backward"></i> ' . lang('general.remove_all') . '</button>
             </div>
         </div>
         <div class="col-md-5">
             <div class="form-group">
                 <label class="control-label">' . $titleRight . '</label>
-                <select size="10" id="' . $idRight . '" multiple="multiple" 
+                <select size="10" id="' . $idRight . '" name="' . $nameRight . '" multiple="multiple" 
                         ondblclick="addGroupSelect(\'' . $idRight . '\', \'' . $idLeft . '\')" class="form-control">';
         if (!empty($dataRightArray)) {
             foreach ($dataRightArray as $value) {
-                if (is_array($valueRight)) {
-                    if (in_array($value['id'], $valueRight)) {
-                        $txt .= '<option value="' . $value['id'] . '" selected>' . $value['label'] . '</option>';
+                if (is_object($value)) {
+                    if (is_array($valueRight)) {
+                        if (in_array($value->id, $valueRight)) {
+                            $txt .= '<option value="' . $value->id . '" selected>' . $value->label . '</option>';
+                        } else {
+                            $txt .= '<option value="' . $value->id . '">' . $value->label . '</option>';
+                        }
                     } else {
-                        $txt .= '<option value="' . $value['id'] . '">' . $value['label'] . '</option>';
+                        if ($value->id == $valueRight) {
+                            $txt .= '<option value="' . $value->id . '" selected>' . $value->label . '</option>';
+                        } else {
+                            $txt .= '<option value="' . $value->id . '">' . $value->label . '</option>';
+                        }
                     }
                 } else {
-                    if ($value['id'] == $valueRight) {
-                        $txt .= '<option value="' . $value['id'] . '" selected>' . $value['label'] . '</option>';
+                    if (is_array($valueRight)) {
+                        if (in_array($value['id'], $valueRight)) {
+                            $txt .= '<option value="' . $value['id'] . '" selected>' . $value['label'] . '</option>';
+                        } else {
+                            $txt .= '<option value="' . $value['id'] . '">' . $value['label'] . '</option>';
+                        }
                     } else {
-                        $txt .= '<option value="' . $value['id'] . '">' . $value['label'] . '</option>';
+                        if ($value['id'] == $valueRight) {
+                            $txt .= '<option value="' . $value['id'] . '" selected>' . $value['label'] . '</option>';
+                        } else {
+                            $txt .= '<option value="' . $value['id'] . '">' . $value['label'] . '</option>';
+                        }
                     }
                 }
             }
@@ -273,8 +320,15 @@ class Form {
         if ($this->formOption['ID'] != "") {
             $id = $this->formOption['ID'];
         }
+
+        $actionForm = "#";
+        if ($this->formOption['ACTION_FORM'] != "") {
+            $actionForm = $this->formOption['ACTION_FORM'];
+        }
+
+
         $txt = '';
-        $txt .= '<form role="form" id="' . $id . '" action="#" onsubmit="return false;" method="POST" novalidate="novalidate">
+        $txt .= '<form role="form" id="' . $id . '" action="' . $actionForm . '" onsubmit="return false;" method="POST" novalidate="novalidate">
     <div class="form-body">
     <div id="form-message">
     </div>
@@ -815,12 +869,18 @@ class Form {
             }
         } else {
             foreach ($data as $value) {
-                $val_id = $value['id'];
+                if (is_object($value)) {
+                    $val_id = $value->id;
+                } else {
+                    $val_id = $value['id'];
+                }
+
                 $dt_value = $val_id;
                 $checked_value = '';
                 if (is_array($this->formOption['VALUE'])) {
                     if (in_array($val_id, $this->formOption['VALUE'])) {
-                        $dt_value = $this->formOption['VALUE'];
+//                        $dt_value = $this->formOption['VALUE'];
+                        $dt_value = $val_id;
                         $checked_value = 'checked';
                     }
                 } else {
@@ -829,10 +889,15 @@ class Form {
                         $checked_value = 'checked';
                     }
                 }
+                if (is_object($value)) {
+                    $val_label = $value->label;
+                } else {
+                    $val_label = $value['label'];
+                }
                 $textbox .= '<label class="mt-checkbox mt-checkbox-outline">
                             <input type="checkbox" 
                             name="' . $this->formOption['NAME'] . '" 
-                            id="' . $this->formOption['ID'] . '" value="' . $dt_value . '" ' . $checked_value . '> ' . $value['label'] . '
+                            id="' . $this->formOption['ID'] . '" value="' . $dt_value . '" ' . $checked_value . '> ' . $val_label . '
                                 <span></span>
                         </label>';
             }
@@ -1678,7 +1743,7 @@ class Form {
                 <div class="col-md-9 ' . $this->formOption['CLASS_COMP'] . '" id="comp' . $this->formOption['ID'] . '">';
                 $rs .= $component;
                 $rs .= '</div>';
-                
+
 //            $rs .= '<div class="col-sm-2">
 //            <p class="help-block">' . $msg_rq_tx . '</p>
 //        </div>';

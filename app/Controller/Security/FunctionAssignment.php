@@ -317,7 +317,7 @@ class FunctionAssignment extends Controller {
         $group = $_POST['id'];
         $db->connect();
         $db->insert($sfa->getEntity(), array(
-            $sfa->getCode() => $group . $function_id,
+            $sfa->getCode() => createRandomBooking()."-".$group . $function_id,
             $sfa->getActionType() => $action_type,
             $sfa->getFunctionId() => $function_id,
             $sfa->getGroupId() => $group,

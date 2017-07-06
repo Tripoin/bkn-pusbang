@@ -21,4 +21,5 @@ return [
     "approved"=>"Approved",
     "rejected"=>"Rejected",
     "detail"=>"Detail",
+    "request_akd"=>"Request AKD",
 ];

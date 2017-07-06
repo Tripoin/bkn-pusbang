@@ -1554,13 +1554,32 @@ function postFormAjaxPost(page) {
     var content = 'bodyPage';
     var contents = $('#' + content);
 //alert(form.valid());
+
     if (form.valid()) {
         contents.append(highlightLoader());
+        var formData = new FormData(ti);
+        if ($("select[multiple='multiple']")) {
+//        var Contain = "";
+            $("select[multiple='multiple']").each(function () {
+//            Contain += $(this).attr("id") + "=";
+                var dtstr = "";
+                var id = $(this).attr("id");
+                $('#' + id).find('option').each(function () {
+//                Contain += $(this).val() + ",";
+                    dtstr += $(this).val() + ",";
+                });
+                var trimDtstr = rtrim(dtstr, ",");
+//            Contain += "&";
+                formData.append(id, trimDtstr);
+            });
+        }
+//        console.log(Contain);
+
         $.ajax({
             type: "POST",
             url: page,
 //            data: datastring,
-            data: new FormData(ti),
+            data: formData,
             contentType: false,
             cache: false,
             processData: false,
@@ -1579,6 +1598,14 @@ function postFormAjaxPost(page) {
         });
     }
 }
+
+function rtrim(str, delimeter) {
+//    return str.replace(/,+$/,'');
+    if (typeof delimeter === 'undefined')
+        delimeter = '\\s';
+    return str.replace(new RegExp("[" + delimeter + "]*$"), '');
+}
+
 
 function ajaxPostManual(page, target, value) {
     $('#' + target).html(highlightLoader());
@@ -1731,6 +1758,9 @@ function addGroupSelect(idLeft, idRight) {
         $('#' + idRight).append('<option value="' + arr[no] + '">' + leftSelect2 + '</option>');
         $('#' + idLeft + ' > [value="' + arr[no] + '"]').remove();
     }
+
+    return lToString;
+//    ajaxPostManual(page,target,manual);
 }
 
 function addAllGroupSelect(idLeft, idRight) {
@@ -1744,6 +1774,7 @@ function addAllGroupSelect(idLeft, idRight) {
         $('#' + idRight).append('<option value="' + arr[no] + '">' + leftSelect2 + '</option>');
         $('#' + idLeft + ' > [value="' + arr[no] + '"]').remove();
     }
+    return lToString;
 }
 
 function ajaxCombobox(parent, page, target, value, selected) {
@@ -1759,8 +1790,12 @@ function ajaxCombobox(parent, page, target, value, selected) {
         data: value,
         success: function (data) {
 //                console.log(data);
-            var result = JSON.parse(data);
+            var result = [];
+            try {
+                result = JSON.parse(data);
+            } catch (err) {
 
+            }
             $('#' + target).select2({
                 data: result
             });

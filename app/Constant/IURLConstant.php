@@ -86,6 +86,7 @@ interface IURLConstant {
     const APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL = '/approval/participant-registration';
     const APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL = '/approval/activity-registration';
     const APPROVAL_PIC_REGISTRATION_INDEX_URL = '/approval/pic-registration';
+    const APPROVAL_REQUEST_AKD_INDEX_URL = '/approval/request-akd';
 
     const SURVEY_TRAINER_INDEX_URL = '/survey/survey-trainer';
     const SURVEY_ORGANIZER_INDEX_URL = '/survey/survey-organizer';

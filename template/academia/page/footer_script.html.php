@@ -14,6 +14,7 @@
 <script src="<?= URL('/assets/plugins/bootstrap-sweetalert/sweetalert.min.js'); ?>" type="text/javascript"></script>
 <script src="<?= getTemplateURL('/assets/js/atvImg-min.js'); ?>"></script>
 <script src="<?= getTemplateURL('/assets/plugins/venobox/venobox.min.js'); ?>"></script>
+<script src="<?= URL('/assets/plugins/bootstrap3-typeahead/bootstrap3-typeahead.js'); ?>" type="text/javascript"></script>
 <script src="<?= getTemplateURL('/assets/js/plugins.js'); ?>"></script>
 <script src="<?= URL('/assets/js/function.js'); ?>?tripoin=<?=createRandomBooking();?>"></script>
 

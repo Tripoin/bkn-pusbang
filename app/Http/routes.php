@@ -46,7 +46,7 @@ Routes::set('test-parameter/{param}', 'app\Controller\Master\Test@testParam');
 //Routes::set('page/tala-membership', 'app\Controller\Master\MemberShip@page');
 
 
-
+Routes::set('search/wu', 'app\Controller\Base\General@getWUbyParticipantName');
 Routes::set('search/lov', 'app\Controller\Base\SelectLOV@index');
 Routes::set('chat/send', 'app\Controller\Base\Chat@sendChat');
 Routes::set('chat/load', 'app\Controller\Base\Chat@loadChat');
@@ -80,6 +80,15 @@ Routes::set('captcha/reload', 'app\Util\TCaptcha\TCaptcha@reloadCaptcha');
 Routes::set('contact-us', 'app\Controller\Guest\ContactUs@index');
 Routes::set('contact-us/submit', 'app\Controller\Guest\ContactUs@save');
 
+Routes::set('akd', 'app\Controller\Guest\AKD@index');
+Routes::set('akd/submit-code', 'app\Controller\Guest\AKD@requestCode');
+Routes::set('akd/page-email-request-code', 'app\Controller\Guest\AKD@pageEmailRequestCode');
+Routes::set('akd/page-request-code', 'app\Controller\Guest\AKD@pageRequestCode');
+Routes::set('akd/submit-check-code', 'app\Controller\Guest\AKD@checkRequestCode');
+Routes::set('akd/page-submit-akd', 'app\Controller\Guest\AKD@pageSubmitAKD');
+Routes::set('akd/submit-akd', 'app\Controller\Guest\AKD@submitAKD');
+
+
 Routes::set('activity', 'app\Controller\Guest\Activity@index');
 Routes::set('activity/search', 'app\Controller\Guest\Activity@search');
 Routes::set('activity/{id}/register', 'app\Controller\Guest\Activity@registerActivityPage');
@@ -91,6 +100,7 @@ Routes::set('selected', 'app\Controller\Base\General@getArea');
 if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GUEST])) {
 
     Routes::set('page/member/user-profile', 'app\Controller\Member\UserProfile@index');
+    Routes::set('page/member/user-profile/change-photo', 'app\Controller\Member\UserProfile@changePhoto');
     Routes::set('page/member/user-profile/change-password', 'app\Controller\Member\UserProfile@changePassword');
     Routes::set('page/member/user-profile/change-password/proses', 'app\Controller\Member\UserProfile@changePasswordProses');
     Routes::set('page/member/user-profile/save', 'app\Controller\Member\UserProfile@save');
@@ -108,8 +118,8 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
 
 
     Routes::setScaffolding(IURLMemberConstant::NOTIFICATION_URL, 'app\Controller\Member\Notification');
-    Routes::set(IURLMemberConstant::NOTIFICATION_URL.'/list-user', 'app\Controller\Member\Notification@listUser');
-    
+    Routes::set(IURLMemberConstant::NOTIFICATION_URL . '/list-user', 'app\Controller\Member\Notification@listUser');
+
 
     Routes::set('page/member/video-seminar', 'app\Controller\Member\VideoSeminar@index');
     Routes::set('page/member/video-seminar/list', 'app\Controller\Member\VideoSeminar@lists');
@@ -180,7 +190,7 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
     Routes::set(IURLMemberConstant::AGENDA_WIDYAISWARA_LIST_USER_URL, 'app\Controller\Member\AgendaActivity\AgendaWidyaiswara@listUser');
     Routes::set(IURLMemberConstant::AGENDA_WIDYAISWARA_EDIT_USER_URL, 'app\Controller\Member\AgendaActivity\AgendaWidyaiswara@editUser');
     Routes::set(IURLMemberConstant::AGENDA_WIDYAISWARA_SAVE_USER_URL, 'app\Controller\Member\AgendaActivity\AgendaWidyaiswara@saveUser');
-    
+
 
     Routes::setScaffolding(IURLMemberConstant::SURVEY_TRAINER_URL, 'app\Controller\Member\Survey\TrainerSurvey');
     Routes::set(IURLMemberConstant::SURVEY_TRAINER_URL . '/detail', 'app\Controller\Member\Survey\TrainerSurvey@activityDetail');
@@ -191,8 +201,8 @@ if (isset($_SESSION[SESSION_USERNAME_GUEST]) && isset($_SESSION[SESSION_GROUP_GU
 //ROUTES ADMIN
 if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
     if ($_SESSION[SESSION_GROUP] != 1) {
-        
-        Routes::set($sys_url_admin.'/about-application', 'app\Controller\Base\General@aboutApplication');
+
+        Routes::set($sys_url_admin . '/about-application', 'app\Controller\Base\General@aboutApplication');
 
         //ROUTES MENU POSTING - POST
         $post_class = 'app\Controller\Posting\Posting';
@@ -267,9 +277,21 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
             Routes::setScaffolding(IURLConstant::MASTER_MATERIAL_SUBJECT_INDEX_URL, 'app\Controller\Master\MaterialSubjectController');
 
             Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/curriculum/{subjectId}', 'app\Controller\Master\Subject@curriculums');
-            Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/curriculum/{subjectId}/subject-list', 'app\Controller\Master\Subject@subjectList');
-            Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/curriculum/{subjectId}/create/{materialSubjectId}', 'app\Controller\Master\Subject@createSubject');
+
+            Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/curriculum/{subjectId}/new-edit', 'app\Controller\Master\Subject@newEditSubjectList');
+            Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/curriculum/{subjectId}/new-edit/list', 'app\Controller\Master\Subject@subjectList');
+            Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/curriculum/{subjectId}/new-edit/create', 'app\Controller\Master\Subject@createSubjectList');
+            Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/curriculum/{subjectId}/new-edit/delete', 'app\Controller\Master\Subject@deleteSubjectList');
+            Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/curriculum/{subjectId}/aspek-penilaian-peserta', 'app\Controller\Master\Subject@aspekPenilaianPeserta');
+            Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/curriculum/{subjectId}/aspek-penilaian-peserta/save', 'app\Controller\Master\Subject@saveAspekPenilaianPeserta');
+            Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/curriculum/{subjectId}/aspek-penilaian-widyaiswara', 'app\Controller\Master\Subject@aspekPenilaianWidyaiswara');
+            Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/curriculum/{subjectId}/aspek-penilaian-widyaiswara/save', 'app\Controller\Master\Subject@saveAspekPenilaianWidyaiswara');
+//            Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/curriculum/{subjectId}/edit', 'app\Controller\Master\Subject@editSubject');
             Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/assessment-point/{subjectId}', 'app\Controller\Master\Subject@assessmentPoints');
+            Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/assessment-point/{subjectId}/new-edit', 'app\Controller\Master\Subject@newEditAssessmentPoints');
+            Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/assessment-point/{subjectId}/new-edit/list', 'app\Controller\Master\Subject@listAssessmentPoints');
+            Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/assessment-point/{subjectId}/new-edit/create', 'app\Controller\Master\Subject@createAssessmentPoints');
+            Routes::set(IURLConstant::MASTER_SUBJECT_INDEX_URL . '/assessment-point/{subjectId}/new-edit/delete', 'app\Controller\Master\Subject@deleteAssessmentPoints');
 
 
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/assignment/{activity}', 'app\Controller\Transaction\AgendaKegiatan@listPanitia');
@@ -293,6 +315,7 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/list-peserta/{activity}', 'app\Controller\Transaction\AgendaKegiatan@listPeserta');
             Routes::set(IURLConstant::AGENDA_KEGIATAN_INDEX_URL . '/list-peserta/{activity}/view', 'app\Controller\Transaction\AgendaKegiatan@viewPeserta');
 
+            Routes::setScaffolding(IURLConstant::APPROVAL_REQUEST_AKD_INDEX_URL, 'app\Controller\Approval\RequestAKD');
             Routes::setScaffolding(IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL, 'app\Controller\Approval\ParticipantRegistration');
             Routes::set(IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit-participant/approve', 'app\Controller\Approval\ParticipantRegistration@approveData');
             Routes::set(IURLConstant::APPROVAL_PARTICIPANT_REGISTRATION_INDEX_URL . '/edit-participant/reject', 'app\Controller\Approval\ParticipantRegistration@rejectData');
@@ -308,9 +331,9 @@ if (isset($_SESSION[SESSION_USERNAME]) && isset($_SESSION[SESSION_GROUP])) {
             Routes::set(IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/{activity}/approve', 'app\Controller\Approval\ActivityRegistration@approveData');
             Routes::set(IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/{activity}/reject', 'app\Controller\Approval\ActivityRegistration@rejectData');
             Routes::set(IURLConstant::APPROVAL_ACTIVITY_REGISTRATION_INDEX_URL . '/{activity}/reject-detail', 'app\Controller\Approval\ActivityRegistration@rejectDetail');
-            
+
             Routes::setScaffolding(IURLConstant::REGISTRATION_INTERNAL_INDEX_URL, 'app\Controller\Registration\InternalRegistration');
-            
+
             Routes::setScaffolding(IURLConstant::REGISTRATION_INTERNAL_ACTIVITY_INDEX_URL, 'app\Controller\Registration\InternalRegistrationActivity');
             Routes::set(IURLConstant::REGISTRATION_INTERNAL_ACTIVITY_INDEX_URL . '/assignment/{activity}', 'app\Controller\Registration\InternalRegistrationActivity@listAssignment');
             Routes::set(IURLConstant::REGISTRATION_INTERNAL_ACTIVITY_INDEX_URL . '/assignment/{activity}/create', 'app\Controller\Registration\InternalRegistrationActivity@createAssignment');

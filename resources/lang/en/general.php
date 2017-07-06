@@ -225,4 +225,17 @@ return [
     'read'=>'Read',
     'inbox'=>'Inbox',
     'send_message'=>'Send Message',
+    'title_alert_approved' => 'Are you sure?',
+    'message_alert_approved' => 'Approved this data & send email to user',
+    'button_alert_approved' => 'Yes, Approved it!',
+    'title_alert_rejected' => 'Are you sure?',
+    'message_alert_rejected' => 'Rejected this data & send email to user',
+    'button_alert_rejected' => 'Yes, Rejected it!',
+    'position_participant_akd' => 'Position of AKD Participant',
+    'agency'=>'Agency',
+    'aspects_to_be_assessed'=>'Aspects to be assessed',
+    'aspects_of_assessed'=>'Aspects of Assessment',
+    'please_fill_out_field'=>'Please fill out field',
+    'aspects_assessment_of_activities'=>'Aspects Assessment of Activities',
+    
 ];

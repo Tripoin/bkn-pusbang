@@ -21,6 +21,8 @@ use app\Util\PHPMail\PHPMailer;
 use app\Model\SecurityGroup;
 use app\Model\MasterSystemParameter;
 use app\Model\MasterLanguage;
+use app\Model\MasterContact;
+use app\Model\MasterAddress;
 use app\Util\Database;
 use app\Util\RestClient\TripoinRestClient;
 use app\Constant\IRestCommandConstant;
@@ -33,13 +35,17 @@ function is_not_null($var) {
 
 function getUserMember() {
     $db = new Database();
+    $securityGroup = new SecurityGroup();
     $securityUser = new SecurityUser();
     $securityUserProfile = new SecurityUserProfile();
     $masterUserMain = new MasterUserMain();
+    $masterContact = new MasterContact();
+    $masterAddress = new MasterAddress();
 //    $masterUserAssignment = new MasterUserAssignment();
     $user = checkUserLogin();
     if (!empty($user)) {
         $data_user = $db->selectByID($securityUser, $securityUser->getCode() . equalToIgnoreCase($user[SESSION_USERNAME_GUEST]));
+        $data_group = $db->selectByID($securityGroup, $securityGroup->getId() . equalToIgnoreCase($data_user[0][$securityUser->getGroupId()]));
         $data_user_profile = $db->selectByID($securityUserProfile, $securityUserProfile->getUserId() . equalToIgnoreCase($data_user[0][$securityUser->getId()]));
         $data_user_main = $db->selectByID($masterUserMain, $masterUserMain->getUserProfileId() . equalToIgnoreCase($data_user_profile[0][$securityUserProfile->getId()]));
 //    print_r($data_user_main);
@@ -47,10 +53,28 @@ function getUserMember() {
         if (!empty($data_user_main)) {
             $user_main = $data_user_main[0];
         }
+
+        $data_user_contact = $db->selectByID($masterContact, $masterContact->getId()
+                . equalToIgnoreCase($data_user_profile[0][$securityUserProfile->getContactId()]));
+        $user_contact = array();
+        if (!empty($data_user_contact)) {
+            $user_contact = $data_user_contact[0];
+        }
+
+        $data_user_address = $db->selectByID($masterAddress, $masterAddress->getId()
+                . equalToIgnoreCase($data_user_profile[0][$securityUserProfile->getAddressId()]));
+        $user_address = array();
+        if (!empty($data_user_address)) {
+            $user_address = $data_user_address[0];
+        }
+
         $array = array(
             $securityUser->getEntity() => $data_user[0],
+            $securityGroup->getEntity() => $data_group[0],
             $securityUserProfile->getEntity() => $data_user_profile[0],
             $masterUserMain->getEntity() => $user_main,
+            $masterContact->getEntity() => $user_contact,
+            $masterAddress->getEntity() => $user_address,
         );
     } else {
         $array = array();
@@ -986,14 +1010,14 @@ function getMonth($bln) {
  * @version 1.0
  * @desc Sorry cuk masih belajar
  */
-function createRandomBooking() {
+function createRandomBooking($length = 8) {
 
     $chars = "abcdefghijkmnopqrstuvwxyz023456789";
     srand((double) microtime() * 1000000);
     $i = 0;
     $pass = '';
-
-    while ($i <= 7) {
+    $calcLength = $length - 1;
+    while ($i <= $calcLength) {
         $num = rand() % 33;
         $tmp = substr($chars, $num, 1);
         $pass = $pass . $tmp;
@@ -2585,6 +2609,110 @@ function replace_between($str, $needle_start, $needle_end, $replacement) {
     $end = $start === false ? strlen($str) : $pos;
 
     return substr_replace($str, $replacement, $start, $end - $start);
+}
+
+function reloadCaptcha($id = 'security_code') {
+    return "<script>$(function(){ $('#" . $id . "').focus();$('#" . $id . "').val(''); ajaxPostManual('" . URL('captcha/reload') . "','captcha_image_" . $id . "','') })</script>";
+}
+
+function numberToRomawi($n) {
+    $hasil = "";
+    $iromawi = array("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", 20 => "XX", 30 => "XXX", 40 => "XL", 50 => "L",
+        60 => "LX", 70 => "LXX", 80 => "LXXX", 90 => "XC", 100 => "C", 200 => "CC", 300 => "CCC", 400 => "CD", 500 => "D", 600 => "DC", 700 => "DCC",
+        800 => "DCCC", 900 => "CM", 1000 => "M", 2000 => "MM", 3000 => "MMM");
+    if (array_key_exists($n, $iromawi)) {
+        $hasil = $iromawi[$n];
+    } elseif ($n >= 11 && $n <= 99) {
+        $i = $n % 10;
+        $hasil = $iromawi[$n - $i] . Romawi($n % 10);
+    } elseif ($n >= 101 && $n <= 999) {
+        $i = $n % 100;
+        $hasil = $iromawi[$n - $i] . Romawi($n % 100);
+    } else {
+        $i = $n % 1000;
+        $hasil = $iromawi[$n - $i] . Romawi($n % 1000);
+    }
+    return $hasil;
+}
+
+function createDir($path) {
+    if (!file_exists($path)) {
+        $old_mask = umask(0);
+        mkdir($path, 0777, TRUE);
+        umask($old_mask);
+    }
+}
+
+function createThumb($path1, $path2, $file_type, $new_w, $new_h, $squareSize = '') {
+    /* read the source image */
+    $source_image = FALSE;
+
+    if (preg_match("/jpg|JPG|jpeg|JPEG/", $file_type)) {
+        $source_image = imagecreatefromjpeg($path1);
+    } elseif (preg_match("/png|PNG/", $file_type)) {
+
+        if (!$source_image = @imagecreatefrompng($path1)) {
+            $source_image = imagecreatefromjpeg($path1);
+        }
+    } elseif (preg_match("/gif|GIF/", $file_type)) {
+        $source_image = imagecreatefromgif($path1);
+    }
+    if ($source_image == FALSE) {
+        $source_image = imagecreatefromjpeg($path1);
+    }
+
+    $orig_w = imageSX($source_image);
+    $orig_h = imageSY($source_image);
+
+    if ($orig_w < $new_w && $orig_h < $new_h) {
+        $desired_width = $orig_w;
+        $desired_height = $orig_h;
+    } else {
+        $scale = min($new_w / $orig_w, $new_h / $orig_h);
+        $desired_width = ceil($scale * $orig_w);
+        $desired_height = ceil($scale * $orig_h);
+    }
+
+    if ($squareSize != '') {
+        $desired_width = $desired_height = $squareSize;
+    }
+
+    /* create a new, "virtual" image */
+    $virtual_image = imagecreatetruecolor($desired_width, $desired_height);
+    // for PNG background white----------->
+    $kek = imagecolorallocate($virtual_image, 255, 255, 255);
+    imagefill($virtual_image, 0, 0, $kek);
+
+    if ($squareSize == '') {
+        /* copy source image at a resized size */
+        imagecopyresampled($virtual_image, $source_image, 0, 0, 0, 0, $desired_width, $desired_height, $orig_w, $orig_h);
+    } else {
+        $wm = $orig_w / $squareSize;
+        $hm = $orig_h / $squareSize;
+        $h_height = $squareSize / 2;
+        $w_height = $squareSize / 2;
+
+        if ($orig_w > $orig_h) {
+            $adjusted_width = $orig_w / $hm;
+            $half_width = $adjusted_width / 2;
+            $int_width = $half_width - $w_height;
+            imagecopyresampled($virtual_image, $source_image, -$int_width, 0, 0, 0, $adjusted_width, $squareSize, $orig_w, $orig_h);
+        } elseif (($orig_w <= $orig_h)) {
+            $adjusted_height = $orig_h / $wm;
+            $half_height = $adjusted_height / 2;
+            imagecopyresampled($virtual_image, $source_image, 0, 0, 0, 0, $squareSize, $adjusted_height, $orig_w, $orig_h);
+        } else {
+            imagecopyresampled($virtual_image, $source_image, 0, 0, 0, 0, $squareSize, $squareSize, $orig_w, $orig_h);
+        }
+    }
+
+    if (@imagejpeg($virtual_image, $path2, 90)) {
+        imagedestroy($virtual_image);
+        imagedestroy($source_image);
+        return TRUE;
+    } else {
+        return FALSE;
+    }
 }
 ?>
 

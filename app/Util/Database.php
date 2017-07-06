@@ -387,17 +387,26 @@ class Database {
                 foreach ($params as $key => $value) {
                     if ($value !== NULL) {
 //                        LOGGER($key.'='.$value);
-                        if ($value == NULL) {
+//                        LOGGER('DATA NULL 4 :'.$value);
+                        if ($value === 0) {
+//                            LOGGER($key.'-int='.$value);
+//                            LOGGER('DATA NULL');
+//                            LOGGER($key.'='.$value);
+                            $sql_insert .= $key . " = 0,";
+                            
+                        } else if ($value == NULL) {
+//                            LOGGER($key.'='.$value);
 //                            LOGGER('DATA NULL');
                             $sql_insert .= $key . " = null,";
                         } else {
+                            
                             $sql_insert .= $key . " = '" . $this->mysql->real_escape_string($value) . "',";
                         }
                     } else if ($value === NULL) {
-//                        LOGGER('DATA NULL');
+//                        LOGGER('DATA NULL 3 :'.$value);
                         $sql_insert .= $key . " = null,";
                     } else if ($value == NULL) {
-//                        LOGGER('DATA NULL');
+//                        LOGGER('DATA NULL 2 :'.$value);
                         $sql_insert .= $key . " = null,";
                     } else {
                         LOGGER($key . ":" . $value);
@@ -405,6 +414,7 @@ class Database {
                 }
                 $sql_insert2 = rtrim($sql_insert, ',');
                 $sql = 'INSERT INTO ' . $table . ' SET ' . $sql_insert2;
+//                LOGGER("script sql:" . $sql);
 //            preg_match_all('/fn_name\((["\'])(.*?)\1\)/', $to, $out);
 //            $sql .= addcslashes($sql, "\'\"");
                 $this->myQuery = $sql; // Pass back the SQL

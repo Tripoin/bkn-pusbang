@@ -20,6 +20,7 @@ use app\Model\MasterPostLanguage;
 use app\Model\MasterPostFunction;
 use app\Model\SecurityFunction;
 use app\Model\SecurityFunctionAssignment;
+use app\Model\LinkDocumentationFunction;
 
 class MasterGuest {
 
@@ -252,14 +253,26 @@ class MasterGuest {
 
     public function pageGallery() {
 //        echo 'masuk';
+
         if (!isset($_POST['id'])) {
             $functionId = $_POST['function_id_now'];
+//            echo $functionId;
             $mFunction = new SecurityFunction();
             $db = new Database();
             $function = $db->selectByID($mFunction, $mFunction->getId() . EQUAL . $functionId);
+
+            $linkDocumentationFunction = new LinkDocumentationFunction();
+            $dtLinkDocFunct = $db->selectByID($linkDocumentationFunction, $linkDocumentationFunction->getFunctionId() . equalToIgnoreCase($functionId));
+
             include_once getTemplatePath('page/global/master-guest-gallery-page.html.php');
         } else {
             if ($_POST['id'] != "") {
+                $functionId = $_POST['function_id_now'];
+//            echo $functionId;
+                $db = new Database();
+
+                $linkDocumentationFunction = new LinkDocumentationFunction();
+                $dtLinkDocFunct = $db->selectByID($linkDocumentationFunction, $linkDocumentationFunction->getFunctionId() . equalToIgnoreCase($functionId));
                 
                 include_once getTemplatePath('page/global/gallery/view-gallery.html.php');
             } else {

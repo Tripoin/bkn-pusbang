@@ -43,6 +43,7 @@
     <link href="<?= URL('/assets/plugins/datatables/datatables.min.css'); ?>" rel="stylesheet" type="text/css">
     <link href="<?= URL('/assets/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css'); ?>" rel="stylesheet" type="text/css">
     <link href="<?= URL('/assets/plugins/bootstrap-sweetalert/sweetalert.css'); ?>" rel="stylesheet" type="text/css">
+    <link href="<?= URL('/assets/plugins/typeahead/typeahead.css'); ?>" rel="stylesheet" type="text/css">
     
     <link href="<?= getTemplateURL('/assets/css/themes/'.$them_style.'.css?tripoin=').  createRandomBooking(); ?>" rel="stylesheet"  type="text/css">
     <link href="<?= getTemplateURL('/assets/css/form.css?tripoin='.  createRandomBooking()); ?>" rel="stylesheet"  type="text/css">

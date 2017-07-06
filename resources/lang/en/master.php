@@ -46,14 +46,15 @@ return [
     "curriculum_code"=>"Curriculum Code",
     "curriculum_name"=>"Curriculum Name",
     "curriculum_duration"=>"Duration",
-    "participant_assessment_point"=>"Aspek Peniliaian Peserta",
-    "widyaswara_assessment_point"=>"Aspek Penilaian Widyaswara",
+    "participant_assessment_point"=>"Participant Assesment Point",
+    "widyaswara_assessment_point"=>"Widyaswara Assesment Point",
     "material_subject" => "Material Subject",
     "subject_requirements" => "Subject Requirements",
     "data_type" => "Data Type",
     "location" => "Location",
     "material_subject_code" => "Material Subject Code",
     "material_subject_name"=>"Material Subject Name",
-    "material_subject_duration"=>"Duration"
-
+    "material_subject_duration"=>"Duration",
+    "assessment_category"=>"Assesment Category",
+    "field_description"=>"Field Description",
 ];

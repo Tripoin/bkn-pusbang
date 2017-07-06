@@ -46,7 +46,7 @@ abstract class ControllerRestUI implements IController {
     public $join_list = null;
     public $modelData;
     public $orderBy = null;
-    public $per_page = 5;
+    public $per_page = 10;
     public $auditrail = true;
     public $restURL = '';
     public $url_api;
@@ -137,7 +137,7 @@ abstract class ControllerRestUI implements IController {
         $data = $this->modelData;
 //        if ($_POST['per_page'] == "") {
         if ($_POST['per_page'] == "") {
-            $Datatable->per_page = 5;
+            $Datatable->per_page = $this->per_page;
         } else {
             $Datatable->per_page = $_POST['per_page'];
         }
@@ -242,6 +242,7 @@ abstract class ControllerRestUI implements IController {
 //        $get_data = $db->selectByID($data, $data->getId() . EQUAL . $id);
 //        print_r($result);
         $get_data = json_decode($result->getBody);
+//        print_r($get_data);
         if ($this->autoData == true) {
             include_once FILE_PATH(IViewConstant::CRUD_EDIT_VIEW_INDEX);
         } else {

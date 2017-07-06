@@ -17,10 +17,14 @@ use app\Util\Form;
 use app\Model\SecurityUser;
 use app\Model\SecurityUserProfile;
 use app\Util\Database;
+use app\Model\MasterContact;
+use app\Model\MasterAddress;
 use app\Model\MasterProvince;
 use app\Model\MasterCity;
 use app\Model\MasterDistrict;
 use app\Model\MasterVillage;
+use app\Model\MasterWorkingUnit;
+use app\Model\MasterGovernmentAgencies;
 
 //use app\Model\D
 class General {
@@ -176,7 +180,7 @@ class General {
 
         echo json_encode($data);
     }
-    
+
     public function aboutApplication() {
         $Form = new Form();
 
@@ -185,6 +189,70 @@ class General {
         setBreadCrumb(array('About Tripoin E-Pusbang' => FULLURL()));
 
         include FILE_PATH('/view/page/general/about-application.html.php');
+    }
+
+    public function getWUbyParticipantName() {
+        if (isset($_POST['action'])) {
+            if ($_POST['action'] == "list") {
+                $key = '';
+                $value = '';
+                if (isset($_POST['name'])) {
+                    $key = 'name';
+                    $value = $_POST['name'];
+                }
+
+                $masterWorkingUnit = new MasterWorkingUnit();
+                $masterGovernmentAgencies = new MasterGovernmentAgencies();
+                $db = new Database();
+                $db->connect();
+                if ($key == 'name') {
+                    $db->select($masterWorkingUnit->getEntity(), $masterWorkingUnit->getEntity() . DOT . $masterWorkingUnit->getId() . ','
+                            . $masterWorkingUnit->getEntity() . DOT . $masterWorkingUnit->getName(), array($masterGovernmentAgencies->getEntity()), ""
+                            . $masterWorkingUnit->getEntity() . DOT . $masterWorkingUnit->getGovernment_agency_id() . EQUAL . $masterGovernmentAgencies->getEntity() . DOT . $masterGovernmentAgencies->getId()
+                            . " AND UCASE(" . $masterGovernmentAgencies->getEntity() . DOT . $masterGovernmentAgencies->getName() . ") " . equalToIgnoreCase(strtoupper($value)));
+                    $data_working_unit = $db->getResult();
+                }
+                echo json_encode($data_working_unit);
+            } else if ($_POST['action'] == "select") {
+                $key = '';
+                $value = '';
+                if (isset($_POST['name'])) {
+                    $key = 'name';
+                    $value = $_POST['name'];
+                }
+
+                $masterWorkingUnit = new MasterWorkingUnit();
+                $masterGovernmentAgencies = new MasterGovernmentAgencies();
+                $masterContact = new MasterContact();
+                $masterAddress = new MasterAddress();
+                $db = new Database();
+                $db->connect();
+                if ($key == 'name') {
+                    $db->select($masterWorkingUnit->getEntity(), $masterWorkingUnit->getEntity() . DOT . $masterWorkingUnit->getId() . ','
+                            . $masterWorkingUnit->getEntity() . DOT . $masterWorkingUnit->getName() . ','
+                            . $masterWorkingUnit->getEntity() . DOT . $masterWorkingUnit->getAddress_id() . ','
+                            . $masterWorkingUnit->getEntity() . DOT . $masterWorkingUnit->getContact_id() . '', array($masterGovernmentAgencies->getEntity()), ""
+                            . $masterWorkingUnit->getEntity() . DOT . $masterWorkingUnit->getGovernment_agency_id() . EQUAL . $masterGovernmentAgencies->getEntity() . DOT . $masterGovernmentAgencies->getId()
+                            . " AND UCASE(" . $masterWorkingUnit->getEntity() . DOT . $masterWorkingUnit->getName() . ")" . equalToIgnoreCase(strtoupper($value)));
+                    $data_working_unit = $db->getResult();
+
+                    $data_address = $db->selectByID($masterAddress, $masterAddress->getId() . equalToIgnoreCase($data_working_unit[0][$masterWorkingUnit->getAddress_id()]));
+                    $data_contact = $db->selectByID($masterContact, $masterContact->getId() . equalToIgnoreCase($data_working_unit[0][$masterWorkingUnit->getContact_id()]));
+
+                    $data = array(
+                        'wuPhoneNumber' => $data_contact[0][$masterContact->getPhoneNumber1()],
+                        'wuFax' => $data_contact[0][$masterContact->getFax()],
+                        'wuAddress' => $data_address[0][$masterAddress->getName()],
+                        'wuProvince' => $data_address[0][$masterAddress->getProvinceId()],
+                        'wuCity' => $data_address[0][$masterAddress->getCityId()],
+                        'wuDistrict' => $data_address[0][$masterAddress->getDistrictId()],
+                        'wuVillage' => $data_address[0][$masterAddress->getVillageId()],
+                        'wuZipcode' => $data_address[0][$masterAddress->getZipCode()],
+                    );
+                    echo json_encode($data);
+                }
+            }
+        }
     }
 
 }

@@ -40,7 +40,7 @@ return [
     "subject_parent" => "Induk Kegiatan",
     "subject_requirements"=>"Persyaratan Kegiatan",
     "subject_description"=>"Deskripsi Kegiatan",
-    "assessment_points"=>"Aspek penilaian",
+    "assessment_points"=>"Aspek Penilaian",
     "budget_type_id"=>"Tipe Anggaran",
     "budget_amount"=>"Jumlah Anggaran",
     "curriculum"=>"Kurikulum",
@@ -55,6 +55,8 @@ return [
     "location" => "Location",
     "material_subject_code" => "Kode Materi",
     "material_subject_name"=>"Materi Kegiatan",
-    "material_subject_duration"=>"Durasi"
+    "material_subject_duration"=>"Durasi",
+    "assessment_category"=>"Kategory Penilaian",
+    "field_description"=>"Bidang Uraian",
 ];
 

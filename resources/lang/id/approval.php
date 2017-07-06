@@ -21,5 +21,5 @@ return [
     "approved"=>"Setuju",
     "rejected"=>"Tolak",
     "detail"=>"Detail",
-    
+    "request_akd"=>"Permintaan AKD",
 ];

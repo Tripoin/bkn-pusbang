@@ -98,8 +98,15 @@ class Button {
         if ($icon == '') {
             $icon = 'icon-note';
         }
+        if($this->buttonOption['ONCLICK'] == ""){
+            $onclick = 'postAjaxEdit(\'' . $this->buttonOption['URL'] . '\',\'id=' . $this->buttonOption['VALUE'] . '\')';
+        } else {
+            $onclick = $this->buttonOption['ONCLICK'];
+        }
         if (getActionType(ACTION_TYPE_EDIT) == true) {
-            $txt .= '<a class="btn btn-circle btn-icon-only btn-default btn-success" id="edit' . $this->buttonOption['VALUE'] . '" onclick="postAjaxEdit(\'' . $this->buttonOption['URL'] . '\',\'id=' . $this->buttonOption['VALUE'] . '\')" rel="tooltip" title="' . $title . '" href="javascript:;">
+            
+            $txt .= '<a class="btn btn-circle btn-icon-only btn-default btn-success" id="edit' . $this->buttonOption['VALUE'] . '" 
+                onclick="'.$onclick.'" rel="tooltip" title="' . $title . '" href="javascript:;">
                     <i class="' . $icon . '"></i>
                 </a>';
         }

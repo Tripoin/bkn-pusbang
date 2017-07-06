@@ -106,7 +106,7 @@ small, .small {
     font-size: 85%;
 }
 ul,li,a{
-    /*font-family: 'Montserrat', sans-serif;*/ 
+    font-family: 'Montserrat Light', arial; 
 }
 .clear{clear:both}
 body {}
@@ -1018,7 +1018,9 @@ News area css
     color:gray;
 }
 .news_content p{
-    font-size:12px;line-height:18px;
+    /*font-size:12px;*/
+    /*font-family: 'Montserrat', sans-serif;*/
+    line-height:18px;
 }
 .news_content h2{
     font-size:15px;
@@ -1523,6 +1525,8 @@ banner area css
 }
 .news_buletin_pra p{
     font-size:13px;
+    font-family: 'Montserrat Light', arial;
+    
     margin:15px 0 25px;
 }
 .news_buletin_pra h2{
