@@ -13,6 +13,7 @@ use app\Model\MasterWaitingList;
 use app\Model\MasterApprovalCategory;
 use app\Model\MasterUserMain;
 use app\Model\TransactionRegistration;
+use app\Model\TransactionAKDRequest;
 
 $db->connect();
 
@@ -23,7 +24,15 @@ $masterApprovalCategory = new MasterApprovalCategory();
 $masterWaitingList = new MasterWaitingList();
 $masterUserMain = new MasterUserMain();
 $transactionRegistration = new TransactionRegistration();
+$transactionAKDRequest = new TransactionAKDRequest();
 
+
+$db->select($transactionAKDRequest->getEntity(), "COUNT(".$transactionAKDRequest->getId().") as total", array(), $transactionAKDRequest->getIsActived() . " is null");
+$rs_count_app_akd = $db->getResult();
+$total_app_akd = 0;
+if (isset($rs_count_app_akd[0]['total'])) {
+    $total_app_akd = $rs_count_app_akd[0]['total'];
+}
 $db->select($masterApproval->getEntity(), "COUNT(" . $masterApproval->getEntity() . DOT . $masterApproval->getId() . ") as total"
         . "", array($masterApprovalCategory->getEntity(), $transactionRegistration->getEntity(), $linkRegistration->getEntity()), ""
         . $masterApprovalCategory->getEntity() . DOT . $masterApprovalCategory->getId() . EQUAL . $masterApproval->getEntity() . DOT . $masterApproval->getApprovalCategoryId() . ""
@@ -111,7 +120,7 @@ $total_notif_all = $total_app_pic + $total_app_participant + $total_app_activity
                     <ul class="dropdown-menu">
                         <li class="external">
                             <h3>
-                                <span class="bold">12 pending</span> Approval</h3>
+                                <span class="bold"><?=$total_notif_all;?> pending</span> Approval</h3>
                             <!--<a href="page_user_profile_1.html">view all</a>-->
                         </li>
                         <li>
@@ -143,6 +152,15 @@ $total_notif_all = $total_app_pic + $total_app_participant + $total_app_activity
                                                 <span class="label label-sm label-icon label-success">
                                                     <span class="label label-success"> <b><?php echo $total_app_activity; ?></b> </span>
                                                 </span> Pending Approval Registrasi Kegiatan </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="<?=URL($admin_url.IURLConstant::APPROVAL_REQUEST_AKD_INDEX_URL);?>">
+                                            <!--<span class="time">just now</span>-->
+                                            <span class="details">
+                                                <span class="label label-sm label-icon label-success">
+                                                    <span class="label label-success"> <b><?php echo $total_app_akd; ?></b> </span>
+                                                </span> Pending Approval Request AKD </span>
                                         </a>
                                     </li>
 

@@ -17,7 +17,7 @@ $ckfile = tempnam("/tmp", "CURLMOODCOOKIE");
 
 
 //set POST variables
-$url_elearning = 'http://54.251.168.102/e-learning/login/index.php';
+$url_elearning = URL_ELEARNING.'login/index.php';
 //$fields_string = 'username=' . $username . '&password=';
 //$fields_string .=$password . '&rememberusername=1&Login';
 //
